@@ -1,7 +1,8 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Pressable, TouchableOpacity } from 'react-native';
+import { View, Text } from '@/components/Themed';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -15,6 +16,34 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
+interface TabBarButtonProps {
+  name: any; 
+  active: boolean;
+  colorScheme: any;
+}
+
+function TabBarButton({ name, active, colorScheme }: TabBarButtonProps) {
+  return (
+    <Link href='./newBet' asChild>
+      <TouchableOpacity
+      style={{
+        height: 60,
+        width: 60,
+        borderRadius: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        bottom: 16,
+        elevation: 5,  
+        backgroundColor: 'white',
+      }}
+    >
+      <FontAwesome name="plus" size={24} color={'black'}/>
+      </TouchableOpacity>
+    </Link>
+
+  );
+}
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
@@ -22,36 +51,60 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
+        tabBarItemStyle: {borderTopWidth: 1, borderColor: Colors[colorScheme ?? 'light'].colorBackground}
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          title: 'BetSmart',
+          href: './',
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          tabBarLabel: 'Home',
+          headerShown: false,
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="insights"
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Insights',
+          href: './insights',
+          tabBarIcon: ({ color }) => <TabBarIcon name="eye" color={color} />,
+          tabBarLabel: 'Insights',
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="newBet"
+        options={{
+          title: 'New Bet',
+          tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+          tabBarButton: (props) => (
+            <TabBarButton 
+              name="plus"
+              active={true}
+              colorScheme={colorScheme}            
+            />
+          ),
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="data"
+        options={{
+          title: 'Data',
+          href: './data',
+          tabBarIcon: ({ color }) => <TabBarIcon name="pie-chart" color={color} />,
+          tabBarLabel: 'Data',
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          href: './profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          headerShown: false,
         }}
       />
     </Tabs>
