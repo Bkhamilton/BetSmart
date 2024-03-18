@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
@@ -129,13 +129,15 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <View style={{ alignItems: 'center', height: 84, paddingHorizontal: 20, borderWidth: 1 }}>
+        <Text style={{ marginTop: 44, fontSize: 22, fontWeight: 'bold' }}>BetSmart</Text>
+      </View>
       <ScrollView>
         <StatusBar style="auto" backgroundColor='transparent'/>
         <View style={{alignItems: 'center'}}>
-          <Text style={{fontSize: 20, fontWeight: 'bold'}}>Bet Tracker</Text>
-          <View style={styles.headerContainer}>
+          <TouchableOpacity style={styles.winningsContainer}>
             <Text>+${winnings}</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={{paddingHorizontal: 16, paddingTop: 24,}}>
           <Text style={{fontSize: 18, fontWeight: 'bold'}}>My Bets</Text>
@@ -150,9 +152,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: 60,
   },
-  headerContainer: {
+  winningsContainer: {
     borderWidth: 1, 
     width: 160, 
     height: 160, 
