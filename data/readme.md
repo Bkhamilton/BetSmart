@@ -1,4 +1,4 @@
-## To Add
+# To Add
 
-# SQLite Connection
-# Database Structure
+## SQLite Connection
+## Database Structure
