@@ -38,3 +38,50 @@ The Data page will be an in depth breakdown of the data collected in this app, a
 
 ## Profile
 The Profile page will be used to see general player information, as well as the settings and other important User Info
+## To Add
+## Profile Tab Features
+
+1. **Account Settings**:
+   - Change password
+   - Update email address
+   - Manage notification preferences (email, push notifications, etc.)
+   - Enable or disable two-factor authentication
+
+2. **Personal Information**:
+   - Edit personal details (name, date of birth, location, etc.)
+   - Add a short bio or description
+
+3. **Betting History**:
+   - View a detailed log of all past bets (sport, bet type, odds, result, etc.)
+   - Filter and sort betting history by date, sport, bet type, etc.
+   - Export betting history as a CSV or PDF file
+
+4. **Favorite Teams/Leagues**:
+   - Allow users to select and save their favorite teams or leagues
+   - Display upcoming games or events for the user's favorite teams/leagues
+
+5. **Betting Preferences**:
+   - Set default bet types (moneyline, spread, over/under, etc.)
+   - Set preferred odds format (decimal, American, fractional)
+   - Set default risk level or unit size for bets
+
+6. **Bankroll Management**:
+   - Track and manage the user's bankroll (deposit, withdraw, view balance)
+   - Set bankroll limits or alerts (e.g., notify when bankroll drops below a certain threshold)
+
+7. **Achievements/Badges**:
+   - Display achievements or badges earned based on betting activities or milestones
+   - Gamify the experience by offering challenges or goals to unlock new achievements
+
+8. **Social Features**:
+   - Connect with friends or other users
+   - Follow other users and view their recent bets or activity
+   - Share or discuss bets and predictions with others
+
+9. **Privacy Settings**:
+   - Control the visibility of personal information, betting history, and activity
+   - Manage who can view or follow the user's profile
+
+10. **Support/Help**:
+    - Access to FAQs, tutorials, or support resources
+    - Submit support tickets or request assistance
