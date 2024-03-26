@@ -2,8 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
+import Header from '../../components/Header/Header';
 
 export default function HomeScreen() {
   
@@ -129,9 +129,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{ alignItems: 'center', height: 84, paddingHorizontal: 20, borderWidth: 1 }}>
-        <Text style={{ marginTop: 44, fontSize: 22, fontWeight: 'bold' }}>BetSmart</Text>
-      </View>
+      <Header title={'BetSmart'}/>
       <ScrollView>
         <StatusBar style="auto" backgroundColor='transparent'/>
         <View style={{alignItems: 'center'}}>
