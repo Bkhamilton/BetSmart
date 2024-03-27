@@ -36,15 +36,17 @@ export function useThemeColor(
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+  const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'borderColor');
 
-  return <DefaultText style={[{ color }, style]} {...otherProps} />;
+  return <DefaultText style={[{ color, borderColor }, style]} {...otherProps} />;
 }
 
 export function View(props: ViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'borderColor');
 
-  return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
+  return <DefaultView style={[{ backgroundColor, borderColor }, style]} {...otherProps} />;
 }
 
 export function TouchableOpacity(props: TouchableOpacityProps) {
@@ -58,13 +60,15 @@ export function TouchableOpacity(props: TouchableOpacityProps) {
 export function ScrollView(props: ScrollViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'borderColor');
 
-  return <DefaultScrollView style={[{ backgroundColor }, style]} {...otherProps} />;
+  return <DefaultScrollView style={[{ backgroundColor, borderColor }, style]} {...otherProps} />;
 }
 
 export function SafeAreaView(props: SafeAreaViewProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'borderColor');
 
-  return <DefaultSafeAreaView style={[{ backgroundColor }, style]} {...otherProps} />;
+  return <DefaultSafeAreaView style={[{ backgroundColor, borderColor }, style]} {...otherProps} />;
 }

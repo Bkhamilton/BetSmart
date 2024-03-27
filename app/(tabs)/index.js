@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { Text, View } from '@/components/Themed';
+import { Text, View, ScrollView, TouchableOpacity, SafeAreaView } from '@/components/Themed';
 import Header from '../../components/Header/Header';
 
 export default function HomeScreen() {
