@@ -49,7 +49,7 @@ export default function NewBetScreen() {
   return (
     <View style={styles.container}>
       <Header title={'Place Bet'}/>
-      <View style={{ alignItems: 'center', }}>
+      <View style={{ flex: 1, alignItems: 'center' }}>
         <View style={{ paddingVertical: 16 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Choose {curCategory}</Text>
         </View>
@@ -85,17 +85,17 @@ export default function NewBetScreen() {
         }
       </View>
         { curSport.title.length > 0 &&
-          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <View>
             <FlatList
               horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 16 }}
+              contentContainerStyle={{ paddingBottom: 0 }}
               data={sportsData}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <View style={{ alignItems: 'flex-end' }}>
                   <TouchableOpacity 
-                    style={[styles.gameContainer, { height: 50 }]} // Set your desired height here
+                    style={[styles.gameContainer]} // Set your desired height here
                     onPress={() => selectSport(item)}
                     testID={`game_${item.title}`}
                   >
@@ -137,13 +137,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   gameContainer: {
-    borderWidth: 1,
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
     borderRadius: 0,
     paddingHorizontal: 16,
     paddingVertical: 8,
     margin: 0,
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'center',
   },
   gameText: {
     fontSize: 20,

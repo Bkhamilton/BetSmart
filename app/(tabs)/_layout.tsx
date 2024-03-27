@@ -25,20 +25,22 @@ interface TabBarButtonProps {
 function TabBarButton({ name, active, colorScheme }: TabBarButtonProps) {
   return (
     <Link href='./newBet' asChild>
-      <TouchableOpacity
-      style={{
-        height: 60,
-        width: 60,
-        borderRadius: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        bottom: 16,
-        elevation: 5,  
-        backgroundColor: 'white',
-      }}
-    >
-      <FontAwesome name="plus" size={24} color={'black'}/>
-      </TouchableOpacity>
+          <TouchableOpacity
+          style={{
+            height: 60,
+            width: 60,
+            borderRadius: 30,
+            justifyContent: 'center',
+            alignItems: 'center',
+            bottom: 12,
+            elevation: 5,  
+            backgroundColor: 'white',
+            borderWidth: 1,
+            borderColor: Colors[colorScheme ?? 'light'].borderColor,
+          }}
+        >
+          <FontAwesome name="plus" size={24} color={'black'}/>
+          </TouchableOpacity>
     </Link>
 
   );
