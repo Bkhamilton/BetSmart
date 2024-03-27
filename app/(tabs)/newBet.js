@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Header from '../../components/Header/Header';
 import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams } from '../../data/exampleTeamData';
+import MainButtons from '../../components/PlaceBet/MainButtons';
 
 export default function NewBetScreen() {
 
@@ -72,15 +74,7 @@ export default function NewBetScreen() {
         }
         { curSport.title.length == 0 &&
           <View style={styles.buttonsContainer}>
-            {sportsData.map((sport, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.mainButtonContainer}
-                onPress={() => selectSport(sport)}
-              >
-                <Text style={styles.mainButtonText}>{sport.title}</Text>
-              </TouchableOpacity>
-            ))}
+            <MainButtons sports={sportsData} onPress={selectSport} />
           </View>
         }
       </View>
@@ -120,7 +114,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '80%',
+    width: '100%',
     marginTop: 100,
   },
   mainButtonContainer: {
