@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import Header from '../../components/Header/Header';
-import { nbaTeams, nflTeams, mlbTeams, nhlTeams } from '../../data/exampleTeamData';
+import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams } from '../../data/exampleTeamData';
 
 export default function NewBetScreen() {
 
@@ -44,83 +44,7 @@ export default function NewBetScreen() {
     }
   }
 
-  const sports = [
-    {
-      title: "NBA",
-      games: [{
-        home: "LAL",
-        away: "MIL"
-      },{
-        home: "BOS",
-        away: "PHI"
-      }]
-    },
-    {
-      title: "NFL",
-      games: []
-    },
-    {
-      title: "NCAA",
-      games: [{
-        home: "UConn",
-        away: "Creighton"
-      },{
-        home: "Arizona",
-        away: "Kentucky"
-      }]
-    },
-    {
-      title: "MLB",
-      games: [{
-        home: "LAD",
-        away: "SD"
-      }]
-    },
-    {
-      title: "MLS",
-      games: [{
-        home: "LAFC",
-        away: "LA Galaxy"
-      },{
-        home: "NYCFC",
-        away: "NY Red Bulls"
-      }]
-    },
-    {
-      title: "NHL",
-      games: [{
-        home: "NYR",
-        away: "NYI"
-      },{
-        home: "BOS",
-        away: "PHI"
-      },{
-        home: "WSH",
-        away: "PIT"
-      }
-    ]
-    },      
-    {
-      title: "PGA",
-      games: [{
-        home: "Tiger Woods",
-        away: "Rory McIlroy"
-      },{
-        home: "Brooks Koepka",
-        away: "Dustin Johnson"
-      }]
-    },
-    {
-      title: "UFC",
-      games: [{
-        home: "Conor McGregor",
-        away: "Dustin Poirier"
-      },{
-        home: "Israel Adesanya",
-        away: "Robert Whittaker"
-      }]
-    }
-  ]
+
 
   return (
     <View style={styles.container}>
@@ -148,7 +72,7 @@ export default function NewBetScreen() {
         }
         { curSport.title.length == 0 &&
           <View style={styles.buttonsContainer}>
-            {sports.map((sport, index) => (
+            {sportsData.map((sport, index) => (
               <TouchableOpacity
                 key={index}
                 style={styles.mainButtonContainer}
@@ -166,7 +90,7 @@ export default function NewBetScreen() {
               horizontal
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={{ paddingBottom: 16 }}
-              data={sports}
+              data={sportsData}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item }) => (
                 <View style={{ alignItems: 'flex-end' }}>
