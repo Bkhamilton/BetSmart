@@ -204,7 +204,7 @@ export default function HomeScreen() {
         <View style={{paddingHorizontal: 16, paddingTop: 24,}}>
           <Text style={{fontSize: 18, fontWeight: 'bold'}}>My Bets</Text>
           <MyBets myBets={myBetList}></MyBets>
-        </View>
+        </View> 
       </ScrollView>
     </View>
   );
