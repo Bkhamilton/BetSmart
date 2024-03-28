@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, FlatList } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -19,6 +20,13 @@ export default function NewBetScreen() {
     team: '',
     players: []
   })
+
+  const [randomData, setRandomData] = useState('');
+
+  useEffect(() => {
+    fetchData();
+    retrieveData();
+  });
 
   // Function to select a sport and set the current sport and category
   const selectSport = (sport) => {
@@ -46,11 +54,35 @@ export default function NewBetScreen() {
     }
   }
 
+  // Function to fetch data from API and store it in AsyncStorage
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`https://api.prop-odds.com/beta/games/nba?date=2024-03-28&tz=America/New_York&api_key=AaHYFBJJXgbcJyBYy3OiMVuv1eJAd4JIYkQWFOPTLf4`);
+      await AsyncStorage.setItem('gameData', JSON.stringify(data));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  // Function to retrieve data from AsyncStorage
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('gameData');
+      if (value !== null) {
+        // We have data!!
+        setRandomData(JSON.stringify(value));
+        console.log(JSON.parse(value));
+      }
+    } catch (error) {
+      // Error retrieving data
+      console.error(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <Header title={'Place Bet'}/>
+      <Text>{randomData} A</Text>
       <View style={{ flex: 1, alignItems: 'center' }}>
         <View style={{ paddingVertical: 16 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Choose {curCategory}</Text>
