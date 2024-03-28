@@ -1,4 +1,5 @@
 # BetSmart
+A mobile app designed by Ben Hamilton and Kenneth Sullivan to help sports bettors better understand their betting trends and habits
 ***
 
 ## Home Page
