@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
-import { TouchableOpacity } from '../Themed';
+import { StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, View, TextInput } from '../Themed';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import Colors from '@/constants/Colors';

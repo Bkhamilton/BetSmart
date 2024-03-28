@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TouchableOpacity } from '../Themed';
+import { StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, View } from '../Themed';
 
 import Colors from '@/constants/Colors';
 

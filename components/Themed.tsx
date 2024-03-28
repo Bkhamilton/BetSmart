@@ -3,7 +3,14 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
-import { Text as DefaultText, View as DefaultView, ScrollView as DefaultScrollView, SafeAreaView as DefaultSafeAreaView, TouchableOpacity as DefaultTouchableOpacity } from 'react-native';
+import { 
+  Text as DefaultText, 
+  View as DefaultView, 
+  ScrollView as DefaultScrollView, 
+  SafeAreaView as DefaultSafeAreaView, 
+  TouchableOpacity as DefaultTouchableOpacity,
+  TextInput as DefaultTextInput
+} from 'react-native';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from './useColorScheme';
@@ -18,6 +25,7 @@ export type ViewProps = ThemeProps & DefaultView['props'];
 export type TouchableOpacityProps = ThemeProps & DefaultTouchableOpacity['props'];
 export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
 export type SafeAreaViewProps = ThemeProps & DefaultSafeAreaView['props'];
+export type TextInputProps = ThemeProps & DefaultTextInput['props'];
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -71,4 +79,13 @@ export function SafeAreaView(props: SafeAreaViewProps) {
   const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'borderColor');
 
   return <DefaultSafeAreaView style={[{ backgroundColor, borderColor }, style]} {...otherProps} />;
+}
+
+export function TextInput(props: TextInputProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'borderColor');
+  const color = useThemeColor({ light: lightColor, dark: darkColor }, 'text');
+
+  return <DefaultTextInput style={[{ backgroundColor, borderColor, color }, style]} {...otherProps} />;
 }
