@@ -51,3 +51,5 @@ def get_sports():
     url = "https://api.draftkings.com/sites/US-DK/sports/v1/sports"
     response = requests.get(url)
     return response.json()
+
+print(get_sports())
