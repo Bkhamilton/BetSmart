@@ -1,88 +1,37 @@
 # BetSmart
-A mobile app designed by Ben Hamilton and Kenneth Sullivan to help sports bettors better understand their betting trends and habits
-***
 
-## Home Page
-The Home dashboard will show the user general information about their recent betting habits, as well as any active bets currently in progress.
-***
+BetSmart is a sports bet tracking app that helps you keep track of your bets and analyze your betting performance. Whether you're a casual bettor or a seasoned pro, BetSmart provides the tools you need to stay organized and make informed betting decisions.
 
-## Insights
-The Insights page will be a way for a user to have a parlay or bet put together for them based on their betting trends
-***
+Created by Ben Hamilton and Kenneth Sullivan
 
-## Data
-The Data page will be an in depth breakdown of the data collected in this app, and breakdowns into what trends and habits have the best and worst outcomes
+## Features
 
-## To Add
-## Data Visualization Ideas
+- **Bet Tracking**: Easily record your bets, including the sport, event, bet type, stake, and outcome.
+- **Statistics**: Get detailed statistics on your betting performance, including win/loss ratio, average stake, and total profit/loss.
+- **Graphical Analysis**: Visualize your betting performance over time with interactive charts and graphs.
+- **Notifications**: Receive notifications for upcoming events, bet outcomes, and important updates.
+- **Customization**: Personalize your BetSmart experience by choosing your preferred theme and layout.
 
-1. **Profit/Loss Trend**: A line chart or area chart that shows the user's overall profit or loss over time.
+## Installation
 
-2. **Bet Type Analysis**: A pie chart or stacked bar chart that breaks down the user's bets by type (e.g., moneyline, spread, over/under, parlays, teasers, etc.).
+1. Clone the repository: `git clone [https://github.com/Bkhamilton/BetSmart.git](https://github.com/Bkhamilton/BetSmart.git)`
+2. Install the required dependencies: `npm install`
+3. Start the app: `npm start`
 
-3. **Sport/League Breakdown**: A bar chart or stacked bar chart that shows the user's performance across different sports or leagues.
+## Usage
 
-4. **Handicapping Analysis**: Charts or graphs that analyze the user's performance based on different handicapping factors, such as home/away teams, favorite/underdog status, point spreads, over/under totals, etc.
+1. Open the BetSmart app in your web browser.
+2. Sign up or log in to your account.
+3. Start recording your bets and exploring the app's features.
 
-5. **Bankroll Management**: A line chart or area chart that tracks the user's bankroll (available funds for betting) over time.
+## Contributing
 
-6. **ROI (Return on Investment)**: A bar chart or line chart that displays the user's ROI for different bet types, sports, or time periods.
+Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
 
-7. **Odds Distribution**: A histogram or frequency distribution chart that shows the distribution of odds for the user's winning and losing bets.
+## License
 
-8. **Streak Analysis**: Charts or graphs that visualize the user's longest winning and losing streaks, as well as the frequency and duration of hot or cold streaks.
+This project is licensed under the [MIT License](LICENSE).
 
-9. **Time/Day Analysis**: Charts or graphs that analyze the user's performance based on the time of day, day of the week, or specific events (e.g., primetime games, weekends, playoffs, etc.).
+## Contact
 
-10. **Correlation Analysis**: Scatter plots or correlation matrices that explore relationships between different factors (e.g., bet type, odds, team statistics, weather conditions, etc.) and the user's betting outcomes.
-***
-
-## Profile
-The Profile page will be used to see general player information, as well as the settings and other important User Info
-## To Add
-## Profile Tab Features
-
-1. **Account Settings**:
-   - Change password
-   - Update email address
-   - Manage notification preferences (email, push notifications, etc.)
-   - Enable or disable two-factor authentication
-
-2. **Personal Information**:
-   - Edit personal details (name, date of birth, location, etc.)
-   - Add a short bio or description
-
-3. **Betting History**:
-   - View a detailed log of all past bets (sport, bet type, odds, result, etc.)
-   - Filter and sort betting history by date, sport, bet type, etc.
-   - Export betting history as a CSV or PDF file
-
-4. **Favorite Teams/Leagues**:
-   - Allow users to select and save their favorite teams or leagues
-   - Display upcoming games or events for the user's favorite teams/leagues
-
-5. **Betting Preferences**:
-   - Set default bet types (moneyline, spread, over/under, etc.)
-   - Set preferred odds format (decimal, American, fractional)
-   - Set default risk level or unit size for bets
-
-6. **Bankroll Management**:
-   - Track and manage the user's bankroll (deposit, withdraw, view balance)
-   - Set bankroll limits or alerts (e.g., notify when bankroll drops below a certain threshold)
-
-7. **Achievements/Badges**:
-   - Display achievements or badges earned based on betting activities or milestones
-   - Gamify the experience by offering challenges or goals to unlock new achievements
-
-8. **Social Features**:
-   - Connect with friends or other users
-   - Follow other users and view their recent bets or activity
-   - Share or discuss bets and predictions with others
-
-9. **Privacy Settings**:
-   - Control the visibility of personal information, betting history, and activity
-   - Manage who can view or follow the user's profile
-
-10. **Support/Help**:
-    - Access to FAQs, tutorials, or support resources
-    - Submit support tickets or request assistance
+For any inquiries or support, please contact us at benkenhamilvan@gmail.com.
