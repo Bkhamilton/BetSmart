@@ -2,6 +2,8 @@
 
 BetSmart is a sports bet tracking app that helps you keep track of your bets and analyze your betting performance. Whether you're a casual bettor or a seasoned pro, BetSmart provides the tools you need to stay organized and make informed betting decisions.
 
+Created by Ben Hamilton and Kenneth Sullivan
+
 ## Features
 
 - **Bet Tracking**: Easily record your bets, including the sport, event, bet type, stake, and outcome.
@@ -12,7 +14,7 @@ BetSmart is a sports bet tracking app that helps you keep track of your bets and
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-username/betSmart.git`
+1. Clone the repository: `git clone [https://github.com/Bkhamilton/BetSmart.git](https://github.com/Bkhamilton/BetSmart.git)`
 2. Install the required dependencies: `npm install`
 3. Start the app: `npm start`
 
@@ -32,4 +34,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-For any inquiries or support, please contact us at support@betSmart.com.
+For any inquiries or support, please contact us at benkenhamilvan@gmail.com.
