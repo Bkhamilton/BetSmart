@@ -6,6 +6,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Header from '../../components/Header/Header';
 import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams } from '../../data/exampleTeamData';
 import MainButtons from '../../components/PlaceBet/MainButtons';
+import { getGames } from '../../api/prop-odds.js'; 
 
 export default function NewBetScreen() {
 
@@ -23,13 +24,9 @@ export default function NewBetScreen() {
 
   const [randomData, setRandomData] = useState('');
 
-  useEffect(() => {
-    fetchData();
-    retrieveData();
-  });
-
   // Function to select a sport and set the current sport and category
   const selectSport = (sport) => {
+    setcurGame({home:'', away:''});
     if (curSport.title === sport.title) {
       setcurSport({title:'', games:[]});
       setcurCategory('Sport');
@@ -82,7 +79,6 @@ export default function NewBetScreen() {
   return (
     <View style={styles.container}>
       <Header title={'Place Bet'}/>
-      <Text>{randomData} A</Text>
       <View style={{ flex: 1, alignItems: 'center' }}>
         <View style={{ paddingVertical: 16 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Choose {curCategory}</Text>
@@ -92,16 +88,29 @@ export default function NewBetScreen() {
             <View style={{ paddingVertical: 4, paddingHorizontal: 12, borderWidth: 1, marginTop: 6, borderRadius: 8, }}>
               <Text>{curSport.title}</Text>
             </View>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              {curSport.games.map((game, index) => (
-                <TouchableOpacity 
-                  key={index} style={{ borderWidth: 1, marginHorizontal: 10, paddingHorizontal: 8, paddingVertical: 4, marginVertical: 4, }}
-                  onPress={() => selectGame(game)}
-                >
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{game.away} vs {game.home}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            {
+              curGame.home.length > 0 &&
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, }}>
+                  <View style={{ flex: 1, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8, marginHorizontal: 8 }}>
+                    <Text style={{ textAlign: 'center' }}>{curHomeTeam.team}</Text>
+                  </View>
+                  <View style={{ flex: 1, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8, marginHorizontal: 8 }}>
+                    <Text style={{ textAlign: 'center' }}>{curAwayTeam.team}</Text>
+                  </View>
+                </View>
+            }
+            { curGame.home.length == 0 &&
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                {curSport.games.map((game, index) => (
+                  <TouchableOpacity 
+                    key={index} style={{ borderWidth: 1, marginHorizontal: 10, paddingHorizontal: 8, paddingVertical: 4, marginVertical: 4, }}
+                    onPress={() => selectGame(game)}
+                  >
+                      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{game.away} vs {game.home}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            }
           </View>
         }
         { curSport.title.length == 0 &&
@@ -110,6 +119,28 @@ export default function NewBetScreen() {
           </View>
         }
       </View>
+      { curGame.home.length > 0 &&
+        <View>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 0 }}
+            data={curSport.games}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={{ alignItems: 'flex-end' }}>
+                <TouchableOpacity 
+                  style={[styles.gameContainer]} // Set your desired height here
+                  onPress={() => selectGame(item)}
+                  testID={`game_${item.home}${item.away}`}
+                >
+                  <Text style={styles.gameText}>{item.away} vs {item.home}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>        
+      }
         { curSport.title.length > 0 &&
           <View>
             <FlatList
