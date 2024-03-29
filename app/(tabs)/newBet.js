@@ -152,11 +152,11 @@ export default function NewBetScreen() {
               renderItem={({ item }) => (
                 <View style={{ alignItems: 'flex-end' }}>
                   <TouchableOpacity 
-                    style={[styles.gameContainer]} // Set your desired height here
+                    style={[styles.sportContainer]} // Set your desired height here
                     onPress={() => selectSport(item)}
                     testID={`game_${item.title}`}
                   >
-                    <Text style={styles.gameText}>{item.title}</Text>
+                    <Text style={styles.sportText}>{item.title}</Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold'
   },
-  gameContainer: {
+  sportContainer: {
     borderLeftWidth: 1,
     borderTopWidth: 1,
     borderRightWidth: 1,
@@ -204,8 +204,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  gameText: {
+  sportText: {
     fontSize: 20,
     fontWeight: 'bold'
-  }
+  },
+  gameContainer: {
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderRadius: 0,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    margin: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gameText: {
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
 });

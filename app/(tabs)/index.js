@@ -59,16 +59,16 @@ export default function HomeScreen() {
       </View>
     );
   }
-  
+
   function BetComponent({ bet }) {
     return (
       <View style={styles.betComponent}>
         <Text>{bet.sport} - {bet.date}</Text>
         <Text>{bet.home} vs {bet.away}</Text>
         <Text style={styles.odds}>{bet.odds}</Text>
-        {bet.legs.map((leg, index) => (
-          <LegComponent key={index} leg={leg} />
-        ))}
+        <View style={styles.legComponent}>
+          <Text>{bet.legs.length} legs</Text>
+        </View>
       </View>
     );
   }
@@ -76,7 +76,10 @@ export default function HomeScreen() {
   function MyBet({ myBet }) {
     return (
       <View style={styles.myBet}>
-        <Text>{myBet.date} | <Text style={styles.odds}>{myBet.odds}</Text></Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}> 
+          <Text>{myBet.date}</Text>
+          <Text style={styles.odds}>{myBet.odds}</Text>
+        </View>
         {myBet.bets.map((bet, index) => (
           <BetComponent key={index} bet={bet} />
         ))}
@@ -94,72 +97,140 @@ export default function HomeScreen() {
     );
   } 
 
-  const myBetList = [{
-    date: '3/2/24',
-    odds: '+543',
-    bets: [
-      {
-        date: '3/2/24',
-        sport: 'NBA',
-        home: 'LAL',
-        away: 'DEN',
-        odds: '+168',
-        legs: [
-          {
-            betTarget: 'Lebron James',
-            stat: 'Points',
-            alt: true,
-            line: 20,
-            overUnder: 'over'
-          },
-          {
-            betTarget: 'Lebron James',
-            stat: 'Assists',
-            alt: false,
-            line: 5.5,
-            overUnder: 'over'
-          },
-          {
-            betTarget: 'Nikola Jokic',
-            stat: 'Points',
-            alt: false,
-            line: 26.5,
-            overUnder: 'over'
-          }   
-        ]
-      },
-      {
-        date: '3/2/24',
-        sport: 'NBA',
-        home: 'HOU',
-        away: 'PHX',
-        odds: '+140',
-        legs: [
-          {
-            betTarget: 'Alperen Sengun',
-            stat: 'Points',
-            alt: true,
-            line: 18,
-            overUnder: 'over'
-          },
-          {
-            betTarget: 'Alperen Sengun',
-            stat: 'Assists',
-            alt: false,
-            line: 3.5,
-            overUnder: 'over'
-          },
-          {
-            betTarget: 'Fred VanVleet',
-            stat: 'Threes',
-            alt: true,
-            line: 2,
-            overUnder: 'over'
-          }   
-        ]
-      }, 
-    ]
-  }]
+  const myBetList = [
+    {
+      date: '3/2/24',
+      odds: '+543',
+      bets: [
+        {
+          date: '3/2/24',
+          sport: 'NBA',
+          home: 'LAL',
+          away: 'DEN',
+          odds: '+168',
+          legs: [
+            {
+              betTarget: 'Lebron James',
+              stat: 'Points',
+              alt: true,
+              line: 20,
+              overUnder: 'over'
+            },
+            {
+              betTarget: 'Lebron James',
+              stat: 'Assists',
+              alt: false,
+              line: 5.5,
+              overUnder: 'over'
+            },
+            {
+              betTarget: 'Nikola Jokic',
+              stat: 'Points',
+              alt: false,
+              line: 26.5,
+              overUnder: 'over'
+            }   
+          ]
+        },
+        {
+          date: '3/2/24',
+          sport: 'NBA',
+          home: 'HOU',
+          away: 'PHX',
+          odds: '+140',
+          legs: [
+            {
+              betTarget: 'Alperen Sengun',
+              stat: 'Points',
+              alt: true,
+              line: 18,
+              overUnder: 'over'
+            },
+            {
+              betTarget: 'Alperen Sengun',
+              stat: 'Assists',
+              alt: false,
+              line: 3.5,
+              overUnder: 'over'
+            },
+            {
+              betTarget: 'Fred VanVleet',
+              stat: 'Threes',
+              alt: true,
+              line: 2,
+              overUnder: 'over'
+            }   
+          ]
+        }, 
+      ]
+    },
+    {
+      date: '3/2/24',
+      odds: '+200',
+      bets: [
+        {
+          date: '3/2/24',
+          sport: 'NBA',
+          home: 'BOS',
+          away: 'MIA',
+          odds: '+120',
+          legs: [
+            {
+              betTarget: 'Jayson Tatum',
+              stat: 'Points',
+              alt: true,
+              line: 25,
+              overUnder: 'over'
+            },
+            {
+              betTarget: 'Jayson Tatum',
+              stat: 'Rebounds',
+              alt: false,
+              line: 7.5,
+              overUnder: 'over'
+            },
+            {
+              betTarget: 'Bam Adebayo',
+              stat: 'Assists',
+              alt: false,
+              line: 5.5,
+              overUnder: 'over'
+            }   
+          ]
+        },
+        {
+          date: '3/2/24',
+          sport: 'NBA',
+          home: 'GSW',
+          away: 'UTA',
+          odds: '+180',
+          legs: [
+            {
+              betTarget: 'Stephen Curry',
+              stat: 'Threes',
+              alt: true,
+              line: 4,
+              overUnder: 'over'
+            },
+            {
+              betTarget: 'Stephen Curry',
+              stat: 'Assists',
+              alt: false,
+              line: 6.5,
+              overUnder: 'over'
+            },
+            {
+              betTarget: 'Rudy Gobert',
+              stat: 'Blocks',
+              alt: true,
+              line: 2.5,
+              overUnder: 'over'
+            }   
+          ]
+        }, 
+      ]
+    }
+  ];
 
   const mainLegs = myBetList[0].bets[0].legs; 
 
@@ -193,7 +264,7 @@ export default function HomeScreen() {
                 accessor="value"
                 backgroundColor="transparent"
                 center={[0, 0]}
-                paddingLeft='50'
+                paddingLeft='45'
                 absolute
                 hasLegend={false}
               />
@@ -218,12 +289,13 @@ const styles = StyleSheet.create({
   winningsContainer: { 
     marginTop: 24, 
     alignItems: 'center', 
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   chartContainer: {
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 100,
   },
   profitText: {
     position: 'absolute',
