@@ -4,7 +4,7 @@ import { StyleSheet, FlatList } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Header from '../../components/Header/Header';
-import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams } from '../../data/exampleTeamData';
+import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } from '../../data/exampleTeamData';
 import MainButtons from '../../components/PlaceBet/MainButtons';
 import { getGames } from '../../api/prop-odds.js'; 
 
@@ -54,7 +54,7 @@ export default function NewBetScreen() {
   // Function to fetch data from API and store it in AsyncStorage
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://api.prop-odds.com/beta/games/nba?date=2024-03-28&tz=America/New_York&api_key=AaHYFBJJXgbcJyBYy3OiMVuv1eJAd4JIYkQWFOPTLf4`);
+      const response = await fetch(`https://api.prop-odds.com/beta/games/nba?date=2024-03-30&tz=America/New_York&api_key=AaHYFBJJXgbcJyBYy3OiMVuv1eJAd4JIYkQWFOPTLf4`);
       await AsyncStorage.setItem('gameData', JSON.stringify(data));
     } catch (error) {
       console.error(error);
@@ -80,8 +80,8 @@ export default function NewBetScreen() {
     <View style={styles.container}>
       <Header title={'Place Bet'}/>
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <View style={{ paddingVertical: 16 }}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Choose {curCategory}</Text>
+        <View style={{ flexDirection: 'row', paddingVertical: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Choose {curCategory}</Text>
         </View>
         { curSport.title.length > 0 &&
           <View style={{ alignItems: 'center' }}>
@@ -101,12 +101,12 @@ export default function NewBetScreen() {
             }
             { curGame.home.length == 0 &&
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {curSport.games.map((game, index) => (
+                {nbaGamesToday.games.map((game, index) => (
                   <TouchableOpacity 
                     key={index} style={{ borderWidth: 1, marginHorizontal: 10, paddingHorizontal: 8, paddingVertical: 4, marginVertical: 4, }}
                     onPress={() => selectGame(game)}
                   >
-                      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{game.away} vs {game.home}</Text>
+                      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{game.away_team} vs {game.home_team}</Text>
                   </TouchableOpacity>
                 ))}
               </View>

@@ -240,7 +240,7 @@ export default function HomeScreen() {
 
   const DATA = [
     { value: amountWon, color: 'green', label: 'Amount Won' },
-    { value: amountWagered, color: 'black', label: 'Amount Wagered' },
+    { value: amountWagered, color: 'gray', label: 'Amount Wagered' },
   ];
 
   const chartConfig = {
