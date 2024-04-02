@@ -7,6 +7,7 @@ import Header from '../../components/Header/Header';
 import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } from '../../data/exampleTeamData';
 import MainButtons from '../../components/PlaceBet/MainButtons';
 import { getGames } from '../../api/prop-odds.js';
+import secrets from '../../secrets.js';
 import { nbaTeamAbbreviations } from '../../data/teamAbbreviations.js'; 
 
 export default function NewBetScreen() {
@@ -55,7 +56,8 @@ export default function NewBetScreen() {
   // Function to fetch data from API and store it in AsyncStorage
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://api.prop-odds.com/beta/games/nba?date=2024-03-30&tz=America/New_York&api_key=AaHYFBJJXgbcJyBYy3OiMVuv1eJAd4JIYkQWFOPTLf4`);
+      const sport = 'nba'; // replace with the sport you're interested in
+      const data = await getGames(sport);
       await AsyncStorage.setItem('gameData', JSON.stringify(data));
     } catch (error) {
       console.error(error);
@@ -68,14 +70,21 @@ export default function NewBetScreen() {
       const value = await AsyncStorage.getItem('gameData');
       if (value !== null) {
         // We have data!!
-        setRandomData(JSON.stringify(value));
+        setRandomData(JSON.parse(value));
         console.log(JSON.parse(value));
+      } else {
+        // No data in AsyncStorage, fetch from API
+        fetchData();
       }
     } catch (error) {
       // Error retrieving data
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    retrieveData();
+  }, []);
 
   // Function to get the abbreviation for a team name
   const getTeamAbbreviation = (teamName) => {
@@ -106,11 +115,11 @@ export default function NewBetScreen() {
                 </View>
             }
             { curGame.home.length == 0 &&
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              <View style={{ flexDirection: 'row' }}>
                 <FlatList
                   showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{ paddingBottom: 0 }}
-                  data={nbaGamesToday.games}
+                  contentContainerStyle={{ marginBottom: 50 }}
+                  data={randomData.games}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item }) => (
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -126,16 +135,17 @@ export default function NewBetScreen() {
                           <Text>{getTeamAbbreviation(item.away_team)}</Text>
                         </TouchableOpacity>
                         <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
-                          <View style={{ width: 24, alignItems: 'center' }}>
+                          <View style={{ width: 28, alignItems: 'center' }}>
                             <Text>+5</Text>
                           </View>
                           <View style={{borderLeftWidth: 1, height: 50}}/>
-                          <View>
+                          <View style={{ width: 56, alignItems: 'center' }}>
                             <Text>+215.5</Text>
+                            <View style={{ height: 1, borderTopWidth: 1, width: 56 }}/>
                             <Text>-215.5</Text>
                           </View>
                           <View style={{borderLeftWidth: 1, height: 50}}/>
-                          <View style={{ width: 24, alignItems: 'center' }}>
+                          <View style={{ width: 28, alignItems: 'center' }}>
                             <Text>-5</Text>
                           </View>                          
                         </View>
