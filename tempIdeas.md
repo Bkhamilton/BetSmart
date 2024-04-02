@@ -1,15 +1,3 @@
-# BetSmart
-A mobile app designed by Ben Hamilton and Kenneth Sullivan to help sports bettors better understand their betting trends and habits
-***
-
-## Home Page
-The Home dashboard will show the user general information about their recent betting habits, as well as any active bets currently in progress.
-***
-
-## Insights
-The Insights page will be a way for a user to have a parlay or bet put together for them based on their betting trends
-***
-
 ## Data
 The Data page will be an in depth breakdown of the data collected in this app, and breakdowns into what trends and habits have the best and worst outcomes
 
@@ -86,3 +74,56 @@ The Profile page will be used to see general player information, as well as the 
 10. **Support/Help**:
     - Access to FAQs, tutorials, or support resources
     - Submit support tickets or request assistance
+
+
+```markdown
+# Referencing Markets for a Given Game ID
+
+To reference the different markets available for a specific game, you can use the `game_id` property and the `markets` array. Here's how you can access the moneyline, spread, and total score over/under markets:
+
+## Moneyline
+
+The moneyline market is represented by the string `"moneyline"` in the `markets` array. To access it, you can loop through the array and check for this string:
+
+```javascript
+const gameID = "7b36bc0c154aacccbadc351a390f6dee";
+const data = {
+  "game_id": "7b36bc0c154aacccbadc351a390f6dee",
+  "markets": [
+    // ...
+    { "name": "moneyline" },
+    // ...
+  ]
+};
+
+const moneylineMarket = data.markets.find(market => market.name === "moneyline");
+```
+
+## Spread
+
+The spread market is represented by the string `"spread"` in the `markets` array. You can access it similarly to the moneyline market:
+
+```javascript
+const spreadMarket = data.markets.find(market => market.name === "spread");
+```
+
+## Total Score Over/Under
+
+The total score over/under market is represented by the string `"total_over_under"` in the `markets` array:
+
+```javascript
+const totalOverUnderMarket = data.markets.find(market => market.name === "total_over_under");
+```
+
+## Alternative Markets
+
+In addition to the main markets, the data also includes alternative markets, such as `"moneyline_regulation"`, `"spread_alternate"`, and `"total_over_under_alternate"`. You can access these markets in the same way as the main markets:
+
+```javascript
+const alternativeMoneylineMarket = data.markets.find(market => market.name === "moneyline_regulation");
+const alternativeSpreadMarket = data.markets.find(market => market.name === "spread_alternate");
+const alternativeTotalOverUnderMarket = data.markets.find(market => market.name === "total_over_under_alternate");
+```
+
+With these examples, you should be able to reference the moneyline, spread, and total score over/under markets for a given `gameID` from the provided JSON data.
+```
