@@ -1,10 +1,12 @@
 export const nbaTeamAbbreviations = {
-    "Los Angeles Clippers": "LAC",
+    "LA Clippers": "LAC",
     "Boston Celtics": "BOS",
     "Brooklyn Nets": "BKN",
     "New York Knicks": "NYK",
     "Philadelphia 76ers": "PHI",
     "Toronto Raptors": "TOR",
+    "Charlotte Hornets": "CHA",
+    "Atlanta Hawks": "ATL",
     "Chicago Bulls": "CHI",
     "Cleveland Cavaliers": "CLE",
     "Dallas Mavericks": "DAL",

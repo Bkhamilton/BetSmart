@@ -6,7 +6,8 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Header from '../../components/Header/Header';
 import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } from '../../data/exampleTeamData';
 import MainButtons from '../../components/PlaceBet/MainButtons';
-import { getGames } from '../../api/prop-odds.js'; 
+import { getGames } from '../../api/prop-odds.js';
+import { nbaTeamAbbreviations } from '../../data/teamAbbreviations.js'; 
 
 export default function NewBetScreen() {
 
@@ -76,6 +77,11 @@ export default function NewBetScreen() {
     }
   };
 
+  // Function to get the abbreviation for a team name
+  const getTeamAbbreviation = (teamName) => {
+    return nbaTeamAbbreviations[teamName] || teamName;
+  };
+
   return (
     <View style={styles.container}>
       <Header title={'Place Bet'}/>
@@ -101,14 +107,45 @@ export default function NewBetScreen() {
             }
             { curGame.home.length == 0 &&
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {nbaGamesToday.games.map((game, index) => (
-                  <TouchableOpacity 
-                    key={index} style={{ borderWidth: 1, marginHorizontal: 10, paddingHorizontal: 8, paddingVertical: 4, marginVertical: 4, }}
-                    onPress={() => selectGame(game)}
-                  >
-                      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{game.away_team} vs {game.home_team}</Text>
-                  </TouchableOpacity>
-                ))}
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ paddingBottom: 0 }}
+                  data={nbaGamesToday.games}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item }) => (
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <TouchableOpacity 
+                        style={[styles.gameContainer]}
+                        onPress={() => selectGame(item)}
+                        testID={`game_${item.home}${item.away}`}
+                      >
+                        <Text style={styles.gameText}>{getTeamAbbreviation(item.away_team)} vs {getTeamAbbreviation(item.home_team)}</Text>
+                      </TouchableOpacity>
+                      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <TouchableOpacity style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: 48 }}>
+                          <Text>{getTeamAbbreviation(item.away_team)}</Text>
+                        </TouchableOpacity>
+                        <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
+                          <View style={{ width: 24, alignItems: 'center' }}>
+                            <Text>+5</Text>
+                          </View>
+                          <View style={{borderLeftWidth: 1, height: 50}}/>
+                          <View>
+                            <Text>+215.5</Text>
+                            <Text>-215.5</Text>
+                          </View>
+                          <View style={{borderLeftWidth: 1, height: 50}}/>
+                          <View style={{ width: 24, alignItems: 'center' }}>
+                            <Text>-5</Text>
+                          </View>                          
+                        </View>
+                        <TouchableOpacity style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: 48 }}>
+                          <Text>{getTeamAbbreviation(item.home_team)}</Text>
+                        </TouchableOpacity>     
+                      </View>
+                    </View>
+                  )}
+                />
               </View>
             }
           </View>
@@ -130,7 +167,7 @@ export default function NewBetScreen() {
             renderItem={({ item }) => (
               <View style={{ alignItems: 'flex-end' }}>
                 <TouchableOpacity 
-                  style={[styles.gameContainer]} // Set your desired height here
+                  style={[styles.gameRowContainer]} // Set your desired height here
                   onPress={() => selectGame(item)}
                   testID={`game_${item.home}${item.away}`}
                 >
@@ -208,12 +245,21 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold'
   },
-  gameContainer: {
+  gameRowContainer: {
     borderLeftWidth: 1,
     borderTopWidth: 1,
     borderRightWidth: 1,
     borderRadius: 0,
     paddingHorizontal: 12,
+    paddingVertical: 8,
+    margin: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gameContainer: {
+    borderWidth: 1,
+    borderRadius: 0,
+    width: 120,
     paddingVertical: 8,
     margin: 0,
     alignItems: 'center',
