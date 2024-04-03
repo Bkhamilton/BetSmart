@@ -4,6 +4,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
 import { Text, View, ScrollView, TouchableOpacity, SafeAreaView } from '@/components/Themed';
 import Header from '../../components/Header/Header';
+import ProfitDashboard from '../../components/Home/ProfitDashboard';
 
 export default function HomeScreen() {
   
@@ -234,8 +235,8 @@ export default function HomeScreen() {
 
   const mainLegs = myBetList[0].bets[0].legs; 
 
-  const amountWon = 140; // Dummy data
-  const amountWagered = 120; // Dummy data
+  const amountWon = 140.00; // Dummy data
+  const amountWagered = 120.00; // Dummy data
   const profit = amountWon - amountWagered;
 
   const DATA = [
@@ -253,25 +254,7 @@ export default function HomeScreen() {
       <Header title={'BetSmart'}/>
       <ScrollView>
         <StatusBar style="auto" backgroundColor='transparent'/>
-        <View style={{alignItems: 'center'}}>
-          <TouchableOpacity style={styles.winningsContainer}>
-            <View style={styles.chartContainer}>
-              <PieChart
-                data={DATA}
-                width={180}
-                height={180}
-                chartConfig={chartConfig}
-                accessor="value"
-                backgroundColor="transparent"
-                center={[0, 0]}
-                paddingLeft='45'
-                absolute
-                hasLegend={false}
-              />
-              <Text style={styles.profitText}>+${profit}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        <ProfitDashboard wagered={amountWagered} won={amountWon} />
         <View style={{paddingHorizontal: 16, paddingTop: 24,}}>
           <Text style={{fontSize: 18, fontWeight: 'bold'}}>My Bets</Text>
           <MyBets myBets={myBetList}></MyBets>
