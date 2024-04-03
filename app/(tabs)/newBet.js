@@ -4,8 +4,11 @@ import { StyleSheet, FlatList } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Header from '../../components/Header/Header';
-import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams } from '../../data/exampleTeamData';
+import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } from '../../data/exampleTeamData';
 import MainButtons from '../../components/PlaceBet/MainButtons';
+import { getGames } from '../../api/prop-odds.js';
+import secrets from '../../secrets.js';
+import { nbaTeamAbbreviations } from '../../data/teamAbbreviations.js'; 
 
 export default function NewBetScreen() {
 
@@ -23,13 +26,9 @@ export default function NewBetScreen() {
 
   const [randomData, setRandomData] = useState('');
 
-  useEffect(() => {
-    fetchData();
-    retrieveData();
-  });
-
   // Function to select a sport and set the current sport and category
   const selectSport = (sport) => {
+    setcurGame({home:'', away:''});
     if (curSport.title === sport.title) {
       setcurSport({title:'', games:[]});
       setcurCategory('Sport');
@@ -57,7 +56,8 @@ export default function NewBetScreen() {
   // Function to fetch data from API and store it in AsyncStorage
   const fetchData = async () => {
     try {
-      const response = await fetch(`https://api.prop-odds.com/beta/games/nba?date=2024-03-28&tz=America/New_York&api_key=AaHYFBJJXgbcJyBYy3OiMVuv1eJAd4JIYkQWFOPTLf4`);
+      const sport = 'nba'; // replace with the sport you're interested in
+      const data = await getGames(sport);
       await AsyncStorage.setItem('gameData', JSON.stringify(data));
     } catch (error) {
       console.error(error);
@@ -70,8 +70,11 @@ export default function NewBetScreen() {
       const value = await AsyncStorage.getItem('gameData');
       if (value !== null) {
         // We have data!!
-        setRandomData(JSON.stringify(value));
+        setRandomData(JSON.parse(value));
         console.log(JSON.parse(value));
+      } else {
+        // No data in AsyncStorage, fetch from API
+        fetchData();
       }
     } catch (error) {
       // Error retrieving data
@@ -79,29 +82,82 @@ export default function NewBetScreen() {
     }
   };
 
+  useEffect(() => {
+    retrieveData();
+  }, []);
+
+  // Function to get the abbreviation for a team name
+  const getTeamAbbreviation = (teamName) => {
+    return nbaTeamAbbreviations[teamName] || teamName;
+  };
+
   return (
     <View style={styles.container}>
       <Header title={'Place Bet'}/>
-      <Text>{randomData} A</Text>
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <View style={{ paddingVertical: 16 }}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Choose {curCategory}</Text>
+        <View style={{ flexDirection: 'row', paddingVertical: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Choose {curCategory}</Text>
         </View>
         { curSport.title.length > 0 &&
           <View style={{ alignItems: 'center' }}>
             <View style={{ paddingVertical: 4, paddingHorizontal: 12, borderWidth: 1, marginTop: 6, borderRadius: 8, }}>
               <Text>{curSport.title}</Text>
             </View>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-              {curSport.games.map((game, index) => (
-                <TouchableOpacity 
-                  key={index} style={{ borderWidth: 1, marginHorizontal: 10, paddingHorizontal: 8, paddingVertical: 4, marginVertical: 4, }}
-                  onPress={() => selectGame(game)}
-                >
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{game.away} vs {game.home}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+            {
+              curGame.home.length > 0 &&
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, }}>
+                  <View style={{ flex: 1, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8, marginHorizontal: 8 }}>
+                    <Text style={{ textAlign: 'center' }}>{curHomeTeam.team}</Text>
+                  </View>
+                  <View style={{ flex: 1, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8, marginHorizontal: 8 }}>
+                    <Text style={{ textAlign: 'center' }}>{curAwayTeam.team}</Text>
+                  </View>
+                </View>
+            }
+            { curGame.home.length == 0 &&
+              <View style={{ flexDirection: 'row' }}>
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ marginBottom: 50 }}
+                  data={randomData.games}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item }) => (
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <TouchableOpacity 
+                        style={[styles.gameContainer]}
+                        onPress={() => selectGame(item)}
+                        testID={`game_${item.home}${item.away}`}
+                      >
+                        <Text style={styles.gameText}>{getTeamAbbreviation(item.away_team)} vs {getTeamAbbreviation(item.home_team)}</Text>
+                      </TouchableOpacity>
+                      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <TouchableOpacity style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: 48 }}>
+                          <Text>{getTeamAbbreviation(item.away_team)}</Text>
+                        </TouchableOpacity>
+                        <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
+                          <View style={{ width: 28, alignItems: 'center' }}>
+                            <Text>+5</Text>
+                          </View>
+                          <View style={{borderLeftWidth: 1, height: 50}}/>
+                          <View style={{ width: 56, alignItems: 'center' }}>
+                            <Text>+215.5</Text>
+                            <View style={{ height: 1, borderTopWidth: 1, width: 56 }}/>
+                            <Text>-215.5</Text>
+                          </View>
+                          <View style={{borderLeftWidth: 1, height: 50}}/>
+                          <View style={{ width: 28, alignItems: 'center' }}>
+                            <Text>-5</Text>
+                          </View>                          
+                        </View>
+                        <TouchableOpacity style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: 48 }}>
+                          <Text>{getTeamAbbreviation(item.home_team)}</Text>
+                        </TouchableOpacity>     
+                      </View>
+                    </View>
+                  )}
+                />
+              </View>
+            }
           </View>
         }
         { curSport.title.length == 0 &&
@@ -110,6 +166,28 @@ export default function NewBetScreen() {
           </View>
         }
       </View>
+      { curGame.home.length > 0 &&
+        <View>
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 0 }}
+            data={curSport.games}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={{ alignItems: 'flex-end' }}>
+                <TouchableOpacity 
+                  style={[styles.gameRowContainer]} // Set your desired height here
+                  onPress={() => selectGame(item)}
+                  testID={`game_${item.home}${item.away}`}
+                >
+                  <Text style={styles.gameText}>{item.away} vs {item.home}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+        </View>        
+      }
         { curSport.title.length > 0 &&
           <View>
             <FlatList
@@ -121,11 +199,11 @@ export default function NewBetScreen() {
               renderItem={({ item }) => (
                 <View style={{ alignItems: 'flex-end' }}>
                   <TouchableOpacity 
-                    style={[styles.gameContainer]} // Set your desired height here
+                    style={[styles.sportContainer]} // Set your desired height here
                     onPress={() => selectSport(item)}
                     testID={`game_${item.title}`}
                   >
-                    <Text style={styles.gameText}>{item.title}</Text>
+                    <Text style={styles.sportText}>{item.title}</Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -162,7 +240,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold'
   },
-  gameContainer: {
+  sportContainer: {
     borderLeftWidth: 1,
     borderTopWidth: 1,
     borderRightWidth: 1,
@@ -173,8 +251,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  gameText: {
+  sportText: {
     fontSize: 20,
     fontWeight: 'bold'
-  }
+  },
+  gameRowContainer: {
+    borderLeftWidth: 1,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderRadius: 0,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    margin: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gameContainer: {
+    borderWidth: 1,
+    borderRadius: 0,
+    width: 120,
+    paddingVertical: 8,
+    margin: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gameText: {
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
 });
