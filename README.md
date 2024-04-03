@@ -1,5 +1,7 @@
 # BetSmart
 
+Hi ben
+
 BetSmart is a sports bet tracking app that helps you keep track of your bets and analyze your betting performance. Whether you're a casual bettor or a seasoned pro, BetSmart provides the tools you need to stay organized and make informed betting decisions.
 
 Created by Ben Hamilton and Kenneth Sullivan
