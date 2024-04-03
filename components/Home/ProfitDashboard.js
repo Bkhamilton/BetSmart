@@ -34,7 +34,7 @@ export default function ProfitDashboard({ wagered, won }) {
                 <View style={{ alignItems: 'flex-end' }}>
                     <Text>+$10.90</Text>
                     <Text>-$5.00</Text>
-                    <Text>+$4.30</Text>
+                    <Text>+$2.30</Text>
                 </View>
             </View>
         </View>
