@@ -1,5 +1,6 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '../Themed';
 
@@ -13,9 +14,9 @@ export default function ProfitDashboard({ wagered, won }) {
     return (
     <View style={styles.container}>
         <View style={styles.centeredBox}>
-            <View style={styles.box}>
-                <View style={{ alignItems: 'center', justifyContent: 'center', height: 60, width: 60, borderRadius: 30, borderWidth: 1 }}>
-                    <FontAwesome name="dollar" size={38} color="black" />
+            <View style={[styles.box, { overflow: 'hidden', height: '100%', borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }]}>
+                <View style={styles.dollarContainer}>
+                    <FontAwesome name="dollar" size={60} color="black"/>
                 </View>
             </View>
             <View style={styles.centerBox}>
@@ -23,18 +24,18 @@ export default function ProfitDashboard({ wagered, won }) {
                 <Text style={[styles.bigMoneyText, { marginTop: 8 }]}>${profit.toFixed(2)}</Text>
             </View>
             <View style={styles.box}>
-                <View style={{ alignItems: 'flex-end' }}>
+                <View style={{ alignItems: 'flex-end', paddingRight: 8 }}>
                     <TouchableOpacity>
                         <FontAwesome name="arrow-up" size={18} color="black"/>
                     </TouchableOpacity>
                     <TouchableOpacity>
-                        <FontAwesome name="arrow-down" size={18} color="black" />
+                        <FontAwesome name="arrow-down" size={18} color="gray" />
                     </TouchableOpacity>
                 </View>
-                <View style={{ alignItems: 'flex-end' }}>
-                    <Text>+$10.90</Text>
-                    <Text>-$5.00</Text>
-                    <Text>+$2.30</Text>
+                <View style={{ alignItems: 'flex-end', paddingRight: 4, paddingTop: 14 }}>
+                    <Text style={{ opacity: 0.7 }}>+$10.90</Text>
+                    <Text style={{ fontSize: 12, opacity: 0.6 }}>-$5.00</Text>
+                    <Text style={{ fontSize: 10, opacity: 0.4 }}>+$2.30</Text>
                 </View>
             </View>
         </View>
@@ -130,4 +131,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
   },
+  dollarContainer: {
+    alignItems: 'center', 
+    justifyContent: 'center',
+    height: 110, 
+    width: 110, 
+    borderRadius: 55, 
+    borderWidth: 10, 
+    transform: [{ translateY: 45 }],
+    opacity: 0.3,
+  }
 });

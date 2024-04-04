@@ -100,11 +100,11 @@ export default function HomeScreen() {
 
   const myBetList = [
     {
-      date: '3/2/24',
+      date: '4/4/24',
       odds: '+543',
       bets: [
         {
-          date: '3/2/24',
+          date: '4/4/24',
           sport: 'NBA',
           home: 'LAL',
           away: 'DEN',
@@ -134,7 +134,7 @@ export default function HomeScreen() {
           ]
         },
         {
-          date: '3/2/24',
+          date: '4/4/24',
           sport: 'NBA',
           home: 'HOU',
           away: 'PHX',
@@ -166,11 +166,11 @@ export default function HomeScreen() {
       ]
     },
     {
-      date: '3/2/24',
+      date: '4/4/24',
       odds: '+200',
       bets: [
         {
-          date: '3/2/24',
+          date: '4/4/24',
           sport: 'NBA',
           home: 'BOS',
           away: 'MIA',
@@ -200,7 +200,7 @@ export default function HomeScreen() {
           ]
         },
         {
-          date: '3/2/24',
+          date: '4/4/24',
           sport: 'NBA',
           home: 'GSW',
           away: 'UTA',
@@ -235,7 +235,7 @@ export default function HomeScreen() {
 
   const mainLegs = myBetList[0].bets[0].legs; 
 
-  const amountWon = 140.00; // Dummy data
+  const amountWon = 240.00; // Dummy data
   const amountWagered = 120.00; // Dummy data
   const profit = amountWon - amountWagered;
 
@@ -256,7 +256,7 @@ export default function HomeScreen() {
         <StatusBar style="auto" backgroundColor='transparent'/>
         <ProfitDashboard wagered={amountWagered} won={amountWon} />
         <View style={{paddingHorizontal: 12, paddingTop: 24,}}>
-          <Text style={{fontSize: 18, fontWeight: 'bold'}}>My Bets</Text>
+          <Text style={{fontSize: 18, fontWeight: 'bold'}}>Today's Bets</Text>
           <MyBets myBets={myBetList}></MyBets>
         </View> 
       </ScrollView>
