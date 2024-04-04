@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   centeredBox: {
     flexDirection: 'row',
     alignItems: 'center', 
-    marginHorizontal: 16,
+    marginHorizontal: 10,
     marginTop: 12,
     borderWidth: 1, 
     justifyContent: 'center',
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   leftBox: {
     flex: 1, 
     alignItems: 'flex-start', 
-    marginLeft: 16, 
+    marginLeft: 10, 
     marginRight: 4, 
     paddingVertical: 12,
     borderWidth: 1, 
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   rightBox: {
     flex: 1, 
     alignItems: 'flex-end', 
-    marginRight: 16, 
+    marginRight: 10, 
     marginLeft: 4, 
     paddingVertical: 12,
     borderWidth: 1, 
