@@ -12,49 +12,62 @@ export default function GameList({ games, selectGame }) {
         return nbaTeamAbbreviations[teamName] || teamName;
     };
 
-    // Component to display a game
-        function GameComponent({ game }) {
+    function GameComponent({ game }) {
         return (
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <TouchableOpacity 
-                    style={[styles.gameContainer]}
-                    onPress={() => selectGame(game)}
-                    testID={`game_${game.home_team}${game.away_team}`}
-                >
-                    <Text style={styles.gameText}>{getTeamAbbreviation(game.away_team)} vs {getTeamAbbreviation(game.home_team)}</Text>
-                </TouchableOpacity>
-                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                    <TouchableOpacity style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: 48 }}>
-                        <Text>{getTeamAbbreviation(game.away_team)}</Text>
-                    </TouchableOpacity>
-                    <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
-                        <View style={{ width: 28, alignItems: 'center' }}>
-                            <Text>+5</Text>
+            <View style={{ flexDirection: 'row', borderWidth: 1, borderRadius: 8, paddingHorizontal: 12 }}>
+                {/* Game Info. Team vs Team, Start Time */}
+                <View style={{ flex: 1 }}>
+                    <View style={{ paddingVertical: 8 }}>
+                        <View style={styles.gameTeamContainer}>
+                            <View style={styles.teamIcon}/>
+                            <Text>{getTeamAbbreviation(game.away_team)}</Text>
                         </View>
-                        <View style={{borderLeftWidth: 1, height: 50}}/>
-                        <View style={{ width: 56, alignItems: 'center' }}>
-                            <Text>+215.5</Text>
-                            <View style={{ height: 1, borderTopWidth: 1, width: 56 }}/>
-                            <Text>-215.5</Text>
+                        <View style={{ height: 1, borderBottomWidth: 1, width: 100, paddingTop: 4, marginBottom: 4, opacity: 0.1 }}/>
+                        <View style={styles.gameTeamContainer}>
+                            <View style={styles.teamIcon}/>
+                            <Text>{getTeamAbbreviation(game.home_team)}</Text>
                         </View>
-                        <View style={{borderLeftWidth: 1, height: 50}}/>
-                        <View style={{ width: 28, alignItems: 'center' }}>
-                            <Text>-5</Text>
-                        </View>                          
                     </View>
-                    <TouchableOpacity style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: 48 }}>
-                        <Text>{getTeamAbbreviation(game.home_team)}</Text>
-                    </TouchableOpacity>     
+                </View>
+                {/* Odds for ML, Spread, Total */}
+                <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    {/* Moneyline */}
+                    <View>
+                        <View style={styles.propContainer}>
+                            <Text>-195</Text>
+                        </View>
+                        <View style={styles.propContainer}>
+                            <Text>+110</Text>
+                        </View>
+                    </View>
+                    {/* Spread */}
+                    <View>
+                        <View style={styles.propContainer}>
+                            <Text>-3.5</Text>
+                        </View>
+                        <View style={styles.propContainer}>
+                            <Text>+3.5</Text>
+                        </View>
+                    </View>
+                    {/* Total Pts */}
+                    <View>
+                        <View style={styles.propContainer}>
+                            <Text>+218.5</Text>
+                        </View>
+                        <View style={styles.propContainer}>
+                            <Text>-218.5</Text>
+                        </View>
+                    </View>
                 </View>
             </View>
         );
     }
 
     return (
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', flex: 1 }}>
             <FlatList
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ marginBottom: 50 }}
+                contentContainerStyle={{ marginBottom: 0 }}
                 data={games}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
@@ -110,5 +123,22 @@ const styles = StyleSheet.create({
   gameText: {
     fontSize: 18,
     fontWeight: 'bold'
+  },
+  gameTeamContainer: {
+    flexDirection: 'row', 
+    alignItems: 'center',
+  },
+  teamIcon: {
+    width: 32, 
+    height: 32, 
+    borderRadius: 16, 
+    borderWidth: 1,
+  },
+  propContainer: {
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 10,
   },
 });

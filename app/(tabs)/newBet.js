@@ -101,7 +101,6 @@ export default function NewBetScreen() {
         <View style={{ flexDirection: 'row', paddingVertical: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Choose {curCategory}</Text>
         </View>
-
         { curSport.title.length > 0 &&
           <View style={{ alignItems: 'center' }}>
             <View style={{ paddingVertical: 4, paddingHorizontal: 12, borderWidth: 1, marginTop: 6, borderRadius: 8, }}>
