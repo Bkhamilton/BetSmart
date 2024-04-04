@@ -23,7 +23,7 @@ export default function SportList({ sports, selectSport }) {
                 renderItem={({ item }) => (
                     <View style={{ alignItems: 'flex-end' }}>
                         <TouchableOpacity 
-                            style={[styles.sportContainer]} // Set your desired height here
+                            style={[styles.sportContainer]}
                             onPress={() => selectSport(item)}
                             testID={`game_${item.title}`}
                         >
