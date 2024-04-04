@@ -9,11 +9,14 @@ import MainButtons from '../../components/PlaceBet/MainButtons';
 import { getGames } from '../../api/prop-odds.js';
 import secrets from '../../secrets.js';
 import { nbaTeamAbbreviations } from '../../data/teamAbbreviations.js'; 
+import GameList from '../../components/PlaceBet/GameList.js';
+import SportList from '../../components/PlaceBet/SportList.js';
+import GameListSlider from '../../components/PlaceBet/GameListSlider.js';
 
 export default function NewBetScreen() {
 
   const [curSport, setcurSport] = useState({title:'', games:[]})
-  const [curGame, setcurGame] = useState({home:'', away:''})
+  const [curGame, setcurGame] = useState({"away_team": "", "game_id": "", "home_team": "", "participants": [], "start_timestamp": ""})
   const [curCategory, setcurCategory] = useState('Sport')
   const [curHomeTeam, setCurHomeTeam] = useState({
     team: '',
@@ -28,7 +31,7 @@ export default function NewBetScreen() {
 
   // Function to select a sport and set the current sport and category
   const selectSport = (sport) => {
-    setcurGame({home:'', away:''});
+    setcurGame({"away_team": "", "game_id": "", "home_team": "", "participants": [], "start_timestamp": ""});
     if (curSport.title === sport.title) {
       setcurSport({title:'', games:[]});
       setcurCategory('Sport');
@@ -40,15 +43,15 @@ export default function NewBetScreen() {
 
   // Function to select a game and set the current game, as well as the current team and players for the home and away teams
   const selectGame = (game) => {
-    if (curGame.home === game.home && curGame.away === game.away) {
-      setcurGame({home:'', away:''});
+    if (curGame.home_team === game.home_team && curGame.away_team === game.away_team) {
+      setcurGame({"away_team": "", "game_id": "", "home_team": "", "participants": [], "start_timestamp": ""});
       setCurHomeTeam({team:'', players:[]});
       setCurAwayTeam({team:'', players:[]});
       setcurCategory('Game');
     } else {
       setcurGame(game);
-      setCurHomeTeam({team:game.home, players:[]});
-      setCurAwayTeam({team:game.away, players:[]});
+      setCurHomeTeam({team:game.home_team, players:[]});
+      setCurAwayTeam({team:game.away_team, players:[]});
       setcurCategory('Team');
     }
   }
@@ -98,13 +101,14 @@ export default function NewBetScreen() {
         <View style={{ flexDirection: 'row', paddingVertical: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Choose {curCategory}</Text>
         </View>
+
         { curSport.title.length > 0 &&
           <View style={{ alignItems: 'center' }}>
             <View style={{ paddingVertical: 4, paddingHorizontal: 12, borderWidth: 1, marginTop: 6, borderRadius: 8, }}>
               <Text>{curSport.title}</Text>
             </View>
             {
-              curGame.home.length > 0 &&
+              curGame.home_team.length > 0 &&
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, }}>
                   <View style={{ flex: 1, borderWidth: 1, paddingHorizontal: 12, paddingVertical: 8, marginHorizontal: 8 }}>
                     <Text style={{ textAlign: 'center' }}>{curHomeTeam.team}</Text>
@@ -114,50 +118,7 @@ export default function NewBetScreen() {
                   </View>
                 </View>
             }
-            { curGame.home.length == 0 &&
-              <View style={{ flexDirection: 'row' }}>
-                <FlatList
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{ marginBottom: 50 }}
-                  data={randomData.games}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                      <TouchableOpacity 
-                        style={[styles.gameContainer]}
-                        onPress={() => selectGame(item)}
-                        testID={`game_${item.home}${item.away}`}
-                      >
-                        <Text style={styles.gameText}>{getTeamAbbreviation(item.away_team)} vs {getTeamAbbreviation(item.home_team)}</Text>
-                      </TouchableOpacity>
-                      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <TouchableOpacity style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: 48 }}>
-                          <Text>{getTeamAbbreviation(item.away_team)}</Text>
-                        </TouchableOpacity>
-                        <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
-                          <View style={{ width: 28, alignItems: 'center' }}>
-                            <Text>+5</Text>
-                          </View>
-                          <View style={{borderLeftWidth: 1, height: 50}}/>
-                          <View style={{ width: 56, alignItems: 'center' }}>
-                            <Text>+215.5</Text>
-                            <View style={{ height: 1, borderTopWidth: 1, width: 56 }}/>
-                            <Text>-215.5</Text>
-                          </View>
-                          <View style={{borderLeftWidth: 1, height: 50}}/>
-                          <View style={{ width: 28, alignItems: 'center' }}>
-                            <Text>-5</Text>
-                          </View>                          
-                        </View>
-                        <TouchableOpacity style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: 48 }}>
-                          <Text>{getTeamAbbreviation(item.home_team)}</Text>
-                        </TouchableOpacity>     
-                      </View>
-                    </View>
-                  )}
-                />
-              </View>
-            }
+            { curGame.home_team.length == 0 && <GameList games={randomData.games} selectGame={selectGame} /> }
           </View>
         }
         { curSport.title.length == 0 &&
@@ -166,50 +127,8 @@ export default function NewBetScreen() {
           </View>
         }
       </View>
-      { curGame.home.length > 0 &&
-        <View>
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingBottom: 0 }}
-            data={curSport.games}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
-              <View style={{ alignItems: 'flex-end' }}>
-                <TouchableOpacity 
-                  style={[styles.gameRowContainer]} // Set your desired height here
-                  onPress={() => selectGame(item)}
-                  testID={`game_${item.home}${item.away}`}
-                >
-                  <Text style={styles.gameText}>{item.away} vs {item.home}</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-        </View>        
-      }
-        { curSport.title.length > 0 &&
-          <View>
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 0 }}
-              data={sportsData}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={{ alignItems: 'flex-end' }}>
-                  <TouchableOpacity 
-                    style={[styles.sportContainer]} // Set your desired height here
-                    onPress={() => selectSport(item)}
-                    testID={`game_${item.title}`}
-                  >
-                    <Text style={styles.sportText}>{item.title}</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            />
-          </View>
-        }
+      { curGame.home_team.length > 0 && <GameListSlider games={randomData.games} selectGame={selectGame} /> }
+      { curSport.title.length > 0 && <SportList sports={sportsData} selectSport={selectSport} /> }
     </View>
   );
 }
