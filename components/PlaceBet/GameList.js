@@ -30,7 +30,7 @@ export default function GameList({ games, selectGame, sport }) {
                             <View style={styles.teamIcon}/>
                             <Text>{getTeamAbbreviation(game.away_team, sport)}</Text>
                         </View>
-                        <View style={{ height: 1, borderBottomWidth: 1, width: 100, paddingTop: 4, marginBottom: 4, opacity: 0.1 }}/>
+                        <View style={styles.divider}/>
                         <View style={styles.gameTeamContainer}>
                             <View style={styles.teamIcon}/>
                             <Text>{getTeamAbbreviation(game.home_team, sport)}</Text>
@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     height: 32, 
     borderRadius: 16, 
     borderWidth: 1,
+    marginRight: 8,
   },
   propContainer: {
     borderWidth: 1,
@@ -149,4 +150,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 10,
   },
+  divider: {
+    height: 1, 
+    borderBottomWidth: 1, 
+    width: 150, 
+    paddingTop: 4, 
+    marginBottom: 4, 
+    opacity: 0.1
+  }
 });
