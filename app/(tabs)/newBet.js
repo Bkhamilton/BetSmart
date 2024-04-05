@@ -7,8 +7,6 @@ import Header from '../../components/Header/Header';
 import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } from '../../data/exampleTeamData';
 import MainButtons from '../../components/PlaceBet/MainButtons';
 import { getGames, fetchData, retrieveData } from '../../api/prop-odds.js';
-import secrets from '../../secrets.js';
-import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '../../data/teamAbbreviations.js'; 
 import GameList from '../../components/PlaceBet/GameList.js';
 import SportList from '../../components/PlaceBet/SportList.js';
 import GameListSlider from '../../components/PlaceBet/GameListSlider.js';
