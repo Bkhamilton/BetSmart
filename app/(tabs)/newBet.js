@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, FlatList } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
@@ -6,15 +6,16 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Header from '../../components/Header/Header';
 import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } from '../../data/exampleTeamData';
 import MainButtons from '../../components/PlaceBet/MainButtons';
-import { getGames } from '../../api/prop-odds.js';
+import { getGames, fetchData, retrieveData } from '../../api/prop-odds.js';
 import secrets from '../../secrets.js';
-import { nbaTeamAbbreviations } from '../../data/teamAbbreviations.js'; 
+import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '../../data/teamAbbreviations.js'; 
 import GameList from '../../components/PlaceBet/GameList.js';
 import SportList from '../../components/PlaceBet/SportList.js';
 import GameListSlider from '../../components/PlaceBet/GameListSlider.js';
 
 export default function NewBetScreen() {
 
+  const [header, setHeader] = useState('Place Bet');
   const [curSport, setcurSport] = useState({title:'', games:[]})
   const [curGame, setcurGame] = useState({"away_team": "", "game_id": "", "home_team": "", "participants": [], "start_timestamp": ""})
   const [curCategory, setcurCategory] = useState('Sport')
@@ -28,15 +29,18 @@ export default function NewBetScreen() {
   })
 
   const [randomData, setRandomData] = useState('');
+  const [allSportsData, setAllSportsData] = useState([]);
 
   // Function to select a sport and set the current sport and category
   const selectSport = (sport) => {
     setcurGame({"away_team": "", "game_id": "", "home_team": "", "participants": [], "start_timestamp": ""});
     if (curSport.title === sport.title) {
       setcurSport({title:'', games:[]});
+      setHeader('Place Bet');
       setcurCategory('Sport');
     } else {
       setcurSport(sport);
+      setHeader(sport.title)
       setcurCategory('Game');
     }
   };
@@ -56,47 +60,21 @@ export default function NewBetScreen() {
     }
   }
 
-  // Function to fetch data from API and store it in AsyncStorage
-  const fetchData = async () => {
-    try {
-      const sport = 'nba'; // replace with the sport you're interested in
-      const data = await getGames(sport);
-      await AsyncStorage.setItem('gameData', JSON.stringify(data));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // Function to retrieve data from AsyncStorage
-  const retrieveData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('gameData');
-      if (value !== null) {
-        // We have data!!
-        setRandomData(JSON.parse(value));
-        console.log(JSON.parse(value));
-      } else {
-        // No data in AsyncStorage, fetch from API
-        fetchData();
-      }
-    } catch (error) {
-      // Error retrieving data
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
-    retrieveData();
+    const fetchSportsData = async () => {
+      const data = await retrieveData(['nba', 'mlb', 'nhl']); // replace with the sports you're interested in
+      setAllSportsData(data);
+    };
+  
+    fetchSportsData();
   }, []);
 
-  // Function to get the abbreviation for a team name
-  const getTeamAbbreviation = (teamName) => {
-    return nbaTeamAbbreviations[teamName] || teamName;
-  };
+  const curSportData = allSportsData.find(sportData => sportData.sport.toLowerCase() === curSport.title.toLowerCase());
+  const curSportGames = curSportData ? curSportData.data : [];
 
   return (
     <View style={styles.container}>
-      <Header title={'Place Bet'}/>
+      <Header title={header}/>
       <View style={{ flex: 1, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', paddingVertical: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Choose {curCategory}</Text>
@@ -117,7 +95,7 @@ export default function NewBetScreen() {
                   </View>
                 </View>
             }
-            { curGame.home_team.length == 0 && <GameList games={randomData.games} selectGame={selectGame} /> }
+            { curGame.home_team.length == 0 && <GameList games={curSportGames.games} selectGame={selectGame} sport={curSportGames.league}/> }
           </View>
         }
         { curSport.title.length == 0 &&
@@ -126,7 +104,7 @@ export default function NewBetScreen() {
           </View>
         }
       </View>
-      { curGame.home_team.length > 0 && <GameListSlider games={randomData.games} selectGame={selectGame} /> }
+      { curGame.home_team.length > 0 && <GameListSlider games={curSportGames.games} selectGame={selectGame} /> }
       { curSport.title.length > 0 && <SportList sports={sportsData} selectSport={selectSport} /> }
     </View>
   );

@@ -1,15 +1,23 @@
 import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { TouchableOpacity, Text, View } from '../Themed';
-import { nbaTeamAbbreviations } from '../../data/teamAbbreviations';
+import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '../../data/teamAbbreviations';
 
 import Colors from '@/constants/Colors';
 
-export default function GameList({ games, selectGame }) {
+export default function GameList({ games, selectGame, sport }) {
+
+    // Object mapping sports to their respective abbreviation objects
+    const sportAbbreviations = {
+        nba: nbaTeamAbbreviations,
+        mlb: mlbTeamAbbreviations,
+        nhl: nhlTeamAbbreviations,
+    };
 
     // Function to get the abbreviation for a team name
-    const getTeamAbbreviation = (teamName) => {
-        return nbaTeamAbbreviations[teamName] || teamName;
+    const getTeamAbbreviation = (teamName, sport) => {
+        const abbreviations = sportAbbreviations[sport.toLowerCase()];
+        return abbreviations ? (abbreviations[teamName] || teamName) : teamName;
     };
 
     function GameComponent({ game }) {
@@ -20,12 +28,12 @@ export default function GameList({ games, selectGame }) {
                     <View style={{ paddingVertical: 8 }}>
                         <View style={styles.gameTeamContainer}>
                             <View style={styles.teamIcon}/>
-                            <Text>{getTeamAbbreviation(game.away_team)}</Text>
+                            <Text>{getTeamAbbreviation(game.away_team, sport)}</Text>
                         </View>
                         <View style={{ height: 1, borderBottomWidth: 1, width: 100, paddingTop: 4, marginBottom: 4, opacity: 0.1 }}/>
                         <View style={styles.gameTeamContainer}>
                             <View style={styles.teamIcon}/>
-                            <Text>{getTeamAbbreviation(game.home_team)}</Text>
+                            <Text>{getTeamAbbreviation(game.home_team, sport)}</Text>
                         </View>
                     </View>
                 </View>
