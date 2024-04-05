@@ -1,6 +1,16 @@
+import mlb from '../assets/images/mlb.png';
+import nba from '../assets/images/nba.png';
+import nhl from '../assets/images/nhl.png';
+import nfl from '../assets/images/nfl.png';
+import mls from '../assets/images/mls.png';
+import ncaa from '../assets/images/ncaa.png';
+import pga from '../assets/images/pga.png';
+import ufc from '../assets/images/ufc.png';
+
 export const sportsData = [
   {
     title: "NBA",
+    icon: nba,
     games: [{
       home: "LAL",
       away: "MIL"
@@ -11,10 +21,12 @@ export const sportsData = [
   },
   {
     title: "NFL",
+    icon: nfl,
     games: []
   },
   {
     title: "NCAA",
+    icon: ncaa,
     games: [{
       home: "UConn",
       away: "Creighton"
@@ -25,6 +37,7 @@ export const sportsData = [
   },
   {
     title: "MLB",
+    icon: mlb,
     games: [{
       home: "LAD",
       away: "SD"
@@ -32,6 +45,7 @@ export const sportsData = [
   },
   {
     title: "MLS",
+    icon: mls,
     games: [{
       home: "LAFC",
       away: "LA Galaxy"
@@ -42,6 +56,7 @@ export const sportsData = [
   },
   {
     title: "NHL",
+    icon: nhl,
     games: [{
       home: "NYR",
       away: "NYI"
@@ -56,6 +71,7 @@ export const sportsData = [
   },      
   {
     title: "PGA",
+    icon: pga,
     games: [{
       home: "Tiger Woods",
       away: "Rory McIlroy"
@@ -66,6 +82,7 @@ export const sportsData = [
   },
   {
     title: "UFC",
+    icon: ufc,
     games: [{
       home: "Conor McGregor",
       away: "Dustin Poirier"
