@@ -10,6 +10,7 @@ import { getGames, fetchData, retrieveData } from '../../api/prop-odds.js';
 import GameList from '../../components/PlaceBet/GameList.js';
 import SportList from '../../components/PlaceBet/SportList.js';
 import GameListSlider from '../../components/PlaceBet/GameListSlider.js';
+import SportSlider from '../../components/PlaceBet/SportsSlider.js';
 
 export default function NewBetScreen() {
 
@@ -74,14 +75,16 @@ export default function NewBetScreen() {
     <View style={styles.container}>
       <Header title={header}/>
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <View style={{ flexDirection: 'row', paddingVertical: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Choose {curCategory}</Text>
         </View>
+        { curSport.title.length > 0 && 
+          <View style={{ paddingVertical: 8 }}>
+            <SportSlider sports={sportsData} selectSport={selectSport} />
+          </View>
+        }
         { curSport.title.length > 0 &&
           <View style={{ alignItems: 'center' }}>
-            <View style={{ paddingVertical: 4, paddingHorizontal: 12, borderWidth: 1, marginTop: 6, borderRadius: 8, }}>
-              <Text>{curSport.title}</Text>
-            </View>
             {
               curGame.home_team.length > 0 &&
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 20, }}>
@@ -103,7 +106,6 @@ export default function NewBetScreen() {
         }
       </View>
       { curGame.home_team.length > 0 && <GameListSlider games={curSportGames.games} selectGame={selectGame} /> }
-      { curSport.title.length > 0 && <SportList sports={sportsData} selectSport={selectSport} /> }
     </View>
   );
 }
