@@ -76,7 +76,6 @@ export const retrieveData = async (sports) => {
         data.push({ sport, data: fetchedData });
       }
     }
-    console.log(JSON.stringify(data));
     return data;
   } catch (error) {
     // Error retrieving data
