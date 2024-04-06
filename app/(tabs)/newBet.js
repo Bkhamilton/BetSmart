@@ -8,7 +8,6 @@ import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } fro
 import MainButtons from '../../components/PlaceBet/MainButtons';
 import { getGames, fetchData, retrieveData } from '../../api/prop-odds.js';
 import GameList from '../../components/PlaceBet/GameList.js';
-import SportList from '../../components/PlaceBet/SportList.js';
 import GameListSlider from '../../components/PlaceBet/GameListSlider.js';
 import SportSlider from '../../components/PlaceBet/SportsSlider.js';
 
@@ -61,7 +60,7 @@ export default function NewBetScreen() {
 
   useEffect(() => {
     const fetchSportsData = async () => {
-      const data = await retrieveData(['nba', 'mlb', 'nhl']); // replace with the sports you're interested in
+      const data = await retrieveData(['nba', 'mlb', 'nhl', 'ncaab']); // replace with the sports you're interested in
       setAllSportsData(data);
     };
   
@@ -79,8 +78,8 @@ export default function NewBetScreen() {
           <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Choose {curCategory}</Text>
         </View>
         { curSport.title.length > 0 && 
-          <View style={{ paddingVertical: 8 }}>
-            <SportSlider sports={sportsData} selectSport={selectSport} />
+          <View style={{ paddingVertical: 4  }}>
+            <SportSlider sports={sportsData} selectSport={selectSport} curSport={curSport}/>
           </View>
         }
         { curSport.title.length > 0 &&

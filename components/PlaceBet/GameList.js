@@ -72,7 +72,7 @@ export default function GameList({ games, selectGame, sport }) {
     }
 
     return (
-        <View style={{ flexDirection: 'row', flex: 1 }}>
+        <View style={{ flexDirection: 'row', flex: 1, backgroundColor: 'transparent' }}>
             <FlatList
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ marginBottom: 0 }}
