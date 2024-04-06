@@ -25,7 +25,7 @@ export const sportsData = [
     games: []
   },
   {
-    title: "NCAA",
+    title: "NCAAB",
     icon: ncaa,
     games: [{
       home: "UConn",
