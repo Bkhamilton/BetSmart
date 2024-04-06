@@ -82,7 +82,7 @@ export const nhlTeamAbbreviations = {
     "Florida Panthers": "FLA",
     "Los Angeles Kings": "LAK",
     "Minnesota Wild": "MIN",
-    "Montreal Canadiens": "MTL",
+    "Montréal Canadiens": "MTL",
     "Nashville Predators": "NSH",
     "New Jersey Devils": "NJD",
     "New York Islanders": "NYI",
