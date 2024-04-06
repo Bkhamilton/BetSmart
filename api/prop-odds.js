@@ -42,6 +42,7 @@ export const fetchData = async (sports) => {
       for (let sport of sports) {
         const data = await getGames(sport);
         await AsyncStorage.setItem(`${sport}Data`, JSON.stringify(data));
+        return data;
       }
     } catch (error) {
       console.error(error);
@@ -56,13 +57,26 @@ export const retrieveData = async (sports) => {
       const value = await AsyncStorage.getItem(`${sport}Data`);
       if (value !== null) {
         // We have data!!
-        data.push({ sport, data: JSON.parse(value) });
+        const parsedValue = JSON.parse(value);
+        // Check if the date is from a previous day
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // set the time to 00:00:00
+        const valueDate = new Date(parsedValue.date);
+        if (valueDate.getTime() === today.getTime()) {
+          // If the date is today, use the data from AsyncStorage
+          data.push({ sport, data: parsedValue });
+        } else {
+          // If the date is from a previous day, fetch the data again
+          const fetchedData = await fetchData([sport]);
+          data.push({ sport, data: fetchedData });
+        }
       } else {
         // No data in AsyncStorage, fetch from API
         const fetchedData = await fetchData([sport]);
         data.push({ sport, data: fetchedData });
       }
     }
+    console.log(JSON.stringify(data));
     return data;
   } catch (error) {
     // Error retrieving data
