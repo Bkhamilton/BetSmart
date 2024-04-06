@@ -4,10 +4,10 @@ import { Text, View, TouchableOpacity } from '../Themed';
 
 import Colors from '@/constants/Colors';
 
-export default function SportSlider({ sports, selectSport }) {
+export default function SportSlider({ sports, selectSport, curSport }) {
 
     return (
-        <View style={{ height: 76 }}>
+        <View style={{ height: 78, backgroundColor: 'transparent' }}>
             <FlatList
                 data={sports}
                 horizontal
@@ -15,7 +15,10 @@ export default function SportSlider({ sports, selectSport }) {
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
                     <TouchableOpacity 
-                        style={styles.sportContainer}
+                        style={[
+                            styles.sportContainer,
+                            item.title === curSport?.title && styles.selectedSport // Apply style conditionally
+                        ]}
                         onPress={() => selectSport(item)}
                     >
                         <Image
@@ -44,5 +47,15 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         backgroundColor: 'transparent',
-    }
+    },
+    selectedSport: {
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
 });
