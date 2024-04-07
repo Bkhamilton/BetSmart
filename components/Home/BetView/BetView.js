@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '../../Themed';
-
+import { myBetList } from '../../../data/exampleBetData';
 import Colors from '@/constants/Colors';
 import ChooseBetType from './ChooseBetType';
 import BetDisplay from './BetDisplay';
+import TodaysBets from './TodaysBets';
+import SettledBets from './SettledBets';
+import FutureBets from './FutureBets';
 
-export default function BetView() {
+export default function BetView({ bets }) {
 
     const [selectedType, setSelectedType] = useState('Today');
 
@@ -40,6 +43,14 @@ export default function BetView() {
         changeHeader(type);
     }
 
+    const components = {
+        'Today': TodaysBets,
+        'Settled': SettledBets,
+        'Future': FutureBets,
+    };
+    
+    const BetComponent = components[selectedType] || TodaysBets;
+
     return (
         <View>
             <View style={{ paddingHorizontal: 10, paddingTop: 8 }}>
@@ -47,7 +58,7 @@ export default function BetView() {
                 <Text style={{ fontSize: 10 }}>{subheader}</Text>
             </View>
             <ChooseBetType selectType={changeType} type={selectedType}/>
-            <BetDisplay type={selectedType} />
+            <BetComponent bets={myBetList} />
         </View>
     );
 }
