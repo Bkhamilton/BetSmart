@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   typeContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 4
+    paddingVertical: 6
   },
   typeText: {
     fontSize: 16,
