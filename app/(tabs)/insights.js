@@ -3,9 +3,8 @@ import { StyleSheet } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import Header from '../../components/Header/Header';
-import RecentWinnings from '../../components/Insights/RecentWinnings';
-import RecentBets from '../../components/Insights/RecentBets';
 import BuildABet from '../../components/Insights/BuildABet';
+import RecommendedBets from '../../components/Insights/RecommendedBets/RecommendedBets';
 
 export default function InsightScreen() {
   const recentBets = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -35,16 +34,7 @@ export default function InsightScreen() {
       <View style={{ paddingHorizontal: 10, paddingVertical: 12 }}>
         <BuildABet />
       </View>
-      <View>
-        <View style={styles.insightsContainer}>
-          <View style={styles.insightSection}>
-            <RecentWinnings generatedBet={generatedRecentWinnings} />
-          </View>
-          <View style={styles.insightSection}>
-            <RecentBets generatedBet={generatedRecentBets} />
-          </View>
-        </View>
-      </View>
+      <RecommendedBets wins={generatedRecentBets} losses={generatedRecentBets} recent={generatedRecentBets}/>
     </View>
   );
 }
