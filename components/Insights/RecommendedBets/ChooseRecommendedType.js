@@ -9,21 +9,30 @@ export default function ChooseRecommendedType({ selectType, type }) {
     <View style={{ paddingVertical: 8 }}>
       <View style={styles.container}>
           <TouchableOpacity 
-            style={[styles.typeContainer, { borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }]}
+            style={[
+              styles.typeContainer, 
+              type === 'Wins' && styles.activeTypeContainer
+            ]}
             onPress={() => selectType('Wins')}
           >
               <Text style={[styles.typeText, type === 'Wins' && styles.activeType]}>Wins</Text>
           </TouchableOpacity>
-          <View style={[styles.typeContainer, { borderLeftWidth: 1, borderRightWidth: 1 }]}>
-            <TouchableOpacity
-              style={{ width: '100%', alignItems: 'center' }}
+          <View style={styles.border} />
+          <TouchableOpacity
+              style={[
+                styles.typeContainer,
+                type === 'Losses' && styles.activeTypeContainer
+              ]}
               onPress={() => selectType('Losses')}
             >
                 <Text style={[styles.typeText, type === 'Losses' && styles.activeType]}>Losses</Text>
             </TouchableOpacity>
-          </View>
+          <View style={styles.border} />
           <TouchableOpacity 
-            style={[styles.typeContainer, { borderTopRightRadius: 8, borderBottomRightRadius: 8 }]}
+            style={[
+              styles.typeContainer,
+              type === 'Recent' && styles.activeTypeContainer
+            ]}
             onPress={() => selectType('Recent')}
           >
               <Text style={[styles.typeText, type === 'Recent' && styles.activeType]}>Recent</Text>
@@ -50,5 +59,13 @@ const styles = StyleSheet.create({
   },
   activeType: {
     fontWeight: 'bold',
+  },
+  activeTypeContainer: {
+    borderBottomWidth: 4,
+    borderBottomColor: 'black',
+  },
+  border: {
+    borderLeftWidth: 1,
+    height: '100%',
   },
 });
