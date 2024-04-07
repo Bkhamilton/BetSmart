@@ -6,6 +6,7 @@ import { myBetList } from '../../data/exampleBetData';
 import Header from '../../components/Header/Header';
 import ProfitDashboard from '../../components/Home/ProfitDashboard';
 import TodaysBets from '../../components/Home/TodaysBets';
+import BetView from '../../components/Home/BetView/BetView';
 
 export default function HomeScreen() {
 
@@ -19,6 +20,7 @@ export default function HomeScreen() {
       <ScrollView>
         <StatusBar style="auto" backgroundColor='transparent'/>
         <ProfitDashboard wagered={amountWagered} won={amountWon} />
+        <BetView />
         <View style={{paddingHorizontal: 12, paddingTop: 24,}}>
           <Text style={{fontSize: 18, fontWeight: 'bold'}}>Today's Bets</Text>
           <TodaysBets bets={myBetList} />
