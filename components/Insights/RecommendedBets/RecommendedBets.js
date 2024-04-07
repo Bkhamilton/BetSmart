@@ -16,7 +16,7 @@ export default function RecommendedBets({ wins, losses, recent }) {
                 <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Recommended Bets</Text>
                 <Text style={{ fontSize: 10 }}>Potential Bets Generated from your recent Betting History</Text>
             </View>
-            <ChooseRecommendedType selectType={setSelectedType}/>
+            <ChooseRecommendedType selectType={setSelectedType} type={selectedType}/>
             <RecommendedBet type={selectedType} />
         </View>
     );
