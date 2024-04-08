@@ -72,7 +72,9 @@ export default function NewBetScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title={header}/>
+      <View style={styles.headerContainer}>
+        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{header}</Text>
+      </View>
       <View style={{ flex: 1, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Choose {curCategory}</Text>
@@ -173,5 +175,12 @@ const styles = StyleSheet.create({
   gameText: {
     fontSize: 18,
     fontWeight: 'bold'
+  },
+  headerContainer: {
+    height: 84, 
+    paddingHorizontal: 20, 
+    paddingTop: 48,
+    borderBottomWidth: 1,
+    alignItems: 'center',
   },
 });
