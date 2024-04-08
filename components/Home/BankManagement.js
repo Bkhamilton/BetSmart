@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, View } from '@/components/Themed';
 
 import Colors from '@/constants/Colors';
 
-export default function FutureBets({ transactions }) {
+export default function BankManagement({ transactions }) {
     return (
       <View style={styles.container}>
           <View>
