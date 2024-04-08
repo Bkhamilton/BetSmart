@@ -8,17 +8,23 @@ import { Text, View } from '../Themed';
 export default function Header({ title, children }) {
   return (
     <View style={styles.HeaderContainer}>
-        <Text style={{ marginTop: 44, fontSize: 22, fontWeight: 'bold' }}>{title}</Text>
-        {children}
+        <View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{title}</Text>
+        </View>
+        <View>
+          {children}
+        </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   HeaderContainer: {
-    alignItems: 'center',
     height: 84, 
     paddingHorizontal: 20, 
-    borderBottomWidth: 1
+    paddingTop: 48,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
