@@ -4,6 +4,7 @@ import { TouchableOpacity, Text, View } from '../Themed';
 import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '../../data/teamAbbreviations';
 
 import Colors from '@/constants/Colors';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function GameList({ games, selectGame, sport }) {
 
@@ -20,9 +21,35 @@ export default function GameList({ games, selectGame, sport }) {
         return abbreviations ? (abbreviations[teamName] || teamName) : teamName;
     };
 
+    const getDate = (dateString) => {
+      const date = new Date(dateString);
+      const estDate = new Date(date.getTime() - (3600000 * 4)); // Subtract 4 hours from UTC to get EST
+      return estDate.toISOString().split('T')[0]; // Returns the date part
+    };
+    
+    const getTime = (dateString) => {
+      const date = new Date(dateString);
+      const estDate = new Date(date.getTime() - (3600000 * 4)); // Subtract 4 hours from UTC to get EST
+      let hours = estDate.getHours();
+      const minutes = estDate.getMinutes();
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+      return `${hours}:${minutesStr}`; // Returns the time part in 12-hour format
+    };
+    
+    const getAmPm = (dateString) => {
+      const date = new Date(dateString);
+      const estDate = new Date(date.getTime() - (3600000 * 4)); // Subtract 4 hours from UTC to get EST
+      const hours = estDate.getHours();
+      return hours >= 12 ? 'PM' : 'AM';
+    };
+
+    // Component for each game
     function GameComponent({ game }) {
         return (
-            <View style={{ flexDirection: 'row', borderWidth: 1, borderRadius: 8, paddingHorizontal: 12 }}>
+          <View style={{ borderWidth: 1, borderRadius: 8, paddingHorizontal: 12 }}>
+            <View style={{ flexDirection: 'row' }}>
                 {/* Game Info. Team vs Team, Start Time */}
                 <View style={{ flex: 1 }}>
                     <View style={{ paddingVertical: 8 }}>
@@ -68,14 +95,24 @@ export default function GameList({ games, selectGame, sport }) {
                     </View>
                 </View>
             </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, paddingBottom: 2 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
+                <Text style={{ fontSize: 18 }}>{getTime(game.start_timestamp)}</Text>
+                <Text style={{ fontSize: 12 }}>{getAmPm(game.start_timestamp)}</Text>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                {/* This is where I can include other info under bet buttons */}
+              </View>
+            </View>
+          </View>
         );
     }
 
     return (
-        <View style={{ flexDirection: 'row', flex: 1, backgroundColor: 'transparent' }}>
+        <View style={{ flexDirection: 'row', flex: 0.90, backgroundColor: 'transparent' }}>
             <FlatList
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ marginBottom: 0 }}
+                contentContainerStyle={{ marginBottom: 100 }}
                 data={games}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
