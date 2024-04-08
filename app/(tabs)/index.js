@@ -1,14 +1,26 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 import { Text, View, ScrollView, TouchableOpacity, SafeAreaView } from '@/components/Themed';
 import { myBetList } from '../../data/exampleBetData';
 import Header from '../../components/Header/Header';
 import ProfitDashboard from '../../components/Home/ProfitDashboard';
+import LoginPage from '../../components/Modals/LoginPage';
 import TodaysBets from '../../components/Home/BetView/TodaysBets';
 import BetView from '../../components/Home/BetView/BetView';
 
 export default function HomeScreen() {
+
+  const [loginModalVisible, setLoginModalVisible] = useState(false);
+
+  function openLoginModal() {
+    setLoginModalVisible(true);
+  }
+
+  function closeLoginModal() {
+    setLoginModalVisible(false);
+  }
 
   // Dummy data for ProfitDashboard
   const amountWon = 240.00;
@@ -16,7 +28,14 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title={'BetSmart'}/>
+      <LoginPage visible={loginModalVisible} close={closeLoginModal}/>
+      <Header title={'BetSmart'}>
+        <TouchableOpacity
+          onPress={openLoginModal}
+        >
+          <FontAwesome name='user' size={28} color={'black'}/>
+        </TouchableOpacity>
+      </Header>
       <ScrollView>
         <StatusBar style="auto" backgroundColor='transparent'/>
         <ProfitDashboard wagered={amountWagered} won={amountWon} />
