@@ -24,29 +24,39 @@ export default function LoginPage({ visible, close }) {
                 </TouchableOpacity>
 
                 
-
+                {/* Main Modal Box */}
                 <View style={styles.mainPage}>
-                    
+                    {/* Title */}
                     <View style={styles.title}>
                         <Text style={styles.title}>Sign In</Text>
+                        <View style={styles.underline}></View>
+                    </View>
+                    
+                    {/* Username input */}
+                    <View style={styles.infoBox}>
+                        <Text style={styles.BoxTitle}>Username</Text>
+                        <View style={styles.inputBox}>
+                            <FontAwesome name='user' size={24} color={Colors.primary} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Username"
+                                // Add necessary props and event handlers for username input
+                            />
+                        </View>
                     </View>
 
-                    <View style={styles.Username}>
-                        <Text style={styles.UsernameTitle}>Username</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Username"
-                            // Add necessary props and event handlers for username input
-                        />
-                    </View>
-                    <View style={styles.Password}>
-                        <Text style={styles.PasswordTitle}>Password</Text>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Password"
-                            secureTextEntry={true}
-                            // Add necessary props and event handlers for password input
-                        />
+                    {/* Password input */}
+                    <View style={styles.infoBox}>
+                        <Text style={styles.BoxTitle}>Password</Text>
+                        <View style={styles.inputBox}>
+                            <FontAwesome name='lock' size={24} color={Colors.primary} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Password"
+                                secureTextEntry={true}
+                                // Add necessary props and event handlers for password input
+                            />
+                        </View>
                     </View>
                 </View>
             </View>
@@ -55,41 +65,49 @@ export default function LoginPage({ visible, close }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 56,
-    paddingHorizontal: 10, 
-    borderWidth: 1,
-  },
-  mainPage: {
-    flex: .50,
-    borderWidth: 1,
-    paddingTop: 10,
-    marginTop: 100,
-  },
-    Username: {
-        flex: .50, 
+    container: {
+        flex: 1,
+        paddingTop: 56,
+        paddingHorizontal: 10, 
+        borderWidth: 1,
     },
-    Password: {
+    mainPage: {
         flex: .50,
+        paddingTop: 10,
+        marginTop: 100,
     },
-    UsernameTitle: {
+    title: {
         fontSize: 32,
+        fontWeight: 'bold',
+        textAlign: 'left',
+        marginLeft: 5,
+    },
+    underline: {
+        borderWidth: 1,
+        width: 150,
+        height: 1,
+        opacity: 0.2,
+    },
+    infoBox: {
+        flex: .50,
+        marginTop: 20, 
+    },
+    BoxTitle: {
+        fontSize: 24,
         fontWeight: 'bold',
         margin: 10,
     },
-    PasswordTitle: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        margin: 10,
+    inputBox: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingLeft: 10,
     },
     input: {
         width: 300,
         height: 40,
         margin: 12,
-        borderWidth: 1,
+        borderBottomWidth: 1,
         padding: 10,
-        borderRadius: 5,
     },
     button: {
         width: 300,
@@ -104,10 +122,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        textAlign: 'left',
-    },
+    
 
 });
