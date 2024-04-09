@@ -11,7 +11,7 @@ export default function Header({ title, children }) {
         <View>
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{title}</Text>
         </View>
-        <View>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           {children}
         </View>
     </View>

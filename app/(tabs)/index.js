@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { StyleSheet, Dimensions } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { Text, View, ScrollView, TouchableOpacity, SafeAreaView } from '@/components/Themed';
 import { myBetList } from '../../data/exampleBetData';
 import Header from '../../components/Header/Header';
@@ -16,7 +16,7 @@ export default function HomeScreen() {
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [signUpModalVisible, setSignUpModalVisible] = useState(false)
   function openSignUpModal() {
-    setSignUpMosalVisible(true);
+    setSignUpModalVisible(true);
   }
   function closeSignUpModal() {
     setSignUpModalVisible(false);
@@ -37,20 +37,19 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <LoginPage visible={loginModalVisible} close={closeLoginModal}/>
-      <SignUpPage visable={signUpModalVisable} close={closeSignUpModal}/>
+      <SignUpPage visible={signUpModalVisible} close={closeSignUpModal}/>
       <Header title={'BetSmart'}>
         
         <TouchableOpacity
           onPress={openLoginModal}
         >
-          <FontAwesome name='user' size={28} color={'black'}/>
+          <Ionicons name='person' size={28} color={'black'}/>
         </TouchableOpacity>
         
         <TouchableOpacity
           onPress={openSignUpModal}
         >
-          <
-          FontAwesome name='user-group' size={28} color={'black'}/>
+          <Ionicons name='person-add' size={28} color={'black'}/>
         </TouchableOpacity>
         
       </Header>
