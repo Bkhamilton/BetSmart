@@ -7,19 +7,27 @@ import { myBetList } from '../../data/exampleBetData';
 import Header from '../../components/Header/Header';
 import ProfitDashboard from '../../components/Home/ProfitDashboard';
 import LoginPage from '../../components/Modals/LoginPage';
+import SignUpPage from '../../components/Modals/SignUpPage';
 import TodaysBets from '../../components/Home/BetView/TodaysBets';
 import BetView from '../../components/Home/BetView/BetView';
 
 export default function HomeScreen() {
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
-
+  const [signUpModalVisible, setSignUpModalVisible] = useState(false)
+  function openSignUpModal() {
+    setSignUpMosalVisible(true);
+  }
+  function closeSignUpModal() {
+    setSignUpModalVisible(false);
+  }
   function openLoginModal() {
     setLoginModalVisible(true);
   }
 
   function closeLoginModal() {
     setLoginModalVisible(false);
+    
   }
 
   // Dummy data for ProfitDashboard
@@ -29,12 +37,22 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <LoginPage visible={loginModalVisible} close={closeLoginModal}/>
+      <SignUpPage visable={signUpModalVisable} close={closeSignUpModal}/>
       <Header title={'BetSmart'}>
+        
         <TouchableOpacity
           onPress={openLoginModal}
         >
           <FontAwesome name='user' size={28} color={'black'}/>
         </TouchableOpacity>
+        
+        <TouchableOpacity
+          onPress={openSignUpModal}
+        >
+          <
+          FontAwesome name='user-group' size={28} color={'black'}/>
+        </TouchableOpacity>
+        
       </Header>
       <ScrollView>
         <StatusBar style="auto" backgroundColor='transparent'/>
