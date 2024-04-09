@@ -6,7 +6,7 @@ import { TouchableOpacity, Text, View } from '@/components/Themed';
 import Colors from '@/constants/Colors';
 import { FontStyle } from '@shopify/react-native-skia';
 
-export default function LoginPage({ visible, close }) {
+export default function SignUpPage({ visible, close }) {
 
     return (
         <Modal
@@ -28,7 +28,7 @@ export default function LoginPage({ visible, close }) {
                 <View style={styles.mainPage}>
                     {/* Title */}
                     <View style={styles.title}>
-                        <Text style={styles.title}>Sign In</Text>
+                        <Text style={styles.title}>Sign Up</Text>
                         <View style={styles.underline}></View>
                     </View>
                     
