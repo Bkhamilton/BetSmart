@@ -1,9 +1,16 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import React from 'react';
 
 export default function BetDetailsScreen() {
+
+  const router = useRouter();
+
+  const handleClose = () => {
+    router.pop();
+  };
 
   return (
     <View style={styles.container}>
