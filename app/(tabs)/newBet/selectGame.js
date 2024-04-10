@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, FlatList } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
@@ -10,6 +11,12 @@ import GameListSlider from '@/components/PlaceBet/GameListSlider.js';
 import SportSlider from '@/components/PlaceBet/SportsSlider.js';
 
 export default function SelectGameScreen() {
+  
+  const router = useRouter();
+
+  const handleSelectGame = () => {
+    router.push('/newBet/betDetails');
+  };
 
   const [header, setHeader] = useState('Place Bet');
   const [curSport, setcurSport] = useState({title:'', games:[]})
