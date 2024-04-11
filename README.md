@@ -4,6 +4,18 @@ BetSmart is a sports bet tracking app that helps you keep track of your bets and
 
 Created by Ben Hamilton and Kenneth Sullivan
 
+app/
+├── _layout.tsx
+├── tabs/
+│   ├── home.tsx
+│   ├── insights.tsx
+│   ├── new-bet/
+│   │   ├── _layout.tsx
+│   │   ├── select-game.tsx
+│   │   └── bet-details.tsx
+│   ├── data.tsx
+│   └── profile.tsx
+
 ## Features
 
 - **Bet Tracking**: Easily record your bets, including the sport, event, bet type, stake, and outcome.
