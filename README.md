@@ -14,10 +14,10 @@ app/
 │   ├── _layout.tsx
 │   ├── home.tsx
 │   ├── insights.tsx
-│   ├── new-bet/
+│   ├── newBet/
 │   │   ├── _layout.tsx
-│   │   ├── select-game.tsx
-│   │   └── bet-details.tsx
+│   │   ├── selectGame.tsx
+│   │   └── betDetails.tsx
 │   ├── data.tsx
 │   └── profile.tsx
 ```
