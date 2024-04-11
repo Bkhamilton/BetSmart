@@ -109,7 +109,7 @@ export default function SelectGameScreen() {
                   </View>
                 </View>
             }
-            { !gameSelected && <GameList games={curSportGames.games} selectGame={handleSelectGame} sport={curSportGames.league}/> }
+            { !gameSelected && <GameList games={curSportGames.games} selectGame={game => handleSelectGame({ game })} sport={curSportGames.league}/> }
           </View>
         }
         { !sportSelected &&
