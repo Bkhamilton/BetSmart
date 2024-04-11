@@ -20,7 +20,7 @@ export default function LoginPage({ visible, close }) {
                     onPress={close}
                     style={{ alignItems: 'flex-end'}} 
                 >
-                    <FontAwesome name='close' size={40} color={'red'}/>
+                    <FontAwesome name='arrow-left' size={40} color={'red'}/>
                 </TouchableOpacity>
 
                 
