@@ -11,13 +11,7 @@ export const sportsData = [
   {
     title: "NBA",
     icon: nba,
-    games: [{
-      home: "LAL",
-      away: "MIL"
-    },{
-      home: "BOS",
-      away: "PHI"
-    }]
+    games: []
   },
   {
     title: "NFL",
@@ -27,69 +21,32 @@ export const sportsData = [
   {
     title: "NCAAB",
     icon: ncaa,
-    games: [{
-      home: "UConn",
-      away: "Creighton"
-    },{
-      home: "Arizona",
-      away: "Kentucky"
-    }]
+    games: []
   },
   {
     title: "MLB",
     icon: mlb,
-    games: [{
-      home: "LAD",
-      away: "SD"
-    }]
+    games: []
   },
   {
     title: "MLS",
     icon: mls,
-    games: [{
-      home: "LAFC",
-      away: "LA Galaxy"
-    },{
-      home: "NYCFC",
-      away: "NY Red Bulls"
-    }]
+    games: []
   },
   {
     title: "NHL",
     icon: nhl,
-    games: [{
-      home: "NYR",
-      away: "NYI"
-    },{
-      home: "BOS",
-      away: "PHI"
-    },{
-      home: "WSH",
-      away: "PIT"
-    }
-  ]
+    games: []
   },      
   {
     title: "PGA",
     icon: pga,
-    games: [{
-      home: "Tiger Woods",
-      away: "Rory McIlroy"
-    },{
-      home: "Brooks Koepka",
-      away: "Dustin Johnson"
-    }]
+    games: []
   },
   {
     title: "UFC",
     icon: ufc,
-    games: [{
-      home: "Conor McGregor",
-      away: "Dustin Poirier"
-    },{
-      home: "Israel Adesanya",
-      away: "Robert Whittaker"
-    }]
+    games: []
   }
 ]
 

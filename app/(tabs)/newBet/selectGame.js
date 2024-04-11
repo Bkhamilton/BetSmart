@@ -1,17 +1,22 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, FlatList } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import Header from '../../components/Header/Header';
-import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } from '../../data/exampleTeamData';
-import MainButtons from '../../components/PlaceBet/MainButtons';
-import { getGames, fetchData, retrieveData } from '../../api/prop-odds.js';
-import GameList from '../../components/PlaceBet/GameList.js';
-import GameListSlider from '../../components/PlaceBet/GameListSlider.js';
-import SportSlider from '../../components/PlaceBet/SportsSlider.js';
+import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } from '@/data/exampleTeamData';
+import MainButtons from '@/components/PlaceBet/MainButtons';
+import { getGames, fetchData, retrieveData } from '@/api/prop-odds.js';
+import GameList from '@/components/PlaceBet/GameList.js';
+import GameListSlider from '@/components/PlaceBet/GameListSlider.js';
+import SportSlider from '@/components/PlaceBet/SportsSlider.js';
 
-export default function NewBetScreen() {
+export default function SelectGameScreen() {
+  
+  const router = useRouter();
+
+  const handleSelectGame = ({ game }) => {
+    router.navigate('newBet/betDetails', { game });
+  };
 
   const [header, setHeader] = useState('Place Bet');
   const [curSport, setcurSport] = useState({title:'', games:[]})
@@ -26,8 +31,11 @@ export default function NewBetScreen() {
     players: []
   })
 
-  const [randomData, setRandomData] = useState('');
   const [allSportsData, setAllSportsData] = useState([]);
+
+  const [sportSelected, setSportSelected] = useState(false);
+  const [gameSelected, setGameSelected] = useState(false);
+
 
   // Function to select a sport and set the current sport and category
   const selectSport = (sport) => {
@@ -36,10 +44,12 @@ export default function NewBetScreen() {
       setcurSport({title:'', games:[]});
       setHeader('Place Bet');
       setcurCategory('Sport');
+      setSportSelected(false);
     } else {
       setcurSport(sport);
       setHeader(sport.title)
       setcurCategory('Game');
+      setSportSelected(true);
     }
   };
 
@@ -50,17 +60,19 @@ export default function NewBetScreen() {
       setCurHomeTeam({team:'', players:[]});
       setCurAwayTeam({team:'', players:[]});
       setcurCategory('Game');
+      setGameSelected(false);
     } else {
       setcurGame(game);
       setCurHomeTeam({team:game.home_team, players:[]});
       setCurAwayTeam({team:game.away_team, players:[]});
       setcurCategory('Team');
+      setGameSelected(true);
     }
   }
 
   useEffect(() => {
     const fetchSportsData = async () => {
-      const data = await retrieveData(['nba', 'mlb', 'nhl', 'ncaab']); // replace with the sports you're interested in
+      const data = await retrieveData(['nba', 'mlb', 'nhl']); // replace with the sports you're interested in
       setAllSportsData(data);
     };
   
@@ -79,12 +91,12 @@ export default function NewBetScreen() {
         <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>Choose {curCategory}</Text>
         </View>
-        { curSport.title.length > 0 && 
+        { sportSelected && 
           <View style={{ paddingVertical: 4  }}>
             <SportSlider sports={sportsData} selectSport={selectSport} curSport={curSport}/>
           </View>
         }
-        { curSport.title.length > 0 &&
+        { sportSelected &&
           <View style={{ alignItems: 'center' }}>
             {
               curGame.home_team.length > 0 &&
@@ -97,16 +109,15 @@ export default function NewBetScreen() {
                   </View>
                 </View>
             }
-            { curGame.home_team.length == 0 && <GameList games={curSportGames.games} selectGame={selectGame} sport={curSportGames.league}/> }
+            { !gameSelected && <GameList games={curSportGames.games} selectGame={game => handleSelectGame({ game })} sport={curSportGames.league}/> }
           </View>
         }
-        { curSport.title.length == 0 &&
+        { !sportSelected &&
           <View style={styles.buttonsContainer}>
             <MainButtons sports={sportsData} onPress={selectSport} />
           </View>
         }
       </View>
-      { curGame.home_team.length > 0 && <GameListSlider games={curSportGames.games} selectGame={selectGame} /> }
     </View>
   );
 }

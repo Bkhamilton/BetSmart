@@ -48,7 +48,10 @@ export default function GameList({ games, selectGame, sport }) {
     // Component for each game
     function GameComponent({ game }) {
         return (
-          <View style={{ borderWidth: 1, borderRadius: 8, paddingHorizontal: 12 }}>
+          <TouchableOpacity 
+            style={{ borderWidth: 1, borderRadius: 8, paddingHorizontal: 12 }}
+            onPress={() => selectGame(game)}
+          >
             <View style={{ flexDirection: 'row' }}>
                 {/* Game Info. Team vs Team, Start Time */}
                 <View style={{ flex: 1 }}>
@@ -104,7 +107,7 @@ export default function GameList({ games, selectGame, sport }) {
                 {/* This is where I can include other info under bet buttons */}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         );
     }
 
