@@ -14,8 +14,8 @@ export default function SelectGameScreen() {
   
   const router = useRouter();
 
-  const handleSelectGame = () => {
-    router.navigate('newBet/betDetails');
+  const handleSelectGame = ({ game }) => {
+    router.navigate('newBet/betDetails', { game });
   };
 
   const [header, setHeader] = useState('Place Bet');
