@@ -9,7 +9,7 @@ export default function BetDetailsScreen() {
   const router = useRouter();
 
   const handleClose = () => {
-    router.pop();
+    router.navigate('newBet/selectGame');
   };
 
   return (
@@ -17,6 +17,9 @@ export default function BetDetailsScreen() {
       <Header title={'Bet Details'}/>
       <View>
         <Text>Bet Details</Text>
+        <TouchableOpacity onPress={handleClose}>
+          <Text>Close</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

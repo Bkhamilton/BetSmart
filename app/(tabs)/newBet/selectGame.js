@@ -15,7 +15,7 @@ export default function SelectGameScreen() {
   const router = useRouter();
 
   const handleSelectGame = () => {
-    router.push('/newBet/betDetails');
+    router.navigate('newBet/betDetails');
   };
 
   const [header, setHeader] = useState('Place Bet');
@@ -109,7 +109,7 @@ export default function SelectGameScreen() {
                   </View>
                 </View>
             }
-            { !gameSelected && <GameList games={curSportGames.games} selectGame={selectGame} sport={curSportGames.league}/> }
+            { !gameSelected && <GameList games={curSportGames.games} selectGame={handleSelectGame} sport={curSportGames.league}/> }
           </View>
         }
         { !sportSelected &&
@@ -118,7 +118,6 @@ export default function SelectGameScreen() {
           </View>
         }
       </View>
-      { gameSelected && <GameListSlider games={curSportGames.games} selectGame={selectGame} /> }
     </View>
   );
 }
