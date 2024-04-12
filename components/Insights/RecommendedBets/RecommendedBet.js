@@ -5,6 +5,7 @@ import { TouchableOpacity, Text, View } from '../../Themed';
 import Colors from '@/constants/Colors';
 
 export default function RecommendedBet({ type }) {
+  
     const typeMap = {
       Wins: 'Recent Wins',
       Losses: 'Recent Losses',
