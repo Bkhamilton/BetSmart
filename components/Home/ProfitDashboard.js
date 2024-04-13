@@ -35,6 +35,14 @@ export default function ProfitDashboard({ wagered, won }) {
       [styles.smallText, styles.mediumText, styles.bigText],
     ];    
 
+    const recentResults = [10.9, -5, 2.3, 15.80, -8.50, 6.7];
+
+    // Function to format the value of the recent bet results
+    const formatValue = (num) => {
+      const sign = num >= 0 ? '+' : '-';
+      return `${sign}$${Math.abs(num).toFixed(2)}`;
+    };
+
     return (
     <View style={styles.container}>
         <View style={[styles.centeredBox, { backgroundColor: backgroundGreen, borderColor: backgroundGreen }]}>
@@ -63,9 +71,9 @@ export default function ProfitDashboard({ wagered, won }) {
                 </TouchableOpacity>
                 </View>
                 <View style={styles.moneyBox}>
-                  <Text style={textStyles[betIndex][0]}>+$10.90</Text>
-                  <Text style={textStyles[betIndex][1]}>-$5.00</Text>
-                  <Text style={textStyles[betIndex][2]}>+$2.30</Text>
+                  <Text style={textStyles[betIndex][0]}>{formatValue(recentResults[0])}</Text>
+                  <Text style={textStyles[betIndex][1]}>{formatValue(recentResults[1])}</Text>
+                  <Text style={textStyles[betIndex][2]}>{formatValue(recentResults[2])}</Text>
                 </View>
             </View>
         </View>
