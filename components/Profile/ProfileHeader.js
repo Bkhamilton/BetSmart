@@ -29,6 +29,7 @@ export default function ProfileHeader({ user }) {
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingHorizontal: 12,
+        paddingLeft: 20,
         paddingVertical: 16,
     },
   });
