@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome5 } from '@expo/vector-icons';
 import ProfileHeader from '@/components/Profile/ProfileHeader';
+import AccountInfo from '../../../components/Profile/Settings/AccountInfo';
+import SettingsOptions from '../../../components/Profile/Settings/SettingsOptions';
 
 export default function SettingsScreen() {
 
@@ -17,21 +18,24 @@ export default function SettingsScreen() {
     return (
     <View style={styles.container}>
         <View style={styles.headerContainer}>
-            <View style={{ flex: 0.2 }}>
-                <TouchableOpacity onPress={handleClose}>
-                    <FontAwesome5 name="chevron-left" size={24} color="black" />
-                </TouchableOpacity>
-            </View>
-            <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Settings</Text>
-            </View>
-            <View style={{ flex: 0.2, alignItems: 'center' }}>
-                
-            </View>                
+          <TouchableOpacity 
+            onPress={handleClose}
+          >
+            <FontAwesome5 name="chevron-left" size={24} color="black" />
+          </TouchableOpacity>        
         </View>
-        <View>
-            <Text>Settings Page</Text>
-        </View>
+        <ScrollView>
+          <View style={styles.settingsHeader}>
+            <Text style={styles.settingsHeaderText}>Settings</Text>
+          </View>
+          <View style={{ backgroundColor: 'transparent' }}>
+            <View style={styles.accountHeader}>
+              <Text style={styles.accountHeaderText}>Account</Text>
+            </View>
+            <AccountInfo />
+            <SettingsOptions onPress={handleClose}/>
+          </View>
+        </ScrollView>
     </View>
     );
 }
@@ -44,8 +48,24 @@ const styles = StyleSheet.create({
     height: 84, 
     paddingHorizontal: 20, 
     paddingTop: 48,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  settingsHeader: {
+    paddingHorizontal: 20, 
+    paddingTop: 48, 
+    paddingBottom: 40
+  },
+  settingsHeaderText: {
+    fontSize: 38, 
+    fontWeight: 'bold'
+  },
+  accountHeader: {
+    paddingHorizontal: 20, 
+    paddingVertical: 12
+  },
+  accountHeaderText: {
+    fontSize: 24, 
+    fontWeight: '500'
   },
 });
