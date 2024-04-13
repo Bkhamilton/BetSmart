@@ -2,7 +2,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import Header from '@/components/Header/Header';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useState, useEffect } from 'react';
 
 export default function BetDetailsScreen({ game }) {
@@ -13,7 +13,7 @@ export default function BetDetailsScreen({ game }) {
         <View style={styles.headerContainer}>
           <View style={{ flex: 0.2, alignItems: 'center' }}>
             <TouchableOpacity onPress={handleClose}>
-              <Ionicons name="return-up-back" size={24} color="black" />
+              <FontAwesome5 name="chevron-left" size={24} color="black" />
             </TouchableOpacity>
           </View>
           <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
@@ -36,7 +36,7 @@ export default function BetDetailsScreen({ game }) {
         <View style={styles.headerContainer}>
           <View style={{ flex: 0.2 }}>
             <TouchableOpacity onPress={handleClose}>
-              <Ionicons name="return-up-back" size={24} color="black" />
+              <FontAwesome5 name="chevron-left" size={24} color="black" />
             </TouchableOpacity>
           </View>
           <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
