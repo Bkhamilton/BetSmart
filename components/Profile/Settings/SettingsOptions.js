@@ -13,10 +13,10 @@ export default function SettingsOptions({ onPress }) {
   function SettingsOption({ icon, title, pressIcon, onPress }) {
     return (
       <View style={styles.optionContainer}>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+        <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
           <Ionicons name={icon} size={18} color={iconColor} />
           <Text style={styles.optionText}>{title}</Text>
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity style={{ addingHorizontal: 6, paddingVertical: 6 }}>
           <FontAwesome5 name={pressIcon} size={24} color={iconColor} />
         </TouchableOpacity>
