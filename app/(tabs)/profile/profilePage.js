@@ -5,6 +5,7 @@ import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome } from '@expo/vector-icons';
 import ProfileHeader from '@/components/Profile/ProfileHeader';
+import UserFavorites from '@/components/Profile/UserFavorites';
 
 export default function ProfileScreen() {
 
@@ -25,6 +26,7 @@ export default function ProfileScreen() {
       </Header>
       <ScrollView> 
         <ProfileHeader user={{}} />
+        <UserFavorites league={"NBA"} team={"BOS"} player={"Zion Williamson"} bet={"Spread"}/>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account Settings</Text>
           {/* Add account settings components here */}
