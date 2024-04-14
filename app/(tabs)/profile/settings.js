@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, useColorScheme } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
@@ -7,7 +7,12 @@ import ProfileHeader from '@/components/Profile/ProfileHeader';
 import AccountInfo from '../../../components/Profile/Settings/AccountInfo';
 import SettingsOptions from '../../../components/Profile/Settings/SettingsOptions';
 
+import Colors from '@/constants/Colors';
+
 export default function SettingsScreen() {
+    const colorScheme = useColorScheme();
+
+    const iconColor = colorScheme === 'dark' ? Colors.dark.text : Colors.light.text;
 
     const router = useRouter();
 
@@ -21,7 +26,7 @@ export default function SettingsScreen() {
           <TouchableOpacity 
             onPress={handleClose}
           >
-            <FontAwesome5 name="chevron-left" size={24} color="black" />
+            <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
           </TouchableOpacity>        
         </View>
         <ScrollView>
