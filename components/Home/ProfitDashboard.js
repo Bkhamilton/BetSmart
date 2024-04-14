@@ -17,7 +17,8 @@ export default function ProfitDashboard({ wagered, won }) {
     const backgroundGreen = colorScheme === 'dark' ? Colors.dark.mainGreen : Colors.light.mainGreen;
     const accentGreen = colorScheme === 'dark' ? Colors.dark.accentGreen : Colors.light.accentGreen;
     const greenText = colorScheme === 'dark' ? '#36d363' : '#25A74A';
-    const grayBackground = colorScheme === 'dark' ? '#313131' : '#D6D6D6';
+    const grayBackground = colorScheme === 'dark' ? '#313131' : '#F5F5F5';
+    const grayBorder = colorScheme === 'dark' ? '#292929' : '#EBEBEB';
 
     const [betIndex, setBetIndex] = React.useState(0);
 
@@ -78,7 +79,7 @@ export default function ProfitDashboard({ wagered, won }) {
             </View>
         </View>
         <View style={styles.row}>
-            <View style={[styles.leftBox, { backgroundColor: grayBackground }]}>
+            <View style={[styles.leftBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
                 <Text style={{ paddingLeft: 16 }}>Total Won</Text>
                 <Text style={[styles.moneyText, { color: greenText }]}>${won.toFixed(2)}</Text>
             </View>
@@ -87,7 +88,7 @@ export default function ProfitDashboard({ wagered, won }) {
                     <FontAwesome name={arrowDirection} size={20} color={arrowColor} style={{ marginTop: -4 }}/>
                 </View>
             </View>
-            <View style={[styles.rightBox, { backgroundColor: grayBackground }]}>
+            <View style={[styles.rightBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
                 <Text>Total Bet</Text>
                 <Text style={[styles.moneyText, { color: '#ff5757' }]}>${wagered.toFixed(2)}</Text>
             </View>
