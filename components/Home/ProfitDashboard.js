@@ -16,9 +16,8 @@ export default function ProfitDashboard({ wagered, won }) {
 
     const backgroundGreen = colorScheme === 'dark' ? Colors.dark.mainGreen : Colors.light.mainGreen;
     const accentGreen = colorScheme === 'dark' ? Colors.dark.accentGreen : Colors.light.accentGreen;
-    const backgroundBlue = colorScheme === 'dark' ? Colors.dark.mainBlue : Colors.light.mainBlue;
-    const accentBlue = colorScheme === 'dark' ? Colors.dark.accentBlue : Colors.light.accentBlue;
-    const grayBackground = colorScheme === 'dark' ? '#313131' : '#B8B8B8';
+    const greenText = colorScheme === 'dark' ? '#36d363' : '#25A74A';
+    const grayBackground = colorScheme === 'dark' ? '#313131' : '#D6D6D6';
 
     const [betIndex, setBetIndex] = React.useState(0);
 
@@ -81,7 +80,7 @@ export default function ProfitDashboard({ wagered, won }) {
         <View style={styles.row}>
             <View style={[styles.leftBox, { backgroundColor: grayBackground }]}>
                 <Text style={{ paddingLeft: 16 }}>Total Won</Text>
-                <Text style={[styles.moneyText, { color: '#36d363' }]}>${won.toFixed(2)}</Text>
+                <Text style={[styles.moneyText, { color: greenText }]}>${won.toFixed(2)}</Text>
             </View>
             <View style={[styles.indicator, { backgroundColor: 'transparent' }]}>
                 <View style={styles.circle}>
