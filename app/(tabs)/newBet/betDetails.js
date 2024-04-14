@@ -79,9 +79,9 @@ export default function BetDetailsScreen() {
         <Text>{getTime(currentGame.start_timestamp)} {getAmPm(currentGame.start_timestamp)}</Text>
       </View>
       <View style={styles.matchupContainer}>
-        <Text style={styles.matchupTitle}>{currentGame.home_team}</Text>
-        <Text>vs</Text>
         <Text style={styles.matchupTitle}>{currentGame.away_team}</Text>
+        <Text>vs</Text>
+        <Text style={styles.matchupTitle}>{currentGame.home_team}</Text>
       </View>
     </View>
   );
