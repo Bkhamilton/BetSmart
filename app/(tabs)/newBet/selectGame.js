@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, FlatList } from 'react-native';
@@ -9,12 +9,15 @@ import { getGames, fetchData, retrieveData } from '@/api/prop-odds.js';
 import GameList from '@/components/PlaceBet/GameList.js';
 import GameListSlider from '@/components/PlaceBet/GameListSlider.js';
 import SportSlider from '@/components/PlaceBet/SportsSlider.js';
+import { BetContext } from '@/contexts/BetContext';
 
 export default function SelectGameScreen() {
-  
+  const { currentGame, setCurrentGame } = useContext(BetContext);
+
   const router = useRouter();
 
   const handleSelectGame = ({ game }) => {
+    setCurrentGame(game);
     router.navigate('newBet/betDetails', { game });
   };
 
