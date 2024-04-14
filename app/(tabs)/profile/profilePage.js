@@ -28,11 +28,6 @@ export default function ProfileScreen() {
         <ProfileHeader user={{}} />
         <UserFavorites league={"NBA"} team={"BOS"} player={"Zion Williamson"} bet={"Spread"}/>
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account Settings</Text>
-          {/* Add account settings components here */}
-        </View>
-
-        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Personal Information</Text>
           {/* Add personal information components here */}
         </View>
@@ -40,11 +35,6 @@ export default function ProfileScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Betting History</Text>
           {/* Add betting history components here */}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Favorite Teams/Leagues</Text>
-          {/* Add favorite teams/leagues components here */}
         </View>
 
         <View style={styles.section}>
