@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { TouchableOpacity, Text, View } from '../Themed';
-import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '../../data/teamAbbreviations';
+import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '@/data/teamAbbreviations';
 
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
