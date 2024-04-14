@@ -17,7 +17,11 @@ export default function AccountInfo({ onPress }) {
             <View style={styles.accountImageContainer}/>
             <View style={styles.accountInfoContainer}>
                 <Text style={{ fontWeight: '500', fontSize: 18 }}>Username</Text>
-                <Text>Profile Settings</Text>
+                <TouchableOpacity
+                  style={{ backgroundColor: 'transparent' }}
+                >
+                  <Text>Profile Settings</Text>
+                </TouchableOpacity>
             </View>
         </View>
         <View style={styles.accountArrowContainer}>
