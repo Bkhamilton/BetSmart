@@ -13,11 +13,13 @@ import { BetContext } from '@/contexts/BetContext';
 
 export default function SelectGameScreen() {
   const { currentGame, setCurrentGame } = useContext(BetContext);
+  const { league, setLeague } = useContext(BetContext);
 
   const router = useRouter();
 
   const handleSelectGame = ({ game }) => {
     setCurrentGame(game);
+    setLeague(curSport.title);
     router.navigate('newBet/betDetails', { game });
   };
 
