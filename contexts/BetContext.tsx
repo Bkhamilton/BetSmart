@@ -13,6 +13,8 @@ interface BetContextValue {
   setBetSlip: (betSlip: any[]) => void;
   currentGame: Game | null;
   setCurrentGame: (game: Game | null) => void;
+  league: string | null;
+  setLeague: (league: string | null) => void;
 }
 
 export const BetContext = createContext<BetContextValue>({
@@ -20,6 +22,8 @@ export const BetContext = createContext<BetContextValue>({
   setBetSlip: () => {},
   currentGame: null,
   setCurrentGame: () => {},
+  league: null,
+  setLeague: () => {},
 });
 
 interface BetContextProviderProps {
@@ -29,12 +33,15 @@ interface BetContextProviderProps {
 export const BetContextProvider = ({ children }: BetContextProviderProps) => {
   const [betSlip, setBetSlip] = useState<any[]>([]);
   const [currentGame, setCurrentGame] = useState<Game | null>(null);
+  const [league, setLeague] = useState<string | null>(null);
 
   const value = {
     betSlip,
     setBetSlip,
     currentGame,
     setCurrentGame,
+    league,
+    setLeague,
   };
 
   return (
