@@ -18,6 +18,7 @@ export default function ProfitDashboard({ wagered, won }) {
     const accentGreen = colorScheme === 'dark' ? Colors.dark.accentGreen : Colors.light.accentGreen;
     const backgroundBlue = colorScheme === 'dark' ? Colors.dark.mainBlue : Colors.light.mainBlue;
     const accentBlue = colorScheme === 'dark' ? Colors.dark.accentBlue : Colors.light.accentBlue;
+    const grayBackground = colorScheme === 'dark' ? '#313131' : '#B8B8B8';
 
     const [betIndex, setBetIndex] = React.useState(0);
 
@@ -78,18 +79,18 @@ export default function ProfitDashboard({ wagered, won }) {
             </View>
         </View>
         <View style={styles.row}>
-            <View style={[styles.leftBox]}>
-                <Text>Total Won</Text>
-                <Text style={[styles.moneyText, { color: 'green' }]}>${won.toFixed(2)}</Text>
+            <View style={[styles.leftBox, { backgroundColor: grayBackground }]}>
+                <Text style={{ paddingLeft: 16 }}>Total Won</Text>
+                <Text style={[styles.moneyText, { color: '#36d363' }]}>${won.toFixed(2)}</Text>
             </View>
-            <View style={styles.indicator}>
+            <View style={[styles.indicator, { backgroundColor: 'transparent' }]}>
                 <View style={styles.circle}>
                     <FontAwesome name={arrowDirection} size={20} color={arrowColor} style={{ marginTop: -4 }}/>
                 </View>
             </View>
-            <View style={styles.rightBox}>
+            <View style={[styles.rightBox, { backgroundColor: grayBackground }]}>
                 <Text>Total Bet</Text>
-                <Text style={[styles.moneyText, { color: 'red' }]}>${wagered.toFixed(2)}</Text>
+                <Text style={[styles.moneyText, { color: '#ff5757' }]}>${wagered.toFixed(2)}</Text>
             </View>
         </View>
     </View>
@@ -131,9 +132,8 @@ const styles = StyleSheet.create({
     marginLeft: 10, 
     marginRight: 4, 
     paddingVertical: 12,
-    borderWidth: 1, 
     justifyContent: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     borderRadius: 8,
   },
   rightBox: {
@@ -142,9 +142,8 @@ const styles = StyleSheet.create({
     marginRight: 10, 
     marginLeft: 4, 
     paddingVertical: 12,
-    borderWidth: 1, 
     justifyContent: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     borderRadius: 8,
   },
   bigMoneyText: {
