@@ -18,9 +18,10 @@ app/
 │ │ ├── selectGame.tsx
 │ │ └── betDetails.tsx
 │ ├── data.tsx
-│ └── profile/
-│ ├── profilePage.tsx
-│ └── settings.tsx
+│ ├── profile/
+│ │ ├── \_layout.tsx
+│ │ ├── profilePage.tsx
+│ │ └── settings.tsx
 ```
 
 ## Features
