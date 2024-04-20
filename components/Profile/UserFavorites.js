@@ -29,7 +29,7 @@ export default function UserFavorites({ league, team, player, sportsbook, bet })
                 <FavoriteComponent type="League" />
                 <FavoriteComponent type="Team" />
                 <FavoriteComponent type="Player" />
-                <FavoriteComponent type="Sportsbook" />
+                <FavoriteComponent type="Bookie" />
                 <FavoriteComponent type="Bet" />
             </ScrollView>
         </View>
