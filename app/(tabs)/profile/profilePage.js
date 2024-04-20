@@ -6,6 +6,7 @@ import Header from '@/components/Header/Header';
 import { FontAwesome } from '@expo/vector-icons';
 import ProfileHeader from '@/components/Profile/ProfileHeader';
 import UserFavorites from '@/components/Profile/UserFavorites';
+import Achievements from '../../../components/Profile/Achievements';
 
 export default function ProfileScreen() {
 
@@ -27,6 +28,7 @@ export default function ProfileScreen() {
       <ScrollView> 
         <ProfileHeader user={{}} />
         <UserFavorites league={"NBA"} team={"BOS"} player={"Zion Williamson"} bet={"Spread"}/>
+        <Achievements />
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Personal Information</Text>
           {/* Add personal information components here */}
