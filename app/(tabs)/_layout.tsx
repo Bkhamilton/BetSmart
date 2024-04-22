@@ -104,7 +104,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Profile',
-          href: '/(tabs)/profile',
+          href: '/(tabs)/profile/profilePage',
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
           headerShown: false,
         }}
