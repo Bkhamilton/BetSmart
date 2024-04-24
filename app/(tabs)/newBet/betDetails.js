@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Text, View, TouchableOpacity } from '@/components/Themed';
+import { Text, View, TouchableOpacity, Pressable } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useState, useEffect, useContext } from 'react';
@@ -66,7 +66,12 @@ export default function BetDetailsScreen() {
         <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'flex-start5' }}>
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league}</Text>
         </View>
-        <View style={{ flex: 0.2, alignItems: 'center' }}></View>
+        <View style={{ flex: 0.2, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <Text style={{ fontSize: 20, fontWeight: '500', marginRight: 8 }}>$200</Text>
+          <TouchableOpacity>
+            <FontAwesome5 name="wallet" size={22} color="black" />
+          </TouchableOpacity>
+        </View>
       </View>
     )
   };
