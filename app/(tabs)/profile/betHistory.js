@@ -5,7 +5,7 @@ import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 import Colors from '@/constants/Colors';
-import ChooseBetType from '@/components/Home/BetView/ChooseBetType';
+import ChooseBetType from '@/components/Profile/BetHistory/ChooseBetType';
 
 export default function SettingsScreen() {
     const colorScheme = useColorScheme();

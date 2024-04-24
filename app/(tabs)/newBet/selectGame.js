@@ -2,13 +2,14 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, FlatList } from 'react-native';
-import { Text, View, TouchableOpacity } from '@/components/Themed';
+import { Text, View, TouchableOpacity, Pressable } from '@/components/Themed';
 import { sportsData, nbaTeams, nflTeams, mlbTeams, nhlTeams, nbaGamesToday } from '@/data/exampleTeamData';
 import MainButtons from '@/components/PlaceBet/MainButtons';
 import { getGames, fetchData, retrieveData } from '@/api/prop-odds.js';
 import GameList from '@/components/PlaceBet/GameList.js';
 import GameListSlider from '@/components/PlaceBet/GameListSlider.js';
 import SportSlider from '@/components/PlaceBet/SportsSlider.js';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext';
 
 export default function SelectGameScreen() {
@@ -90,7 +91,17 @@ export default function SelectGameScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{header}</Text>
+        <View style={{ flex: 0.2 }}>
+          <Text style={{ fontSize: 24, fontWeight: '500' }}>$200</Text>
+        </View>
+        <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{header}</Text>
+        </View>
+        <View style={{ flex: 0.2, alignItems: 'flex-end' }}>
+          <TouchableOpacity>
+            <FontAwesome5 name='wallet' size={24} color={'black'} />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={{ flex: 1, alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', paddingTop: 16, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
@@ -197,6 +208,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20, 
     paddingTop: 48,
     borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
 });
