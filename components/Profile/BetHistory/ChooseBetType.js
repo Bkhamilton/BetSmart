@@ -6,7 +6,7 @@ import Colors from '@/constants/Colors';
 
 export default function ChooseBetType({ selectType, type }) {
   return (
-    <View style={{ paddingVertical: 8 }}>
+    <View>
       <View style={styles.container}>
           <TouchableOpacity 
             style={[
