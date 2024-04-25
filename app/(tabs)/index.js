@@ -9,14 +9,18 @@ import Header from '@/components/Header/Header';
 import ProfitDashboard from '@/components/Home/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
 import SignUpPage from '@/components/Modals/SignUpPage';
-import TodaysBets from '@/components/Home/BetView/TodaysBets';
-import BetView from '@/components/Home/BetView/BetView';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
+import TodaysBets from '../../components/Home/BetReview/TodaysBets';
+
+import Colors from '@/constants/Colors';
+import { useColorScheme } from 'react-native';
 
 export default function HomeScreen() {
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
-  const [signUpModalVisible, setSignUpModalVisible] = useState(false)
+
+  const [signUpModalVisible, setSignUpModalVisible] = useState(false);
+
   function openSignUpModal() {
     setSignUpModalVisible(true);
   }
@@ -26,10 +30,8 @@ export default function HomeScreen() {
   function openLoginModal() {
     setLoginModalVisible(true);
   }
-
   function closeLoginModal() {
     setLoginModalVisible(false);
-    
   }
 
   const router = useRouter();
@@ -42,36 +44,41 @@ export default function HomeScreen() {
   const amountWon = 240.00;
   const amountWagered = 120.00;
 
+  const colorScheme = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? Colors.dark.icon : Colors.light.icon;
+
+  const HistoryButton = ({ onPress }) => (
+    <TouchableOpacity onPress={onPress} accessibilityLabel="Open Bet History">
+      <FontAwesome5 name='history' size={28} color={iconColor} />
+    </TouchableOpacity>
+  );
+  
+  const LoginButton = ({ onPress }) => (
+    <TouchableOpacity onPress={onPress} accessibilityLabel="Open Login">
+      <Ionicons name='person' size={28} color={iconColor} />
+    </TouchableOpacity>
+  );
+  
+  const SignUpButton = ({ onPress }) => (
+    <TouchableOpacity onPress={onPress} accessibilityLabel="Open Sign Up">
+      <Ionicons name='person-add' size={28} color={iconColor} />
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <LoginPage visible={loginModalVisible} close={closeLoginModal}/>
       <SignUpPage visible={signUpModalVisible} close={closeSignUpModal}/>
       <Header title={'BetSmart'}>
-        
-        <TouchableOpacity
-          onPress={handleBetHistory}
-        >
-          <FontAwesome5 name='history' size={28} color={'black'}/>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={openLoginModal}
-        >
-          <Ionicons name='person' size={28} color={'black'}/>
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          onPress={openSignUpModal}
-        >
-          <Ionicons name='person-add' size={28} color={'black'}/>
-        </TouchableOpacity>
-        
+        <HistoryButton onPress={handleBetHistory} />
+        <LoginButton onPress={openLoginModal} />
+        <SignUpButton onPress={openSignUpModal} />
       </Header>
       <ScrollView>
         <StatusBar style="auto" backgroundColor='transparent'/>
         <ProfitDashboard wagered={amountWagered} won={amountWon} />
         <YesterdaysBets bets={myBetList}/>
-        <BetView bets={myBetList}/>
+        <TodaysBets bets={myBetList}/>
       </ScrollView>
     </View>
   );
