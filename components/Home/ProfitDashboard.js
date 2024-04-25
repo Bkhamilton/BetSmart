@@ -3,22 +3,14 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '../Themed';
-import { useColorScheme } from 'react-native';
-
-import Colors from '@/constants/Colors';
+import useTheme from '@/hooks/useTheme';
 
 export default function ProfitDashboard({ wagered, won }) {
     const profit = won - wagered;
     const arrowDirection = profit > 0 ? 'chevron-up' : 'chevron-down';
     const arrowColor = profit > 0 ? 'green' : 'red';
-  
-    const colorScheme = useColorScheme();
 
-    const backgroundGreen = colorScheme === 'dark' ? Colors.dark.mainGreen : Colors.light.mainGreen;
-    const accentGreen = colorScheme === 'dark' ? Colors.dark.accentGreen : Colors.light.accentGreen;
-    const greenText = colorScheme === 'dark' ? '#36d363' : '#25A74A';
-    const grayBackground = colorScheme === 'dark' ? '#313131' : '#F5F5F5';
-    const grayBorder = colorScheme === 'dark' ? '#292929' : '#EBEBEB';
+    const { backgroundGreen, accentGreen, greenText, grayBackground, grayBorder } = useTheme();
 
     const [betIndex, setBetIndex] = React.useState(0);
 
