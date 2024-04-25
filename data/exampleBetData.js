@@ -1,7 +1,11 @@
 export const myBetList = [
     {
+      id: 1,
+      type: 'parlay',
       date: '4/4/24',
       odds: '+543',
+      betAmount: 20.00,
+      winnings: 108.60,
       bets: [
         {
           date: '4/4/24',
@@ -11,6 +15,7 @@ export const myBetList = [
           odds: '+168',
           legs: [
             {
+              type: 'Player Points',
               betTarget: 'Lebron James',
               stat: 'Points',
               alt: true,
@@ -18,6 +23,7 @@ export const myBetList = [
               overUnder: 'over'
             },
             {
+              type: 'Player Assists',
               betTarget: 'Lebron James',
               stat: 'Assists',
               alt: false,
@@ -25,6 +31,7 @@ export const myBetList = [
               overUnder: 'over'
             },
             {
+              type: 'Player Rebounds',
               betTarget: 'Nikola Jokic',
               stat: 'Points',
               alt: false,
@@ -41,6 +48,7 @@ export const myBetList = [
           odds: '+140',
           legs: [
             {
+              type: 'Player Points',
               betTarget: 'Alperen Sengun',
               stat: 'Points',
               alt: true,
@@ -48,6 +56,7 @@ export const myBetList = [
               overUnder: 'over'
             },
             {
+              type: 'Player Assists',
               betTarget: 'Alperen Sengun',
               stat: 'Assists',
               alt: false,
@@ -55,6 +64,7 @@ export const myBetList = [
               overUnder: 'over'
             },
             {
+              type: 'Player Threes',
               betTarget: 'Fred VanVleet',
               stat: 'Threes',
               alt: true,
@@ -66,8 +76,12 @@ export const myBetList = [
       ]
     },
     {
+      id: 2,
+      type: 'parlay',
       date: '4/4/24',
-      odds: '+200',
+      odds: '+120',
+      betAmount: 20.00,
+      winnings: 44.00,
       bets: [
         {
           date: '4/4/24',
@@ -77,6 +91,7 @@ export const myBetList = [
           odds: '+120',
           legs: [
             {
+              type: 'Player Points',
               betTarget: 'Jayson Tatum',
               stat: 'Points',
               alt: true,
@@ -84,6 +99,7 @@ export const myBetList = [
               overUnder: 'over'
             },
             {
+              type: 'Player Rebounds',
               betTarget: 'Jayson Tatum',
               stat: 'Rebounds',
               alt: false,
@@ -91,6 +107,7 @@ export const myBetList = [
               overUnder: 'over'
             },
             {
+              type: 'Player Assists',
               betTarget: 'Bam Adebayo',
               stat: 'Assists',
               alt: false,
