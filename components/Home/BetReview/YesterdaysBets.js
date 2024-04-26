@@ -86,6 +86,29 @@ export default function YesterdaysBets({ bets }) {
 
   const { text, borderColor, greenText } = useTheme();
 
+  // Function to determine font size
+  const determineFontSize = (won, total) => {
+    if (won.toString().length > 1 && total.toString().length > 1) {
+      return 11;
+    } else {
+      return 12;
+    }
+  };
+
+  const StatCounter = ({ title, won, total }) => {
+    const fontSize = determineFontSize(won, total);
+    
+    return (
+    <View style={styles.statCounterContainer}>
+      <View style={styles.statCounterTitle}>
+        <Text style={styles.statCounterTitleText}>{title}:</Text>
+      </View>
+      <View style={styles.statCounterTotal}>
+        <Text style={[styles.statCounterTotalText, { fontSize: fontSize }]}>{`${won}/${total}`}</Text>
+      </View>
+    </View>
+  )};
+
   return (
     <View style={styles.container}>
         <View style={{ backgroundColor: 'transparent', paddingBottom: 8 }}>
@@ -99,7 +122,7 @@ export default function YesterdaysBets({ bets }) {
         >
           {showDetails ? (
             <>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, }}>
                 <View style={styles.detailsContainer}>
                   <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
                   <Text style={{ fontSize: 18, fontWeight: '600', marginTop: 18 }}> bets</Text>
@@ -108,7 +131,7 @@ export default function YesterdaysBets({ bets }) {
                   <Text style={{ fontSize: 16, fontWeight: '600' }}>Bet:</Text>
                   <View>
                     {betSlips.map(bet => (
-                      <Text key={bet.id} style={{ fontSize: 18, fontWeight: '700', color: bet.betStatus === 'won' ? text : 'red' }}>{`$${bet.betAmount.toFixed(2)}`}</Text>
+                      <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.betStatus === 'won' ? '500' : '700', color: bet.betStatus === 'won' ? text : 'red' }}>{`$${bet.betAmount.toFixed(2)}`}</Text>
                     ))}
                   </View>
                 </View>
@@ -116,15 +139,28 @@ export default function YesterdaysBets({ bets }) {
                   <Text style={{ fontSize: 16, fontWeight: '600' }}>Won:</Text>
                   <View>
                     {betSlips.map(bet => (
-                      <Text key={bet.id} style={{ fontSize: 18, fontWeight: '700', color: bet.betStatus === 'won' ? greenText : text }}>{`$${bet.betWon.toFixed(2)}`}</Text>
+                      <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.betStatus === 'won' ? '700' : '500', color: bet.betStatus === 'won' ? greenText : text }}>{`$${bet.betWon.toFixed(2)}`}</Text>
                     ))}
                   </View>
                 </View>
-              </View>            
+              </View>
+              <View style={styles.divider} />
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0 }}>
+                <StatCounter title="SPREAD" won={3} total={3} />
+                <StatCounter title="ML" won={2} total={3} />
+                <StatCounter title="O/U" won={3} total={8} />
+                <StatCounter title="PTS" won={2} total={4} />
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0 }}>
+                <StatCounter title="AST" won={3} total={3} />
+                <StatCounter title="REB" won={2} total={3} />
+                <StatCounter title="3PT" won={1} total={2} />
+                <StatCounter title="TOTAL" won={16} total={26} />
+              </View>               
             </>
           ) : (
             <>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12 }}>
                 <View style={styles.infoContainer}>
                   <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
                   <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 6 }}> bets</Text>
@@ -135,9 +171,16 @@ export default function YesterdaysBets({ bets }) {
                 </View>
                 <View style={[styles.infoContainer, { marginBottom: 6 }]}>
                   <Text style={{ fontSize: 16, fontWeight: '600' }}>Won:</Text>
-                  <Text style={{ fontSize: 18, fontWeight: '700', color: 'green' }}>{`$${amountWon.toFixed(2)}`}</Text>
+                  <Text style={{ fontSize: 18, fontWeight: '700', color: greenText }}>{`$${amountWon.toFixed(2)}`}</Text>
                 </View>
               </View>
+              <View style={styles.divider} />
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0 }}>
+                <StatCounter title="SPREAD" won={3} total={3} />
+                <StatCounter title="ML" won={2} total={3} />
+                <StatCounter title="PLAYER" won={8} total={12} />
+                <StatCounter title="TOTAL" won={16} total={26} />
+              </View>  
             </>
 
           )}
@@ -156,7 +199,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingVertical: 8,
     borderRadius: 8,
-    paddingHorizontal: 12,
     shadowOffset: {
       width: 0,
       height: 1,
@@ -175,5 +217,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     backgroundColor: 'transparent',
+  },
+  statCounterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
+  },
+  statCounterTitle: {
+    flex: 0.61,
+    alignItems: 'flex-end',
+  },
+  statCounterTotal: {
+    flex: 0.39,
+    alignItems: 'flex-start',
+  },  
+  statCounterTitleText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  statCounterTotalText: {
+    fontWeight: '700',
+  },
+  divider: {
+    height: 1,
+    marginHorizontal: 4,
+    borderTopWidth: 1,
+    opacity: 0.2,
+    marginTop: 8, 
+    marginBottom: 4,
   }
 });
