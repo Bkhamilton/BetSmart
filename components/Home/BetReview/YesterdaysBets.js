@@ -122,12 +122,18 @@ export default function YesterdaysBets({ bets }) {
         >
           {showDetails ? (
             <>
+              <View style={{ opacity: 0.4, paddingHorizontal: 4, flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 2 }}>
+                <Text style={{ fontSize: 10, fontWeight: '500' }}>Main Info</Text>
+                <View style={{ width: 58, alignItems: 'flex-start' }}>
+                  <Text style={{ fontSize: 10, fontWeight: '500', color: greenText }}>Show Less</Text>
+                </View>
+              </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, }}>
-                <View style={styles.detailsContainer}>
+                <View style={[styles.detailsContainer, { flex: 0.3 }]}>
                   <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
                   <Text style={{ fontSize: 18, fontWeight: '600', marginTop: 18 }}> bets</Text>
                 </View>
-                <View style={[styles.detailsContainer, { marginBottom: 6 }]}>
+                <View style={[styles.detailsContainer, { marginBottom: 6, marginTop: 20, flex: 0.35, marginLeft: 16 }]}>
                   <Text style={{ fontSize: 16, fontWeight: '600' }}>Bet:</Text>
                   <View>
                     {betSlips.map(bet => (
@@ -135,7 +141,7 @@ export default function YesterdaysBets({ bets }) {
                     ))}
                   </View>
                 </View>
-                <View style={[styles.detailsContainer, { marginBottom: 6 }]}>
+                <View style={[styles.detailsContainer, { marginBottom: 6, marginTop: 20, flex: 0.35, marginLeft: 16 }]}>
                   <Text style={{ fontSize: 16, fontWeight: '600' }}>Won:</Text>
                   <View>
                     {betSlips.map(bet => (
@@ -143,6 +149,9 @@ export default function YesterdaysBets({ bets }) {
                     ))}
                   </View>
                 </View>
+              </View>
+              <View style={{ paddingHorizontal: 4, paddingTop: 8, opacity: 0.4, }}>
+                <Text style={{ fontSize: 10, fontWeight: '500' }}>Details</Text>
               </View>
               <View style={styles.divider} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0 }}>
@@ -160,19 +169,28 @@ export default function YesterdaysBets({ bets }) {
             </>
           ) : (
             <>
+              <View style={{ opacity: 0.4, paddingHorizontal: 4, flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 2 }}>
+                <Text style={{ fontSize: 10, fontWeight: '500' }}>Main Info</Text>
+                <View style={{ width: 58, alignItems: 'flex-start' }}>
+                  <Text style={{ fontSize: 10, fontWeight: '500', color: greenText }}>Show More</Text>
+                </View>
+              </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12 }}>
-                <View style={styles.infoContainer}>
+                <View style={[styles.infoContainer, { flex: 0.3 }]}>
                   <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
                   <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 6 }}> bets</Text>
                 </View>
-                <View style={[styles.infoContainer, { marginBottom: 6 }]}>
+                <View style={[styles.infoContainer, { marginBottom: 6, flex: 0.35, marginLeft: 16 }]}>
                   <Text style={{ fontSize: 16, fontWeight: '600' }}>Bet:</Text>
-                  <Text style={{ fontSize: 18, fontWeight: '700', color: 'red' }}>{`$${amountBet.toFixed(2)}`}</Text>
+                  <Text style={{ fontSize: 18, fontWeight: '700', color: 'red', marginBottom: -2 }}>{`$${amountBet.toFixed(2)}`}</Text>
                 </View>
-                <View style={[styles.infoContainer, { marginBottom: 6 }]}>
+                <View style={[styles.infoContainer, { marginBottom: 6, flex: 0.35, marginLeft: 16  }]}>
                   <Text style={{ fontSize: 16, fontWeight: '600' }}>Won:</Text>
-                  <Text style={{ fontSize: 18, fontWeight: '700', color: greenText }}>{`$${amountWon.toFixed(2)}`}</Text>
+                  <Text style={{ fontSize: 18, fontWeight: '700', color: greenText, marginBottom: -2 }}>{`$${amountWon.toFixed(2)}`}</Text>
                 </View>
+              </View>
+              <View style={{ paddingHorizontal: 4, paddingTop: 8, opacity: 0.4, }}>
+                <Text style={{ fontSize: 10, fontWeight: '500' }}>Details</Text>
               </View>
               <View style={styles.divider} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0 }}>
@@ -182,7 +200,6 @@ export default function YesterdaysBets({ bets }) {
                 <StatCounter title="TOTAL" won={16} total={26} />
               </View>  
             </>
-
           )}
         </Pressable>
     </View>
@@ -197,7 +214,8 @@ const styles = StyleSheet.create({
   },
   mainInfo: {
     borderWidth: 1,
-    paddingVertical: 8,
+    paddingTop: 4,
+    paddingBottom: 8,
     borderRadius: 8,
     shadowOffset: {
       width: 0,
@@ -244,7 +262,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     borderTopWidth: 1,
     opacity: 0.2,
-    marginTop: 8, 
-    marginBottom: 4,
+    marginBottom: 6,
   }
 });
