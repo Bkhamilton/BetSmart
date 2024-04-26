@@ -2,7 +2,7 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View } from '../Themed';
+import { TouchableOpacity, Text, View, Pressable } from '../Themed';
 import useTheme from '@/hooks/useTheme';
 
 export default function ProfitDashboard({ wagered, won }) {
@@ -10,7 +10,7 @@ export default function ProfitDashboard({ wagered, won }) {
     const arrowDirection = profit > 0 ? 'chevron-up' : 'chevron-down';
     const arrowColor = profit > 0 ? 'green' : 'red';
 
-    const { backgroundGreen, accentGreen, greenText, grayBackground, grayBorder } = useTheme();
+    const { mainGreen, accentGreen, mainBlue, accentBlue, greenText, grayBackground, grayBorder, text, backgroundColor } = useTheme();
 
     const [betIndex, setBetIndex] = React.useState(0);
 
@@ -38,7 +38,7 @@ export default function ProfitDashboard({ wagered, won }) {
 
     return (
     <View style={styles.container}>
-        <View style={[styles.centeredBox, { backgroundColor: backgroundGreen, borderColor: backgroundGreen }]}>
+        <View style={[styles.centeredBox, { backgroundColor: mainGreen, borderColor: mainGreen }]}>
             <View style={[styles.box, { overflow: 'hidden', height: '100%', borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }]}>
                 <View style={[styles.dollarContainer, { borderColor: accentGreen }]}>
                     <FontAwesome name="dollar" size={60} color={accentGreen}/>
@@ -84,6 +84,22 @@ export default function ProfitDashboard({ wagered, won }) {
                 <Text>Total Bet</Text>
                 <Text style={[styles.moneyText, { color: '#ff5757' }]}>${wagered.toFixed(2)}</Text>
             </View>
+        </View>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 12 }}>
+          <Pressable
+            style={[styles.bankButton, { marginLeft: 10, marginRight: 4, backgroundColor: mainGreen, borderColor: mainGreen}]}
+          >
+              {({ pressed }) => (
+                <Text style={{ fontSize: 14, fontWeight: '600', color: pressed ? backgroundColor : text }}>Withdraw</Text>
+              )}
+          </Pressable>
+          <Pressable
+            style={[styles.bankButton, { marginLeft: 4, marginRight: 10, backgroundColor: mainGreen, borderColor: mainGreen }]}
+          >
+            {({ pressed }) => (
+              <Text style={{ fontSize: 14, fontWeight: '600', color: pressed ? backgroundColor : text }}>Deposit</Text>
+            )}
+          </Pressable>
         </View>
     </View>
   );
@@ -190,4 +206,12 @@ const styles = StyleSheet.create({
     fontSize: 10,
     opacity: 0.4
   },
+  bankButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    alignItems: 'center',
+    flex: 1,
+  }
 });
