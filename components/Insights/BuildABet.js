@@ -53,7 +53,7 @@ export default function BuildABet() {
   return (
     <View style={styles.container}>
       <View style={styles.titleTextContainer}>
-        <Text style={styles.titleText}>Build A Bet</Text>
+        <Text style={styles.titleText}>Build-A-Bet</Text>
       </View>
       <View style={styles.splitView}>
         <View style={styles.leftView}>
@@ -83,7 +83,6 @@ export default function BuildABet() {
       <View style={styles.generateButtonContainer}>
         <TouchableOpacity style={styles.generateButton}>
           <FontAwesome name="refresh" size={20} color={'black'} />
-          <Text>Generate</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -95,18 +94,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: '100%',
     borderRadius: 8,
-    paddingVertical: 8,
+    paddingTop: 4,
+    paddingBottom: 8,
     paddingHorizontal: 8,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   titleTextContainer: {
     alignItems: 'center',
-    paddingVertical: 4
+    paddingBottom: 4
   },
   titleText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '500',
   },
   splitView: {
     flexDirection: 'row',
@@ -135,9 +135,9 @@ const styles = StyleSheet.create({
   },
   generateButton: {
     borderWidth: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 32,
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
