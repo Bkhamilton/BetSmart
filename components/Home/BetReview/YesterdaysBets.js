@@ -84,7 +84,7 @@ export default function YesterdaysBets({ bets }) {
     setShowDetails(!showDetails);
   };
 
-  const { text, borderColor, greenText } = useTheme();
+  const { text, borderColor, greenText, mainGreen } = useTheme();
 
   // Function to determine font size
   const determineFontSize = (won, total) => {
@@ -118,7 +118,7 @@ export default function YesterdaysBets({ bets }) {
               onPressIn={handlePressIn}
               onPressOut={handlePressOut}
               onPress={handlePress}
-              style={[styles.mainInfo, { borderColor: borderColor }]}
+              style={[styles.mainInfo, { borderColor: borderColor, shadowColor: mainGreen }]}
         >
           {showDetails ? (
             <>
@@ -221,7 +221,6 @@ const styles = StyleSheet.create({
       width: 0,
       height: 1,
     },
-    shadowColor: Colors.light.mainBlue,
     shadowOpacity: 0.2,
     shadowRadius: 3.84,
     elevation: 5,
