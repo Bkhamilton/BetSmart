@@ -72,12 +72,14 @@ export default function BuildABet() {
         </View>
         <View style={styles.rightView}>
             <Text style={{ textAlign: 'right' }}>{moneylineOdds}</Text>
-          {bets.map((bet, index) => (
-            <Text key={index} style={styles.betList}>
-              <Text style={styles.bullet}>{'\u2022'}</Text>
-              <Text> {bet.bet}</Text>
-            </Text>
-          ))}
+            <View style={{ paddingTop: 16 }}>
+              {bets.map((bet, index) => (
+                <Text key={index} style={styles.betList}>
+                  <Text style={styles.bullet}>{'\u2022'}</Text>
+                  <Text> {bet.bet}</Text>
+                </Text>
+              ))}
+            </View>
         </View>
       </View>
       <View style={styles.generateButtonContainer}>
@@ -94,7 +96,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: '100%',
     borderRadius: 8,
-    paddingTop: 4,
+    paddingTop: 8,
     paddingBottom: 8,
     paddingHorizontal: 8,
     alignItems: 'center',
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
   splitView: {
     flexDirection: 'row',
     width: '100%',
-    height: 100,
+    height: 140,
   },
   leftView: {
     flex: 1,
@@ -122,7 +124,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 16,
     justifyContent: 'flex-start',
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingTop: 8,
+    paddingBottom: 16,
   },
   betList: {
     flexDirection: 'row',
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
     width: 10,
   },
   generateButtonContainer: {
-    paddingTop: 16
+    paddingTop: 4,
   },
   generateButton: {
     borderWidth: 1,
