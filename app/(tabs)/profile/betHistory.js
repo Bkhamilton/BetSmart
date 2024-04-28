@@ -27,11 +27,19 @@ export default function SettingsScreen() {
     return (
     <View style={styles.container}>
         <View style={styles.headerContainer}>
-          <TouchableOpacity 
-            onPress={handleClose}
-          >
-            <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
-          </TouchableOpacity>        
+          <View style={{ flex: 0.2, }}>
+            <TouchableOpacity 
+              onPress={handleClose}
+            >
+              <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
+            </TouchableOpacity>  
+          </View>
+          <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 14, fontWeight: '600' }}>All Bets</Text>
+          </View>
+          <View style={{ flex: 0.2 }}>
+
+          </View>
         </View>
         <ChooseBetType selectType={changeType} type={selectedType}/>
         <ScrollView>
@@ -49,8 +57,9 @@ const styles = StyleSheet.create({
     height: 84, 
     paddingHorizontal: 20, 
     paddingTop: 48,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   settingsHeader: {
     paddingHorizontal: 20, 
