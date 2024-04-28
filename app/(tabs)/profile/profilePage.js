@@ -3,10 +3,11 @@ import { useRouter } from 'expo-router';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import ProfileHeader from '@/components/Profile/ProfileHeader';
 import UserFavorites from '@/components/Profile/UserFavorites';
 import Achievements from '../../../components/Profile/Achievements';
+import useTheme from '@/hooks/useTheme';
 
 export default function ProfileScreen() {
 
@@ -16,13 +17,27 @@ export default function ProfileScreen() {
     router.navigate('profile/settings');
   };
 
+  const handleBetHistory = () => {
+    router.navigate('profile/betHistory');
+  };
+
+  const { iconColor } = useTheme();
+
   return (
     <View style={styles.container}>
       <Header title={'Username'}>
         <TouchableOpacity 
-          onPress={handleSettings}
+          onPress={handleBetHistory} 
+          accessibilityLabel="Open Bet History"
+          style={{ marginRight: 4 }}
         >
-          <FontAwesome name="cog" size={24} color={'black'}/>
+          <FontAwesome5 name='history' size={24} color={iconColor} />
+        </TouchableOpacity>
+        <TouchableOpacity 
+          onPress={handleSettings}
+          accessibilityLabel="Open Settings"
+        >
+          <FontAwesome name="cog" size={24} color={iconColor}/>
         </TouchableOpacity>
       </Header>
       <ScrollView> 
