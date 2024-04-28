@@ -84,7 +84,7 @@ export default function YesterdaysBets({ bets }) {
     setShowDetails(!showDetails);
   };
 
-  const { text, borderColor, greenText, mainGreen } = useTheme();
+  const { text, borderColor, greenText, mainGreen, grayBackground, grayBorder } = useTheme();
 
   // Function to determine font size
   const determineFontSize = (won, total) => {
@@ -118,24 +118,24 @@ export default function YesterdaysBets({ bets }) {
               onPressIn={handlePressIn}
               onPressOut={handlePressOut}
               onPress={handlePress}
-              style={[styles.mainInfo, { borderColor: borderColor, shadowColor: mainGreen }]}
+              style={[styles.mainInfo, { borderColor: grayBorder, shadowColor: mainGreen, backgroundColor: grayBackground }]}
         >
           {showDetails ? (
             <>
-              <View style={{ opacity: 0.4, paddingHorizontal: 4, flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 2 }}>
+              <View style={{ opacity: 0.4, paddingHorizontal: 4, flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 2, backgroundColor: 'transparent' }}>
                 <Text style={{ fontSize: 10, fontWeight: '500' }}>Main Info</Text>
-                <View style={{ width: 58, alignItems: 'flex-start' }}>
+                <View style={{ width: 58, alignItems: 'flex-start', backgroundColor: 'transparent' }}>
                   <Text style={{ fontSize: 10, fontWeight: '500', color: greenText }}>Show Less</Text>
                 </View>
               </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, backgroundColor: 'transparent' }}>
                 <View style={[styles.detailsContainer, { flex: 0.3 }]}>
                   <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
                   <Text style={{ fontSize: 18, fontWeight: '600', marginTop: 18 }}> bets</Text>
                 </View>
                 <View style={[styles.detailsContainer, { marginBottom: 6, marginTop: 20, flex: 0.35, marginLeft: 16 }]}>
                   <Text style={{ fontSize: 16, fontWeight: '600' }}>Bet:</Text>
-                  <View>
+                  <View style={{ backgroundColor: 'transparent' }}>
                     {betSlips.map(bet => (
                       <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.betStatus === 'won' ? '500' : '700', color: bet.betStatus === 'won' ? text : 'red' }}>{`$${bet.betAmount.toFixed(2)}`}</Text>
                     ))}
@@ -143,24 +143,24 @@ export default function YesterdaysBets({ bets }) {
                 </View>
                 <View style={[styles.detailsContainer, { marginBottom: 6, marginTop: 20, flex: 0.35, marginLeft: 16 }]}>
                   <Text style={{ fontSize: 16, fontWeight: '600' }}>Won:</Text>
-                  <View>
+                  <View style={{ backgroundColor: 'transparent' }}>
                     {betSlips.map(bet => (
                       <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.betStatus === 'won' ? '700' : '500', color: bet.betStatus === 'won' ? greenText : text }}>{`$${bet.betWon.toFixed(2)}`}</Text>
                     ))}
                   </View>
                 </View>
               </View>
-              <View style={{ paddingHorizontal: 4, paddingTop: 8, opacity: 0.4, }}>
+              <View style={{ paddingHorizontal: 4, paddingTop: 8, opacity: 0.4, backgroundColor: 'transparent' }}>
                 <Text style={{ fontSize: 10, fontWeight: '500' }}>Details</Text>
               </View>
               <View style={styles.divider} />
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0, backgroundColor: 'transparent' }}>
                 <StatCounter title="SPREAD" won={3} total={3} />
                 <StatCounter title="ML" won={2} total={3} />
                 <StatCounter title="O/U" won={3} total={8} />
                 <StatCounter title="PTS" won={2} total={4} />
               </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0, backgroundColor: 'transparent' }}>
                 <StatCounter title="AST" won={3} total={3} />
                 <StatCounter title="REB" won={2} total={3} />
                 <StatCounter title="3PT" won={1} total={2} />
@@ -169,13 +169,13 @@ export default function YesterdaysBets({ bets }) {
             </>
           ) : (
             <>
-              <View style={{ opacity: 0.4, paddingHorizontal: 4, flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 2 }}>
+              <View style={{ opacity: 0.4, paddingHorizontal: 4, flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 2, backgroundColor: 'transparent' }}>
                 <Text style={{ fontSize: 10, fontWeight: '500' }}>Main Info</Text>
-                <View style={{ width: 58, alignItems: 'flex-start' }}>
+                <View style={{ width: 58, alignItems: 'flex-start', backgroundColor: 'transparent' }}>
                   <Text style={{ fontSize: 10, fontWeight: '500', color: greenText }}>Show More</Text>
                 </View>
               </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 12, backgroundColor: 'transparent' }}>
                 <View style={[styles.infoContainer, { flex: 0.3 }]}>
                   <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
                   <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 6 }}> bets</Text>
@@ -189,11 +189,11 @@ export default function YesterdaysBets({ bets }) {
                   <Text style={{ fontSize: 18, fontWeight: '700', color: greenText, marginBottom: -2 }}>{`$${amountWon.toFixed(2)}`}</Text>
                 </View>
               </View>
-              <View style={{ paddingHorizontal: 4, paddingTop: 8, opacity: 0.4, }}>
+              <View style={{ paddingHorizontal: 4, paddingTop: 8, opacity: 0.4, backgroundColor: 'transparent' }}>
                 <Text style={{ fontSize: 10, fontWeight: '500' }}>Details</Text>
               </View>
               <View style={styles.divider} />
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 0, backgroundColor: 'transparent' }}>
                 <StatCounter title="SPREAD" won={3} total={3} />
                 <StatCounter title="ML" won={2} total={3} />
                 <StatCounter title="PLAYER" won={8} total={12} />
@@ -239,15 +239,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flex: 1,
+    flex: 1, 
+    backgroundColor: 'transparent',
   },
   statCounterTitle: {
     flex: 0.61,
     alignItems: 'flex-end',
+    backgroundColor: 'transparent',  
   },
   statCounterTotal: {
     flex: 0.39,
     alignItems: 'flex-start',
+    backgroundColor: 'transparent',  
   },  
   statCounterTitleText: {
     fontSize: 12,
