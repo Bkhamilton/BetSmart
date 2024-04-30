@@ -30,7 +30,7 @@ export default function InsightScreen() {
 
   return (
     <View style={styles.container}>
-      <Header title={"BetSmart"} />
+      <Header title={"Insights"} />
       <View style={{ paddingHorizontal: 10, paddingVertical: 12 }}>
         <BuildABet />
       </View>
