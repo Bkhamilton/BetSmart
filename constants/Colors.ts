@@ -17,6 +17,7 @@ export default {
     accentGreen: '#268023',
     accentBlue: '#0B5D83',
     greenText: '#25A74A',
+    redText: '#ff5757',
   },
   dark: {
     text: '#fff',
@@ -33,5 +34,6 @@ export default {
     accentGreen: '#4AD346',
     accentBlue: '#1292CE',
     greenText: '#36d363',
+    redText: '#ff5757',
   },
 };
