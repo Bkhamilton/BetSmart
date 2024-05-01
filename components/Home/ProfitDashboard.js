@@ -68,7 +68,7 @@ export default function ProfitDashboard({ wagered, won }) {
       return (
         <View style={[styles.centeredBox, { backgroundColor: balanceColor, borderColor: balanceBorderColor }]}>
             <View style={[styles.box, { overflow: 'hidden', height: '100%', borderTopLeftRadius: 8, borderBottomLeftRadius: 8, flex: 0.28, }]}>
-              <Pressable 
+              <TouchableOpacity 
                 onLongPress={selectBookie}
                 style={[styles.dollarContainer, { borderColor: accentGreen, borderWidth: bookie === 'Total' ? 10 : 2 }]}
               >
@@ -77,7 +77,7 @@ export default function ProfitDashboard({ wagered, won }) {
                 ) : (
                   <Image source={bookieImages[bookie]} style={{ width: 100, height: 100, borderRadius: 50 }}/>
                 )}
-              </Pressable>
+              </TouchableOpacity>
             </View>
             <View style={styles.centerBox}>
                 <Text>{bookie.toUpperCase()} BALANCE</Text>
