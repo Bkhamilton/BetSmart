@@ -1,9 +1,11 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable } from '../Themed';
 import useTheme from '@/hooks/useTheme';
+import draftkings from '@/assets/images/DraftKings.png';
+import fanduel from '@/assets/images/FanDuel.jpg';
 
 export default function ProfitDashboard({ wagered, won }) {
     const profit = won - wagered;
@@ -13,6 +15,7 @@ export default function ProfitDashboard({ wagered, won }) {
     const { mainGreen, accentGreen, mainBlue, accentBlue, greenText, grayBackground, grayBorder, text, backgroundColor } = useTheme();
 
     const [betIndex, setBetIndex] = React.useState(0);
+    const [bookie, setBookie] = React.useState('DraftKings');
 
     const pressUp = () => {
       setBetIndex((prevIndex) => (prevIndex === 0 ? 0 : prevIndex - 1));
@@ -29,6 +32,11 @@ export default function ProfitDashboard({ wagered, won }) {
     ];    
 
     const recentResults = [10.9, -5, 2.3, 15.80, -8.50, 6.7];
+    const recentFanDuelResults = [5.9, -3, 1.3, 10.80, -5.50, 3.7];
+    const recentDraftKingsResults = [7.9, -4, 2.3, 12.80, -7.50, 5.7];
+
+    const draftKingsBalance = 75.00;
+    const fanDuelBalance = 100.00;
 
     // Function to format the value of the recent bet results
     const formatValue = (num) => {
@@ -36,19 +44,48 @@ export default function ProfitDashboard({ wagered, won }) {
       return `${sign}$${Math.abs(num).toFixed(2)}`;
     };
 
-    return (
-    <View style={styles.container}>
-        <View style={[styles.centeredBox, { backgroundColor: mainGreen, borderColor: mainGreen }]}>
-            <View style={[styles.box, { overflow: 'hidden', height: '100%', borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }]}>
-                <View style={[styles.dollarContainer, { borderColor: accentGreen }]}>
-                    <FontAwesome name="dollar" size={60} color={accentGreen}/>
-                </View>
+    const bookieImages = {
+      'DraftKings': draftkings,
+      'FanDuel': fanduel,
+    };
+
+    const selectBookie = () => {
+      setBookie((prevBookie) => {
+        if (prevBookie === 'DraftKings') {
+          return 'FanDuel';
+        } else if (prevBookie === 'FanDuel') {
+          return 'Total';
+        } else {
+          return 'DraftKings';
+        }
+      });
+    };
+
+    const balanceColor = bookie === 'FanDuel' ? mainBlue : mainGreen;
+    const balanceBorderColor = bookie === 'FanDuel' ? accentBlue : mainGreen;
+
+    const BalanceChecker = () => {
+      return (
+        <View style={[styles.centeredBox, { backgroundColor: balanceColor, borderColor: balanceBorderColor }]}>
+            <View style={[styles.box, { overflow: 'hidden', height: '100%', borderTopLeftRadius: 8, borderBottomLeftRadius: 8, flex: 0.28, }]}>
+              <Pressable 
+                onLongPress={selectBookie}
+                style={[styles.dollarContainer, { borderColor: accentGreen, borderWidth: bookie === 'Total' ? 10 : 2 }]}
+              >
+                {bookie === 'Total' ? (
+                  <FontAwesome name="dollar" size={60} color={accentGreen}/>
+                ) : (
+                  <Image source={bookieImages[bookie]} style={{ width: 100, height: 100, borderRadius: 50 }}/>
+                )}
+              </Pressable>
             </View>
             <View style={styles.centerBox}>
-                <Text>CURRENT BALANCE</Text>
-                <Text style={[styles.bigMoneyText, { marginTop: 8 }]}>${profit.toFixed(2)}</Text>
+                <Text>{bookie.toUpperCase()} BALANCE</Text>
+                <Text style={[styles.bigMoneyText, { marginTop: 8 }]}>
+                  ${bookie === 'FanDuel' ? fanDuelBalance.toFixed(2) : bookie === 'DraftKings' ? draftKingsBalance.toFixed(2) : (fanDuelBalance + draftKingsBalance).toFixed(2)}
+                </Text>
             </View>
-            <View style={styles.box}>
+            <View style={[styles.box, { flex: 0.26, }]}>
                 <View style={{ alignItems: 'flex-end', paddingRight: 8, backgroundColor: 'transparent' }}>
                 <TouchableOpacity 
                   style={{ backgroundColor: 'transparent', opacity: betIndex === 0 ? 1 : 0.5 }}
@@ -64,12 +101,23 @@ export default function ProfitDashboard({ wagered, won }) {
                 </TouchableOpacity>
                 </View>
                 <View style={styles.moneyBox}>
-                  <Text style={textStyles[betIndex][0]}>{formatValue(recentResults[0])}</Text>
-                  <Text style={textStyles[betIndex][1]}>{formatValue(recentResults[1])}</Text>
-                  <Text style={textStyles[betIndex][2]}>{formatValue(recentResults[2])}</Text>
+                  <Text style={textStyles[betIndex][0]}>
+                    {formatValue(bookie === 'FanDuel' ? recentFanDuelResults[0] : bookie === 'DraftKings' ? recentDraftKingsResults[0] : recentResults[0])}
+                  </Text>
+                  <Text style={textStyles[betIndex][1]}>
+                    {formatValue(bookie === 'FanDuel' ? recentFanDuelResults[1] : bookie === 'DraftKings' ? recentDraftKingsResults[1] : recentResults[1])}
+                  </Text>
+                  <Text style={textStyles[betIndex][2]}>
+                    {formatValue(bookie === 'FanDuel' ? recentFanDuelResults[2] : bookie === 'DraftKings' ? recentDraftKingsResults[2] : recentResults[2])}
+                  </Text>
                 </View>
             </View>
         </View>
+      );
+    }
+
+    const BetResults = () => {
+      return (
         <View style={styles.row}>
             <View style={[styles.leftBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
                 <Text style={{ paddingLeft: 16 }}>Total Won</Text>
@@ -85,6 +133,11 @@ export default function ProfitDashboard({ wagered, won }) {
                 <Text style={[styles.moneyText, { color: '#ff5757' }]}>${wagered.toFixed(2)}</Text>
             </View>
         </View>
+      );
+    }
+
+    const BankButtons = () => {
+      return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingTop: 12 }}>
           <Pressable
             style={[styles.bankButton, { marginLeft: 10, marginRight: 4, backgroundColor: mainGreen, borderColor: mainGreen}]}
@@ -101,14 +154,18 @@ export default function ProfitDashboard({ wagered, won }) {
             )}
           </Pressable>
         </View>
-    </View>
+      );
+    }
+
+    return (
+    <>
+        <BalanceChecker />
+        <BetResults />
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 0,
-  },
   centeredBox: {
     flexDirection: 'row',
     alignItems: 'center', 
@@ -119,11 +176,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   box: {
-    flex: 0.3,
     backgroundColor: 'transparent'
   },
   centerBox: {
-    flex: 0.4,
+    flex: 0.46,
     paddingTop: 28,
     paddingBottom: 24, 
     alignItems: 'center',
@@ -181,10 +237,9 @@ const styles = StyleSheet.create({
   dollarContainer: {
     alignItems: 'center', 
     justifyContent: 'center',
-    height: 110, 
-    width: 110, 
+    height: 100, 
+    width: 100, 
     borderRadius: 55, 
-    borderWidth: 10, 
     transform: [{ translateY: 45 }],
     opacity: 0.3,
     backgroundColor: 'transparent'
