@@ -7,7 +7,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { BetContext } from '@/contexts/BetContext';
 import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '@/data/teamAbbreviations';
 import CategorySlider from '../../../components/PlaceBet/BetDetails/CategorySlider';
-import MainInfo from '../../../components/PlaceBet/BetDetails/MainInfo';
+import IntroInfo from '../../../components/PlaceBet/BetDetails/IntroInfo';
 
 export default function BetDetailsScreen() {
   const { currentGame } = useContext(BetContext);
@@ -56,7 +56,7 @@ export default function BetDetailsScreen() {
     <View style={styles.container}>
       <GameHeader />
       <ScrollView>
-        <MainInfo currentGame={currentGame} />
+        <IntroInfo currentGame={currentGame} />
         <CategorySlider />
       </ScrollView>
     </View>
