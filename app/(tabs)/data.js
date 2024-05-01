@@ -14,12 +14,21 @@ export default function DataScreen() {
     setSelectedTime(timeRange);
   };
 
+  const MainHeader = () => {
+    return (
+      <View>
+        <View style={styles.headerContainer}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Analytics</Text>
+        </View>
+        <TimeSelector selectTime={selectTime} curTime={selectedTime}/>
+      </View>
+    )
+  };
+
   return (
     <View style={styles.container}>
-      <Header title={'Analytics'}/>
+      <MainHeader/>
       <ScrollView>
-        <DataHeader />
-        <TimeSelector selectTime={selectTime} curTime={selectedTime}/>
         <AnalyticsDisplay data={selectedTime}/>
       </ScrollView>
     </View>
@@ -29,5 +38,12 @@ export default function DataScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  headerContainer: {
+    height: 84, 
+    paddingHorizontal: 20, 
+    paddingTop: 48,
+    borderBottomWidth: 1,
+    justifyContent: 'center',
   },
 });
