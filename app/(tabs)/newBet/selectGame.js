@@ -59,23 +59,6 @@ export default function SelectGameScreen() {
     }
   };
 
-  // Function to select a game and set the current game, as well as the current team and players for the home and away teams
-  const selectGame = (game) => {
-    if (curGame.home_team === game.home_team && curGame.away_team === game.away_team) {
-      setcurGame({"away_team": "", "game_id": "", "home_team": "", "participants": [], "start_timestamp": ""});
-      setCurHomeTeam({team:'', players:[]});
-      setCurAwayTeam({team:'', players:[]});
-      setcurCategory('Game');
-      setGameSelected(false);
-    } else {
-      setcurGame(game);
-      setCurHomeTeam({team:game.home_team, players:[]});
-      setCurAwayTeam({team:game.away_team, players:[]});
-      setcurCategory('Team');
-      setGameSelected(true);
-    }
-  }
-
   useEffect(() => {
     const fetchSportsData = async () => {
       const data = await retrieveData(['nba', 'mlb', 'nhl']); // replace with the sports you're interested in
