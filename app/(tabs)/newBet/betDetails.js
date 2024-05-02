@@ -43,7 +43,7 @@ export default function BetDetailsScreen() {
             <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
           </TouchableOpacity>
         </View>
-        <View style={{ flex: 0.4, alignItems: 'center', justifyContent: 'flex-start' }}>
+        <View style={{ flex: 0.4, alignItems: 'center', justifyContent: 'flex-start', marginLeft: -10, }}>
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
   },
   headerContainer: {
     height: 84, 
-    paddingHorizontal: 20, 
+    paddingLeft: 20,
+    paddingRight: 10, 
     paddingTop: 48,
     borderBottomWidth: 1,
     flexDirection: 'row',
