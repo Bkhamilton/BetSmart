@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, FlatList } from 'react-native';
+import { StyleSheet, Dimensions, FlatList, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, Pressable, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
@@ -8,6 +8,8 @@ import { BetContext } from '@/contexts/BetContext';
 import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '@/data/teamAbbreviations';
 import CategorySlider from '../../../components/PlaceBet/BetDetails/CategorySlider';
 import IntroInfo from '../../../components/PlaceBet/BetDetails/IntroInfo';
+import draftkings from '@/assets/images/DraftKings.png';
+import useTheme from '@/hooks/useTheme';
 
 export default function BetDetailsScreen() {
   const { currentGame } = useContext(BetContext);
@@ -30,23 +32,25 @@ export default function BetDetailsScreen() {
       const abbreviations = sportAbbreviations[sport.toLowerCase()];
       return abbreviations ? (abbreviations[teamName] || teamName) : teamName;
   }
+
+  const { mainGreen, iconColor } = useTheme();
   
   const GameHeader = () => {
     return (
       <View style={styles.headerContainer}>
-        <View style={{ flex: 0.2 }}>
+        <View style={{ flex: 0.3 }}>
           <TouchableOpacity onPress={handleClose}>
-            <FontAwesome5 name="chevron-left" size={24} color="black" />
+            <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
           </TouchableOpacity>
         </View>
-        <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'flex-start5' }}>
+        <View style={{ flex: 0.4, alignItems: 'center', justifyContent: 'flex-start' }}>
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league}</Text>
         </View>
-        <View style={{ flex: 0.2, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <Text style={{ fontSize: 20, fontWeight: '500', marginRight: 8 }}>$200</Text>
-          <TouchableOpacity>
-            <FontAwesome5 name="wallet" size={24} color="black" />
-          </TouchableOpacity>
+        <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <Pressable style={[styles.bankButton, { backgroundColor: mainGreen, borderColor: mainGreen }] }>
+            <Text style={{ fontSize: 20, fontWeight: '500', marginRight: 8 }}>$200</Text>
+            <Image source={draftkings} style={{ width: 32, height: 32, borderRadius: 8 }} />
+          </Pressable>
         </View>
       </View>
     )
@@ -75,4 +79,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  bankButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: -8,
+    paddingLeft: 8,
+  }
 });
