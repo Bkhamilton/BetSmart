@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, Dimensions } from 'react-native';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Text, View, ScrollView, TouchableOpacity, SafeAreaView } from '@/components/Themed';
-import { myBetList } from '@/data/exampleBetData';
+import { myBetList, playoffBets } from '@/data/exampleBetData';
 import Header from '@/components/Header/Header';
 import ProfitDashboard from '@/components/Home/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
@@ -77,8 +77,8 @@ export default function HomeScreen() {
       <ScrollView>
         <StatusBar style="auto" backgroundColor='transparent'/>
         <ProfitDashboard wagered={amountWagered} won={amountWon} />
+        <TodaysBets bets={playoffBets}/>
         <YesterdaysBets bets={myBetList}/>
-        <TodaysBets bets={myBetList}/>
       </ScrollView>
     </View>
   );
