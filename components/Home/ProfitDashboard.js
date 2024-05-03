@@ -1,6 +1,6 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons, FontAwesome6 } from '@expo/vector-icons';
 import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable } from '../Themed';
 import useTheme from '@/hooks/useTheme';
@@ -12,7 +12,7 @@ export default function ProfitDashboard({ wagered, won }) {
     const arrowDirection = profit > 0 ? 'chevron-up' : 'chevron-down';
     const arrowColor = profit > 0 ? 'green' : 'red';
 
-    const { mainGreen, accentGreen, mainBlue, accentBlue, greenText, grayBackground, grayBorder, text, backgroundColor } = useTheme();
+    const { mainGreen, accentGreen, mainBlue, accentBlue, greenText, grayBackground, grayBorder, text, backgroundColor, iconColor } = useTheme();
 
     const [betIndex, setBetIndex] = React.useState(0);
     const [bookie, setBookie] = React.useState('DraftKings');
@@ -35,8 +35,16 @@ export default function ProfitDashboard({ wagered, won }) {
     const recentFanDuelResults = [5.9, -3, 1.3, 10.80, -5.50, 3.7];
     const recentDraftKingsResults = [7.9, -4, 2.3, 12.80, -7.50, 5.7];
 
-    const draftKingsBalance = 75.00;
-    const fanDuelBalance = 100.00;
+    const userBalance = [
+      {
+        bookie: 'DraftKings',
+        balance: 75.00,
+      },
+      {
+        bookie: 'FanDuel',
+        balance: 100.00,
+      }
+    ]
 
     // Function to format the value of the recent bet results
     const formatValue = (num) => {
@@ -61,13 +69,30 @@ export default function ProfitDashboard({ wagered, won }) {
       });
     };
 
-    const balanceColor = bookie === 'FanDuel' ? mainBlue : mainGreen;
-    const balanceBorderColor = bookie === 'FanDuel' ? accentBlue : mainGreen;
-
     const BalanceChecker = () => {
+
+      const balanceColor = bookie === 'FanDuel' ? mainBlue : mainGreen;
+      const balanceBorderColor = bookie === 'FanDuel' ? accentBlue : mainGreen;
+      
+      const balanceValue = bookie === 'Total' ? userBalance.reduce((total, item) => total + item.balance, 0) : userBalance.find(item => item.bookie === bookie)?.balance || 0;
+
       return (
         <View style={[styles.centeredBox, { backgroundColor: balanceColor, borderColor: balanceBorderColor }]}>
-            <View style={[styles.box, { overflow: 'hidden', height: '100%', borderTopLeftRadius: 8, borderBottomLeftRadius: 8, flex: 0.28, }]}>
+            <View style={[styles.box, { overflow: 'hidden', borderTopLeftRadius: 8, borderBottomLeftRadius: 8, flex: 0.28, }]}>
+              <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: 'transparent', transform: [{ translateY: 8 }] }}>
+                <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
+                  <TouchableOpacity style={{ backgroundColor: 'transparent', paddingHorizontal: 10, }}>
+                    <FontAwesome6 name="sack-dollar" size={24} color={iconColor}/>
+                  </TouchableOpacity>
+                  <Text style={{ fontSize: 8, opacity: 0.7, fontWeight: '600' }}>Deposit</Text>
+                </View>
+                <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
+                  <TouchableOpacity style={{ backgroundColor: 'transparent', paddingHorizontal: 10 }}>
+                    <FontAwesome6 name="hand-holding-dollar" size={24} color={iconColor}/>
+                  </TouchableOpacity>
+                  <Text style={{ fontSize: 8, opacity: 0.7, fontWeight: '600' }}>Withdraw</Text>
+                </View>
+              </View>
               <TouchableOpacity 
                 onLongPress={selectBookie}
                 style={[styles.dollarContainer, { borderColor: accentGreen, borderWidth: bookie === 'Total' ? 10 : 2 }]}
@@ -82,7 +107,7 @@ export default function ProfitDashboard({ wagered, won }) {
             <View style={styles.centerBox}>
                 <Text>{bookie.toUpperCase()} BALANCE</Text>
                 <Text style={[styles.bigMoneyText, { marginTop: 8 }]}>
-                  ${bookie === 'FanDuel' ? fanDuelBalance.toFixed(2) : bookie === 'DraftKings' ? draftKingsBalance.toFixed(2) : (fanDuelBalance + draftKingsBalance).toFixed(2)}
+                  ${balanceValue.toFixed(2)}
                 </Text>
             </View>
             <View style={[styles.box, { flex: 0.26, }]}>
@@ -240,9 +265,10 @@ const styles = StyleSheet.create({
     height: 100, 
     width: 100, 
     borderRadius: 55, 
-    transform: [{ translateY: 45 }],
+    transform: [{ translateY: 20 }],
     opacity: 0.3,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    zIndex: 1,
   },
   moneyBox: {
     alignItems: 'flex-end', 
