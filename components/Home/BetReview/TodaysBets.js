@@ -2,8 +2,6 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, ScrollView, Pressable } from '../../Themed';
 import useTheme from '@/hooks/useTheme';
-
-import Colors from '@/constants/Colors';
 import DetailedInfo from './DetailedInfo';
 
 export default function TodaysBets({ bets }) {
