@@ -259,5 +259,136 @@ export const playoffBets = [
         ]
       }
     ]
-  }
+  },
+  {
+    id: 5,
+    type: 'parlay',
+    date: '5/1/24',
+    odds: '+634',
+    betAmount: 4.00,
+    winnings: 30.36,
+    bets: [
+      {
+        date: '5/1/24',
+        sport: 'NBA',
+        home: 'DEN',
+        away: 'MIN',
+        odds: '+634',
+        legs: [
+          {
+            type: 'Player Points',
+            betTarget: 'Anthony Edwards',
+            stat: 'Points',
+            line: 30.0,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Rebounds',
+            betTarget: 'Rudy Gobert',
+            stat: 'Rebounds',
+            line: 10.0,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Threes',
+            betTarget: 'Jamal Murray',
+            stat: 'Threes',
+            line: 2,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Points',
+            betTarget: 'Nikola Jokic',
+            stat: 'Points',
+            line: 30.0,
+            overUnder: 'over'
+          }  
+        ]
+      }
+    ]
+  },
+  {
+    id: 6,
+    type: 'parlay plus',
+    date: '5/1/24',
+    odds: '+129550',
+    betAmount: 1.00,
+    winnings: 1296.50,
+    bets: [
+      {
+        date: '5/1/24',
+        sport: 'NBA',
+        home: 'ORL',
+        away: 'CLE',
+        odds: '+3628',
+        legs: [
+          {
+            type: 'Player Threes',
+            betTarget: 'Jalen Suggs',
+            stat: 'Threes',
+            line: 4,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Points',
+            betTarget: 'Jalen Suggs',
+            stat: 'Points',
+            line: 20.0,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Rebounds',
+            betTarget: 'Paolo Banchero',
+            stat: 'Rebounds',
+            line: 7.5,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Assists',
+            betTarget: 'Paolo Banchero',
+            stat: 'Assists',
+            line: 6,
+            overUnder: 'over'
+          }  
+        ]
+      },
+      {
+        date: '5/1/24',
+        sport: 'NBA',
+        home: 'DAL',
+        away: 'LAC',
+        odds: '+3377',
+        legs: [
+          {
+            type: 'Player Threes',
+            betTarget: 'Kyrie Irving',
+            stat: 'threes',
+            line: 4,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Points',
+            betTarget: 'Ivica Zubac',
+            stat: 'Points',
+            line: 17.5,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Points',
+            betTarget: 'Kyrie Irving',
+            stat: 'Points',
+            line: 30.0,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Points',
+            betTarget: 'James Harden',
+            stat: 'Points',
+            line: 16.5,
+            overUnder: 'under'
+          }
+        ]
+      }
+    ]
+  },
 ];
