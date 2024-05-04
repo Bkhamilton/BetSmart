@@ -1,10 +1,14 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View, ScrollView } from '../../Themed';
+import { TouchableOpacity, Text, View, ScrollView, Pressable } from '../../Themed';
+import useTheme from '@/hooks/useTheme';
 
 import Colors from '@/constants/Colors';
+import DetailedInfo from './DetailedInfo';
 
 export default function TodaysBets({ bets }) {
+
+  const { iconColor, grayBackground, grayBorder, mainGreen } = useTheme();
 
   const BigPictureInfo = ({ totalBets, betAmount, toWin }) => {
     return (
@@ -27,25 +31,7 @@ export default function TodaysBets({ bets }) {
     );
   }
 
-  const DetailedInfo = () => {
-    return (
-      <ScrollView 
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        {bets.map((bet) => (
-          <View key={bet.id} style={styles.betContainer}>
-            <Text style={styles.betText}>{bet.parlay}</Text>
-            <Text style={styles.betText}>{bet.date}</Text>
-            <Text style={styles.betText}>{bet.odds}</Text>
-            <Text style={styles.betText}>${bet.betAmount}</Text>
-            <Text style={styles.betText}>${bet.winnings}</Text>
-          </View>
-        ))}
-      </ScrollView>
-    );
-  };
-
+  const totalBets = bets.length;
   const totalBetAmount = bets.reduce((total, bet) => total + bet.betAmount, 0);
   const totalWinnings = bets.reduce((total, bet) => total + bet.winnings, 0);
 
@@ -54,8 +40,8 @@ export default function TodaysBets({ bets }) {
       <View style={{ backgroundColor: 'transparent', paddingBottom: 8 }}>
         <Text style={{ fontSize: 20, fontWeight: '600' }}>Today's Bets</Text>
       </View>
-      <BigPictureInfo totalBets={10} betAmount={totalBetAmount} toWin={totalWinnings} />
-      <DetailedInfo />
+      <BigPictureInfo totalBets={totalBets} betAmount={totalBetAmount} toWin={totalWinnings} />
+      <DetailedInfo bets={bets} />
     </View>
   );
 }
@@ -72,10 +58,11 @@ export default function TodaysBets({ bets }) {
         borderRadius: 8,
     },
     betContainer: {
-        backgroundColor: 'green',
-        padding: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
         borderRadius: 8,
         marginRight: 10,
+        borderWidth: 1,
     },
     betText: {
         fontSize: 16,
