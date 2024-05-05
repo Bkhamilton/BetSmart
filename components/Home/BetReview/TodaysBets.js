@@ -35,7 +35,7 @@ export default function TodaysBets({ bets }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ backgroundColor: 'transparent', paddingBottom: 8 }}>
+      <View style={{ backgroundColor: 'transparent', paddingBottom: 8, paddingHorizontal: 10 }}>
         <Text style={{ fontSize: 20, fontWeight: '600' }}>Today's Bets</Text>
       </View>
       <BigPictureInfo totalBets={totalBets} betAmount={totalBetAmount} toWin={totalWinnings} />
@@ -46,7 +46,6 @@ export default function TodaysBets({ bets }) {
   
   const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 10,
         paddingVertical: 10,
     },
     mainInfoContainer: {
@@ -54,6 +53,7 @@ export default function TodaysBets({ bets }) {
         justifyContent: 'space-between',
         alignItems: 'center',
         borderRadius: 8,
+        paddingHorizontal: 10
     },
     betContainer: {
         paddingHorizontal: 10,
