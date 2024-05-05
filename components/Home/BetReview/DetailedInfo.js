@@ -12,12 +12,22 @@ export default function DetailedInfo({ bets }) {
   const BetLegsDetail = ({ legs }) => {
 
     const displayLegInfo = (leg) => {
-      const isWholeNumber = Number.isInteger(parseFloat(leg.line)) || parseFloat(leg.line) % 1 === 0;
+      const isWholeNumber = 'line' in leg && (Number.isInteger(parseFloat(leg.line)) || parseFloat(leg.line) % 1 === 0);
     
-      if (isWholeNumber) {
-        return `${leg.line}+ ${leg.stat}`;
+      if ('overUnder' in leg && 'line' in leg) {
+        if (isWholeNumber) {
+          return `${leg.line}+ ${leg.stat}`;
+        } else {
+          return `${leg.overUnder} ${leg.line} ${leg.stat}`;
+        }
+      } else if ('line' in leg) {
+        if (isWholeNumber) {
+          return `${leg.line}+ ${leg.stat}`;
+        } else {
+          return `${leg.line} ${leg.stat}`;
+        }
       } else {
-        return `${leg.overUnder} ${leg.line} ${leg.stat}`;
+        return `${leg.betTarget} ${leg.stat}`;
       }
     };
 
@@ -80,12 +90,22 @@ export default function DetailedInfo({ bets }) {
   const BetLegsNoDetail = ({ legs }) => {
 
     const displayLegInfo = (leg) => {
-      const isWholeNumber = Number.isInteger(parseFloat(leg.line)) || parseFloat(leg.line) % 1 === 0;
+      const isWholeNumber = 'line' in leg && (Number.isInteger(parseFloat(leg.line)) || parseFloat(leg.line) % 1 === 0);
     
-      if (isWholeNumber) {
-        return `${leg.line}+ ${leg.stat}`;
+      if ('overUnder' in leg && 'line' in leg) {
+        if (isWholeNumber) {
+          return `${leg.line}+ ${leg.stat}`;
+        } else {
+          return `${leg.overUnder} ${leg.line} ${leg.stat}`;
+        }
+      } else if ('line' in leg) {
+        if (isWholeNumber) {
+          return `${leg.line}+ ${leg.stat}`;
+        } else {
+          return `${leg.line} ${leg.stat}`;
+        }
       } else {
-        return `${leg.overUnder} ${leg.line} ${leg.stat}`;
+        return `${leg.betTarget} ${leg.stat}`;
       }
     };
 
@@ -164,6 +184,7 @@ export default function DetailedInfo({ bets }) {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ alignItems: 'flex-start' }}
+        style={{ paddingLeft: 10 }}
       >
         {bets.map((bet) => (
           <Bet key={bet.id} bet={bet} styles={styles} grayBackground={grayBackground} grayBorder={grayBorder} />
