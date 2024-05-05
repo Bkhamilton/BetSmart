@@ -7,7 +7,7 @@ import useTheme from '@/hooks/useTheme';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 
-export default function ProfitDashboard({ wagered, won }) {
+export default function ProfitDashboard({ wagered, won, openTransaction }) {
     const profit = won - wagered;
     const arrowDirection = profit > 0 ? 'chevron-up' : 'chevron-down';
     const arrowColor = profit > 0 ? 'green' : 'red';
@@ -69,6 +69,10 @@ export default function ProfitDashboard({ wagered, won }) {
       });
     };
 
+    const selectTransaction = (type) => {
+      openTransaction(type);
+    };
+
     const BalanceChecker = () => {
 
       const balanceColor = bookie === 'FanDuel' ? mainBlue : mainGreen;
@@ -81,13 +85,17 @@ export default function ProfitDashboard({ wagered, won }) {
             <View style={[styles.box, { overflow: 'hidden', borderTopLeftRadius: 8, borderBottomLeftRadius: 8, flex: 0.28, }]}>
               <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: 'transparent', transform: [{ translateY: 8 }] }}>
                 <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
-                  <TouchableOpacity style={{ backgroundColor: 'transparent', paddingHorizontal: 10, }}>
+                  <TouchableOpacity
+                    style={{ backgroundColor: 'transparent', paddingHorizontal: 10, }}
+                  >
                     <FontAwesome6 name="sack-dollar" size={24} color={iconColor}/>
                   </TouchableOpacity>
                   <Text style={{ fontSize: 8, opacity: 0.7, fontWeight: '600' }}>Deposit</Text>
                 </View>
                 <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
-                  <TouchableOpacity style={{ backgroundColor: 'transparent', paddingHorizontal: 10 }}>
+                  <TouchableOpacity 
+                    style={{ backgroundColor: 'transparent', paddingHorizontal: 10 }}
+                  >
                     <FontAwesome6 name="hand-holding-dollar" size={24} color={iconColor}/>
                   </TouchableOpacity>
                   <Text style={{ fontSize: 8, opacity: 0.7, fontWeight: '600' }}>Withdraw</Text>
