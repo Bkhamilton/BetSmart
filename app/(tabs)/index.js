@@ -10,7 +10,8 @@ import ProfitDashboard from '@/components/Home/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
 import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
-import TodaysBets from '../../components/Home/BetReview/TodaysBets';
+import TodaysBets from '@/components/Home/BetReview/TodaysBets';
+import TransactionModal from '@/components/Modals/TransactionModal';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
@@ -20,6 +21,10 @@ export default function HomeScreen() {
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
   const [transactionModalVisible, setTransactionModalVisible] = useState(false);
+
+  const [transactionTitle, setTransactionTitle] = useState('Deposit');
+  const [transactionBookie, setTransactionBookie] = useState('DraftKings');
+  const [userBalance, setUserBalance] = useState([]); // [TODO] Replace with actual user balance from API
 
   function openSignUpModal() {
     setSignUpModalVisible(true);
@@ -35,7 +40,14 @@ export default function HomeScreen() {
     setLoginModalVisible(false);
   }
 
-  function openTransactionModal(type) {
+  function updateTransactionInfo(title, balance, bookie) {
+    setTransactionTitle(title);
+    setTransactionBookie(bookie);
+    setUserBalance(balance);
+  }
+
+  function openTransactionModal(type, balance, bookie) {
+    updateTransactionInfo(type, balance, bookie);
     setTransactionModalVisible(true);
   }
   function closeTransactionModal() {
@@ -77,6 +89,13 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <LoginPage visible={loginModalVisible} close={closeLoginModal}/>
       <SignUpPage visible={signUpModalVisible} close={closeSignUpModal}/>
+      <TransactionModal 
+        visible={transactionModalVisible} 
+        close={closeTransactionModal}
+        title={transactionTitle}
+        bookie={transactionBookie}
+        balance={userBalance}
+      />
       <Header title={'BetSmart'}>
         <HistoryButton onPress={handleBetHistory} />
         <LoginButton onPress={openLoginModal} />
