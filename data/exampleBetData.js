@@ -391,4 +391,42 @@ export const playoffBets = [
       }
     ]
   },
+  {
+    id: 7,
+    type: 'parlay',
+    date: '5/1/24',
+    odds: '+475',
+    betAmount: 25.00,
+    winnings: 143.75,
+    bets: [
+      {
+        date: '5/1/24',
+        sport: 'NBA',
+        home: 'DEN',
+        away: 'MIN',
+        odds: '+475',
+        legs: [
+          {
+            type: 'Main',
+            betTarget: 'DEN',
+            stat: 'Moneyline',
+          },
+          {
+            type: 'Player Points',
+            betTarget: 'Nikola Jokic',
+            stat: 'Points',
+            line: 30.0,
+            overUnder: 'over'
+          },
+          {
+            type: 'Player Rebounds',
+            betTarget: 'Rudy Gobert',
+            stat: 'Rebounds',
+            line: 12.5,
+            overUnder: 'over'
+          }
+        ]
+      }
+    ]
+  }
 ];
