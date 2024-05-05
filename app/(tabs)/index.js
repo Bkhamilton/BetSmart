@@ -18,8 +18,8 @@ import { useColorScheme } from 'react-native';
 export default function HomeScreen() {
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
-
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
+  const [transactionModalVisible, setTransactionModalVisible] = useState(false);
 
   function openSignUpModal() {
     setSignUpModalVisible(true);
@@ -27,11 +27,19 @@ export default function HomeScreen() {
   function closeSignUpModal() {
     setSignUpModalVisible(false);
   }
+
   function openLoginModal() {
     setLoginModalVisible(true);
   }
   function closeLoginModal() {
     setLoginModalVisible(false);
+  }
+
+  function openTransactionModal(type) {
+    setTransactionModalVisible(true);
+  }
+  function closeTransactionModal() {
+    setTransactionModalVisible(false);
   }
 
   const router = useRouter();
@@ -76,7 +84,7 @@ export default function HomeScreen() {
       </Header>
       <ScrollView>
         <StatusBar style="auto" backgroundColor='transparent'/>
-        <ProfitDashboard wagered={amountWagered} won={amountWon} />
+        <ProfitDashboard wagered={amountWagered} won={amountWon} openTransaction={openTransactionModal}/>
         <TodaysBets bets={playoffBets}/>
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
