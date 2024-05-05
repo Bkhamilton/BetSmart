@@ -70,7 +70,7 @@ export default function ProfitDashboard({ wagered, won, openTransaction }) {
     };
 
     const selectTransaction = (type) => {
-      openTransaction(type);
+      openTransaction(type, userBalance, bookie);
     };
 
     const BalanceChecker = () => {
@@ -86,6 +86,7 @@ export default function ProfitDashboard({ wagered, won, openTransaction }) {
               <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: 'transparent', transform: [{ translateY: 8 }] }}>
                 <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
                   <TouchableOpacity
+                    onPress={() => selectTransaction('Deposit')}
                     style={{ backgroundColor: 'transparent', paddingHorizontal: 10, }}
                   >
                     <FontAwesome6 name="sack-dollar" size={24} color={iconColor}/>
@@ -94,6 +95,7 @@ export default function ProfitDashboard({ wagered, won, openTransaction }) {
                 </View>
                 <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
                   <TouchableOpacity 
+                    onPress={() => selectTransaction('Withdraw')}
                     style={{ backgroundColor: 'transparent', paddingHorizontal: 10 }}
                   >
                     <FontAwesome6 name="hand-holding-dollar" size={24} color={iconColor}/>
