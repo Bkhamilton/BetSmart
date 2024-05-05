@@ -1,11 +1,20 @@
 import React from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
+import { FontAwesome } from '@expo/vector-icons';
 import Colors from '@/constants/Colors';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 
-export default function TransactionModal({ visible, close, title, bookie, initialAmount, onConfirm  }) {
+export default function TransactionModal({ visible, close, title, bookie, balance, onConfirm  }) {
+
+  var selectedBookie = balance.find(item => item.bookie === bookie);
+  if (!selectedBookie) {
+    const totalBalance = balance.reduce((sum, item) => sum + item.balance, 0);
+    selectedBookie = { bookie: 'Total', balance: totalBalance };
+  }
+  const initialAmount = selectedBookie.balance;
+
   return (
     <Modal
       animationType="none"
@@ -15,37 +24,34 @@ export default function TransactionModal({ visible, close, title, bookie, initia
       style={styles.modalContainer}
     >
       <View style={styles.container}>
-        <TouchableOpacity 
-          onPress={close}
-          style={{ alignItems: 'flex-end'}} 
-        >
-          <FontAwesome name='close' size={40} color={'red'}/>
-        </TouchableOpacity>
-
         {/* Main Modal Box */}
         <View style={styles.mainPage}>
           {/* Title */}
-          <View style={styles.title}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
             <Text style={styles.title}>{title}</Text>
-            <View style={styles.underline}></View>
+            <TouchableOpacity 
+              onPress={close}
+            >
+              <FontAwesome name='close' size={40} color={'red'}/>
+            </TouchableOpacity>
           </View>
+          <View style={styles.underline}></View>
           
           {/* Bookie */}
-          <View style={styles.infoBox}>
-            <Text style={styles.BoxTitle}>Bookie</Text>
+          <View style={[styles.infoBox, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+            <Text style={styles.BoxTitle}>{bookie}</Text>
             <View style={styles.inputBox}>
-              <Text>{bookie}</Text>
+              <Text>{initialAmount}</Text>
             </View>
           </View>
+          <View style={styles.underline}></View>
 
           {/* Amount */}
-          <View style={styles.infoBox}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.BoxTitle}>Amount</Text>
             <View style={styles.inputBox}>
               <TextInput
-                style={styles.input}
                 placeholder="Amount"
-                value={initialAmount}
                 // Add necessary props and event handlers for amount input
               />
             </View>
@@ -88,12 +94,12 @@ const styles = StyleSheet.create({
   },
   underline: {
     borderBottomWidth: 1,
-    borderBottomColor: Colors.primary,
+    borderBottomColor: 'gray',
     width: '100%',
     marginVertical: 10,
   },
   infoBox: {
-    marginVertical: 10,
+    marginVertical: 0,
   },
   BoxTitle: {
     fontSize: 18,
@@ -102,8 +108,6 @@ const styles = StyleSheet.create({
   inputBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.primary,
   },
   input: {
     flex: 1,
@@ -111,7 +115,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   confirmButton: {
-    backgroundColor: Colors.primary,
+    backgroundColor: 'green',
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
