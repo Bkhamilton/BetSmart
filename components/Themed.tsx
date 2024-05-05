@@ -10,7 +10,8 @@ import {
   SafeAreaView as DefaultSafeAreaView, 
   TouchableOpacity as DefaultTouchableOpacity,
   TextInput as DefaultTextInput,
-  Pressable as DefaultPressable
+  Pressable as DefaultPressable,
+  Modal as DefaultModal,
 } from 'react-native';
 
 import Colors from '@/constants/Colors';
@@ -28,6 +29,7 @@ export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
 export type SafeAreaViewProps = ThemeProps & DefaultSafeAreaView['props'];
 export type TextInputProps = ThemeProps & DefaultTextInput['props'];
 export type PressableProps = ThemeProps & DefaultPressable['props'];
+export type ModalProps = ThemeProps & DefaultModal['props'];
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -98,4 +100,12 @@ export function Pressable(props: PressableProps) {
   const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'borderColor');
 
   return <DefaultPressable style={[{ backgroundColor, borderColor }, style]} {...otherProps} />;
+}
+
+export function Modal(props: ModalProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
+  const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'borderColor');
+
+  return <DefaultModal style={[{ backgroundColor, borderColor }, style]} {...otherProps} />;
 }
