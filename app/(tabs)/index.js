@@ -1,17 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Dimensions } from 'react-native';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Text, View, ScrollView, TouchableOpacity, SafeAreaView } from '@/components/Themed';
 import { myBetList, playoffBets } from '@/data/exampleBetData';
 import Header from '@/components/Header/Header';
-import ProfitDashboard from '@/components/Home/ProfitDashboard';
+import ProfitDashboard from '@/components/Home/Balance/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
 import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
 import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
+import { fetchBalance } from '@/api/async-storage';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
@@ -24,7 +25,7 @@ export default function HomeScreen() {
 
   const [transactionTitle, setTransactionTitle] = useState('Deposit');
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
-  const [userBalance, setUserBalance] = useState([]); // [TODO] Replace with actual user balance from API
+  const [userBalance, setUserBalance] = useState([])
 
   function openSignUpModal() {
     setSignUpModalVisible(true);
@@ -59,6 +60,12 @@ export default function HomeScreen() {
   const handleBetHistory = () => {
     router.navigate('profile/betHistory');
   };
+
+  useEffect(() => {
+    fetchBalance().then((balance) => {
+      setUserBalance(balance);
+    });
+  }, []);
 
   // Dummy data for ProfitDashboard
   const amountWon = 240.00;
@@ -101,9 +108,10 @@ export default function HomeScreen() {
         <LoginButton onPress={openLoginModal} />
         <SignUpButton onPress={openSignUpModal} />
       </Header>
-      <ScrollView>
-        <StatusBar style="auto" backgroundColor='transparent'/>
-        <ProfitDashboard wagered={amountWagered} won={amountWon} openTransaction={openTransactionModal}/>
+      <ScrollView
+        showVerticalScrollIndicator={false}
+      >
+        <ProfitDashboard wagered={amountWagered} won={amountWon} openTransaction={openTransactionModal} balance={userBalance}/>
         <TodaysBets bets={playoffBets}/>
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
