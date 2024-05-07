@@ -29,3 +29,22 @@ export const retrieveBalance = async () => {
         throw error;
     }
 };
+
+// Function to update balance in AsyncStorage
+export const updateBalance = async (bookie, balance) => {
+    try {
+        const storedBalance = await retrieveBalance();
+        const updatedBalance = storedBalance.map(item => {
+            if (item.bookie === bookie) {
+                return { ...item, balance: Number(balance) };
+            }
+            return item;
+        });
+        await AsyncStorage.setItem('balance', JSON.stringify(updatedBalance));
+        console.log('Balance updated:', updatedBalance);
+        return updatedBalance;
+    } catch (error) {
+        console.error('Error updating balance:', error);
+        throw error;
+    }
+};

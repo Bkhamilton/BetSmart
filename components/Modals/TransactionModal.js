@@ -1,12 +1,14 @@
-import React from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, TextInput, Image, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
-import Colors from '@/constants/Colors';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 
 export default function TransactionModal({ visible, close, title, bookie, balance, onConfirm  }) {
+
+  const [amount, setAmount] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
   var selectedBookie = balance.find(item => item.bookie === bookie);
   if (!selectedBookie) {
@@ -15,6 +17,50 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
   }
   const initialAmount = selectedBookie.balance;
 
+  const bookieImages = {
+    'DraftKings': draftkings,
+    'FanDuel': fanduel,
+  };
+
+  const handleClose = () => {
+    setAmount('');
+    close();
+  };
+
+  const handleConfirm = () => {
+    if (amount === '') {
+      alert('Please enter an amount');
+      return;
+    }
+  
+    // Convert amount to a number
+    const numericAmount = Number(amount);
+    const numericInitialAmount = Number(initialAmount);
+  
+    let updatedBalance;
+    if (title === 'Withdraw') {
+      if (numericAmount > initialAmount) {
+        alert('You cannot withdraw more than your current balance');
+        return;
+      }
+      updatedBalance = numericInitialAmount - numericAmount;
+    } else if (title === 'Deposit') {
+      updatedBalance = numericInitialAmount + numericAmount;
+    }
+  
+    console.log('Numeric Amount:', numericAmount);
+    console.log('Numeric Initial Amount:', numericInitialAmount);
+    console.log('Updated Balance:', updatedBalance);
+    onConfirm(bookie, updatedBalance);
+    setAmount('');
+  };
+
+  useEffect(() => {
+    if (isLoading) {
+      setIsLoading(false);
+    }
+  }, [isLoading]);
+  
   return (
     <Modal
       animationType="none"
@@ -23,49 +69,82 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
       onRequestClose={close}
       style={styles.modalContainer}
     >
-      <View style={styles.container}>
-        {/* Main Modal Box */}
-        <View style={styles.mainPage}>
-          {/* Title */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={styles.title}>{title}</Text>
-            <TouchableOpacity 
-              onPress={close}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          {/* Main Modal Box */}
+          <View style={styles.mainPage}>
+            {/* Title */}
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={styles.title}>{title}</Text>
+              <TouchableOpacity 
+                onPress={handleClose}
+              >
+                <FontAwesome name='close' size={40} color={'red'}/>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.underline}></View>
+            
+            {/* Bookie */}
+            <View style={[styles.infoBox, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                <View style={styles.inputBox}>
+                  <Image source={bookieImages[bookie]} style={{ width: 24, height: 24, borderRadius: 4 }} />
+                </View>
+                <Text style={[styles.BoxTitle, { marginLeft: 4 }]}>{bookie}</Text>
+              </View>
+              <View style={styles.inputBox}>
+                <Text>{initialAmount}</Text>
+              </View>
+            </View>
+            <View style={styles.underline}></View>
+
+            {/* Amount */}
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={styles.BoxTitle}>Amount</Text>
+              <View style={styles.inputBox}>
+                {amount !== '' && <Text style={styles.sign}>{title === 'Deposit' ? '+' : '-'}</Text>}
+                <TextInput
+                  placeholder="Amount"
+                  keyboardType="numeric"
+                  value={amount}
+                  onChangeText={(text) => {
+                    if (/^\d*\.?\d{0,2}$/.test(text)) { // Check if text matches the desired format
+                      setAmount(text);
+                    }
+                  }}
+                  maxLength={10}
+                  // Add necessary props and event handlers for amount input
+                />
+              </View>
+            </View>
+            <View style={styles.underline}></View>
+            {/* New Balance */}
+            <View style={[styles.infoBox, { flexDirection: 'row', justifyContent: 'space-between' }]}>
+              <View>
+                
+              </View>
+              <View>
+                <Text>{selectedBookie.balance + (title === 'Deposit' ? +amount : -amount)}</Text>
+              </View>
+            </View>
+
+            {/* Confirm Button */}
+            <TouchableOpacity
+              style={[styles.confirmButton, { backgroundColor: isLoading ? 'blue' : 'green', }]}
+              onPress={() => {
+                if (amount === '') {
+                  alert('Please enter an amount');
+                  return;
+                }
+                setIsLoading(true);
+                handleConfirm();
+              }}
             >
-              <FontAwesome name='close' size={40} color={'red'}/>
+              <Text style={styles.confirmText}>Confirm</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.underline}></View>
-          
-          {/* Bookie */}
-          <View style={[styles.infoBox, { flexDirection: 'row', justifyContent: 'space-between' }]}>
-            <Text style={styles.BoxTitle}>{bookie}</Text>
-            <View style={styles.inputBox}>
-              <Text>{initialAmount}</Text>
-            </View>
-          </View>
-          <View style={styles.underline}></View>
-
-          {/* Amount */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.BoxTitle}>Amount</Text>
-            <View style={styles.inputBox}>
-              <TextInput
-                placeholder="Amount"
-                // Add necessary props and event handlers for amount input
-              />
-            </View>
-          </View>
-
-          {/* Confirm Button */}
-          <TouchableOpacity
-            style={styles.confirmButton}
-            onPress={onConfirm}
-          >
-            <Text style={styles.confirmText}>Confirm</Text>
-          </TouchableOpacity>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 }
@@ -115,7 +194,6 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   confirmButton: {
-    backgroundColor: 'green',
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
@@ -125,5 +203,11 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  sign: {
+    fontSize: 14,
+    fontWeight: '500',
+    opacity: 0.7,
+    marginRight: 2,
   },
 });

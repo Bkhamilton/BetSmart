@@ -12,7 +12,7 @@ import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
 import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
-import { fetchBalance } from '@/api/async-storage';
+import { fetchBalance, updateBalance } from '@/api/async-storage';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
@@ -67,6 +67,13 @@ export default function HomeScreen() {
     });
   }, []);
 
+  const onConfirmTransaction = (bookie, updatedBalance) => {
+    updateBalance(bookie, updatedBalance).then((balance) => {
+      setUserBalance(balance);
+      closeTransactionModal();
+    });
+  }
+
   // Dummy data for ProfitDashboard
   const amountWon = 240.00;
   const amountWagered = 120.00;
@@ -102,6 +109,7 @@ export default function HomeScreen() {
         title={transactionTitle}
         bookie={transactionBookie}
         balance={userBalance}
+        onConfirm={onConfirmTransaction}
       />
       <Header title={'BetSmart'}>
         <HistoryButton onPress={handleBetHistory} />
