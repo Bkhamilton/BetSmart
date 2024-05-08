@@ -47,6 +47,8 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
     } else if (title === 'Deposit') {
       updatedBalance = numericInitialAmount + numericAmount;
     }
+
+    updatedBalance = Number(updatedBalance.toFixed(2));
   
     console.log('Numeric Amount:', numericAmount);
     console.log('Numeric Initial Amount:', numericInitialAmount);
@@ -93,7 +95,7 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
                 <Text style={[styles.BoxTitle, { marginLeft: 4 }]}>{bookie}</Text>
               </View>
               <View style={styles.inputBox}>
-                <Text>{initialAmount}</Text>
+                <Text>{initialAmount.toFixed(2)}</Text>
               </View>
             </View>
             <View style={styles.underline}></View>
@@ -124,7 +126,7 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
                 
               </View>
               <View>
-                <Text>{selectedBookie.balance + (title === 'Deposit' ? +amount : -amount)}</Text>
+                <Text>{(selectedBookie.balance + (title === 'Deposit' ? +amount : -amount)).toFixed(2)}</Text>
               </View>
             </View>
 
