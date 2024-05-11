@@ -13,6 +13,8 @@ export default function BalanceChecker({ openTransaction, balance }) {
     const [betIndex, setBetIndex] = useState(0);
     const [bookie, setBookie] = useState('DraftKings');
 
+    const [balanceVal, setBalanceVal] = useState(0);
+
     const pressUp = () => {
       setBetIndex((prevIndex) => (prevIndex === 0 ? 0 : prevIndex - 1));
     };
@@ -72,7 +74,7 @@ export default function BalanceChecker({ openTransaction, balance }) {
     const balanceColor = bookie === 'FanDuel' ? mainBlue : mainGreen;
     const balanceBorderColor = bookie === 'FanDuel' ? accentBlue : mainGreen;
     
-    const balanceValue = bookie === 'Total' ? balance.reduce((total, item) => total + item.balance, 0) : balance.find(item => item.bookie === bookie)?.balance || 0;
+    const balanceValue = bookie === 'Total' ? balance?.reduce((total, item) => total + item.Balance, 0) : balance?.find(item => item.Bookie === bookie)?.Balance || 0;
 
     return (
       <View style={[styles.centeredBox, { backgroundColor: balanceColor, borderColor: balanceBorderColor }]}>
