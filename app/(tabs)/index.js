@@ -12,9 +12,9 @@ import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
 import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
-import { fetchBalance } from '@/api/async-storage';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
+import { useTheme } from '@/hooks/useTheme';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
@@ -29,7 +29,7 @@ export default function HomeScreen() {
 
   const [transactionTitle, setTransactionTitle] = useState('Deposit');
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
-  const [userBalance, setUserBalance] = useState([])
+  const [userBalance, setUserBalance] = useState([{ Bookie: 'DraftKings', Balance: 0 }, { Bookie: 'FanDuel', Balance: 0 }])
   const [userID, setUserID] = useState(1);
 
   function openSignUpModal() {
@@ -68,14 +68,17 @@ export default function HomeScreen() {
 
   useEffect(() => {
     getBalance(db, userID).then((balance) => {
-      console.log('Balance:', balance);
       setUserBalance(balance);
     });
   }, []);
 
   const onConfirmTransaction = (bookie, updatedBalance) => {
-    updateBalance(db, bookie, updatedBalance, userID).then((balance) => {
-      setUserBalance(balance);
+    updateBalance(db, bookie, updatedBalance, userID).then(() => {
+      setUserBalance(prevBalances => 
+        prevBalances.map(item => 
+          item.Bookie === bookie ? { ...item, Balance: Number(updatedBalance) } : item
+        )
+      );
       closeTransactionModal();
     });
   }
@@ -84,8 +87,7 @@ export default function HomeScreen() {
   const amountWon = 240.00;
   const amountWagered = 120.00;
 
-  const colorScheme = useColorScheme();
-  const iconColor = colorScheme === 'dark' ? Colors.dark.icon : Colors.light.icon;
+  const { iconColor } = useTheme();
 
   const HistoryButton = ({ onPress }) => (
     <TouchableOpacity onPress={onPress} accessibilityLabel="Open Bet History">
@@ -136,6 +138,5 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
 });
