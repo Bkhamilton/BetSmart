@@ -4,6 +4,8 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { SQLiteProvider } from 'expo-sqlite';
+import { initializeDatabase } from '@/api/sqlite';
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -41,7 +43,11 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <SQLiteProvider databaseName="BetSmart.db" onInit={initializeDatabase} useSuspense>
+      <RootLayoutNav />
+    </SQLiteProvider>
+  );
 }
 
 function RootLayoutNav() {
