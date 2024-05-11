@@ -10,12 +10,23 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
   const [amount, setAmount] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
 
-  var selectedBookie = balance.find(item => item.bookie === bookie);
+  if (balance) {
+    balance = balance.map(item => {
+      return {
+        Bookie: item.Bookie,
+        Balance: Number(item.Balance),
+      };
+    });
+  } else {
+    balance = [];
+  }
+
+  var selectedBookie = balance.find(item => item.Bookie === bookie);
   if (!selectedBookie) {
-    const totalBalance = balance.reduce((sum, item) => sum + item.balance, 0);
+    const totalBalance = balance.reduce((sum, item) => sum + item.Balance, 0);
     selectedBookie = { bookie: 'Total', balance: totalBalance };
   }
-  const initialAmount = selectedBookie.balance;
+  const initialAmount = selectedBookie.Balance;
 
   const bookieImages = {
     'DraftKings': draftkings,
@@ -50,9 +61,6 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
 
     updatedBalance = Number(updatedBalance.toFixed(2));
   
-    console.log('Numeric Amount:', numericAmount);
-    console.log('Numeric Initial Amount:', numericInitialAmount);
-    console.log('Updated Balance:', updatedBalance);
     onConfirm(bookie, updatedBalance);
     setAmount('');
   };
@@ -95,7 +103,7 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
                 <Text style={[styles.BoxTitle, { marginLeft: 4 }]}>{bookie}</Text>
               </View>
               <View style={styles.inputBox}>
-                <Text>{initialAmount.toFixed(2)}</Text>
+                <Text>{Number(initialAmount).toFixed(2)}</Text>
               </View>
             </View>
             <View style={styles.underline}></View>
@@ -126,7 +134,7 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
                 
               </View>
               <View>
-                <Text>{(selectedBookie.balance + (title === 'Deposit' ? +amount : -amount)).toFixed(2)}</Text>
+                <Text>{(selectedBookie.Balance + (title === 'Deposit' ? +amount : -amount)).toFixed(2)}</Text>
               </View>
             </View>
 
