@@ -12,12 +12,16 @@ import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
 import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
-import { fetchBalance, updateBalance } from '@/api/async-storage';
+import { fetchBalance } from '@/api/async-storage';
+import { useSQLiteContext } from 'expo-sqlite';
+import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from 'react-native';
 
 export default function HomeScreen() {
+
+  const db = useSQLiteContext();
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
@@ -26,6 +30,7 @@ export default function HomeScreen() {
   const [transactionTitle, setTransactionTitle] = useState('Deposit');
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
   const [userBalance, setUserBalance] = useState([])
+  const [userID, setUserID] = useState(1);
 
   function openSignUpModal() {
     setSignUpModalVisible(true);
@@ -62,13 +67,14 @@ export default function HomeScreen() {
   };
 
   useEffect(() => {
-    fetchBalance().then((balance) => {
+    getBalance(db, userID).then((balance) => {
+      console.log('Balance:', balance);
       setUserBalance(balance);
     });
   }, []);
 
   const onConfirmTransaction = (bookie, updatedBalance) => {
-    updateBalance(bookie, updatedBalance).then((balance) => {
+    updateBalance(db, bookie, updatedBalance, userID).then((balance) => {
       setUserBalance(balance);
       closeTransactionModal();
     });
