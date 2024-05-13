@@ -38,7 +38,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
   const [betSlip, setBetSlip] = useState<any[]>([]);
   const [currentGame, setCurrentGame] = useState<Game | null>(null);
   const [league, setLeague] = useState<string | null>(null);
-  const [bookie, setBookie] = useState<string | null>(null);
+  const [bookie, setBookie] = useState<string | null>('DraftKings');
 
   const value = {
     betSlip,
