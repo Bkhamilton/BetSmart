@@ -1,11 +1,14 @@
-import React from 'react';
-import { StyleSheet, Image } from 'react-native';
-import { Text, View, Pressable, TouchableOpacity } from '@/components/Themed';
+import React, { useContext } from 'react';
+import { StyleSheet, Image, Pressable } from 'react-native';
+import { Text, View, TouchableOpacity } from '@/components/Themed';
+import { BetContext } from '@/contexts/BetContext';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 import useTheme from '@/hooks/useTheme';
 
-export default function BalanceBox({ userBalance, bookie }) {
+export default function BalanceBox({ userBalance, openModal }) {
+
+    const { bookie, setBookie } = useContext(BetContext);
 
     const curBookie = userBalance.find(obj => obj.Bookie === bookie);
 
@@ -14,16 +17,32 @@ export default function BalanceBox({ userBalance, bookie }) {
         'FanDuel': fanduel,
     };
 
-    const { mainGreen } = useTheme();
+    const { mainGreen, mainBlue } = useTheme();
+
+    // Function to switch between bookies
+    const switchBookie = () => {
+        const newBookie = bookie === 'DraftKings' ? 'FanDuel' : 'DraftKings';
+        setBookie(newBookie);
+    };
+
+    const backgroundColor = bookie === 'DraftKings' ? mainGreen : mainBlue;
+    const borderColor = bookie === 'DraftKings' ? mainGreen : mainBlue;
 
     return (
-        <TouchableOpacity 
-            style={[styles.bankButton, { backgroundColor: mainGreen, borderColor: mainGreen }] }
-            onLongPress={() => console.log('long press')}
+        <Pressable 
+            style={({pressed}) => ({
+                ...styles.bankButton,
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                opacity: pressed ? 0.6 : 1,
+            })}
+            onLongPress={() => switchBookie()}
         >
-            <Text style={{ fontSize: 20, fontWeight: '500', marginRight: 8 }}>${curBookie.Balance.toFixed(2)}</Text>
+          <View style={{ backgroundColor: 'transparent', width: 75, alignItems: 'flex-start', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 18, fontWeight: '500' }}>${curBookie.Balance.toFixed(2)}</Text>
+          </View>
             <Image source={bookieImages[bookie]} style={{ width: 32, height: 32, borderRadius: 8 }} />
-        </TouchableOpacity>
+        </Pressable>
     );
 }
 
