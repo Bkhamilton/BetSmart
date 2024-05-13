@@ -14,6 +14,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
 import useTheme from '@/hooks/useTheme';
 import BalanceBox from '../../../components/PlaceBet/BalanceBox';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function SelectGameScreen() {
 
@@ -50,14 +51,19 @@ export default function SelectGameScreen() {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      getBalance(db, userID).then((balance) => {
+        setUserBalance(balance);
+      });
+    }, [])
+  );
+
   useEffect(() => {
     const fetchSportsData = async () => {
       const data = await retrieveData(['nba', 'mlb', 'nhl']); // replace with the sports you're interested in
       setAllSportsData(data);
     };
-    getBalance(db, userID).then((balance) => {
-      setUserBalance(balance);
-    });
 
     fetchSportsData();
   }, []);
