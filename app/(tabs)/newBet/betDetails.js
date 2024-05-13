@@ -62,7 +62,7 @@ export default function BetDetailsScreen() {
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <BalanceBox userBalance={userBalance} bookie={"DraftKings"} />
+          <BalanceBox userBalance={userBalance} />
         </View>
       </View>
     )
