@@ -14,10 +14,7 @@ import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
-import { useTheme } from '@/hooks/useTheme';
-
-import Colors from '@/constants/Colors';
-import { useColorScheme } from 'react-native';
+import useTheme from '@/hooks/useTheme';
 
 export default function HomeScreen() {
 
