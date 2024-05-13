@@ -9,12 +9,21 @@ import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from
 import CategorySlider from '../../../components/PlaceBet/BetDetails/CategorySlider';
 import IntroInfo from '../../../components/PlaceBet/BetDetails/IntroInfo';
 import draftkings from '@/assets/images/DraftKings.png';
+import { useSQLiteContext } from 'expo-sqlite';
+import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
 import useTheme from '@/hooks/useTheme';
+import BalanceBox from '../../../components/PlaceBet/BalanceBox';
 
 export default function BetDetailsScreen() {
   const { currentGame } = useContext(BetContext);
   const { league } = useContext(BetContext);
   const router = useRouter();
+
+  const db = useSQLiteContext();
+
+  const [userBalance, setUserBalance] = useState([{ Bookie: 'DraftKings', Balance: 0 }, { Bookie: 'FanDuel', Balance: 0 }])
+  const [userID, setUserID] = useState(1);
+
 
   const handleClose = () => {
     router.navigate('newBet/selectGame');
@@ -34,6 +43,12 @@ export default function BetDetailsScreen() {
   }
 
   const { mainGreen, iconColor } = useTheme();
+
+  useEffect(() => {
+    getBalance(db, userID).then((balance) => {
+      setUserBalance(balance);
+    });
+  }, []);
   
   const GameHeader = () => {
     return (
@@ -47,10 +62,7 @@ export default function BetDetailsScreen() {
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <Pressable style={[styles.bankButton, { backgroundColor: mainGreen, borderColor: mainGreen }] }>
-            <Text style={{ fontSize: 20, fontWeight: '500', marginRight: 8 }}>$200</Text>
-            <Image source={draftkings} style={{ width: 32, height: 32, borderRadius: 8 }} />
-          </Pressable>
+          <BalanceBox userBalance={userBalance} bookie={"DraftKings"} />
         </View>
       </View>
     )
@@ -80,13 +92,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  bankButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: -8,
-    paddingLeft: 8,
-  }
 });
