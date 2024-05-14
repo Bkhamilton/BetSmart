@@ -6,17 +6,17 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useState, useEffect, useContext } from 'react';
 import { BetContext } from '@/contexts/BetContext';
 import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '@/data/teamAbbreviations';
-import CategorySlider from '../../../components/PlaceBet/BetDetails/CategorySlider';
-import IntroInfo from '../../../components/PlaceBet/BetDetails/IntroInfo';
+import CategorySlider from '@/components/PlaceBet/BetDetails/CategorySlider';
+import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
 import draftkings from '@/assets/images/DraftKings.png';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
 import useTheme from '@/hooks/useTheme';
-import BalanceBox from '../../../components/PlaceBet/BalanceBox';
+import BalanceBox from '@/components/PlaceBet/BalanceBox';
+import ChooseBookie from '@/components/Modals/ChooseBookie';
 
 export default function BetDetailsScreen() {
-  const { currentGame } = useContext(BetContext);
-  const { league } = useContext(BetContext);
+  const { league, currentGame, setBookie } = useContext(BetContext);
   const router = useRouter();
 
   const db = useSQLiteContext();
@@ -24,6 +24,20 @@ export default function BetDetailsScreen() {
   const [userBalance, setUserBalance] = useState([{ Bookie: 'DraftKings', Balance: 0 }, { Bookie: 'FanDuel', Balance: 0 }])
   const [userID, setUserID] = useState(1);
 
+  const [chooseBookieModal, setChooseBookieModal] = useState(false);
+
+  const openBookieModal = () => {
+    setChooseBookieModal(true);
+  }
+
+  const closeBookieModal = () => {
+    setChooseBookieModal(false);
+  }
+
+  const selectBookie = (bookie) => {
+    setChooseBookieModal(false);
+    setBookie(bookie);
+  }
 
   const handleClose = () => {
     router.navigate('newBet/selectGame');
@@ -62,7 +76,7 @@ export default function BetDetailsScreen() {
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <BalanceBox userBalance={userBalance} />
+          <BalanceBox userBalance={userBalance} openModal={openBookieModal}/>
         </View>
       </View>
     )
@@ -70,6 +84,12 @@ export default function BetDetailsScreen() {
 
   return (
     <View style={styles.container}>
+      <ChooseBookie
+        userBalance={userBalance}
+        visible={chooseBookieModal}
+        close={closeBookieModal}
+        selectBookie={selectBookie}
+      />
       <GameHeader />
       <ScrollView>
         <IntroInfo currentGame={currentGame} />
