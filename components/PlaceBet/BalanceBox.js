@@ -36,6 +36,7 @@ export default function BalanceBox({ userBalance, openModal }) {
                 borderColor: borderColor,
                 opacity: pressed ? 0.6 : 1,
             })}
+            onPress={() => openModal()}
             onLongPress={() => switchBookie()}
         >
           <View style={{ backgroundColor: 'transparent', width: 75, alignItems: 'flex-start', justifyContent: 'center' }}>
