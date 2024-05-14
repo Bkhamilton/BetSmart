@@ -15,12 +15,13 @@ import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
 import useTheme from '@/hooks/useTheme';
 import BalanceBox from '../../../components/PlaceBet/BalanceBox';
 import { useFocusEffect } from '@react-navigation/native';
+import ChooseBookie from '../../../components/Modals/ChooseBookie';
 
 export default function SelectGameScreen() {
 
   const db = useSQLiteContext();
 
-  const { setCurrentGame, setLeague } = useContext(BetContext);
+  const { setCurrentGame, setLeague, setBookie } = useContext(BetContext);
 
   const router = useRouter();
 
@@ -37,6 +38,21 @@ export default function SelectGameScreen() {
   const [sportSelected, setSportSelected] = useState(false);
   const [userBalance, setUserBalance] = useState([{ Bookie: 'DraftKings', Balance: 0 }, { Bookie: 'FanDuel', Balance: 0 }])
   const [userID, setUserID] = useState(1);
+
+  const [chooseBookieModal, setChooseBookieModal] = useState(false);
+
+  const openBookieModal = () => {
+    setChooseBookieModal(true);
+  }
+
+  const closeBookieModal = () => {
+    setChooseBookieModal(false);
+  }
+
+  const selectBookie = (bookie) => {
+    setChooseBookieModal(false);
+    setBookie(bookie);
+  }
 
   // Function to select a sport and set the current sport and category
   const selectSport = (sport) => {
@@ -83,7 +99,7 @@ export default function SelectGameScreen() {
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{header}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <BalanceBox userBalance={userBalance} />
+          <BalanceBox userBalance={userBalance} openModal={openBookieModal}/>
         </View>
       </View>
     );
@@ -92,6 +108,12 @@ export default function SelectGameScreen() {
   return (
     <View style={styles.container}>
       <SelectGameHeader />
+      <ChooseBookie
+        userBalance={userBalance}
+        visible={chooseBookieModal}
+        close={closeBookieModal}
+        selectBookie={selectBookie}
+      />
       <View style={{ flex: 1, alignItems: 'center' }}>
         { sportSelected &&
           <>
