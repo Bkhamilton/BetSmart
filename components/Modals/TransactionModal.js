@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, TextInput, Image, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
-import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
+import { StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
+import { TouchableOpacity, Text, View, Modal, TextInput } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
+import useTheme from '@/hooks/useTheme';
 
 export default function TransactionModal({ visible, close, title, bookie, balance, onConfirm  }) {
 
@@ -20,6 +21,8 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
   } else {
     balance = [];
   }
+
+  const { grayBorder } = useTheme();
 
   var selectedBookie = balance.find(item => item.Bookie === bookie);
   if (!selectedBookie) {
@@ -82,7 +85,7 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           {/* Main Modal Box */}
-          <View style={styles.mainPage}>
+          <View style={[styles.mainPage, { borderColor: grayBorder }]}>
             {/* Title */}
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={styles.title}>{title}</Text>
@@ -172,10 +175,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mainPage: {
-    backgroundColor: 'white',
     width: '80%',
     borderRadius: 20,
     padding: 20,
+    borderWidth: 1,
   },
   title: {
     fontSize: 24,
