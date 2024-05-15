@@ -15,6 +15,7 @@ import TransactionModal from '@/components/Modals/TransactionModal';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
 import useTheme from '@/hooks/useTheme';
+import HomeHeader from '../../components/Home/HomeHeader';
 
 export default function HomeScreen() {
 
@@ -84,26 +85,6 @@ export default function HomeScreen() {
   const amountWon = 240.00;
   const amountWagered = 120.00;
 
-  const { iconColor } = useTheme();
-
-  const HistoryButton = ({ onPress }) => (
-    <TouchableOpacity onPress={onPress} accessibilityLabel="Open Bet History">
-      <FontAwesome5 name='history' size={28} color={iconColor} />
-    </TouchableOpacity>
-  );
-  
-  const LoginButton = ({ onPress }) => (
-    <TouchableOpacity onPress={onPress} accessibilityLabel="Open Login">
-      <Ionicons name='person' size={28} color={iconColor} />
-    </TouchableOpacity>
-  );
-  
-  const SignUpButton = ({ onPress }) => (
-    <TouchableOpacity onPress={onPress} accessibilityLabel="Open Sign Up">
-      <Ionicons name='person-add' size={28} color={iconColor} />
-    </TouchableOpacity>
-  );
-
   return (
     <View style={styles.container}>
       <LoginPage visible={loginModalVisible} close={closeLoginModal}/>
@@ -116,11 +97,7 @@ export default function HomeScreen() {
         balance={userBalance}
         onConfirm={onConfirmTransaction}
       />
-      <Header title={'BetSmart'}>
-        <HistoryButton onPress={handleBetHistory} />
-        <LoginButton onPress={openLoginModal} />
-        <SignUpButton onPress={openSignUpModal} />
-      </Header>
+      <HomeHeader history={handleBetHistory} login={openLoginModal} signup={openSignUpModal} />
       <ScrollView
         showVerticalScrollIndicator={false}
       >
