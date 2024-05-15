@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Pressable } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
@@ -134,7 +134,14 @@ export default function BalanceChecker({ openTransaction, balance }) {
     }
 
     return (
-      <View style={[styles.centeredBox, { backgroundColor: balanceColor, borderColor: balanceBorderColor }]}>
+      <Pressable 
+        style={({pressed}) => ({
+          ...styles.centeredBox,
+          backgroundColor: balanceColor,
+          borderColor: balanceBorderColor,
+          opacity: pressed ? 0.8 : 1,
+      })}
+      >
         <BankButtons />
         <View style={styles.centerBox}>
             <Text>{bookie.toUpperCase()} BALANCE</Text>
@@ -143,7 +150,7 @@ export default function BalanceChecker({ openTransaction, balance }) {
             </Text>
         </View>
         <RecentTransactions />
-      </View>
+      </Pressable>
     );
   }
 
