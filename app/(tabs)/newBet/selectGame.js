@@ -114,7 +114,7 @@ export default function SelectGameScreen() {
         close={closeBookieModal}
         selectBookie={selectBookie}
       />
-      <View style={{ flex: 1, alignItems: 'center' }}>
+      <View style={styles.mainContainer}>
         { sportSelected &&
           <>
             <View style={{ paddingVertical: 10  }}>
@@ -155,4 +155,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  mainContainer: {
+    flex: 1, 
+    alignItems: 'center',
+  }
 });
