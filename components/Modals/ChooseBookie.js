@@ -27,7 +27,7 @@ export default function ChooseBookie({ userBalance, visible, close, selectBookie
                 onPress={close}
             >
                 <View style={styles.container}>
-                    <View style={{ marginTop: 110, }}>
+                    <View style={{ marginTop: 110, backgroundColor: 'transparent' }}>
                         <TouchableOpacity 
                             onPress={() => selectBookie('DraftKings')}
                             style={[styles.bookieButton, {backgroundColor: mainGreen, borderColor: mainGreen}]}
