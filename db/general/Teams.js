@@ -1,4 +1,4 @@
-
+import * as SQLite from 'expo-sqlite';
 
 // Function to get all teams
 export const getAllTeams = async (db) => {
