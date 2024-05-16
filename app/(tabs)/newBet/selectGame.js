@@ -11,7 +11,7 @@ import SportSlider from '@/components/PlaceBet/SportsSlider.js';
 import { BetContext } from '@/contexts/BetContext';
 import draftkings from '@/assets/images/DraftKings.png';
 import { useSQLiteContext } from 'expo-sqlite';
-import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
+import { getBalance, updateBalance } from '@/db/user-specific/Balance';
 import useTheme from '@/hooks/useTheme';
 import BalanceBox from '../../../components/PlaceBet/BalanceBox';
 import { useFocusEffect } from '@react-navigation/native';
