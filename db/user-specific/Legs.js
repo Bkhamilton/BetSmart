@@ -14,8 +14,8 @@ export const getLeg = async (db, legId) => {
 
 // Function to insert a leg
 export const insertLeg = async (db, participantBetId, result) => {
-  const result = await db.runAsync('INSERT INTO Legs (participantBetId, result) VALUES (?, ?)', [participantBetId, result]);
-  return result.lastInsertRowId;
+  const resultDB = await db.runAsync('INSERT INTO Legs (participantBetId, result) VALUES (?, ?)', [participantBetId, result]);
+  return resultDB.lastInsertRowId;
 };
 
 // Function to update a leg
