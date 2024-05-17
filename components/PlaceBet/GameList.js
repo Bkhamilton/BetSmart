@@ -5,6 +5,7 @@ import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from
 
 import Colors from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
+import { getGameMarketProps } from '../../api/prop-odds';
 
 export default function GameList({ games, selectGame, sport }) {
 
@@ -23,13 +24,13 @@ export default function GameList({ games, selectGame, sport }) {
 
     const getDate = (dateString) => {
       const date = new Date(dateString);
-      const estDate = new Date(date.getTime() - (3600000 * 4)); // Subtract 4 hours from UTC to get EST
+      const estDate = new Date(date.getTime()); // Subtract 4 hours from UTC to get EST
       return estDate.toISOString().split('T')[0]; // Returns the date part
     };
     
     const getTime = (dateString) => {
       const date = new Date(dateString);
-      const estDate = new Date(date.getTime() - (3600000 * 4)); // Subtract 4 hours from UTC to get EST
+      const estDate = new Date(date.getTime()); // Subtract 4 hours from UTC to get EST
       let hours = estDate.getHours();
       const minutes = estDate.getMinutes();
       hours = hours % 12;
@@ -40,13 +41,14 @@ export default function GameList({ games, selectGame, sport }) {
     
     const getAmPm = (dateString) => {
       const date = new Date(dateString);
-      const estDate = new Date(date.getTime() - (3600000 * 4)); // Subtract 4 hours from UTC to get EST
+      const estDate = new Date(date.getTime()); // Subtract 4 hours from UTC to get EST
       const hours = estDate.getHours();
       return hours >= 12 ? 'PM' : 'AM';
     };
 
     // Component for each game
     function GameComponent({ game }) {
+
         return (
           <TouchableOpacity 
             style={{ borderWidth: 1, borderRadius: 8, paddingHorizontal: 12 }}
