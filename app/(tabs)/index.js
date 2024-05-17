@@ -12,6 +12,7 @@ import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
 import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
 import { useSQLiteContext } from 'expo-sqlite';
+import { createTables } from '@/api/sqlite';
 import { getBalance, updateBalance } from '@/db/user-specific/Balance';
 import useTheme from '@/hooks/useTheme';
 import HomeHeader from '../../components/Home/HomeHeader';
