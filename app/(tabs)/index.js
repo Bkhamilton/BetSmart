@@ -5,7 +5,6 @@ import { StyleSheet, Dimensions } from 'react-native';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Text, View, ScrollView, TouchableOpacity, SafeAreaView } from '@/components/Themed';
 import { myBetList, playoffBets } from '@/data/exampleBetData';
-import Header from '@/components/Header/Header';
 import ProfitDashboard from '@/components/Home/Balance/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
 import SignUpPage from '@/components/Modals/SignUpPage';
@@ -13,7 +12,7 @@ import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
 import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
 import { useSQLiteContext } from 'expo-sqlite';
-import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
+import { getBalance, updateBalance } from '@/db/user-specific/Balance';
 import useTheme from '@/hooks/useTheme';
 import HomeHeader from '../../components/Home/HomeHeader';
 

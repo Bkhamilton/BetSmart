@@ -10,7 +10,7 @@ import CategorySlider from '@/components/PlaceBet/BetDetails/CategorySlider';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
 import draftkings from '@/assets/images/DraftKings.png';
 import { useSQLiteContext } from 'expo-sqlite';
-import { getBalance, getAllUsers, getUser, updateBalance } from '@/api/sqlite';
+import { getBalance } from '@/db/user-specific/Balance';
 import useTheme from '@/hooks/useTheme';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
