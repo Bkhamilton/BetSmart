@@ -13,14 +13,14 @@ export const getTeam = async (db, teamId) => {
 };
 
 // Function to insert a team
-export const insertTeam = async (db, teamName, abbreviation, logoUrl, leagueId) => {
-  const result = await db.runAsync('INSERT INTO Teams (teamName, abbreviation, logoUrl, leagueId) VALUES (?, ?, ?, ?)', [teamName, abbreviation, logoUrl, leagueId]);
+export const insertTeam = async (db, teamName, abbreviation, leagueId) => {
+  const result = await db.runAsync('INSERT INTO Teams (teamName, abbreviation, leagueId) VALUES (?, ?, ?, ?)', [teamName, abbreviation, leagueId]);
   return result.lastInsertRowId;
 };
 
 // Function to update a team
-export const updateTeam = async (db, teamId, teamName, abbreviation, logoUrl, leagueId) => {
-  await db.runAsync('UPDATE Teams SET teamName = ?, abbreviation = ?, logoUrl = ?, leagueId = ? WHERE id = ?', [teamName, abbreviation, logoUrl, leagueId, teamId]);
+export const updateTeam = async (db, teamId, teamName, abbreviation, leagueId) => {
+  await db.runAsync('UPDATE Teams SET teamName = ?, abbreviation = ?, leagueId = ? WHERE id = ?', [teamName, abbreviation, leagueId, teamId]);
 };
 
 // Function to delete a team
