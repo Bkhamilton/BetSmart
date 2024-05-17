@@ -1,6 +1,7 @@
 // Function to fetch game data from prop-odds api based on sport
 import secrets from "../secrets";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { insertBetMarket } from "../db/api/BetMarkets";
 
 export const getGames = async (sport) => {
     try {
@@ -82,3 +83,26 @@ export const retrieveData = async (sports) => {
     console.error(error);
   }
 };
+
+const getMoneyLine = (marketData) => {
+  const moneyLine = {};
+  marketData.market.outcomes.forEach(outcome => {
+    moneyLine[outcome.name] = outcome.odds;
+  });
+  return moneyLine;
+};
+
+export const fetchMarketProps = async (gameId, market) => {
+  try {
+    const data = await getGameMarketProps(gameId, market);
+    const filteredData = data.sportsbooks.filter(book => ['draftkings', 'fanduel', 'betmgm'].includes(book.bookie_key));
+
+    return filteredData.map(book => ({
+      bookie: book.bookie_key,
+      moneyLine: getMoneyLine(book.market),
+    }));
+    
+  } catch (error) {
+    console.error(error);
+  }
+}
