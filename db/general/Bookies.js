@@ -13,7 +13,7 @@ export const getAllBookies = async (db) => {
 // Function to get a bookie
 export const getBookies = async (db, userId) => {
     try {
-        const bookie = await db.getAsync('SELECT * FROM Bookies WHERE userId = ?', [userId]);
+        const bookie = await db.getAllAsync('SELECT * FROM Bookies WHERE userId = ?', [userId]);
         return bookie;
     } catch (error) {
         console.error('Error getting a bookie:', error);
