@@ -6,7 +6,7 @@ import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 import useTheme from '@/hooks/useTheme';
 
-export default function TransactionModal({ visible, close, title, bookie, balance, onConfirm  }) {
+export default function TransactionModal({ visible, close, title, bookie, bookieId, balance, onConfirm  }) {
 
   const [amount, setAmount] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -24,12 +24,12 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
 
   const { grayBorder } = useTheme();
 
-  var selectedBookie = balance.find(item => item.Bookie === bookie);
+  var selectedBookie = balance.find(item => item.bookieId === bookieId);
   if (!selectedBookie) {
-    const totalBalance = balance.reduce((sum, item) => sum + item.Balance, 0);
+    const totalBalance = balance.reduce((sum, item) => sum + item.balance, 0);
     selectedBookie = { bookie: 'Total', balance: totalBalance };
   }
-  const initialAmount = selectedBookie.Balance;
+  const initialAmount = selectedBookie.balance;
 
   const bookieImages = {
     'DraftKings': draftkings,
@@ -64,7 +64,7 @@ export default function TransactionModal({ visible, close, title, bookie, balanc
 
     updatedBalance = Number(updatedBalance.toFixed(2));
   
-    onConfirm(bookie, updatedBalance);
+    onConfirm(bookieId, updatedBalance);
     setAmount('');
   };
 

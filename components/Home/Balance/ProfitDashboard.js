@@ -7,7 +7,7 @@ import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 import BalanceChecker from './BalanceChecker';
 
-export default function ProfitDashboard({ wagered, won, openTransaction, balance }) {
+export default function ProfitDashboard({ wagered, won, openTransaction, balance, bookies }) {
     const profit = won - wagered;
     const arrowDirection = profit > 0 ? 'chevron-up' : 'chevron-down';
     const arrowColor = profit > 0 ? 'green' : 'red';
@@ -36,7 +36,7 @@ export default function ProfitDashboard({ wagered, won, openTransaction, balance
 
     return (
     <>
-        <BalanceChecker openTransaction={openTransaction} balance={balance}/>
+        <BalanceChecker openTransaction={openTransaction} balance={balance} bookies={bookies}/>
         <BetResults />
     </>
   );

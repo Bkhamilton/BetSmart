@@ -6,12 +6,13 @@ import useTheme from '@/hooks/useTheme';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 
-export default function BalanceChecker({ openTransaction, balance }) {
+export default function BalanceChecker({ openTransaction, balance, bookies }) {
 
     const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor } = useTheme();
 
     const [betIndex, setBetIndex] = useState(0);
     const [bookie, setBookie] = useState('DraftKings');
+    const [bookieId, setBookieId] = useState(1);
 
     const pressUp = () => {
       setBetIndex((prevIndex) => (prevIndex === 0 ? 0 : prevIndex - 1));
@@ -43,15 +44,22 @@ export default function BalanceChecker({ openTransaction, balance }) {
     };
 
     const selectBookie = () => {
-        setBookie((prevBookie) => {
-            if (prevBookie === 'DraftKings') {
-            return 'FanDuel';
-            } else if (prevBookie === 'FanDuel') {
-            return 'Total';
-            } else {
-            return 'DraftKings';
-            }
-        });
+      setBookie((prevBookie) => {
+        let newBookie;
+        if (prevBookie === 'DraftKings') {
+          newBookie = 'FanDuel';
+        } else if (prevBookie === 'FanDuel') {
+          newBookie = 'Total';
+        } else {
+          newBookie = 'DraftKings';
+        }
+
+        // Find the bookieId of the new bookie and set it
+        const newBookieId = bookies.find(item => item.name === newBookie)?.bookieId || 0;
+        setBookieId(newBookieId);
+    
+        return newBookie;
+      });
     };
 
     const selectTransaction = (type) => {
@@ -61,7 +69,9 @@ export default function BalanceChecker({ openTransaction, balance }) {
     const balanceColor = bookie === 'FanDuel' ? mainBlue : mainGreen;
     const balanceBorderColor = bookie === 'FanDuel' ? accentBlue : mainGreen;
     
-    const balanceValue = bookie === 'Total' ? balance?.reduce((total, item) => total + item.Balance, 0) : balance?.find(item => item.Bookie === bookie)?.Balance || 0;
+    const balanceValue = bookie === 'Total' 
+      ? balance?.reduce((total, item) => total + item.balance, 0) 
+      : balance?.find(item => item.bookieId === bookieId)?.balance || 0;
 
 
     const BankButtons = () => {

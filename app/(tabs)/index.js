@@ -14,6 +14,7 @@ import TransactionModal from '@/components/Modals/TransactionModal';
 import { useSQLiteContext } from 'expo-sqlite';
 import { createTables } from '@/api/sqlite';
 import { getBalance, updateBalance } from '@/db/user-specific/Balance';
+import { getAllBookies, getBookies } from '@/db/general/Bookies';
 import useTheme from '@/hooks/useTheme';
 import HomeHeader from '../../components/Home/HomeHeader';
 
@@ -27,7 +28,9 @@ export default function HomeScreen() {
 
   const [transactionTitle, setTransactionTitle] = useState('Deposit');
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
-  const [userBalance, setUserBalance] = useState([{ Bookie: 'DraftKings', Balance: 0 }, { Bookie: 'FanDuel', Balance: 0 }])
+  const [transactionBookieId, setTransactionBookieId] = useState(1);
+  const [userBalance, setUserBalance] = useState([{ bookieId: 1, balance: 0 }, { bookieId: 2, balance: 0 }])
+  const [userBookies, setUserBookies] = useState([]);
   const [userID, setUserID] = useState(1);
 
   function openSignUpModal() {
@@ -47,6 +50,8 @@ export default function HomeScreen() {
   function updateTransactionInfo(title, balance, bookie) {
     setTransactionTitle(title);
     setTransactionBookie(bookie);
+    const bookieId = userBookies.find(item => item.name === bookie)?.bookieId;
+    setTransactionBookieId(bookieId);
     setUserBalance(balance);
   }
 
@@ -68,13 +73,17 @@ export default function HomeScreen() {
     getBalance(db, userID).then((balance) => {
       setUserBalance(balance);
     });
+    getBookies(db, userID).then((bookies) => {
+      console.log(bookies);
+      setUserBookies(bookies);
+    });
   }, []);
 
-  const onConfirmTransaction = (bookie, updatedBalance) => {
-    updateBalance(db, bookie, updatedBalance, userID).then(() => {
+  const onConfirmTransaction = (bookieId, updatedBalance) => {
+    updateBalance(db, bookieId, updatedBalance, userID).then(() => {
       setUserBalance(prevBalances => 
         prevBalances.map(item => 
-          item.Bookie === bookie ? { ...item, Balance: Number(updatedBalance) } : item
+          item.bookieId === bookieId ? { ...item, balance: Number(updatedBalance) } : item
         )
       );
       closeTransactionModal();
@@ -94,14 +103,16 @@ export default function HomeScreen() {
         close={closeTransactionModal}
         title={transactionTitle}
         bookie={transactionBookie}
+        bookieId={transactionBookieId}
         balance={userBalance}
+        userBookies={userBookies}
         onConfirm={onConfirmTransaction}
       />
       <HomeHeader history={handleBetHistory} login={openLoginModal} signup={openSignUpModal} />
       <ScrollView
         showVerticalScrollIndicator={false}
       >
-        <ProfitDashboard wagered={amountWagered} won={amountWon} openTransaction={openTransactionModal} balance={userBalance}/>
+        <ProfitDashboard wagered={amountWagered} won={amountWon} openTransaction={openTransactionModal} balance={userBalance} bookies={userBookies}/>
         <TodaysBets bets={playoffBets}/>
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
