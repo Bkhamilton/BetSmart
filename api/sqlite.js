@@ -7,49 +7,53 @@ export const initializeDatabase = async (db) => {
 // Function to create the database and tables
 export const createTables = async (db) => {
   await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS users (
-      Id INTEGER PRIMARY KEY AUTOINCREMENT, 
-      Name TEXT NOT NULL, 
-      Username TEXT NOT NULL, 
-      Password TEXT NOT NULL
+    CREATE TABLE IF NOT EXISTS Users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      name TEXT,
+      email TEXT, 
+      username TEXT NOT NULL, 
+      password TEXT NOT NULL,
+      UNIQUE (id, username)
     );
-    CREATE TABLE IF NOT EXISTS balance (
-      Bookie TEXT PRIMARY KEY NOT NULL, 
-      Balance REAL NOT NULL, 
-      UserID INTEGER, 
-      FOREIGN KEY(UserID) REFERENCES users(Id),
+    CREATE TABLE IF NOT EXISTS Balance (
+      bookieId INTEGER NOT NULL, 
+      balance REAL NOT NULL, 
+      userID INTEGER NOT NULL, 
+      FOREIGN KEY(userID) REFERENCES users(Id),
+      FOREIGN KEY(bookieId) REFERENCES Bookies(Id),
+      PRIMARY KEY (bookieId, Balance, userID)
     );
     CREATE TABLE IF NOT EXISTS Bookies (
-      id INTEGER AUTOINCREMENT, 
-      Name TEXT NOT NULL, 
-      Description TEXT,
-      PRIMARY KEY (Id, Name, Description)
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      name TEXT NOT NULL, 
+      description TEXT,
+      UNIQUE (id, name, description)
     );
     CREATE TABLE IF NOT EXISTS Leagues (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       leagueName TEXT NOT NULL,
       sport TEXT NOT NULL,
       description TEXT,
-      PRIMARY KEY (id, leagueName, sport, description)
+      UNIQUE (id, leagueName, sport, description)
     );
     CREATE TABLE IF NOT EXISTS Teams (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       teamName TEXT NOT NULL,
       abbreviation TEXT NOT NULL,
       leagueId INTEGER NOT NULL,
       FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-      PRIMARY KEY (id, teamName, abbreviation, leagueId)
+      UNIQUE (id, teamName, abbreviation, leagueId)
     );
     CREATE TABLE IF NOT EXISTS Seasons (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       leagueId INTEGER NOT NULL,
       season TEXT NOT NULL,
       games INTEGER NOT NULL,
       FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-      PRIMARY KEY (id, leagueId, season, games)
+      UNIQUE (id, leagueId, season, games)
     );
     CREATE TABLE IF NOT EXISTS Games (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       gameId TEXT NOT NULL,
       seasonId INTEGER NOT NULL,
       date TEXT NOT NULL,
@@ -58,21 +62,21 @@ export const createTables = async (db) => {
       FOREIGN KEY(seasonId) REFERENCES Seasons(id),
       FOREIGN KEY(homeTeamId) REFERENCES Teams(id),
       FOREIGN KEY(awayTeamId) REFERENCES Teams(id),
-      PRIMARY KEY (id, gameId, seasonId, date, homeTeamId, awayTeamId)
+      UNIQUE (id, gameId, seasonId, date, homeTeamId, awayTeamId)
     );
     CREATE TABLE IF NOT EXISTS BetTargets (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       targetType TEXT NOT NULL,
       targetName TEXT NOT NULL,
       teamId INTEGER,
       FOREIGN KEY(teamId) REFERENCES Teams(id),
-      PRIMARY KEY (id, targetType, targetName, teamId)
+      UNIQUE (id, targetType, targetName, teamId)
     );
     CREATE TABLE BetTypes (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       betType TEXT NOT NULL,
       description TEXT,
-      PRIMARY KEY (id, betType, description)
+      UNIQUE (id, betType, description)
     );
     CREATE TABLE BetFormats (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,7 +84,7 @@ export const createTables = async (db) => {
       description TEXT
     );
     CREATE TABLE BetMarkets (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       gameId TEXT NOT NULL,
       marketType TEXT NOT NULL,
       value REAL NOT NULL,
@@ -91,10 +95,10 @@ export const createTables = async (db) => {
       FOREIGN KEY(betTargetId) REFERENCES BetTargets(id),
       FOREIGN KEY(gameId) REFERENCES Games(gameId),
       FOREIGN KEY(bookieId) REFERENCES Bookies(Id),
-      PRIMARY KEY (id, gameId, marketType, value, odds, overUnder, betTargetId, bookieId)
+      UNIQUE (id, gameId, marketType, value, odds, overUnder, betTargetId, bookieId)
     );
     CREATE TABLE BetSlips (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       formatId INTEGER NOT NULL,
       date TEXT NOT NULL,
       odds TEXT NOT NULL,
@@ -105,10 +109,10 @@ export const createTables = async (db) => {
       FOREIGN KEY (formatId) REFERENCES BetFormats(id),
       FOREIGN KEY (userId) REFERENCES Users(id),
       FOREIGN KEY (bookieId) REFERENCES Bookies(Id),
-      PRIMARY KEY (id, formatId, date, odds, betAmount, winnings, userId, bookieId)
+      UNIQUE (id, formatId, date, odds, betAmount, winnings, userId, bookieId)
     );
     CREATE TABLE ParticipantBets (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       betSlipId INTEGER NOT NULL,
       sport TEXT NOT NULL,
       homeTeamId INTEGER NOT NULL,
@@ -117,15 +121,37 @@ export const createTables = async (db) => {
       FOREIGN KEY (betSlipId) REFERENCES BetSlips(id),
       FOREIGN KEY (homeTeamId) REFERENCES BetTargets(id),
       FOREIGN KEY (awayTeamId) REFERENCES BetTargets(id),
-      PRIMARY KEY (id, betSlipId, sport, homeTeamId, awayTeamId, odds)
+      UNIQUE (id, betSlipId, sport, homeTeamId, awayTeamId, odds)
     );
     CREATE TABLE Legs (
-      id INTEGER AUTOINCREMENT,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
       participantBetId INTEGER NOT NULL,
       betMarketId INTEGER NOT NULL,
       FOREIGN KEY (participantBetId) REFERENCES ParticipantBets(id),
       FOREIGN KEY (betMarketId) REFERENCES BetMarkets(id),
-      PRIMARY KEY (id, participantBetId, betMarketId)
+      UNIQUE (id, participantBetId, betMarketId)
     );
   `);
+  console.log('Tables created');
+};
+
+// Function to drop the tables
+export const dropTables = async (db) => {
+  await db.execAsync(`
+    DROP TABLE IF EXISTS users;
+    DROP TABLE IF EXISTS balance;
+    DROP TABLE IF EXISTS Bookies;
+    DROP TABLE IF EXISTS Leagues;
+    DROP TABLE IF EXISTS Teams;
+    DROP TABLE IF EXISTS Seasons;
+    DROP TABLE IF EXISTS Games;
+    DROP TABLE IF EXISTS BetTargets;
+    DROP TABLE IF EXISTS BetTypes;
+    DROP TABLE IF EXISTS BetFormats;
+    DROP TABLE IF EXISTS BetMarkets;
+    DROP TABLE IF EXISTS BetSlips;
+    DROP TABLE IF EXISTS ParticipantBets;
+    DROP TABLE IF EXISTS Legs;
+  `);
+  console.log('Tables dropped');
 };
