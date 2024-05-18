@@ -2,9 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
-import Header from '../../components/Header/Header';
-import BuildABet from '../../components/Insights/BuildABet';
-import RecommendedBets from '../../components/Insights/RecommendedBets/RecommendedBets';
+import Header from '@/components/Header/Header';
+import BuildABet from '@/components/Insights/BuildABet';
+import RecommendedBets from '@/components/Insights/RecommendedBets/RecommendedBets';
+import { createTables, dropTables } from '@/api/sqlite';
+import { insertUser, getAllUsers } from '@/db/user-specific/Users';
+import { insertBalance } from '@/db/user-specific/Balance';
+import { insertBookie } from '@/db/general/Bookies';
+import { useSQLiteContext } from 'expo-sqlite';
 
 export default function InsightScreen() {
   const recentBets = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -19,6 +24,12 @@ export default function InsightScreen() {
     return shuffledData.slice(0, itemsCount); // Return a new array with the random items
   };
 
+  const generateFunction = () => {
+
+  }
+
+  const db = useSQLiteContext();
+
   useEffect(() => {
     // Generate the random items when the component mounts
     const initialRecentBets = generateItems(recentBets);
@@ -32,7 +43,7 @@ export default function InsightScreen() {
     <View style={styles.container}>
       <Header title={"Insights"} />
       <View style={{ paddingHorizontal: 10, paddingVertical: 12 }}>
-        <BuildABet />
+        <BuildABet generate={generateFunction}/>
       </View>
       <RecommendedBets wins={generatedRecentBets} losses={generatedRecentBets} recent={generatedRecentBets}/>
     </View>

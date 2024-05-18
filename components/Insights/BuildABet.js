@@ -2,10 +2,11 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, TextInput } from '../Themed';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import useTheme from '@/hooks/useTheme';
 
 import Colors from '@/constants/Colors';
 
-export default function BuildABet() {
+export default function BuildABet({ generate }) {
 
   //dummy example sports bet about the NBA with 3 legs
   const bets = [
@@ -50,6 +51,8 @@ export default function BuildABet() {
   let totalOdds = calculateTotalOdds(bets);
   let moneylineOdds = calculateMoneylineOdds(totalOdds);
 
+  const { iconColor } = useTheme();
+
   return (
     <View style={styles.container}>
       <View style={styles.titleTextContainer}>
@@ -83,8 +86,11 @@ export default function BuildABet() {
         </View>
       </View>
       <View style={styles.generateButtonContainer}>
-        <TouchableOpacity style={styles.generateButton}>
-          <FontAwesome name="refresh" size={20} color={'black'} />
+        <TouchableOpacity 
+          onPress={generate}
+          style={styles.generateButton}
+        >
+          <FontAwesome name="refresh" size={20} color={iconColor} />
         </TouchableOpacity>
       </View>
     </View>
