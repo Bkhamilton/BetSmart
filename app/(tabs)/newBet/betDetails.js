@@ -11,17 +11,19 @@ import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
 import draftkings from '@/assets/images/DraftKings.png';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance } from '@/db/user-specific/Balance';
+import { getAllBookies } from '@/db/general/Bookies';
 import useTheme from '@/hooks/useTheme';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
 
 export default function BetDetailsScreen() {
-  const { league, currentGame, setBookie } = useContext(BetContext);
+  const { league, currentGame, setBookie, setBookieId } = useContext(BetContext);
   const router = useRouter();
 
   const db = useSQLiteContext();
 
-  const [userBalance, setUserBalance] = useState([{ Bookie: 'DraftKings', Balance: 0 }, { Bookie: 'FanDuel', Balance: 0 }])
+  const [userBalance, setUserBalance] = useState([{ bookieId: 1, balance: 0 }, { bookieId: 2, balance: 0 }])
+  const [bookies, setBookies] = useState([{ id: 0, name: '', description: ''}]);
   const [userID, setUserID] = useState(1);
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);
@@ -36,7 +38,8 @@ export default function BetDetailsScreen() {
 
   const selectBookie = (bookie) => {
     setChooseBookieModal(false);
-    setBookie(bookie);
+    setBookie(bookie.name);
+    setBookieId(bookie.id);
   }
 
   const handleClose = () => {
@@ -62,6 +65,9 @@ export default function BetDetailsScreen() {
     getBalance(db, userID).then((balance) => {
       setUserBalance(balance);
     });
+    getAllBookies(db).then((bookies) => {
+      setBookies(bookies);
+    });
   }, []);
   
   const GameHeader = () => {
@@ -86,6 +92,7 @@ export default function BetDetailsScreen() {
     <View style={styles.container}>
       <ChooseBookie
         userBalance={userBalance}
+        bookies={bookies}
         visible={chooseBookieModal}
         close={closeBookieModal}
         selectBookie={selectBookie}

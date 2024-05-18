@@ -46,16 +46,18 @@ export default function BalanceChecker({ openTransaction, balance, bookies }) {
     const selectBookie = () => {
       setBookie((prevBookie) => {
         let newBookie;
+        let newBookieId;
         if (prevBookie === 'DraftKings') {
           newBookie = 'FanDuel';
+          newBookieId = 2;
         } else if (prevBookie === 'FanDuel') {
           newBookie = 'Total';
+          newBookieId = 0;
         } else {
           newBookie = 'DraftKings';
+          newBookieId = 1;
         }
 
-        // Find the bookieId of the new bookie and set it
-        const newBookieId = bookies.find(item => item.name === newBookie)?.bookieId || 0;
         setBookieId(newBookieId);
     
         return newBookie;

@@ -14,8 +14,8 @@ export default function TransactionModal({ visible, close, title, bookie, bookie
   if (balance) {
     balance = balance.map(item => {
       return {
-        Bookie: item.Bookie,
-        Balance: Number(item.Balance),
+        bookieId: item.bookieId,
+        balance: Number(item.balance),
       };
     });
   } else {
@@ -106,7 +106,7 @@ export default function TransactionModal({ visible, close, title, bookie, bookie
                 <Text style={[styles.BoxTitle, { marginLeft: 4 }]}>{bookie}</Text>
               </View>
               <View style={styles.inputBox}>
-                <Text>{Number(initialAmount).toFixed(2)}</Text>
+                <Text>{initialAmount.toFixed(2)}</Text>
               </View>
             </View>
             <View style={styles.underline}></View>
@@ -137,7 +137,7 @@ export default function TransactionModal({ visible, close, title, bookie, bookie
                 
               </View>
               <View>
-                <Text>{(selectedBookie.Balance + (title === 'Deposit' ? +amount : -amount)).toFixed(2)}</Text>
+                <Text>{(selectedBookie.balance + (title === 'Deposit' ? +amount : -amount)).toFixed(2)}</Text>
               </View>
             </View>
 

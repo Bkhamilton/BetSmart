@@ -12,6 +12,7 @@ import { BetContext } from '@/contexts/BetContext';
 import draftkings from '@/assets/images/DraftKings.png';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance, updateBalance } from '@/db/user-specific/Balance';
+import { getAllBookies } from '@/db/general/Bookies';
 import useTheme from '@/hooks/useTheme';
 import BalanceBox from '../../../components/PlaceBet/BalanceBox';
 import { useFocusEffect } from '@react-navigation/native';
@@ -21,7 +22,7 @@ export default function SelectGameScreen() {
 
   const db = useSQLiteContext();
 
-  const { setCurrentGame, setLeague, setBookie } = useContext(BetContext);
+  const { setCurrentGame, setLeague, setBookie, setBookieId } = useContext(BetContext);
 
   const router = useRouter();
 
@@ -36,7 +37,8 @@ export default function SelectGameScreen() {
   const [curSport, setcurSport] = useState({title:'', games:[]})
   const [allSportsData, setAllSportsData] = useState([]);
   const [sportSelected, setSportSelected] = useState(false);
-  const [userBalance, setUserBalance] = useState([{ Bookie: 'DraftKings', Balance: 0 }, { Bookie: 'FanDuel', Balance: 0 }])
+  const [userBalance, setUserBalance] = useState([{ bookieId: 1, balance: 0 }, { bookieId: 2, balance: 0 }])
+  const [bookies, setBookies] = useState([{ id: 0, name: '', description: ''}]);
   const [userID, setUserID] = useState(1);
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);
@@ -51,7 +53,8 @@ export default function SelectGameScreen() {
 
   const selectBookie = (bookie) => {
     setChooseBookieModal(false);
-    setBookie(bookie);
+    setBookie(bookie.name);
+    setBookieId(bookie.id);
   }
 
   // Function to select a sport and set the current sport and category
@@ -80,6 +83,10 @@ export default function SelectGameScreen() {
       const data = await retrieveData(['nba', 'mlb', 'nhl']); // replace with the sports you're interested in
       setAllSportsData(data);
     };
+
+    getAllBookies(db).then((bookies) => {
+      setBookies(bookies);
+    });
 
     fetchSportsData();
   }, []);
@@ -110,6 +117,7 @@ export default function SelectGameScreen() {
       <SelectGameHeader />
       <ChooseBookie
         userBalance={userBalance}
+        bookies={bookies}
         visible={chooseBookieModal}
         close={closeBookieModal}
         selectBookie={selectBookie}

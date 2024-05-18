@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
 import Colors from '@/constants/Colors';
@@ -7,13 +7,29 @@ import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default function ChooseBookie({ userBalance, visible, close, selectBookie }) {
+export default function ChooseBookie({ userBalance, bookies, visible, close, selectBookie }) {
 
     const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor } = useTheme();
 
+    const [balance, setBalance] = useState([]);
+
+    useEffect(() => {
+        if (userBalance && bookies) {
+            const updatedBalance = userBalance.map((b) => {
+                const bookie = bookies.find((bookie) => bookie.id === b.bookieId);
+                return {
+                    bookie: bookie ? bookie.name : '',
+                    balance: b.balance,
+                };
+            });
+            setBalance(updatedBalance);
+            console.log('updatedBalance', updatedBalance);
+        }
+    }, [userBalance, bookies]);
+
     const getBalance = (bookieName) => {
-        const bookie = userBalance.find((b) => b.Bookie === bookieName);
-        return bookie ? bookie.Balance : 0;
+        const bookie = balance.find((b) => b.bookie === bookieName);
+        return bookie ? bookie.balance : 0;
     };
 
     return (
@@ -29,14 +45,20 @@ export default function ChooseBookie({ userBalance, visible, close, selectBookie
                 <View style={styles.container}>
                     <View style={{ marginTop: 110, backgroundColor: 'transparent' }}>
                         <TouchableOpacity 
-                            onPress={() => selectBookie('DraftKings')}
+                            onPress={() => {
+                                const bookie = bookies.find((b) => b.name === 'DraftKings');
+                                selectBookie(bookie);
+                            }}
                             style={[styles.bookieButton, {backgroundColor: mainGreen, borderColor: mainGreen}]}
                         >
                             <Text style={styles.balanceText}>${getBalance('DraftKings').toFixed(2)}</Text>
                             <Image source={draftkings} style={{ width: 40, height: 40, borderRadius: 8 }} />
                         </TouchableOpacity>
                         <TouchableOpacity 
-                            onPress={() => selectBookie('FanDuel')}
+                            onPress={() => {
+                                const bookie = bookies.find((b) => b.name === 'FanDuel');
+                                selectBookie(bookie);
+                            }}
                             style={[styles.bookieButton, {backgroundColor: mainBlue, borderColor: mainBlue}]}
                         >
                             <Text style={styles.balanceText}>${getBalance('FanDuel').toFixed(2)}</Text>

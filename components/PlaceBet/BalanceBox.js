@@ -8,9 +8,9 @@ import useTheme from '@/hooks/useTheme';
 
 export default function BalanceBox({ userBalance, openModal }) {
 
-    const { bookie, setBookie } = useContext(BetContext);
+    const { bookie, setBookie, bookieId, setBookieId } = useContext(BetContext);
 
-    const curBookie = userBalance.find(obj => obj.Bookie === bookie);
+    const curBookie = userBalance.find(obj => obj.bookieId === bookieId);
 
     const bookieImages = {
         'DraftKings': draftkings,
@@ -22,7 +22,9 @@ export default function BalanceBox({ userBalance, openModal }) {
     // Function to switch between bookies
     const switchBookie = () => {
         const newBookie = bookie === 'DraftKings' ? 'FanDuel' : 'DraftKings';
+        const newBookieId = bookieId === 1 ? 2 : 1;
         setBookie(newBookie);
+        setBookieId(newBookieId);
     };
 
     const backgroundColor = bookie === 'DraftKings' ? mainGreen : mainBlue;
@@ -40,7 +42,7 @@ export default function BalanceBox({ userBalance, openModal }) {
             onLongPress={() => switchBookie()}
         >
           <View style={{ backgroundColor: 'transparent', width: 75, alignItems: 'flex-start', justifyContent: 'center' }}>
-            <Text style={{ fontSize: 18, fontWeight: '500' }}>${curBookie.Balance.toFixed(2)}</Text>
+            <Text style={{ fontSize: 18, fontWeight: '500' }}>${curBookie.balance.toFixed(2)}</Text>
           </View>
             <Image source={bookieImages[bookie]} style={{ width: 32, height: 32, borderRadius: 8 }} />
         </Pressable>

@@ -29,8 +29,9 @@ export default function HomeScreen() {
   const [transactionTitle, setTransactionTitle] = useState('Deposit');
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
   const [transactionBookieId, setTransactionBookieId] = useState(1);
+  
   const [userBalance, setUserBalance] = useState([{ bookieId: 1, balance: 0 }, { bookieId: 2, balance: 0 }])
-  const [userBookies, setUserBookies] = useState([]);
+  const [userBookies, setUserBookies] = useState([{ id: 0, name: '', description: ''}]);
   const [userID, setUserID] = useState(1);
 
   function openSignUpModal() {
@@ -50,8 +51,8 @@ export default function HomeScreen() {
   function updateTransactionInfo(title, balance, bookie) {
     setTransactionTitle(title);
     setTransactionBookie(bookie);
-    const bookieId = userBookies.find(item => item.name === bookie)?.bookieId;
-    setTransactionBookieId(bookieId);
+    const curBookie = userBookies.find(item => item.name === bookie);
+    setTransactionBookieId(curBookie.id);
     setUserBalance(balance);
   }
 
@@ -73,8 +74,7 @@ export default function HomeScreen() {
     getBalance(db, userID).then((balance) => {
       setUserBalance(balance);
     });
-    getBookies(db, userID).then((bookies) => {
-      console.log(bookies);
+    getAllBookies(db).then((bookies) => {
       setUserBookies(bookies);
     });
   }, []);
@@ -105,7 +105,6 @@ export default function HomeScreen() {
         bookie={transactionBookie}
         bookieId={transactionBookieId}
         balance={userBalance}
-        userBookies={userBookies}
         onConfirm={onConfirmTransaction}
       />
       <HomeHeader history={handleBetHistory} login={openLoginModal} signup={openSignUpModal} />
