@@ -23,7 +23,6 @@ export default function ChooseBookie({ userBalance, bookies, visible, close, sel
                 };
             });
             setBalance(updatedBalance);
-            console.log('updatedBalance', updatedBalance);
         }
     }, [userBalance, bookies]);
 
