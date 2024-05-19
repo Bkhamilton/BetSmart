@@ -3,7 +3,6 @@ import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome5 } from '@expo/vector-icons';
-import ProfileHeader from '@/components/Profile/ProfileHeader';
 import AccountInfo from '../../../components/Profile/Settings/AccountInfo';
 import SettingsOptions from '../../../components/Profile/Settings/SettingsOptions';
 
