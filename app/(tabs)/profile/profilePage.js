@@ -1,15 +1,24 @@
-import { StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
-import ProfileHeader from '@/components/Profile/ProfileHeader';
+import ProfileMainInfo from '../../../components/Profile/ProfileMainInfo';
 import UserFavorites from '@/components/Profile/UserFavorites';
 import Achievements from '../../../components/Profile/Achievements';
+import { useSQLiteContext } from 'expo-sqlite';
+import { getUserById, getAllUsers } from '@/db/user-specific/Users';
+import { getBalance } from '@/db/user-specific/Balance';
 import useTheme from '@/hooks/useTheme';
 
 export default function ProfileScreen() {
+
+  const db = useSQLiteContext();
+
+  const [user, setUser] = useState({id: 0, name: '', email: '', username: '', password: ''});
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
 
@@ -21,10 +30,31 @@ export default function ProfileScreen() {
     router.navigate('profile/betHistory');
   };
 
-  const { iconColor } = useTheme();
+  const { iconColor, backgroundColor } = useTheme();
+  
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await getUserById(db, 1);
+        setLoading(false); // Set loading to false when done
+        return user; // Return user data if successful
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+    
+    fetchUser().then((user) => {
+      setUser(user);
+    } );
+  }
+  , []);
 
-  return (
-    <View style={styles.container}>
+  if (loading) {
+    return <ActivityIndicator size="large" color={backgroundColor} />; // Display loading indicator while loading
+  }
+
+  const LoadingHeader = () => {
+    return (
       <Header title={'Username'}>
         <TouchableOpacity 
           onPress={handleBetHistory} 
@@ -40,8 +70,39 @@ export default function ProfileScreen() {
           <FontAwesome name="cog" size={24} color={iconColor}/>
         </TouchableOpacity>
       </Header>
-      <ScrollView> 
-        <ProfileHeader user={{}} />
+    );
+  }
+
+  const ProfilePageHeader = ({ user }) => {
+    return (
+      <View style={styles.headerContainer}>
+        <View>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{user.username}</Text>
+        </View>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <TouchableOpacity 
+            onPress={handleBetHistory} 
+            accessibilityLabel="Open Bet History"
+            style={{ marginRight: 4 }}
+          >
+            <FontAwesome5 name='history' size={24} color={iconColor} />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={handleSettings}
+            accessibilityLabel="Open Settings"
+          >
+            <FontAwesome name="cog" size={24} color={iconColor}/>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+  
+  return (
+    <View style={styles.container}>
+      {loading ? <LoadingHeader /> : <ProfilePageHeader user={user} />}
+      <ScrollView>
+        <ProfileMainInfo user={user} /> 
         <UserFavorites league={"NBA"} team={"BOS"} player={"Zion Williamson"} bet={"Spread"}/>
         <Achievements />
         <View style={styles.section}>
@@ -62,11 +123,6 @@ export default function ProfileScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Bankroll Management</Text>
           {/* Add bankroll management components here */}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Achievements/Badges</Text>
-          {/* Add achievements/badges components here */}
         </View>
 
         <View style={styles.section}>
@@ -114,5 +170,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  headerContainer: {
+    height: 84, 
+    paddingHorizontal: 20, 
+    paddingTop: 48,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
