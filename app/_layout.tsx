@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { Suspense, useEffect } from 'react';
 import { SQLiteProvider } from 'expo-sqlite';
 import { initializeDatabase } from '@/api/sqlite';
+import { UserContextProvider } from '@/contexts/UserContext';
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -45,7 +46,9 @@ export default function RootLayout() {
 
   return (
     <SQLiteProvider databaseName="BetSmart.db" onInit={initializeDatabase} useSuspense>
-      <RootLayoutNav />
+      <UserContextProvider>
+        <RootLayoutNav />
+      </UserContextProvider>
     </SQLiteProvider>
   );
 }
