@@ -14,8 +14,19 @@ export const getAllUsers = async (db) => {
 // Function to get a user
 export const getUser = async (db, username) => {
   try {
-    const user = await db.getAsync('SELECT * FROM Users WHERE username = ?', [username]);
-    return user;
+    const user = await db.getAllAsync('SELECT * FROM Users WHERE username = ?', [username]);
+    return user[0];
+  } catch (error) {
+    console.error('Error getting user:', error);
+    throw error;
+  }
+};
+
+// Function to get a user by ID
+export const getUserById = async (db, id) => {
+  try {
+    const user = await db.getAllAsync('SELECT * FROM Users WHERE id = ?', [id]);
+    return user[0];
   } catch (error) {
     console.error('Error getting user:', error);
     throw error;
@@ -25,7 +36,7 @@ export const getUser = async (db, username) => {
 // Function to insert a user
 export const insertUser = async (db, name, email, username, password) => {
   try {
-    const result = await db.runAsync('INSERT INTO Users (name, email, username, password) VALUES (?, ?, ?)', [name, email, username, password]);
+    const result = await db.runAsync('INSERT INTO Users (name, email, username, password) VALUES (?, ?, ?, ?)', [name, email, username, password]);
     return result.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting user:', error);
