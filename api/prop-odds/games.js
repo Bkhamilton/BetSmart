@@ -1,6 +1,7 @@
 import secrets from "../secrets";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getAllGames, insertGame } from "../../db/general/Games";
+import { getGamesByDate, insertGame } from "@/db/general/Games";
+import { getTeamIds } from "@/db/general/Teams";
 
 export const getGames = async (sport) => {
     try {
@@ -59,4 +60,43 @@ export const retrieveData = async (sports) => {
     // Error retrieving data
     console.error(error);
   }
+};
+
+// Function to fetch data from API and store it in SQLite DB
+export const fetchGamesDB = async (db, sports) => {
+  try {
+    for (let sport of sports) {
+      const data = await getGames(sport);
+      for (let game of data.games) {
+        const { id, game_id, away_team, home_team, start_timestamp } = game;
+        await insertGame(db, game_id, data.seasonId, start_timestamp, home_team, away_team);
+      }
+      return data;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Function to retrieve data from SQLite DB
+export const retrieveGamesDB = async (db, sports) => {
+try {
+  let data = [];
+  for (let sport of sports) {
+    const today = new Date();
+    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const value = await getGamesByDate(db, date);
+    if (value.length > 0) {
+      // We have data!!
+      data.push({ sport, data: value });
+    } else {
+      // If the date is from a previous day, fetch the data again
+      const fetchedData = await fetchData(db, [sport]);
+      data.push({ sport, data: fetchedData });
+    }
+  }
+  return data;
+} catch (error) {
+  console.error(error);
+}
 };
