@@ -11,6 +11,17 @@ export const getAllGames = async (db) => {
     }
 };
 
+// Function to get all games by date
+export const getGamesByDate = async (db, date) => {
+    try {
+        const allRows = await db.getAllAsync('SELECT * FROM Games WHERE date = ?', [date]);
+        return allRows;
+    } catch (error) {
+        console.error('Error in getGamesByDate:', error);
+        throw error;
+    }
+};
+
 // Function to get a game
 export const getGame = async (db, gameId) => {
     try {

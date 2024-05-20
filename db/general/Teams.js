@@ -11,6 +11,19 @@ export const getAllTeams = async (db) => {
   }
 };
 
+// Function to get team IDs by team names
+export const getTeamIds = async (db, teamNames) => {
+  try {
+      const placeholders = teamNames.map(() => '?').join(',');
+      const query = `SELECT id, teamName FROM Teams WHERE teamName IN (${placeholders})`;
+      const allRows = await db.getAllAsync(query, teamNames);
+      return allRows;
+  } catch (error) {
+      console.error('Error in getTeamIds:', error);
+      throw error;
+  }
+};
+
 // Function to get a team
 export const getTeam = async (db, teamId) => {
   try {

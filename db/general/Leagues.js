@@ -26,6 +26,7 @@ export const getLeague = async (db, leagueId) => {
 export const insertLeague = async (db, leagueName, sport, description) => {
   try {
     const result = await db.runAsync('INSERT INTO Leagues (leagueName, sport, description) VALUES (?, ?, ?)', [leagueName, sport, description]);
+    console.log('Inserted league:', result.lastInsertRowId);
     return result.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting league:', error);
