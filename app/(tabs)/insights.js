@@ -9,6 +9,7 @@ import { createTables, dropTables } from '@/api/sqlite';
 import { insertUser, getAllUsers } from '@/db/user-specific/Users';
 import { insertBalance } from '@/db/user-specific/Balance';
 import { insertBookie } from '@/db/general/Bookies';
+import { insertLeague, getAllLeagues } from '@/db/general/Leagues';
 import { useSQLiteContext } from 'expo-sqlite';
 
 export default function InsightScreen() {
