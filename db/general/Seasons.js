@@ -14,7 +14,7 @@ export const getAllSeasons = async (db) => {
 // Function to get a season
 export const getSeason = async (db, seasonId) => {
   try {
-    const season = await db.getAsync('SELECT * FROM Seasons WHERE id = ?', [seasonId]);
+    const season = await db.getAllAsync('SELECT * FROM Seasons WHERE id = ?', [seasonId]);
     return season;
   } catch (error) {
     console.error('Error in getSeason:', error);
@@ -22,10 +22,32 @@ export const getSeason = async (db, seasonId) => {
   }
 };
 
-// Function to insert a season
-export const insertSeason = async (db, leagueId, season, games) => {
+// Function to get all seasons for a league
+export const getSeasonsByLeague = async (db, leagueId) => {
   try {
-    const result = await db.runAsync('INSERT INTO Seasons (leagueId, season, games) VALUES (?, ?, ?)', [leagueId, season, games]);
+    const seasons = await db.getAllAsync('SELECT * FROM Seasons WHERE leagueId = ?', [leagueId]);
+    return seasons;
+  } catch (error) {
+    console.error('Error in getSeasonsByLeague:', error);
+    throw error;
+  }
+};
+
+// Function to get most current season for a given league
+export const getCurrentSeason = async (db, leagueId) => {
+  try {
+    const season = await db.getAllAsync('SELECT * FROM Seasons WHERE leagueId = ? ORDER BY startDate DESC LIMIT 1', [leagueId]);
+    return season;
+  } catch (error) {
+    console.error('Error in getCurrentSeason:', error);
+    throw error;
+  }
+};
+
+// Function to insert a season
+export const insertSeason = async (db, leagueId, season, games, description, seasonType, startDate, endDate) => {
+  try {
+    const result = await db.runAsync('INSERT INTO Seasons (leagueId, season, games, description, seasonType, startDate, endDate) VALUES (?, ?, ?, ?, ?, ?, ?)', [leagueId, season, games, description, seasonType, startDate, endDate]);
     return result.lastInsertRowId;
   } catch (error) {
     console.error('Error in insertSeason:', error);
@@ -34,9 +56,10 @@ export const insertSeason = async (db, leagueId, season, games) => {
 };
 
 // Function to update a season
-export const updateSeason = async (db, seasonId, leagueId, season, games) => {
+export const updateSeason = async (db, seasonId, leagueId, season, games, description, seasonType, startDate, endDate) => {
   try {
-    await db.runAsync('UPDATE Seasons SET leagueId = ?, season = ?, games = ? WHERE id = ?', [leagueId, season, games, seasonId]);
+    const result = await db.runAsync('UPDATE Seasons SET leagueId = ?, season = ?, games = ?, description = ?, seasonType = ?, startDate = ?, endDate = ? WHERE id = ?', [leagueId, season, games, description, seasonType, startDate, endDate, seasonId]);
+    return result.changes;
   } catch (error) {
     console.error('Error in updateSeason:', error);
     throw error;

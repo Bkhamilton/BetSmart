@@ -49,6 +49,8 @@ export const createTables = async (db) => {
       leagueId INTEGER NOT NULL,
       season TEXT NOT NULL,
       games INTEGER NOT NULL,
+      description TEXT,
+      seasonType TEXT NOT NULL,
       FOREIGN KEY(leagueId) REFERENCES Leagues(id),
       UNIQUE (id, leagueId, season, games)
     );
@@ -155,3 +157,28 @@ export const dropTables = async (db) => {
   `);
   console.log('Tables dropped');
 };
+
+export const dropSeasonsTable = async (db) => {
+  await db.execAsync(`
+    DROP TABLE IF EXISTS Seasons;
+  `);
+  console.log('Seasons Table dropped');
+};
+
+export const createSeasonsTable = async (db) => {
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS Seasons (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      leagueId INTEGER NOT NULL,
+      season TEXT NOT NULL,
+      games INTEGER NOT NULL,
+      description TEXT,
+      seasonType TEXT NOT NULL CHECK(seasonType IN ('Pre-Season', 'Regular Season', 'Playoffs')),
+      startDate DATE NOT NULL,
+      endDate DATE NOT NULL,
+      FOREIGN KEY(leagueId) REFERENCES Leagues(id),
+      UNIQUE (id, leagueId, season, games)
+    );
+  `);
+  console.log('Seasons Table created');
+}
