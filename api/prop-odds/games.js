@@ -2,6 +2,7 @@ import secrets from "../secrets";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getGamesByDate, insertGame } from "@/db/general/Games";
 import { getTeamIds } from "@/db/general/Teams";
+import { getCurrentSeason } from "@/db/general/Seasons";
 
 export const getGames = async (sport) => {
     try {
@@ -62,14 +63,27 @@ export const retrieveData = async (sports) => {
   }
 };
 
+export const addGameToDB = async (db, game, sport) => {
+  try {
+    const { game_id, start_timestamp, home_team, away_team } = game;
+    const teamIds = await getTeamIds(db, [home_team, away_team]);
+    const homeTeamId = teamIds[0].id;
+    const awayTeamId = teamIds[1].id;
+    const curSeason = getCurrentSeason(db, sport);
+    const seasonId = curSeason.id;
+    await insertGame(db, game_id, seasonId, start_timestamp, homeTeamId, awayTeamId);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // Function to fetch data from API and store it in SQLite DB
 export const fetchGamesDB = async (db, sports) => {
   try {
     for (let sport of sports) {
       const data = await getGames(sport);
       for (let game of data.games) {
-        const { id, game_id, away_team, home_team, start_timestamp } = game;
-        await insertGame(db, game_id, data.seasonId, start_timestamp, home_team, away_team);
+        await addGameToDB(db, game, sport);
       }
       return data;
     }
