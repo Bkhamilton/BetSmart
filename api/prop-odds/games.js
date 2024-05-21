@@ -94,23 +94,23 @@ export const fetchGamesDB = async (db, sports) => {
 
 // Function to retrieve data from SQLite DB
 export const retrieveGamesDB = async (db, sports) => {
-try {
-  let data = [];
-  for (let sport of sports) {
-    const today = new Date();
-    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-    const value = await getGamesByDate(db, date);
-    if (value.length > 0) {
-      // We have data!!
-      data.push({ sport, data: value });
-    } else {
-      // If the date is from a previous day, fetch the data again
-      const fetchedData = await fetchData(db, [sport]);
-      data.push({ sport, data: fetchedData });
+  try {
+    let data = [];
+    for (let sport of sports) {
+      const today = new Date();
+      const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      const value = await getGamesByDate(db, date, sport);
+      if (value.length > 0) {
+        // We have data!!
+        data.push({ sport, data: value });
+      } else {
+        // If the date is from a previous day, fetch the data again
+        const fetchedData = await fetchData(db, [sport]);
+        data.push({ sport, data: fetchedData });
+      }
     }
+    return data;
+  } catch (error) {
+    console.error(error);
   }
-  return data;
-} catch (error) {
-  console.error(error);
-}
 };

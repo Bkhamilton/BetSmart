@@ -12,9 +12,9 @@ export const getAllGames = async (db) => {
 };
 
 // Function to get all games by date
-export const getGamesByDate = async (db, date) => {
+export const getGamesByDate = async (db, date, sport) => {
     try {
-        const allRows = await db.getAllAsync('SELECT * FROM Games WHERE date = ?', [date]);
+        const allRows = await db.getAllAsync('SELECT * FROM Games WHERE date = ? AND sport = ?', [date, sport]);
         return allRows;
     } catch (error) {
         console.error('Error in getGamesByDate:', error);
