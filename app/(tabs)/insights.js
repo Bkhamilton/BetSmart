@@ -5,12 +5,13 @@ import { Text, View } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import BuildABet from '@/components/Insights/BuildABet';
 import RecommendedBets from '@/components/Insights/RecommendedBets/RecommendedBets';
-import { createTables, dropTables } from '@/api/sqlite';
+import { createTables, dropTables, createSeasonsTable, dropSeasonsTable } from '@/api/sqlite';
 import { insertUser, getAllUsers } from '@/db/user-specific/Users';
 import { insertBalance } from '@/db/user-specific/Balance';
 import { insertBookie } from '@/db/general/Bookies';
-import { insertLeague, getAllLeagues } from '@/db/general/Leagues';
+import { insertLeague, getAllLeagues, getLeagueByName } from '@/db/general/Leagues';
 import { useSQLiteContext } from 'expo-sqlite';
+import { insertSeason, getSeasonsByLeague, getCurrentSeason } from '@/db/general/Seasons';
 
 export default function InsightScreen() {
   const recentBets = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -26,7 +27,13 @@ export default function InsightScreen() {
   };
 
   const generateFunction = () => {
-
+    try {
+      getCurrentSeason(db, 1).then((season) => {
+        console.log('Current season:', season);
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const db = useSQLiteContext();
