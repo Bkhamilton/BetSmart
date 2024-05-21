@@ -22,6 +22,17 @@ export const getLeague = async (db, leagueId) => {
   }
 };
 
+// Function to get a league by name
+export const getLeagueByName = async (db, leagueName) => {
+  try {
+    const league = await db.getAllAsync('SELECT * FROM Leagues WHERE leagueName = ?', [leagueName.toUpperCase()]);
+    return league[0];
+  } catch (error) {
+    console.error('Error getting league:', error);
+    throw error;
+  }
+};
+
 // Function to insert a league
 export const insertLeague = async (db, leagueName, sport, description) => {
   try {
