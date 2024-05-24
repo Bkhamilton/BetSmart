@@ -1,8 +1,10 @@
-import secrets from "../secrets";
+import secrets from "@/secrets";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getGamesByDate, insertGame } from "@/db/general/Games";
 import { getTeamIds } from "@/db/general/Teams";
 import { getCurrentSeason } from "@/db/general/Seasons";
+import { getLeagueByName } from "@/db/general/Leagues";
+import { getTodaysGameswithNames } from "../../db/general/Games";
 
 export const getGames = async (sport) => {
     try {
@@ -64,14 +66,24 @@ export const retrieveData = async (sports) => {
 };
 
 export const addGameToDB = async (db, game, sport) => {
+
+  const getDate = (dateString) => {
+      const date = new Date(dateString);
+      const estDate = new Date(date.getTime());
+      const sqliteFormat = localDate.toISOString().replace("T", " ").replace("Z", "");
+      return sqliteFormat;
+  };
+
   try {
     const { game_id, start_timestamp, home_team, away_team } = game;
     const teamIds = await getTeamIds(db, [home_team, away_team]);
     const homeTeamId = teamIds[0].id;
     const awayTeamId = teamIds[1].id;
-    const curSeason = getCurrentSeason(db, sport);
-    const seasonId = curSeason.id;
-    await insertGame(db, game_id, seasonId, start_timestamp, homeTeamId, awayTeamId);
+    const league = await getLeagueByName(db, sport);
+    const curSeason = await getCurrentSeason(db, league.id);
+    const date = getDate(start_timestamp);
+    console.log(game_id, curSeason.id, date, homeTeamId, awayTeamId);
+    await insertGame(db, game_id, curSeason.id, date, homeTeamId, awayTeamId);
   } catch (error) {
     console.error(error);
   }
@@ -99,13 +111,17 @@ export const retrieveGamesDB = async (db, sports) => {
     for (let sport of sports) {
       const today = new Date();
       const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-      const value = await getGamesByDate(db, date, sport);
+      const league = await getLeagueByName(db, sport);
+      const curSeason = await getCurrentSeason(db, league.id);
+      const value = await getTodaysGameswithNames(db, date, curSeason.id);
       if (value.length > 0) {
         // We have data!!
+        console.log(value);
         data.push({ sport, data: value });
       } else {
         // If the date is from a previous day, fetch the data again
-        const fetchedData = await fetchData(db, [sport]);
+        await fetchGamesDB(db, [sport]);
+        const fetchedData = await getTodaysGameswithNames(db, date, curSeason.id);
         data.push({ sport, data: fetchedData });
       }
     }
