@@ -70,7 +70,7 @@ export const addGameToDB = async (db, game, sport) => {
   const getDate = (dateString) => {
       const date = new Date(dateString);
       const estDate = new Date(date.getTime());
-      const sqliteFormat = localDate.toISOString().replace("T", " ").replace("Z", "");
+      const sqliteFormat = estDate.toISOString().replace("T", " ").replace("Z", "");
       return sqliteFormat;
   };
 
@@ -82,7 +82,6 @@ export const addGameToDB = async (db, game, sport) => {
     const league = await getLeagueByName(db, sport);
     const curSeason = await getCurrentSeason(db, league.id);
     const date = getDate(start_timestamp);
-    console.log(game_id, curSeason.id, date, homeTeamId, awayTeamId);
     await insertGame(db, game_id, curSeason.id, date, homeTeamId, awayTeamId);
   } catch (error) {
     console.error(error);
@@ -116,7 +115,6 @@ export const retrieveGamesDB = async (db, sports) => {
       const value = await getTodaysGameswithNames(db, date, curSeason.id);
       if (value.length > 0) {
         // We have data!!
-        console.log(value);
         data.push({ sport, data: value });
       } else {
         // If the date is from a previous day, fetch the data again
