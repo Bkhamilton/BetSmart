@@ -37,7 +37,7 @@ export const getSeasonsByLeague = async (db, leagueId) => {
 export const getCurrentSeason = async (db, leagueId) => {
   try {
     const season = await db.getAllAsync('SELECT * FROM Seasons WHERE leagueId = ? ORDER BY startDate DESC LIMIT 1', [leagueId]);
-    return season;
+    return season[0];
   } catch (error) {
     console.error('Error in getCurrentSeason:', error);
     throw error;
