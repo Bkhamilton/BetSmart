@@ -7,7 +7,7 @@ export default function IntroInfo({ currentGame }) {
 
     const getDate = (dateString) => {
         const date = new Date(dateString);
-        const estDate = new Date(date.getTime() - (3600000 * 4)); // Subtract 4 hours from UTC to get EST
+        const estDate = new Date(date.getTime());
         const month = estDate.getMonth() + 1; // getMonth returns month index starting from 0
         const day = estDate.getDate();
         return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}`; // Returns the date in MM/DD format
@@ -15,7 +15,7 @@ export default function IntroInfo({ currentGame }) {
       
     const getTime = (dateString) => {
         const date = new Date(dateString);
-        const estDate = new Date(date.getTime() - (3600000 * 4)); // Subtract 4 hours from UTC to get EST
+        const estDate = new Date(date.getTime()); // Subtract 4 hours from UTC to get EST
         let hours = estDate.getHours();
         const minutes = estDate.getMinutes();
         hours = hours % 12;
