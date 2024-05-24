@@ -38,7 +38,7 @@ export const getTeam = async (db, teamId) => {
 // Function to insert a team
 export const insertTeam = async (db, teamName, abbreviation, leagueId) => {
   try {
-    const result = await db.runAsync('INSERT INTO Teams (teamName, abbreviation, leagueId) VALUES (?, ?, ?, ?)', [teamName, abbreviation, leagueId]);
+    const result = await db.runAsync('INSERT INTO Teams (teamName, abbreviation, leagueId) VALUES (?, ?, ?)', [teamName, abbreviation, leagueId]);
     return result.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting team:', error);
