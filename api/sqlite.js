@@ -13,7 +13,7 @@ export const createTables = async (db) => {
       email TEXT, 
       username TEXT NOT NULL, 
       password TEXT NOT NULL,
-      UNIQUE (id, username)
+      UNIQUE (username)
     );
     CREATE TABLE IF NOT EXISTS Balance (
       bookieId INTEGER NOT NULL, 
@@ -34,7 +34,7 @@ export const createTables = async (db) => {
       leagueName TEXT NOT NULL,
       sport TEXT NOT NULL,
       description TEXT,
-      UNIQUE (id, leagueName, sport, description)
+      UNIQUE (leagueName, sport, description)
     );
     CREATE TABLE IF NOT EXISTS Teams (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,7 +42,7 @@ export const createTables = async (db) => {
       abbreviation TEXT NOT NULL,
       leagueId INTEGER NOT NULL,
       FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-      UNIQUE (id, teamName, abbreviation, leagueId)
+      UNIQUE (teamName, abbreviation, leagueId)
     );
     CREATE TABLE IF NOT EXISTS Seasons (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,7 +52,7 @@ export const createTables = async (db) => {
       description TEXT,
       seasonType TEXT NOT NULL,
       FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-      UNIQUE (id, leagueId, season, games)
+      UNIQUE (leagueId, season, games)
     );
     CREATE TABLE IF NOT EXISTS Games (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,7 +64,7 @@ export const createTables = async (db) => {
       FOREIGN KEY(seasonId) REFERENCES Seasons(id),
       FOREIGN KEY(homeTeamId) REFERENCES Teams(id),
       FOREIGN KEY(awayTeamId) REFERENCES Teams(id),
-      UNIQUE (id, gameId, seasonId, date, homeTeamId, awayTeamId)
+      UNIQUE (gameId, seasonId, date, homeTeamId, awayTeamId)
     );
     CREATE TABLE IF NOT EXISTS BetTargets (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,13 +72,13 @@ export const createTables = async (db) => {
       targetName TEXT NOT NULL,
       teamId INTEGER,
       FOREIGN KEY(teamId) REFERENCES Teams(id),
-      UNIQUE (id, targetType, targetName, teamId)
+      UNIQUE (targetType, targetName, teamId)
     );
     CREATE TABLE BetTypes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       betType TEXT NOT NULL,
       description TEXT,
-      UNIQUE (id, betType, description)
+      UNIQUE (betType, description)
     );
     CREATE TABLE BetFormats (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -97,7 +97,7 @@ export const createTables = async (db) => {
       FOREIGN KEY(betTargetId) REFERENCES BetTargets(id),
       FOREIGN KEY(gameId) REFERENCES Games(gameId),
       FOREIGN KEY(bookieId) REFERENCES Bookies(Id),
-      UNIQUE (id, gameId, marketType, value, odds, overUnder, betTargetId, bookieId)
+      UNIQUE (gameId, marketType, value, odds, overUnder, betTargetId, bookieId)
     );
     CREATE TABLE BetSlips (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -111,7 +111,7 @@ export const createTables = async (db) => {
       FOREIGN KEY (formatId) REFERENCES BetFormats(id),
       FOREIGN KEY (userId) REFERENCES Users(id),
       FOREIGN KEY (bookieId) REFERENCES Bookies(Id),
-      UNIQUE (id, formatId, date, odds, betAmount, winnings, userId, bookieId)
+      UNIQUE (formatId, date, odds, betAmount, winnings, userId, bookieId)
     );
     CREATE TABLE ParticipantBets (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -123,7 +123,7 @@ export const createTables = async (db) => {
       FOREIGN KEY (betSlipId) REFERENCES BetSlips(id),
       FOREIGN KEY (homeTeamId) REFERENCES BetTargets(id),
       FOREIGN KEY (awayTeamId) REFERENCES BetTargets(id),
-      UNIQUE (id, betSlipId, sport, homeTeamId, awayTeamId, odds)
+      UNIQUE (betSlipId, sport, homeTeamId, awayTeamId, odds)
     );
     CREATE TABLE Legs (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -131,7 +131,7 @@ export const createTables = async (db) => {
       betMarketId INTEGER NOT NULL,
       FOREIGN KEY (participantBetId) REFERENCES ParticipantBets(id),
       FOREIGN KEY (betMarketId) REFERENCES BetMarkets(id),
-      UNIQUE (id, participantBetId, betMarketId)
+      UNIQUE (participantBetId, betMarketId)
     );
   `);
   console.log('Tables created');
