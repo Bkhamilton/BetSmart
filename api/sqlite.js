@@ -27,7 +27,7 @@ export const createTables = async (db) => {
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       name TEXT NOT NULL, 
       description TEXT,
-      UNIQUE (id, name, description)
+      UNIQUE (name, description)
     );
     CREATE TABLE IF NOT EXISTS Leagues (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -140,8 +140,8 @@ export const createTables = async (db) => {
 // Function to drop the tables
 export const dropTables = async (db) => {
   await db.execAsync(`
-    DROP TABLE IF EXISTS users;
-    DROP TABLE IF EXISTS balance;
+    DROP TABLE IF EXISTS Users;
+    DROP TABLE IF EXISTS Balance;
     DROP TABLE IF EXISTS Bookies;
     DROP TABLE IF EXISTS Leagues;
     DROP TABLE IF EXISTS Teams;
@@ -177,8 +177,34 @@ export const createSeasonsTable = async (db) => {
       startDate DATE NOT NULL,
       endDate DATE NOT NULL,
       FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-      UNIQUE (id, leagueId, season, games)
+      UNIQUE (leagueId, season, games, seasonType, startDate, endDate)
     );
   `);
   console.log('Seasons Table created');
+}
+
+export const dropGamesTable = async (db) => {
+  await db.execAsync(`
+    DROP TABLE IF EXISTS Games;
+  `);
+  console.log('Games Table dropped');
+};
+
+export const createGamesTable = async (db) => {
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS Games (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      gameId TEXT NOT NULL,
+      seasonId INTEGER NOT NULL,
+      date TEXT NOT NULL,
+      timestamp TEXT NOT NULL,
+      homeTeamId INTEGER NOT NULL,
+      awayTeamId INTEGER NOT NULL,
+      FOREIGN KEY(seasonId) REFERENCES Seasons(id),
+      FOREIGN KEY(homeTeamId) REFERENCES Teams(id),
+      FOREIGN KEY(awayTeamId) REFERENCES Teams(id),
+      UNIQUE (gameId, seasonId, date, homeTeamId, awayTeamId)
+    );
+  `);
+  console.log('Games Table created');
 }
