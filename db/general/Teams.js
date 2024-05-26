@@ -11,6 +11,17 @@ export const getAllTeams = async (db) => {
   }
 };
 
+// Function to get all teams for each league
+export const getTeamsByLeague = async (db, leagueId) => {
+  try {
+    const allRows = await db.getAllAsync('SELECT * FROM Teams WHERE leagueId = ?', [leagueId]);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting all teams:', error);
+    throw error;
+  }
+};
+
 // Function to get team IDs by team names
 export const getTeamIds = async (db, teamNames) => {
   try {
