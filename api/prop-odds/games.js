@@ -65,14 +65,16 @@ export const retrieveData = async (sports) => {
   }
 };
 
-export const addGameToDB = async (db, game, sport) => {
+const getDate = (dateString) => {
+  const date = new Date(dateString);
+  const estDate = new Date(date.getTime());
+  const year = estDate.getFullYear();
+  const month = estDate.getMonth() + 1; // getMonth returns month index starting from 0
+  const day = estDate.getDate();
+  return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`; // Returns the date in YYYY-MM-DD format
+};
 
-  const getDate = (dateString) => {
-      const date = new Date(dateString);
-      const estDate = new Date(date.getTime());
-      const sqliteFormat = estDate.toISOString().replace("T", " ").replace("Z", "");
-      return sqliteFormat;
-  };
+export const addGameToDB = async (db, game, sport) => {
 
   try {
     const { game_id, start_timestamp, home_team, away_team } = game;
@@ -82,7 +84,7 @@ export const addGameToDB = async (db, game, sport) => {
     const league = await getLeagueByName(db, sport);
     const curSeason = await getCurrentSeason(db, league.id);
     const date = getDate(start_timestamp);
-    await insertGame(db, game_id, curSeason.id, date, homeTeamId, awayTeamId);
+    await insertGame(db, game_id, curSeason.id, date, start_timestamp, homeTeamId, awayTeamId);
   } catch (error) {
     console.error(error);
   }
