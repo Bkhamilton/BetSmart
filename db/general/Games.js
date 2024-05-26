@@ -25,7 +25,7 @@ export const getGamesByDate = async (db, date, season) => {
 // Function to get all of today's games for a given seasonId
 export const getTodaysGameswithNames = async (db, date, seasonId) => {
     try {
-        const allRows = await db.getAllAsync('SELECT Games.id, Games.gameId, Games.seasonId, Games.date, Teams.teamName as homeTeam, Teams2.teamName as awayTeam FROM Games JOIN Teams ON Games.homeTeamId = Teams.id JOIN Teams as Teams2 ON Games.awayTeamId = Teams2.id WHERE DATE(Games.date) = ? AND Games.seasonId = ?', [date, seasonId]);
+        const allRows = await db.getAllAsync('SELECT Games.id, Games.gameId, Games.seasonId, Games.date, Games.timestamp, Teams.teamName as homeTeam, Teams2.teamName as awayTeam FROM Games JOIN Teams ON Games.homeTeamId = Teams.id JOIN Teams as Teams2 ON Games.awayTeamId = Teams2.id WHERE DATE(Games.date) = ? AND Games.seasonId = ?', [date, seasonId]);
         return allRows;
     } catch (error) {
         console.error('Error in getTodaysGameswithNames:', error);
@@ -45,9 +45,9 @@ export const getGame = async (db, gameId) => {
 };
 
 // Function to insert a game
-export const insertGame = async (db, gameId, seasonId, date, homeTeamId, awayTeamId) => {
+export const insertGame = async (db, gameId, seasonId, date, timestamp, homeTeamId, awayTeamId) => {
     try {
-        const result = await db.runAsync('INSERT INTO Games (gameId, seasonId, date, homeTeamId, awayTeamId) VALUES (?, ?, ?, ?, ?)', [gameId, seasonId, date, homeTeamId, awayTeamId]);
+        const result = await db.runAsync('INSERT INTO Games (gameId, seasonId, date, timestamp, homeTeamId, awayTeamId) VALUES (?, ?, ?, ?, ?, ?)', [gameId, seasonId, date, timestamp, homeTeamId, awayTeamId]);
         return result.lastInsertRowId;
     } catch (error) {
         console.error('Error in insertGame:', error);
@@ -56,9 +56,9 @@ export const insertGame = async (db, gameId, seasonId, date, homeTeamId, awayTea
 };
 
 // Function to update a game
-export const updateGame = async (db, gameId, seasonId, date, homeTeamId, awayTeamId) => {
+export const updateGame = async (db, gameId, seasonId, date, timestamp, homeTeamId, awayTeamId) => {
     try {
-        await db.runAsync('UPDATE Games SET seasonId = ?, date = ?, homeTeamId = ?, awayTeamId = ? WHERE id = ?', [seasonId, date, homeTeamId, awayTeamId, gameId]);
+        await db.runAsync('UPDATE Games SET seasonId = ?, date = ?, timestamp = ?, homeTeamId = ?, awayTeamId = ? WHERE id = ?', [seasonId, date, timestamp, homeTeamId, awayTeamId, gameId]);
     } catch (error) {
         console.error('Error in updateGame:', error);
         throw error;
