@@ -2,7 +2,7 @@ import secrets from "@/secrets";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getGamesByDate, insertGame } from "@/db/general/Games";
 import { getTeamIds } from "@/db/general/Teams";
-import { getCurrentSeason } from "@/db/general/Seasons";
+import { getCurrentSeason, getSeasonByDate } from "@/db/general/Seasons";
 import { getLeagueByName } from "@/db/general/Leagues";
 import { getTodaysGameswithNames } from "../../db/general/Games";
 
@@ -82,8 +82,8 @@ export const addGameToDB = async (db, game, sport) => {
     const homeTeamId = teamIds[0].id;
     const awayTeamId = teamIds[1].id;
     const league = await getLeagueByName(db, sport);
-    const curSeason = await getCurrentSeason(db, league.id);
     const date = getDate(start_timestamp);
+    const curSeason = await getSeasonByDate(db, league.id, date);
     await insertGame(db, game_id, curSeason.id, date, start_timestamp, homeTeamId, awayTeamId);
   } catch (error) {
     console.error(error);
@@ -91,15 +91,13 @@ export const addGameToDB = async (db, game, sport) => {
 };
 
 // Function to fetch data from API and store it in SQLite DB
-export const fetchGamesDB = async (db, sports) => {
+export const fetchGamesDB = async (db, sport) => {
   try {
-    for (let sport of sports) {
-      const data = await getGames(sport);
-      for (let game of data.games) {
-        await addGameToDB(db, game, sport);
-      }
-      return data;
+    const data = await getGames(sport);
+    for (let game of data.games) {
+      await addGameToDB(db, game, sport);
     }
+    return data;
   } catch (error) {
     console.error(error);
   }
@@ -113,14 +111,14 @@ export const retrieveGamesDB = async (db, sports) => {
       const today = new Date();
       const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
       const league = await getLeagueByName(db, sport);
-      const curSeason = await getCurrentSeason(db, league.id);
+      const curSeason = await getSeasonByDate(db, league.id, date);
       const value = await getTodaysGameswithNames(db, date, curSeason.id);
       if (value.length > 0) {
         // We have data!!
         data.push({ sport, data: value });
       } else {
         // If the date is from a previous day, fetch the data again
-        await fetchGamesDB(db, [sport]);
+        await fetchGamesDB(db, sport);
         const fetchedData = await getTodaysGameswithNames(db, date, curSeason.id);
         data.push({ sport, data: fetchedData });
       }
