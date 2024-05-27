@@ -8,9 +8,7 @@ import { getTodaysGameswithNames } from "@/db/general/Games";
 
 export const getMarkets = async (gameId, market) => {
     try {
-      const today = new Date();
-      const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-      const response = await fetch(`https://api.prop-odds.com/beta/odds/${gameId}/${market}?api_key=%7BYOUR_API_KEY%7D`);
+      const response = await fetch(`https://api.prop-odds.com/beta/odds/${gameId}/${market}?api_key=${secrets.PROP_ODDS_API_KEY}`);
       const data = await response.json();
       return data;
     } catch (error) {
