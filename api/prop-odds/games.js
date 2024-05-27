@@ -18,53 +18,6 @@ export const getGames = async (sport) => {
     }
 };
 
-// Function to fetch data from API and store it in AsyncStorage
-export const fetchData = async (sports) => {
-    try {
-      for (let sport of sports) {
-        const data = await getGames(sport);
-        await AsyncStorage.setItem(`${sport}Data`, JSON.stringify(data));
-        return data;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-};
-
-// Function to retrieve data from AsyncStorage
-export const retrieveData = async (sports) => {
-  try {
-    let data = [];
-    for (let sport of sports) {
-      const value = await AsyncStorage.getItem(`${sport}Data`);
-      if (value !== null) {
-        // We have data!!
-        const parsedValue = JSON.parse(value);
-        // Check if the date is from a previous day
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // set the time to 00:00:00
-        const valueDate = new Date(parsedValue.date);
-        if (valueDate.getTime() === today.getTime()) {
-          // If the date is today, use the data from AsyncStorage
-          data.push({ sport, data: parsedValue });
-        } else {
-          // If the date is from a previous day, fetch the data again
-          const fetchedData = await fetchData([sport]);
-          data.push({ sport, data: fetchedData });
-        }
-      } else {
-        // No data in AsyncStorage, fetch from API
-        const fetchedData = await fetchData([sport]);
-        data.push({ sport, data: fetchedData });
-      }
-    }
-    return data;
-  } catch (error) {
-    // Error retrieving data
-    console.error(error);
-  }
-};
-
 const getDate = (dateString) => {
   const date = new Date(dateString);
   const estDate = new Date(date.getTime());
@@ -115,12 +68,32 @@ export const retrieveGamesDB = async (db, sports) => {
       const value = await getTodaysGameswithNames(db, date, curSeason.id);
       if (value.length > 0) {
         // We have data!!
-        data.push({ sport, data: value });
+        data.push(
+          { sport, 
+            data: {
+              league: league.leagueName,
+              season: curSeason.description,
+              seasonType: curSeason.seasonType,
+              date: date,
+              games: value
+            } 
+          }
+        );
       } else {
         // If the date is from a previous day, fetch the data again
         await fetchGamesDB(db, sport);
         const fetchedData = await getTodaysGameswithNames(db, date, curSeason.id);
-        data.push({ sport, data: fetchedData });
+        data.push(
+          { sport, 
+            data: {
+              league: league.leagueName,
+              season: curSeason.description,
+              seasonType: curSeason.seasonType,
+              date: date,
+              games: fetchedData
+            } 
+          }
+        );
       }
     }
     return data;
