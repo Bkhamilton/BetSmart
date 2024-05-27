@@ -8,7 +8,9 @@ import { getTodaysGameswithNames } from "@/db/general/Games";
 
 export const getMarkets = async (gameId) => {
     try {
-        const response = await fetch(`https://api.prop-odds.com/beta/markets/${gameId}?api_key=${secrets}`);
+        const response = await fetch(`https://api.prop-odds.com/beta/markets/${gameId}?api_key=${secrets.PROP_ODDS_API_KEY}`);
+        const data = await response.json();
+        return data;
     } catch (error) {
         console.error(error)
     }
