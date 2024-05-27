@@ -6,7 +6,7 @@ import { getCurrentSeason } from "@/db/general/Seasons";
 import { getLeagueByName } from "@/db/general/Leagues";
 import { getTodaysGameswithNames } from "@/db/general/Games";
 
-export const getMarkets = async (gameId, market) => {
+export const getMarketValues = async (gameId, market) => {
     try {
       const response = await fetch(`https://api.prop-odds.com/beta/odds/${gameId}/${market}?api_key=${secrets.PROP_ODDS_API_KEY}`);
       const data = await response.json();
