@@ -33,6 +33,17 @@ export const getSeasonsByLeague = async (db, leagueId) => {
   }
 };
 
+// Function to get season active during a given date
+export const getSeasonByDate = async (db, leagueId, date) => {
+  try {
+    const season = await db.getAllAsync('SELECT * FROM Seasons WHERE leagueId = ? AND startDate <= ? AND endDate >= ?', [leagueId, date, date]);
+    return season[0];
+  } catch (error) {
+    console.error('Error in getSeasonByDate:', error);
+    throw error;
+  }
+};
+
 // Function to get most current season for a given league
 export const getCurrentSeason = async (db, leagueId) => {
   try {

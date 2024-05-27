@@ -22,6 +22,17 @@ export const getBetTarget = async (db, betTargetId) => {
   }
 };
 
+// Function to get bet target ID by name
+export const getBetTargetId = async (db, targetName) => {
+  try {
+    const betTarget = await db.getAsync('SELECT id FROM BetTargets WHERE targetName = ?', [targetName]);
+    return betTarget;
+  } catch (error) {
+    console.error('Error getting bet target ID by name:', error);
+    throw error;
+  }
+};
+
 // Function to insert a bet target
 export const insertBetTarget = async (db, targetType, targetName, teamId) => {
   try {

@@ -22,6 +22,17 @@ export const getBetMarket = async (db, betMarketId) => {
   }
 };
 
+// Function to get all bet markets for a game and market type
+export const getBetMarketByGame = async (db, gameId, marketType) => {
+  try {
+    const allRows = await db.getAllAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = ?', [gameId, marketType]);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting bet markets by game and market type:', error);
+    throw error;
+  }
+};
+
 // Function to insert a bet market
 export const insertBetMarket = async (db, gameId, marketType, value, odds, overUnder, betTargetId, bookieId) => {
   try {

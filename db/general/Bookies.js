@@ -20,6 +20,16 @@ export const getBookies = async (db, userId) => {
     }
 };
 
+// Function to get a bookie by name
+export const getBookieByName = async (db, name) => {
+    try {
+        const bookie = await db.getAsync('SELECT * FROM Bookies WHERE LOWER(name) = LOWER(?)', [name]);
+        return bookie;
+    } catch (error) {
+        console.error('Error getting a bookie by name:', error);
+    }
+};
+
 // Function to insert a bookie
 export const insertBookie = async (db, name, description) => {
     try {
