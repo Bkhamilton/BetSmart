@@ -2,10 +2,14 @@
 import React, { createContext, useState, ReactNode } from 'react';
 
 interface Game {
-  home_team: string;
-  away_team: string;
-  start_timestamp: number;
-  game_id: string;
+  id: number;
+  gameId: string;
+  date: string;
+  timestamp: string;
+  homeTeamName: string;
+  homeTeamAbv: string;
+  awayTeamName: string;
+  awayTeamAbv: string;
 }
 
 interface BetContextValue {

@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback, useContext } from 'react';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, Image } from 'react-native';
 import { Text, View, Pressable } from '@/components/Themed';
 import { sportsData } from '@/data/exampleTeamData';
 import MainButtons from '@/components/PlaceBet/MainButtons';
-import { getGames, fetchData, retrieveData } from '@/api/prop-odds.js';
+import { retrieveGamesDB } from '@/api/prop-odds/games.js';
 import GameList from '@/components/PlaceBet/GameList.js';
 import SportSlider from '@/components/PlaceBet/SportsSlider.js';
 import { BetContext } from '@/contexts/BetContext';
@@ -80,8 +79,9 @@ export default function SelectGameScreen() {
 
   useEffect(() => {
     const fetchSportsData = async () => {
-      const data = await retrieveData(['nba', 'mlb', 'nhl']); // replace with the sports you're interested in
-      setAllSportsData(data);
+      retrieveGamesDB(db, ["NBA", "MLB", "NHL"]).then((data) => {
+        setAllSportsData(data);
+      });
     };
 
     getAllBookies(db).then((bookies) => {

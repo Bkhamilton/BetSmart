@@ -9,19 +9,6 @@ import { getGameMarketProps } from '../../api/prop-odds';
 
 export default function GameList({ games, selectGame, sport }) {
 
-    // Object mapping sports to their respective abbreviation objects
-    const sportAbbreviations = {
-        nba: nbaTeamAbbreviations,
-        mlb: mlbTeamAbbreviations,
-        nhl: nhlTeamAbbreviations,
-    };
-
-    // Function to get the abbreviation for a team name
-    const getTeamAbbreviation = (teamName, sport) => {
-        const abbreviations = sportAbbreviations[sport.toLowerCase()];
-        return abbreviations ? (abbreviations[teamName] || teamName) : teamName;
-    };
-
     const getDate = (dateString) => {
       const date = new Date(dateString);
       const estDate = new Date(date.getTime()); // Subtract 4 hours from UTC to get EST
@@ -60,12 +47,12 @@ export default function GameList({ games, selectGame, sport }) {
                     <View style={{ paddingVertical: 8 }}>
                         <View style={styles.gameTeamContainer}>
                             <View style={styles.teamIcon}/>
-                            <Text>{getTeamAbbreviation(game.away_team, sport)}</Text>
+                            <Text>{game.awayTeamAbv}</Text>
                         </View>
                         <View style={styles.divider}/>
                         <View style={styles.gameTeamContainer}>
                             <View style={styles.teamIcon}/>
-                            <Text>{getTeamAbbreviation(game.home_team, sport)}</Text>
+                            <Text>{game.homeTeamAbv}</Text>
                         </View>
                     </View>
                 </View>
@@ -102,8 +89,8 @@ export default function GameList({ games, selectGame, sport }) {
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, paddingBottom: 2 }}>
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 18 }}>{getTime(game.start_timestamp)}</Text>
-                <Text style={{ fontSize: 12 }}>{getAmPm(game.start_timestamp)}</Text>
+                <Text style={{ fontSize: 18 }}>{getTime(game.timestamp)}</Text>
+                <Text style={{ fontSize: 12 }}>{getAmPm(game.timestamp)}</Text>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                 {/* This is where I can include other info under bet buttons */}

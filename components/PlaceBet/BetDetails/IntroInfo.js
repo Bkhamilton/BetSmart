@@ -34,13 +34,13 @@ export default function IntroInfo({ currentGame }) {
     return (
         <View style={{ borderWidth: 1 }}>
           <View style={styles.dateTimeContainer}>
-            <Text>{getDate(currentGame.start_timestamp)}</Text>
-            <Text>{getTime(currentGame.start_timestamp)} {getAmPm(currentGame.start_timestamp)}</Text>
+            <Text>{getDate(currentGame.timestamp)}</Text>
+            <Text>{getTime(currentGame.timestamp)} {getAmPm(currentGame.timestamp)}</Text>
           </View>
           <View style={styles.matchupContainer}>
-            <Text style={styles.matchupTitle}>{currentGame.away_team}</Text>
+            <Text style={styles.matchupTitle}>{currentGame.awayTeamName}</Text>
             <Text>vs</Text>
-            <Text style={styles.matchupTitle}>{currentGame.home_team}</Text>
+            <Text style={styles.matchupTitle}>{currentGame.homeTeamName}</Text>
           </View>
         </View>
     )
