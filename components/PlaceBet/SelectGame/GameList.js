@@ -1,18 +1,15 @@
 import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import { TouchableOpacity, Text, View } from '../Themed';
-import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '@/data/teamAbbreviations';
-
-import Colors from '@/constants/Colors';
-import { Ionicons } from '@expo/vector-icons';
-import { getGameMarketProps } from '../../api/prop-odds';
+import { TouchableOpacity, Text, View } from '@/components/Themed'
 
 export default function GameList({ games, selectGame, sport }) {
 
     const getDate = (dateString) => {
-      const date = new Date(dateString);
-      const estDate = new Date(date.getTime()); // Subtract 4 hours from UTC to get EST
-      return estDate.toISOString().split('T')[0]; // Returns the date part
+        const date = new Date(dateString);
+        const estDate = new Date(date.getTime());
+        const month = estDate.getMonth() + 1; // getMonth returns month index starting from 0
+        const day = estDate.getDate();
+        return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}`; // Returns the date in MM/DD format
     };
     
     const getTime = (dateString) => {
@@ -32,6 +29,37 @@ export default function GameList({ games, selectGame, sport }) {
       const hours = estDate.getHours();
       return hours >= 12 ? 'PM' : 'AM';
     };
+
+    function BettingLine({ value }) {
+        return (
+            <TouchableOpacity style={styles.propContainer}>
+                <Text>{value}</Text>
+            </TouchableOpacity>
+        );
+    }
+
+    function MainBettingLines() {
+        return (
+            <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                {/* Moneyline */}
+                <View>
+                    <BettingLine value="-195"/>
+                    <BettingLine value="+110"/>
+                </View>
+                {/* Spread */}
+                <View>
+                    <BettingLine value="-3.5"/>
+                    <BettingLine value="+3.5"/>
+                </View>
+                {/* Total Pts */}
+                <View>
+                    <BettingLine value="O 218.5"/>
+                    <BettingLine value="U 218.5"/>
+                </View>
+            </View>
+        );
+    }
+
 
     // Component for each game
     function GameComponent({ game }) {
@@ -57,43 +85,15 @@ export default function GameList({ games, selectGame, sport }) {
                     </View>
                 </View>
                 {/* Odds for ML, Spread, Total */}
-                <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    {/* Moneyline */}
-                    <View>
-                        <View style={styles.propContainer}>
-                            <Text>-195</Text>
-                        </View>
-                        <View style={styles.propContainer}>
-                            <Text>+110</Text>
-                        </View>
-                    </View>
-                    {/* Spread */}
-                    <View>
-                        <View style={styles.propContainer}>
-                            <Text>-3.5</Text>
-                        </View>
-                        <View style={styles.propContainer}>
-                            <Text>+3.5</Text>
-                        </View>
-                    </View>
-                    {/* Total Pts */}
-                    <View>
-                        <View style={styles.propContainer}>
-                            <Text>+218.5</Text>
-                        </View>
-                        <View style={styles.propContainer}>
-                            <Text>-218.5</Text>
-                        </View>
-                    </View>
-                </View>
+                <MainBettingLines />
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, paddingBottom: 2 }}>
+            <View style={styles.dateTimeContainer}>
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
                 <Text style={{ fontSize: 18 }}>{getTime(game.timestamp)}</Text>
                 <Text style={{ fontSize: 12 }}>{getAmPm(game.timestamp)}</Text>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                {/* This is where I can include other info under bet buttons */}
+                <Text style={{ fontSize: 14 }}>{getDate(game.timestamp)}</Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -186,5 +186,10 @@ const styles = StyleSheet.create({
     paddingTop: 4, 
     marginBottom: 4, 
     opacity: 0.1
+  },
+  dateTimeContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 10, paddingBottom: 2
   }
 });

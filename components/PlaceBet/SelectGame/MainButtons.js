@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View } from '../Themed';
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
+import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
+import useTheme from '@/hooks/useTheme';
 
 export default function MainButtons({ sports, onPress, leagues }) {
-    const colorScheme = useColorScheme();
-    const isLightMode = colorScheme === 'light';
+
+    const { iconColor } = useTheme();
+
     return (
             <View style={styles.buttonsContainer}>
                 <View style={styles.buttonsRow}>
@@ -40,7 +40,7 @@ export default function MainButtons({ sports, onPress, leagues }) {
                     <TouchableOpacity
                         style={styles.mainButtonContainer}
                     >
-                        <FontAwesome name="plus" size={24} color={isLightMode ? 'black' : 'white'} />
+                        <FontAwesome name="plus" size={24} color={iconColor} />
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer, { marginLeft: 28, marginRight: 4}]}
