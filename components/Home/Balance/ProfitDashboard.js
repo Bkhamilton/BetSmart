@@ -3,8 +3,6 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
-import draftkings from '@/assets/images/DraftKings.png';
-import fanduel from '@/assets/images/FanDuel.jpg';
 import BalanceChecker from './BalanceChecker';
 
 export default function ProfitDashboard({ wagered, won, openTransaction, balance, bookies }) {
