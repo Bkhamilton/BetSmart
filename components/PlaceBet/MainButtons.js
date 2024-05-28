@@ -5,7 +5,7 @@ import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default function MainButtons({ sports, onPress }) {
+export default function MainButtons({ sports, onPress, leagues }) {
     const colorScheme = useColorScheme();
     const isLightMode = colorScheme === 'light';
     return (
@@ -15,19 +15,19 @@ export default function MainButtons({ sports, onPress }) {
                         style={[styles.mainButtonContainer]}
                         onPress={() => onPress(sports[0])}
                     >
-                        <Text style={styles.mainButtonText}>{sports[0].title}</Text>
+                        <Text style={styles.mainButtonText}>{leagues[0].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer, { marginTop: 0}]}
                         onPress={() => onPress(sports[1])}
                     >
-                        <Text style={styles.mainButtonText}>{sports[1].title}</Text>
+                        <Text style={styles.mainButtonText}>{leagues[1].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer]}
                         onPress={() => onPress(sports[2])}
                     >
-                        <Text style={styles.mainButtonText}>{sports[2].title}</Text>
+                        <Text style={styles.mainButtonText}>{leagues[2].leagueName}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonsRow}>
@@ -35,7 +35,7 @@ export default function MainButtons({ sports, onPress }) {
                         style={[styles.mainButtonContainer, { marginLeft: 4, marginRight: 28}]}
                         onPress={() => onPress(sports[3])}
                     >
-                        <Text style={styles.mainButtonText}>{sports[3].title}</Text>
+                        <Text style={styles.mainButtonText}>{leagues[3].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.mainButtonContainer}
@@ -46,7 +46,7 @@ export default function MainButtons({ sports, onPress }) {
                         style={[styles.mainButtonContainer, { marginLeft: 28, marginRight: 4}]}
                         onPress={() => onPress(sports[4])}
                     >
-                        <Text style={styles.mainButtonText}>{sports[4].title}</Text>
+                        <Text style={styles.mainButtonText}>{leagues[4].leagueName}</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonsRow}>
@@ -54,19 +54,19 @@ export default function MainButtons({ sports, onPress }) {
                         style={[styles.mainButtonContainer]}
                         onPress={() => onPress(sports[5])}
                     >
-                        <Text style={styles.mainButtonText}>{sports[5].title}</Text>
+                        <Text style={styles.mainButtonText}>{leagues[5].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer, { marginTop: 32}]}
                         onPress={() => onPress(sports[6])}
                     >
-                        <Text style={styles.mainButtonText}>{sports[6].title}</Text>
+                        <Text style={styles.mainButtonText}>{leagues[6].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer]}
                         onPress={() => onPress(sports[7])}
                     >
-                        <Text style={styles.mainButtonText}>{sports[7].title}</Text>
+                        <Text style={styles.mainButtonText}>{leagues[7].leagueName}</Text>
                     </TouchableOpacity>
                 </View>
             </View>
