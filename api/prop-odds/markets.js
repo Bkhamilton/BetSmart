@@ -7,7 +7,7 @@ import { getLeagueByName } from "@/db/general/Leagues";
 import { getTodaysGameswithNames } from "@/db/general/Games";
 import { getBookieByName } from "@/db/general/Bookies";
 import { getBetTargetId } from "@/db/bet-general/BetTargets";
-import { getBetMarketByGame } from "@/db/api/BetMarkets";
+import { getBetMarketByGame, insertBetMarket } from "@/db/api/BetMarkets";
 
 export const getMarkets = async (gameId) => {
     try {
@@ -21,8 +21,9 @@ export const getMarkets = async (gameId) => {
 
 export const getMarketProps = async (gameId, market) => {
     try {
-      const response = await fetch(`https://api.prop-odds.com/beta/odds/${gameId}/${market}?api_key=${secrets.PROP_ODDS_API_KEY}`);
+      const response = await fetch(`https://api.prop-odds.com/beta/odds/94a341a91450aa39f4492d2f49b5e46f/${market}?api_key=${secrets.PROP_ODDS_API_KEY}`);
       const data = await response.json();
+      console.log(JSON.stringify(data, null, 2));
       return data;
     } catch (error) {
       console.error(error);
@@ -64,16 +65,25 @@ const fetchMarketValues = (data) => {
   }));
 };
 
+const getBetTargetName = (name) => {
+  console.log(name);
+
+  return name;
+}
+
 const addBetMarketToDB = async (db, gameId, market, book) => {
   try {
-    const bookieId = getBookieByName(book.bookie_key);
+    const bookie = await getBookieByName(db, book.bookie_key);
+    const bookieId = bookie.id;
     const marketValues = fetchMarketValues(book);
     for (let outcome of marketValues) {
-      const betTargetId = getBetTargetId(outcome.name);
+      const betTarget = getBetTargetName(outcome.name);
+      const betTargetId = await getBetTargetId(db, betTarget).id;
       const value = outcome.outcome.handicap === 0 ? outcome.outcome.description : outcome.outcome.handicap;
       const odds = outcome.outcome.odds;
-      const overUnder = outcome.outcome.name === 'Over' || outcome.outcome.name === 'Under' ? outcome.outcome.name : null;
-      await insertBetMarket(db, gameId, market, value, odds, overUnder, betTargetId, bookieId);
+      const overUnder = outcome.outcome.name === 'Over' || outcome.outcome.name === 'Under' ? outcome.outcome.name : '';
+      console.log(`Inserting ${gameId}, ${market}, ${value}, ${odds}, ${overUnder}, ${betTargetId}, ${bookieId}`);
+      //await insertBetMarket(db, gameId, market, value, odds, overUnder, betTargetId, bookieId);
     }
   } catch (error) {
     console.error(error);
@@ -83,7 +93,7 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
 export const fetchMarketProps = async (db, gameId, market) => {
   try {
     const data = await getMarketProps(db, gameId, market);
-    const filteredData = data.sportsbooks.filter(book => ['draftkings', 'fanduel', 'betmgm'].includes(book.bookie_key));
+    const filteredData = data.sportsbooks.filter(book => ['draftkings', 'fanduel'].includes(book.bookie_key));
     for (let book of filteredData) {
       await addBetMarketToDB(db, gameId, market, book);
     }
