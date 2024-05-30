@@ -208,3 +208,41 @@ export const createGamesTable = async (db) => {
   `);
   console.log('Games Table created');
 }
+
+export const createTransactionsTable = async (db) => {
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS Transactions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      bookieId INTEGER NOT NULL,
+      userId INTEGER NOT NULL,
+      transactionType TEXT NOT NULL CHECK(transactionType IN ('Deposit', 'Withdrawal')),
+      initialBalance REAL NOT NULL,
+      amount REAL NOT NULL,
+      finalBalance REAL NOT NULL,
+      timestamp TEXT NOT NULL,
+      description TEXT,
+      FOREIGN KEY(bookieId) REFERENCES Bookies(id),
+      FOREIGN KEY(userId) REFERENCES Users(id),
+      UNIQUE (bookieId, userId, transactionType, initialBalance, amount, finalBalance, timestamp, status)
+    );
+  `);
+  console.log('Transactions Table created');
+};
+
+export const createBonusesTable = async (db) => {
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS Bonuses (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      bookieId INTEGER NOT NULL,
+      userId INTEGER NOT NULL,
+      bonusType TEXT NOT NULL CHECK(bonusType IN ('Deposit', 'Withdrawal')),
+      bonusAmount REAL NOT NULL,
+      timestamp TEXT NOT NULL,
+      description TEXT,
+      FOREIGN KEY(bookieId) REFERENCES Bookies(id),
+      FOREIGN KEY(userId) REFERENCES Users(id),
+      UNIQUE (bookieId, userId, bonusType, bonusAmount, timestamp, description)
+    );
+  `);
+  console.log('Bonuses Table created');
+}
