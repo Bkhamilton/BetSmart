@@ -14,7 +14,7 @@ export const getBalance = async (db, userId) => {
 // Function to get a user's balance
 export const getBalanceByUser = async (db, userId) => {
   try {
-    const allRows = await db.getAllAsync('SELECT * FROM Balance WHERE userID = ?', [userId]);
+    const allRows = await db.getAllAsync('SELECT Balance.*, Bookies.name as bookieName FROM Balance JOIN Bookies ON Balance.bookieId = Bookies.id WHERE Balance.userID = ?', [userId]);
     return allRows;
   } catch (error) {
     console.error('Error getting balance:', error);
