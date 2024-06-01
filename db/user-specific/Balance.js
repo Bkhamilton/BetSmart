@@ -11,6 +11,17 @@ export const getBalance = async (db, userId) => {
   }
 };
 
+// Function to get a user's balance
+export const getBalanceByUser = async (db, userId) => {
+  try {
+    const allRows = await db.getAllAsync('SELECT * FROM Balance WHERE userID = ?', [userId]);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting balance:', error);
+    throw error;
+  }
+};
+
 // Function to insert a balance
 export const insertBalance = async (db, bookieId, balance, userId) => {
   try {
