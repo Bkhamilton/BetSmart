@@ -64,7 +64,7 @@ export default function TransactionModal({ visible, close, title, bookie, bookie
 
     updatedBalance = Number(updatedBalance.toFixed(2));
   
-    onConfirm(bookieId, updatedBalance);
+    onConfirm(bookieId, title, numericInitialAmount, numericAmount, updatedBalance);
     setAmount('');
   };
 
