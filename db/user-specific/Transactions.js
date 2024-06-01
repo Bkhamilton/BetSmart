@@ -14,7 +14,7 @@ export const getAllTransactions = async (db) => {
 // Function to get a transaction
 export const getTransaction = async (db, transactionId) => {
     try {
-        const transaction = await db.getAsync('SELECT * FROM Transactions WHERE id = ?', [transactionId]);
+        const transaction = await db.getAllAsync('SELECT * FROM Transactions WHERE id = ?', [transactionId]);
         return transaction;
     } catch (error) {
         console.error('Error retrieving transaction:', error);
