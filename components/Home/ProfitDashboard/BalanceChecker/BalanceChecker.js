@@ -1,42 +1,17 @@
 import React, { useState } from 'react';
 import { StyleSheet, Image, Pressable } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { TouchableOpacity, Text, View, ScrollView } from '@/components/Themed';
 import { FontAwesome, FontAwesome6 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 
-export default function BalanceChecker({ openTransaction, balance, bookies }) {
+export default function BalanceChecker({ openTransaction, balance, bookies, transactions }) {
 
     const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor } = useTheme();
 
-    const [betIndex, setBetIndex] = useState(0);
     const [bookie, setBookie] = useState('DraftKings');
     const [bookieId, setBookieId] = useState(1);
-
-    const pressUp = () => {
-      setBetIndex((prevIndex) => (prevIndex === 0 ? 0 : prevIndex - 1));
-    };
-
-    const pressDown = () => {
-      setBetIndex((prevIndex) => (prevIndex === 2 ? 2 : prevIndex + 1));
-    };
-
-    const textStyles = [
-      [styles.bigText, styles.mediumText, styles.smallText],
-      [styles.mediumText, styles.bigText, styles.mediumText],
-      [styles.smallText, styles.mediumText, styles.bigText],
-    ];    
-
-    const recentResults = [10.9, -5, 2.3, 15.80, -8.50, 6.7];
-    const recentFanDuelResults = [5.9, -3, 1.3, 10.80, -5.50, 3.7];
-    const recentDraftKingsResults = [7.9, -4, 2.3, 12.80, -7.50, 5.7];
-
-    // Function to format the value of the recent bet results
-    const formatValue = (num) => {
-        const sign = num >= 0 ? '+' : '-';
-        return `${sign}$${Math.abs(num).toFixed(2)}`;
-    };
 
     const bookieImages = {
         'DraftKings': draftkings,
@@ -115,32 +90,30 @@ export default function BalanceChecker({ openTransaction, balance, bookies }) {
 
     const RecentTransactions = () => {
       return (
-        <View style={[styles.box, { flex: 0.26, }]}>
-          <View style={{ alignItems: 'flex-end', paddingRight: 8, backgroundColor: 'transparent' }}>
-            <TouchableOpacity 
-              style={{ backgroundColor: 'transparent', opacity: betIndex === 0 ? 1 : 0.5 }}
-              onPress={pressUp}
-            >
-              <FontAwesome name="arrow-up" size={18} color="black"/>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={{ backgroundColor: 'transparent', opacity: betIndex === 2 ? 1 : 0.5 }}
-              onPress={pressDown}
-            >
-              <FontAwesome name="arrow-down" size={18} color="black"/>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.moneyBox}>
-            <Text style={textStyles[betIndex][0]}>
-              {formatValue(bookie === 'FanDuel' ? recentFanDuelResults[0] : bookie === 'DraftKings' ? recentDraftKingsResults[0] : recentResults[0])}
-            </Text>
-            <Text style={textStyles[betIndex][1]}>
-              {formatValue(bookie === 'FanDuel' ? recentFanDuelResults[1] : bookie === 'DraftKings' ? recentDraftKingsResults[1] : recentResults[1])}
-            </Text>
-            <Text style={textStyles[betIndex][2]}>
-              {formatValue(bookie === 'FanDuel' ? recentFanDuelResults[2] : bookie === 'DraftKings' ? recentDraftKingsResults[2] : recentResults[2])}
-            </Text>
-          </View>
+        <View style={[styles.box, { flex: 0.26 }]}>
+          <ScrollView 
+            style={{ backgroundColor: 'transparent', flexDirection: 'column-reverse'  }}
+            contentContainerStyle={{ 
+              alignItems: 'flex-end', 
+              justifyContent: 'flex-end', 
+              paddingRight: 8,
+              paddingBottom: 8,
+            }}
+          >
+            {[...transactions].reverse().map((transaction, index) => (
+              <View key={index} style={{ backgroundColor: 'transparent' }}>
+                <Text>{transaction.transactionType === 'Deposit' ? '+' : '-'}${transaction.amount}</Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
+      );
+    }
+
+    const RecentTransactionsOld = () => {
+      return (
+        <View style={[styles.box, { flex: 0.26 }]}>
+
         </View>
       );
     }
@@ -152,7 +125,7 @@ export default function BalanceChecker({ openTransaction, balance, bookies }) {
           backgroundColor: balanceColor,
           borderColor: balanceBorderColor,
           opacity: pressed ? 0.8 : 1,
-      })}
+        })}
       >
         <BankButtons />
         <View style={styles.centerBox}>
@@ -161,7 +134,8 @@ export default function BalanceChecker({ openTransaction, balance, bookies }) {
               ${balanceValue.toFixed(2)}
             </Text>
         </View>
-        <RecentTransactions />
+        {transactions.length > 0 && <RecentTransactions />}
+        {transactions.length === 0 && <RecentTransactionsOld />}
       </Pressable>
     );
   }
@@ -205,22 +179,5 @@ const styles = StyleSheet.create({
       opacity: 0.3,
       backgroundColor: 'transparent',
       zIndex: 1,
-  },
-  moneyBox: {
-      alignItems: 'flex-end', 
-      paddingRight: 4, 
-      paddingTop: 14, 
-      backgroundColor: 'transparent'
-  },  
-  bigText: {
-      opacity: 0.7
-  },
-  mediumText: {
-      fontSize: 12,
-      opacity: 0.6
-  },
-  smallText: {
-      fontSize: 10,
-      opacity: 0.4
   },
 });

@@ -3,9 +3,9 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
-import BalanceChecker from './BalanceChecker';
+import BalanceChecker from '@/components/Home/ProfitDashboard/BalanceChecker/BalanceChecker';
 
-export default function ProfitDashboard({ wagered, won, openTransaction, balance, bookies }) {
+export default function ProfitDashboard({ wagered, won, openTransaction, balance, bookies, transactions }) {
     const profit = won - wagered;
     const arrowDirection = profit > 0 ? 'chevron-up' : 'chevron-down';
     const arrowColor = profit > 0 ? 'green' : 'red';
@@ -34,7 +34,12 @@ export default function ProfitDashboard({ wagered, won, openTransaction, balance
 
     return (
     <>
-        <BalanceChecker openTransaction={openTransaction} balance={balance} bookies={bookies}/>
+        <BalanceChecker 
+            openTransaction={openTransaction} 
+            balance={balance} 
+            bookies={bookies}
+            transactions={transactions}
+        />
         <BetResults />
     </>
   );
