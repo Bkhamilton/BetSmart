@@ -1,11 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Dimensions } from 'react-native';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Text, View, ScrollView, TouchableOpacity, SafeAreaView } from '@/components/Themed';
 import { myBetList, playoffBets } from '@/data/exampleBetData';
-import ProfitDashboard from '@/components/Home/Balance/ProfitDashboard';
+import ProfitDashboard from '@/components/Home/ProfitDashboard/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
 import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
@@ -13,10 +13,11 @@ import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
 import { useSQLiteContext } from 'expo-sqlite';
 import { createTables } from '@/api/sqlite';
-import { getBalance, updateBalance } from '@/db/user-specific/Balance';
+import { getBalanceByUser, updateBalance } from '@/db/user-specific/Balance';
 import { getAllBookies, getBookies } from '@/db/general/Bookies';
+import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
 import useTheme from '@/hooks/useTheme';
-import HomeHeader from '../../components/Home/HomeHeader';
+import HomeHeader from '@/components/Home/HomeHeader';
 
 export default function HomeScreen() {
 
@@ -31,7 +32,8 @@ export default function HomeScreen() {
   const [transactionBookieId, setTransactionBookieId] = useState(1);
   
   const [userBalance, setUserBalance] = useState([{ bookieId: 1, balance: 0 }, { bookieId: 2, balance: 0 }])
-  const [userBookies, setUserBookies] = useState([{ id: 0, name: '', description: ''}]);
+  const [userBookies, setUserBookies] = useState([]);
+  const [userTransactions, setUserTransactions] = useState([]);
   const [userID, setUserID] = useState(1);
 
   function openSignUpModal() {
@@ -70,8 +72,16 @@ export default function HomeScreen() {
     router.navigate('profile/betHistory');
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      getTransactionsByUser(db, userID).then((transactions) => {
+        setUserTransactions(transactions);
+      });
+    }, [])
+  );
+
   useEffect(() => {
-    getBalance(db, userID).then((balance) => {
+    getBalanceByUser(db, userID).then((balance) => {
       setUserBalance(balance);
     });
     getAllBookies(db).then((bookies) => {
@@ -79,7 +89,7 @@ export default function HomeScreen() {
     });
   }, []);
 
-  const onConfirmTransaction = (bookieId, updatedBalance) => {
+  const onConfirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
     updateBalance(db, bookieId, updatedBalance, userID).then(() => {
       setUserBalance(prevBalances => 
         prevBalances.map(item => 
@@ -87,6 +97,11 @@ export default function HomeScreen() {
         )
       );
       closeTransactionModal();
+    });
+    const timestamp = new Date().toISOString();
+    const description = `${title} for ${transactionAmount} with ${transactionBookie}`;
+    insertTransaction(db, bookieId, userID, title, initialAmount, transactionAmount, updatedBalance, timestamp, description).then(() => {
+      console.log('Transaction inserted');
     });
   }
 
@@ -111,7 +126,14 @@ export default function HomeScreen() {
       <ScrollView
         showVerticalScrollIndicator={false}
       >
-        <ProfitDashboard wagered={amountWagered} won={amountWon} openTransaction={openTransactionModal} balance={userBalance} bookies={userBookies}/>
+        <ProfitDashboard 
+          wagered={amountWagered} 
+          won={amountWon} 
+          openTransaction={openTransactionModal} 
+          balance={userBalance} 
+          bookies={userBookies}
+          transactions={userTransactions}
+        />
         <TodaysBets bets={playoffBets}/>
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
