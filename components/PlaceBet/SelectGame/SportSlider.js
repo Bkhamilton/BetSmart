@@ -25,7 +25,7 @@ export default function SportSlider({ sports, selectSport, curSport }) {
         'UFC': ufc,
     }
 
-    const { mainBlue, text, borderColor, iconColor } = useTheme();
+    const { mainBlue, text, borderColor, iconColor, backgroundColor } = useTheme();
 
     return (
         <View style={{ height: 78, backgroundColor: 'transparent' }}>
@@ -49,7 +49,7 @@ export default function SportSlider({ sports, selectSport, curSport }) {
                         />
                         <Text style={[
                             styles.leagueText,
-                            item.title === curSport.title ? { color: borderColor } : {}
+                            item.title === curSport.title ? { color: backgroundColor } : {}
                         ]}>{item.title}</Text>
                     </TouchableOpacity>
                 )}
