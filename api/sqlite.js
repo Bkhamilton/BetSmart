@@ -50,15 +50,18 @@ export const createTables = async (db) => {
       season TEXT NOT NULL,
       games INTEGER NOT NULL,
       description TEXT,
-      seasonType TEXT NOT NULL,
+      seasonType TEXT NOT NULL CHECK(seasonType IN ('Pre-Season', 'Regular Season', 'Playoffs')),
+      startDate DATE NOT NULL,
+      endDate DATE NOT NULL,
       FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-      UNIQUE (leagueId, season, games)
+      UNIQUE (leagueId, season, games, seasonType, startDate, endDate)
     );
     CREATE TABLE IF NOT EXISTS Games (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       gameId TEXT NOT NULL,
       seasonId INTEGER NOT NULL,
       date TEXT NOT NULL,
+      timestamp TEXT NOT NULL,
       homeTeamId INTEGER NOT NULL,
       awayTeamId INTEGER NOT NULL,
       FOREIGN KEY(seasonId) REFERENCES Seasons(id),
@@ -133,6 +136,32 @@ export const createTables = async (db) => {
       FOREIGN KEY (betMarketId) REFERENCES BetMarkets(id),
       UNIQUE (participantBetId, betMarketId)
     );
+    CREATE TABLE IF NOT EXISTS Transactions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      bookieId INTEGER NOT NULL,
+      userId INTEGER NOT NULL,
+      transactionType TEXT NOT NULL CHECK(transactionType IN ('Deposit', 'Withdraw')),
+      initialBalance REAL NOT NULL,
+      amount REAL NOT NULL,
+      finalBalance REAL NOT NULL,
+      timestamp TEXT NOT NULL,
+      description TEXT,
+      FOREIGN KEY(bookieId) REFERENCES Bookies(id),
+      FOREIGN KEY(userId) REFERENCES Users(id),
+      UNIQUE (bookieId, userId, transactionType, initialBalance, amount, finalBalance, timestamp)
+    );
+    CREATE TABLE IF NOT EXISTS Bonuses (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      bookieId INTEGER NOT NULL,
+      userId INTEGER NOT NULL,
+      bonusType TEXT NOT NULL,
+      bonusAmount REAL NOT NULL,
+      timestamp TEXT NOT NULL,
+      description TEXT,
+      FOREIGN KEY(bookieId) REFERENCES Bookies(id),
+      FOREIGN KEY(userId) REFERENCES Users(id),
+      UNIQUE (bookieId, userId, bonusType, bonusAmount, timestamp, description)
+    );
   `);
   console.log('Tables created');
 };
@@ -154,95 +183,8 @@ export const dropTables = async (db) => {
     DROP TABLE IF EXISTS BetSlips;
     DROP TABLE IF EXISTS ParticipantBets;
     DROP TABLE IF EXISTS Legs;
+    DROP TABLE IF EXISTS Transactions;
+    DROP TABLE IF EXISTS Bonuses;
   `);
   console.log('Tables dropped');
 };
-
-export const dropSeasonsTable = async (db) => {
-  await db.execAsync(`
-    DROP TABLE IF EXISTS Seasons;
-  `);
-  console.log('Seasons Table dropped');
-};
-
-export const createSeasonsTable = async (db) => {
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS Seasons (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      leagueId INTEGER NOT NULL,
-      season TEXT NOT NULL,
-      games INTEGER NOT NULL,
-      description TEXT,
-      seasonType TEXT NOT NULL CHECK(seasonType IN ('Pre-Season', 'Regular Season', 'Playoffs')),
-      startDate DATE NOT NULL,
-      endDate DATE NOT NULL,
-      FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-      UNIQUE (leagueId, season, games, seasonType, startDate, endDate)
-    );
-  `);
-  console.log('Seasons Table created');
-}
-
-export const dropGamesTable = async (db) => {
-  await db.execAsync(`
-    DROP TABLE IF EXISTS Games;
-  `);
-  console.log('Games Table dropped');
-};
-
-export const createGamesTable = async (db) => {
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS Games (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      gameId TEXT NOT NULL,
-      seasonId INTEGER NOT NULL,
-      date TEXT NOT NULL,
-      timestamp TEXT NOT NULL,
-      homeTeamId INTEGER NOT NULL,
-      awayTeamId INTEGER NOT NULL,
-      FOREIGN KEY(seasonId) REFERENCES Seasons(id),
-      FOREIGN KEY(homeTeamId) REFERENCES Teams(id),
-      FOREIGN KEY(awayTeamId) REFERENCES Teams(id),
-      UNIQUE (gameId, seasonId, date, homeTeamId, awayTeamId)
-    );
-  `);
-  console.log('Games Table created');
-}
-
-export const createTransactionsTable = async (db) => {
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS Transactions (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      bookieId INTEGER NOT NULL,
-      userId INTEGER NOT NULL,
-      transactionType TEXT NOT NULL CHECK(transactionType IN ('Deposit', 'Withdrawal')),
-      initialBalance REAL NOT NULL,
-      amount REAL NOT NULL,
-      finalBalance REAL NOT NULL,
-      timestamp TEXT NOT NULL,
-      description TEXT,
-      FOREIGN KEY(bookieId) REFERENCES Bookies(id),
-      FOREIGN KEY(userId) REFERENCES Users(id),
-      UNIQUE (bookieId, userId, transactionType, initialBalance, amount, finalBalance, timestamp, status)
-    );
-  `);
-  console.log('Transactions Table created');
-};
-
-export const createBonusesTable = async (db) => {
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS Bonuses (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      bookieId INTEGER NOT NULL,
-      userId INTEGER NOT NULL,
-      bonusType TEXT NOT NULL CHECK(bonusType IN ('Deposit', 'Withdrawal')),
-      bonusAmount REAL NOT NULL,
-      timestamp TEXT NOT NULL,
-      description TEXT,
-      FOREIGN KEY(bookieId) REFERENCES Bookies(id),
-      FOREIGN KEY(userId) REFERENCES Users(id),
-      UNIQUE (bookieId, userId, bonusType, bonusAmount, timestamp, description)
-    );
-  `);
-  console.log('Bonuses Table created');
-}
