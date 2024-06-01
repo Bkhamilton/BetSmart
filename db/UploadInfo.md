@@ -117,8 +117,8 @@ I only have myself inserted as a user, I have the default User hardcoded into th
 manual inserts
 
 ```javascript
-insertBalance(db, getBookieByName("DraftKings).id, 100, getUser("username"))
-insertBalance(db, getBookieByName("FanDuel).id, 100, getUser("username"))
+insertBalance(db, getBookieByName("DraftKings").id, 100, getUser("username"))
+insertBalance(db, getBookieByName("FanDuel").id, 100, getUser("username"))
 ```
 
 This adds $100 to your current balance for FanDuel and DraftKings
