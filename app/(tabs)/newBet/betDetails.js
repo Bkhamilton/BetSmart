@@ -13,8 +13,10 @@ import { getAllBookies } from '@/db/general/Bookies';
 import useTheme from '@/hooks/useTheme';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
+import { NBAcategories, NHLcategories, MLBcategories } from '@/data/leagueCategoryData';
 
 export default function BetDetailsScreen() {
+  
   const { league, currentGame, setBookie, setBookieId } = useContext(BetContext);
   const router = useRouter();
 
@@ -23,6 +25,8 @@ export default function BetDetailsScreen() {
   const [userBalance, setUserBalance] = useState([])
   const [bookies, setBookies] = useState([{ id: 0, name: '', description: ''}]);
   const [userID, setUserID] = useState(1);
+
+  const [curCategory, setCurCategory] = useState('Popular');
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);
 
@@ -42,6 +46,10 @@ export default function BetDetailsScreen() {
 
   const handleClose = () => {
     router.navigate('newBet/selectGame');
+  };
+
+  const selectCategory = (category) => {
+    setCurCategory(category);
   };
 
   const { mainGreen, iconColor } = useTheme();
@@ -85,7 +93,11 @@ export default function BetDetailsScreen() {
       <GameHeader />
       <ScrollView>
         <IntroInfo currentGame={currentGame} />
-        <CategorySlider />
+        <CategorySlider 
+          categories={NBAcategories}
+          selectCategory={selectCategory}
+          curCategory={curCategory}
+        />
       </ScrollView>
     </View>
   );
