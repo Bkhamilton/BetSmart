@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
-export default function MainButtons({ sports, onPress, leagues }) {
+export default function MainButtons({ leagues, selectLeague }) {
 
     const { iconColor } = useTheme();
 
@@ -13,19 +13,19 @@ export default function MainButtons({ sports, onPress, leagues }) {
                 <View style={styles.buttonsRow}>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer]}
-                        onPress={() => onPress(sports[0])}
+                        onPress={() => selectLeague(leagues[0])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[0].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer, { marginTop: 0}]}
-                        onPress={() => onPress(sports[1])}
+                        onPress={() => selectLeague(leagues[1])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[1].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer]}
-                        onPress={() => onPress(sports[2])}
+                        onPress={() => selectLeague(leagues[2])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[2].leagueName}</Text>
                     </TouchableOpacity>
@@ -33,7 +33,7 @@ export default function MainButtons({ sports, onPress, leagues }) {
                 <View style={styles.buttonsRow}>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer, { marginLeft: 4, marginRight: 28}]}
-                        onPress={() => onPress(sports[3])}
+                        onPress={() => selectLeague(leagues[3])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[3].leagueName}</Text>
                     </TouchableOpacity>
@@ -44,7 +44,7 @@ export default function MainButtons({ sports, onPress, leagues }) {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer, { marginLeft: 28, marginRight: 4}]}
-                        onPress={() => onPress(sports[4])}
+                        onPress={() => selectLeague(leagues[4])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[4].leagueName}</Text>
                     </TouchableOpacity>
@@ -52,19 +52,19 @@ export default function MainButtons({ sports, onPress, leagues }) {
                 <View style={styles.buttonsRow}>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer]}
-                        onPress={() => onPress(sports[5])}
+                        onPress={() => selectLeague(leagues[5])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[5].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer, { marginTop: 32}]}
-                        onPress={() => onPress(sports[6])}
+                        onPress={() => selectLeague(leagues[6])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[6].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer]}
-                        onPress={() => onPress(sports[7])}
+                        onPress={() => selectLeague(leagues[7])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[7].leagueName}</Text>
                     </TouchableOpacity>

@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { sportsData } from '@/data/exampleTeamData';
 import { retrieveGamesDB } from '@/api/prop-odds/games.js';
 import { Text, View, Pressable } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
@@ -15,7 +14,6 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance, updateBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getAllLeagues } from '@/db/general/Leagues';
-import useTheme from '@/hooks/useTheme';
 
 export default function SelectGameScreen() {
 
@@ -27,16 +25,16 @@ export default function SelectGameScreen() {
 
   const handleSelectGame = ({ game }) => {
     setCurrentGame(game);
-    setLeague(curSport.title);
+    setLeague(curLeague.leagueName);
     router.navigate('newBet/betDetails', { game });
   };
 
   const [header, setHeader] = useState('Place Bet');
 
-  const [curSport, setcurSport] = useState({title:'', games:[]})
+  const [curLeague, setcurLeague] = useState({});
   const [allSportsData, setAllSportsData] = useState([]);
-  const [sportSelected, setSportSelected] = useState(false);
-  const [userBalance, setUserBalance] = useState([{ bookieId: 1, balance: 0 }, { bookieId: 2, balance: 0 }])
+  const [leagueSelected, setLeagueSelected] = useState(false);
+  const [userBalance, setUserBalance] = useState([])
   const [bookies, setBookies] = useState([{ id: 0, name: '', description: ''}]);
   const [leagues, setLeagues] = useState([{"description": "", "id": 0, "leagueName": "", "sport": ""}]);
   const [userID, setUserID] = useState(1);
@@ -57,18 +55,17 @@ export default function SelectGameScreen() {
     setBookieId(bookie.id);
   }
 
-  // Function to select a sport and set the current sport and category
-  const selectSport = (sport) => {
-    if (curSport.title === sport.title) {
-      setcurSport({title:'', games:[]});
+  const selectLeague = (league) => {
+    if (curLeague?.leagueName === league.leagueName) {
+      setcurLeague({});
       setHeader('Place Bet');
-      setSportSelected(false);
+      setLeagueSelected(false);
     } else {
-      setcurSport(sport);
-      setHeader(sport.title)
-      setSportSelected(true);
+      setcurLeague(league);
+      setHeader(league.leagueName)
+      setLeagueSelected(true);
     }
-  };
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -96,10 +93,8 @@ export default function SelectGameScreen() {
     fetchSportsData();
   }, []);
 
-  const curSportData = allSportsData.find(sportData => sportData.sport.toLowerCase() === curSport.title.toLowerCase());
-  const curSportGames = curSportData ? curSportData.data : [];
-
-  const { iconColor, mainGreen } = useTheme();
+  const curLeagueData = allSportsData.find(sportData => sportData.sport === curLeague?.leagueName);
+  const curLeagueGames = curLeagueData ? curLeagueData.data : [];
 
   const SelectGameHeader = () => {
     return (
@@ -128,17 +123,27 @@ export default function SelectGameScreen() {
         selectBookie={selectBookie}
       />
       <View style={styles.mainContainer}>
-        { sportSelected && leagues.length > 1 &&
+        { leagueSelected && leagues.length > 1 &&
           <>
             <View style={{ paddingVertical: 10  }}>
-              <SportSlider sports={sportsData} selectSport={selectSport} curSport={curSport} leagues={leagues}/>
+              <SportSlider 
+                leagues={leagues} 
+                curLeague={curLeague}
+                selectLeague={selectLeague}
+              />
             </View> 
-            <GameList games={curSportGames.games} selectGame={game => handleSelectGame({ game })} sport={curSportGames.league}/>
+            <GameList 
+              games={curLeagueGames.games} 
+              selectGame={game => handleSelectGame({ game })} 
+            />
           </> 
         }
-        { !sportSelected && leagues.length > 1 &&
+        { !leagueSelected && leagues.length > 1 &&
           <View style={styles.buttonsContainer}>
-            <MainButtons sports={sportsData} onPress={selectSport} leagues={leagues}/>
+            <MainButtons 
+              leagues={leagues} 
+              selectLeague={selectLeague}
+            />
           </View>
         }
       </View>

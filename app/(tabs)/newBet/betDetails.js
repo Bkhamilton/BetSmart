@@ -5,10 +5,8 @@ import Header from '@/components/Header/Header';
 import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useState, useEffect, useContext } from 'react';
 import { BetContext } from '@/contexts/BetContext';
-import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '@/data/teamAbbreviations';
 import CategorySlider from '@/components/PlaceBet/BetDetails/CategorySlider';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
-import draftkings from '@/assets/images/DraftKings.png';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
@@ -22,7 +20,7 @@ export default function BetDetailsScreen() {
 
   const db = useSQLiteContext();
 
-  const [userBalance, setUserBalance] = useState([{ bookieId: 1, balance: 0 }, { bookieId: 2, balance: 0 }])
+  const [userBalance, setUserBalance] = useState([])
   const [bookies, setBookies] = useState([{ id: 0, name: '', description: ''}]);
   const [userID, setUserID] = useState(1);
 
@@ -45,19 +43,6 @@ export default function BetDetailsScreen() {
   const handleClose = () => {
     router.navigate('newBet/selectGame');
   };
-
-  // Object mapping sports to their respective abbreviation objects
-  const sportAbbreviations = {
-      nba: nbaTeamAbbreviations,
-      mlb: mlbTeamAbbreviations,
-      nhl: nhlTeamAbbreviations,
-  };
-
-  // Function to get the abbreviation for a team name
-  const getTeamAbbreviation = (teamName, sport) => {
-      const abbreviations = sportAbbreviations[sport.toLowerCase()];
-      return abbreviations ? (abbreviations[teamName] || teamName) : teamName;
-  }
 
   const { mainGreen, iconColor } = useTheme();
 

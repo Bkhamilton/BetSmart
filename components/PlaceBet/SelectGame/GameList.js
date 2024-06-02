@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed'
 
-export default function GameList({ games, selectGame, sport }) {
+export default function GameList({ games, selectGame }) {
 
     const getDate = (dateString) => {
         const date = new Date(dateString);

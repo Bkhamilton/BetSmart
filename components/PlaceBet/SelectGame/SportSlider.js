@@ -12,7 +12,7 @@ import ncaa from '@/assets/images/ncaa.png';
 import pga from '@/assets/images/pga.png';
 import ufc from '@/assets/images/ufc.png';
 
-export default function SportSlider({ sports, selectSport, curSport }) {
+export default function SportSlider({ leagues, curLeague, selectLeague }) {
 
     const nameToIcon = {
         'NBA': nba,
@@ -30,7 +30,7 @@ export default function SportSlider({ sports, selectSport, curSport }) {
     return (
         <View style={{ height: 78, backgroundColor: 'transparent' }}>
             <FlatList
-                data={sports}
+                data={leagues}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
@@ -38,19 +38,19 @@ export default function SportSlider({ sports, selectSport, curSport }) {
                     <TouchableOpacity 
                         style={[
                             styles.sportContainer,
-                            item.title === curSport?.title && styles.selectedSport,
-                            item.title === curSport.title ? { backgroundColor: text } : {}
+                            item.leagueName === curLeague?.leagueName && styles.selectedSport,
+                            item.leagueName === curLeague.leagueName ? { backgroundColor: text } : {}
                         ]}
-                        onPress={() => selectSport(item)}
+                        onPress={() => selectLeague(item)}
                     >
                         <Image
-                            source={item.icon}
+                            source={nameToIcon[item.leagueName]}
                             style={styles.logo}
                         />
                         <Text style={[
                             styles.leagueText,
-                            item.title === curSport.title ? { color: backgroundColor } : {}
-                        ]}>{item.title}</Text>
+                            item.leagueName === curLeague.leagueName ? { color: backgroundColor } : {}
+                        ]}>{item.leagueName}</Text>
                     </TouchableOpacity>
                 )}
             />
