@@ -188,3 +188,16 @@ export const dropTables = async (db) => {
   `);
   console.log('Tables dropped');
 };
+
+export const createLeagueProps = async (db) => {
+  await db.execAsync(`
+  CREATE TABLE IF NOT EXISTS LeagueProps (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    leagueId INTEGER NOT NULL,
+    propName TEXT NOT NULL,
+    FOREIGN KEY(leagueId) REFERENCES Leagues(id),
+    UNIQUE (leagueId, propName)
+  );
+`);
+  console.log('League Props created');
+}
