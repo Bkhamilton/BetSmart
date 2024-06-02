@@ -34,9 +34,10 @@ export default function SelectGameScreen() {
   const [curLeague, setcurLeague] = useState({});
   const [allSportsData, setAllSportsData] = useState([]);
   const [leagueSelected, setLeagueSelected] = useState(false);
+
   const [userBalance, setUserBalance] = useState([])
-  const [bookies, setBookies] = useState([{ id: 0, name: '', description: ''}]);
-  const [leagues, setLeagues] = useState([{"description": "", "id": 0, "leagueName": "", "sport": ""}]);
+  const [bookies, setBookies] = useState([]);
+  const [leagues, setLeagues] = useState([]);
   const [userID, setUserID] = useState(1);
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);
