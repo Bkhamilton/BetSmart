@@ -10,7 +10,7 @@ export default function BalanceBox({ userBalance, openModal }) {
 
     const { bookie, setBookie, bookieId, setBookieId } = useContext(BetContext);
 
-    const curBookie = userBalance.find(obj => obj.bookieId === bookieId);
+    const curBookie = userBalance.length > 0 ? userBalance.find(obj => obj.bookieId === bookieId) : { balance: 0 };
 
     const bookieImages = {
         'DraftKings': draftkings,
