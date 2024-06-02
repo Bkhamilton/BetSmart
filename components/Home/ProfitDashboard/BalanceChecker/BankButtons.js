@@ -19,38 +19,25 @@ export default function BankButtons({ selectBookie, openTransaction, bookie }) {
         openTransaction(type);
     };
 
-    const TransactionButton = ({ type }) => {
-        return (
+    const TransactionType = ({ type }) => {
+      return (
+        <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
           <TouchableOpacity
             onPress={() => selectTransaction(type)}
             style={{ backgroundColor: 'transparent', paddingHorizontal: 10 }}
           >
             <FontAwesome6 name={type === 'Deposit' ? 'sack-dollar' : 'hand-holding-dollar'} size={24} color={iconColor}/>
           </TouchableOpacity>
-        );
+          <Text style={{ fontSize: 8, opacity: 0.7, fontWeight: '600' }}>{type}</Text>
+        </View>
+      );
     };
 
     return (
         <View style={[styles.box, { overflow: 'hidden', borderTopLeftRadius: 8, borderBottomLeftRadius: 8, flex: 0.28, }]}>
           <View style={{ flexDirection: 'row', justifyContent: 'center', backgroundColor: 'transparent', transform: [{ translateY: 8 }] }}>
-            <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
-              <TouchableOpacity
-                onPress={() => selectTransaction('Deposit')}
-                style={{ backgroundColor: 'transparent', paddingHorizontal: 10, }}
-              >
-                <FontAwesome6 name="sack-dollar" size={24} color={iconColor}/>
-              </TouchableOpacity>
-              <Text style={{ fontSize: 8, opacity: 0.7, fontWeight: '600' }}>Deposit</Text>
-            </View>
-            <View style={{ alignItems: 'center', backgroundColor: 'transparent' }}>
-              <TouchableOpacity 
-                onPress={() => selectTransaction('Withdraw')}
-                style={{ backgroundColor: 'transparent', paddingHorizontal: 10 }}
-              >
-                <FontAwesome6 name="hand-holding-dollar" size={24} color={iconColor}/>
-              </TouchableOpacity>
-              <Text style={{ fontSize: 8, opacity: 0.7, fontWeight: '600' }}>Withdraw</Text>
-            </View>
+            <TransactionType type='Deposit'/>
+            <TransactionType type='Withdraw'/>
           </View>
           <TouchableOpacity 
             onLongPress={selectBookie}
