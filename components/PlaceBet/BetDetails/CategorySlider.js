@@ -1,78 +1,37 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Text, View, ScrollView, Pressable } from '@/components/Themed';
+import React, { useState } from 'react';
+import { StyleSheet, Pressable } from 'react-native';
+import { Text, View, ScrollView } from '@/components/Themed';
 
-export default function CategorySlider({ selectCategory, curCategory }) {
+import useTheme from '@/hooks/useTheme';
 
-    const categories = [
-        {
-          title: 'Main',
-          id: 1,
-        },
-        {
-          title: 'Alt Main',
-          id: 2,
-        },
-        {
-          title: 'Player Points',
-          id: 3,
-        },
-        {
-          title: 'Player Rebounds',
-          id: 4,
-        },
-        {
-          title: 'Player Assists',
-          id: 5,
-        },
-        {
-          title: 'Player Threes',
-          id: 6,
-        },
-        {
-          title: 'Player Combos',
-          id: 7,
-        },
-        {
-          title: 'Player Defense',
-          id: 8,
-        },
-        {
-          title: 'Stat Leaders',
-          id: 9,
-        },
-        {
-          title: 'Half',
-          id: 10,
-        },
-        {
-          title: 'Quarters',
-          id: 11,
-        },
-        {
-          title: 'Team Props',
-          id: 12,
-        },
-        {
-          title: 'Game Props',
-          id: 13,
-        },
-    ]
+export default function CategorySlider({ categories, selectCategory, curCategory }) {
+    const [pressedId, setPressedId] = useState(null);
+
+    const { grayBackground, iconColor, text } = useTheme();
 
     return (
         <View style={styles.container}>
           <ScrollView 
             horizontal
-            showsHorizontalScrollIndicator={false}  
+            showsHorizontalScrollIndicator={false}
+            style={{ backgroundColor: grayBackground }}  
           >
-            {categories.map((item) => (
-              <Pressable
-                key={item.id}
-                style={styles.categoryContainer}
-              >
-                <Text style={{ color: 'white' }}>{item.title}</Text>
-              </Pressable>
-            ))}
+            {categories.map((item) => {
+              const color = curCategory === item.title ? 'black' : '#1f1f1f';
+              return (
+                <Pressable
+                  key={item.id}
+                  onPressIn={() => setPressedId(item.id)}
+                  onPressOut={() => setPressedId(null)}
+                  onPress={() => selectCategory(item.title)}
+                  style={({pressed}) => ({
+                    ...styles.categoryContainer,
+                  })}
+                >
+                  <Text style={{ color: pressedId === item.id ? text : color, fontWeight: curCategory === item.title ? '600' : '400' }}>{item.title}</Text>
+                </Pressable>
+              );
+            })}
           </ScrollView>
         </View>
       )
@@ -84,10 +43,18 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     categoryContainer: {
-        backgroundColor: 'gray',
         paddingHorizontal: 12,
-        paddingVertical: 8,
+        paddingVertical: 10,
+        backgroundColor: 'transparent',
     },
 });
