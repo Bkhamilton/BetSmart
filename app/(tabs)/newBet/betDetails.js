@@ -5,28 +5,31 @@ import Header from '@/components/Header/Header';
 import { FontAwesome5 } from '@expo/vector-icons';
 import React, { useState, useEffect, useContext } from 'react';
 import { BetContext } from '@/contexts/BetContext';
-import CategorySlider from '@/components/PlaceBet/BetDetails/CategorySlider';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
+import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
+import { getLeagueByName } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
-import { NBAcategories, NHLcategories, MLBcategories } from '@/data/leagueCategoryData';
+import LeaguePropSlider from '@/components/PlaceBet/BetDetails/LeaguePropSlider';
+import LeaguePropInfo from '@/components/PlaceBet/BetDetails/LeaguePropInfo';
 
 export default function BetDetailsScreen() {
-  
+   
   const { league, currentGame, setBookie, setBookieId } = useContext(BetContext);
   const router = useRouter();
 
   const db = useSQLiteContext();
 
-  const [userBalance, setUserBalance] = useState([])
+  const [userBalance, setUserBalance] = useState([]);
+  const [leagueProps, setLeagueProps] = useState([]); // [ { id: 0, leagueId: 0, propName: '' }
   const [bookies, setBookies] = useState([{ id: 0, name: '', description: ''}]);
   const [userID, setUserID] = useState(1);
 
-  const [curCategory, setCurCategory] = useState('Popular');
+  const [curLeagueProp, setCurLeagueProp] = useState('Popular');
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);
 
@@ -48,8 +51,8 @@ export default function BetDetailsScreen() {
     router.navigate('newBet/selectGame');
   };
 
-  const selectCategory = (category) => {
-    setCurCategory(category);
+  const selectLeagueProp = (prop) => {
+    setCurLeagueProp(prop);
   };
 
   const { mainGreen, iconColor } = useTheme();
@@ -60,6 +63,12 @@ export default function BetDetailsScreen() {
     });
     getAllBookies(db).then((bookies) => {
       setBookies(bookies);
+    });
+    getLeagueByName(db, league).then((league) => {
+      getLeaguePropsForLeague(db, league.id).then((props) => {
+        const sortedProps = props.sort((a, b) => a.id - b.id);
+        setLeagueProps(sortedProps);
+      });
     });
   }, []);
   
@@ -93,11 +102,20 @@ export default function BetDetailsScreen() {
       <GameHeader />
       <ScrollView>
         <IntroInfo currentGame={currentGame} />
-        <CategorySlider 
-          categories={NBAcategories}
-          selectCategory={selectCategory}
-          curCategory={curCategory}
-        />
+        {
+          leagueProps.length > 0 &&
+          <>
+            <LeaguePropSlider 
+              leagueProps={leagueProps}
+              selectLeagueProp={selectLeagueProp}
+              curLeagueProp={curLeagueProp}
+            />
+            <LeaguePropInfo 
+              leagueProp={curLeagueProp}
+            />
+          </>
+
+        }
       </ScrollView>
     </View>
   );
