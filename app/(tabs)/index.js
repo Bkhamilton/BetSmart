@@ -2,8 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Dimensions } from 'react-native';
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { Text, View, ScrollView, TouchableOpacity, SafeAreaView } from '@/components/Themed';
+import { Text, View, ScrollView } from '@/components/Themed';
 import { myBetList, playoffBets } from '@/data/exampleBetData';
 import ProfitDashboard from '@/components/Home/ProfitDashboard/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
@@ -12,7 +11,6 @@ import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
 import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
 import { useSQLiteContext } from 'expo-sqlite';
-import { createTables } from '@/api/sqlite';
 import { getBalanceByUser, updateBalance } from '@/db/user-specific/Balance';
 import { getAllBookies, getBookies } from '@/db/general/Bookies';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
@@ -102,6 +100,9 @@ export default function HomeScreen() {
     const description = `${title} for ${transactionAmount} with ${transactionBookie}`;
     insertTransaction(db, bookieId, userID, title, initialAmount, transactionAmount, updatedBalance, timestamp, description).then(() => {
       console.log('Transaction inserted');
+    });
+    getTransactionsByUser(db, userID).then((transactions) => {
+      setUserTransactions(transactions);
     });
   }
 
