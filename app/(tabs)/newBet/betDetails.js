@@ -114,7 +114,6 @@ export default function BetDetailsScreen() {
               leagueProp={curLeagueProp}
             />
           </>
-
         }
       </ScrollView>
     </View>
