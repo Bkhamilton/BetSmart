@@ -1,25 +1,25 @@
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Dimensions, FlatList, Image } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Text, View, TouchableOpacity, Pressable, ScrollView } from '@/components/Themed';
-import Header from '@/components/Header/Header';
 import { FontAwesome5 } from '@expo/vector-icons';
-import React, { useState, useEffect, useContext } from 'react';
 import { BetContext } from '@/contexts/BetContext';
-import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
 import { useSQLiteContext } from 'expo-sqlite';
+import { Text, View, TouchableOpacity, Pressable, ScrollView } from '@/components/Themed';
+import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
+import BalanceBox from '@/components/PlaceBet/BalanceBox';
+import ChooseBookie from '@/components/Modals/ChooseBookie';
+import LeaguePropSlider from '@/components/PlaceBet/BetDetails/LeaguePropSlider';
+import LeaguePropInfo from '@/components/PlaceBet/BetDetails/LeaguePropInfo';
 import { getBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
 import { getLeagueByName } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
-import BalanceBox from '@/components/PlaceBet/BalanceBox';
-import ChooseBookie from '@/components/Modals/ChooseBookie';
-import LeaguePropSlider from '@/components/PlaceBet/BetDetails/LeaguePropSlider';
-import LeaguePropInfo from '@/components/PlaceBet/BetDetails/LeaguePropInfo';
 
 export default function BetDetailsScreen() {
    
   const { league, currentGame, setBookie, setBookieId } = useContext(BetContext);
+
   const router = useRouter();
 
   const db = useSQLiteContext();
