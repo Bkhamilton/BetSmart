@@ -6,6 +6,7 @@ export default function useTheme() {
 
   return {
     text: colorScheme === 'dark' ? Colors.dark.text : Colors.light.text,
+    grayText: colorScheme === 'dark' ? '#dedede' : '#1f1f1f',
     borderColor: colorScheme === 'dark' ? Colors.dark.border : Colors.light.border,
     iconColor: colorScheme === 'dark' ? Colors.dark.icon : Colors.light.icon,
     backgroundColor: colorScheme === 'dark' ? Colors.dark.background : Colors.light.background,
