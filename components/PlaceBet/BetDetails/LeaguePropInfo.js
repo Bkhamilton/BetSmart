@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import Colors from '@/constants/Colors';
 
-export default function CategoryInfo({ curCategory }) {
+export default function LeaguePropInfo({ leagueProp }) {
 
     return (
         <View>

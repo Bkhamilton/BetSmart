@@ -4,10 +4,10 @@ import { Text, View, ScrollView } from '@/components/Themed';
 
 import useTheme from '@/hooks/useTheme';
 
-export default function CategorySlider({ categories, selectCategory, curCategory }) {
+export default function LeaguePropSlider({ leagueProps, selectLeagueProp, curLeagueProp }) {
     const [pressedId, setPressedId] = useState(null);
 
-    const { grayBackground, iconColor, text } = useTheme();
+    const { grayBackground, iconColor, text, grayText } = useTheme();
 
     return (
         <View style={styles.container}>
@@ -16,19 +16,19 @@ export default function CategorySlider({ categories, selectCategory, curCategory
             showsHorizontalScrollIndicator={false}
             style={{ backgroundColor: grayBackground }}  
           >
-            {categories.map((item) => {
-              const color = curCategory === item.title ? 'black' : '#1f1f1f';
+            {leagueProps.map((item) => {
+              const color = curLeagueProp === item.propName ? text : grayText;
               return (
                 <Pressable
                   key={item.id}
                   onPressIn={() => setPressedId(item.id)}
                   onPressOut={() => setPressedId(null)}
-                  onPress={() => selectCategory(item.title)}
+                  onPress={() => selectLeagueProp(item.propName)}
                   style={({pressed}) => ({
                     ...styles.categoryContainer,
                   })}
                 >
-                  <Text style={{ color: pressedId === item.id ? text : color, fontWeight: curCategory === item.title ? '600' : '400' }}>{item.title}</Text>
+                  <Text style={{ color: pressedId === item.id ? text : color, fontWeight: curLeagueProp === item.propName ? '600' : '400' }}>{item.propName}</Text>
                 </Pressable>
               );
             })}
