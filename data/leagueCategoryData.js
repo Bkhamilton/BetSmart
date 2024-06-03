@@ -98,16 +98,20 @@ export const MLBcategories = [
     id: 3,
   },
   {
-    title: 'Player Props',
+    title: 'Batter Props',
     id: 4,
   },
   {
-    title: 'Team Props',
+    title: 'Pitcher Props',
     id: 5,
   },
   {
-    title: 'Game Props',
+    title: 'Innings',
     id: 6,
+  },
+  {
+    title: 'Game Props',
+    id: 7,
   },
 ]
 
@@ -125,15 +129,23 @@ export const NHLcategories = [
     id: 3,
   },
   {
-    title: 'Player Props',
+    title: 'Goal Scorer',
     id: 4,
   },
   {
-    title: 'Team Props',
+    title: 'Player Props',
     id: 5,
   },
   {
-    title: 'Game Props',
+    title: 'Goalie Props',
     id: 6,
+  },
+  {
+    title: 'Periods',
+    id: 7,
+  },
+  {
+    title: 'Game Props',
+    id: 8,
   },
 ]
