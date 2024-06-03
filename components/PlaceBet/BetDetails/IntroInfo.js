@@ -32,7 +32,7 @@ export default function IntroInfo({ currentGame }) {
     };
 
     return (
-        <View style={{ borderWidth: 1 }}>
+        <View>
           <View style={styles.dateTimeContainer}>
             <Text>{getDate(currentGame.timestamp)}</Text>
             <Text>{getTime(currentGame.timestamp)} {getAmPm(currentGame.timestamp)}</Text>
