@@ -162,6 +162,13 @@ export const createTables = async (db) => {
       FOREIGN KEY(userId) REFERENCES Users(id),
       UNIQUE (bookieId, userId, bonusType, bonusAmount, timestamp, description)
     );
+    CREATE TABLE IF NOT EXISTS LeagueProps (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      leagueId INTEGER NOT NULL,
+      propName TEXT NOT NULL,
+      FOREIGN KEY(leagueId) REFERENCES Leagues(id),
+      UNIQUE (leagueId, propName)
+    );
   `);
   console.log('Tables created');
 };
@@ -185,19 +192,7 @@ export const dropTables = async (db) => {
     DROP TABLE IF EXISTS Legs;
     DROP TABLE IF EXISTS Transactions;
     DROP TABLE IF EXISTS Bonuses;
+    DROP TABLE IF EXISTS LeagueProps;
   `);
   console.log('Tables dropped');
 };
-
-export const createLeagueProps = async (db) => {
-  await db.execAsync(`
-  CREATE TABLE IF NOT EXISTS LeagueProps (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    leagueId INTEGER NOT NULL,
-    propName TEXT NOT NULL,
-    FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-    UNIQUE (leagueId, propName)
-  );
-`);
-  console.log('League Props created');
-}
