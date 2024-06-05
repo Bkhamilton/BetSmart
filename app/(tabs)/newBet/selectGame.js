@@ -40,7 +40,7 @@ export default function SelectGameScreen() {
   const [leagues, setLeagues] = useState([]);
   const [userID, setUserID] = useState(1);
 
-  const [chooseBookieModal, setChooseBookieModal] = useState(false);
+  const [chooseBookieModal, setChooseBookieModal] = useState(false);   
 
   const openBookieModal = () => {
     setChooseBookieModal(true);
@@ -66,6 +66,10 @@ export default function SelectGameScreen() {
       setHeader(league.leagueName)
       setLeagueSelected(true);
     }
+  }
+
+  const selectProp = (game, value, odds) => {
+    console.log(JSON.stringify(game, null, 2));
   }
 
   useFocusEffect(
@@ -135,7 +139,8 @@ export default function SelectGameScreen() {
             </View> 
             <GameList 
               games={curLeagueGames.games} 
-              selectGame={game => handleSelectGame({ game })} 
+              selectGame={game => handleSelectGame({ game })}
+              selectProp={selectProp}
             />
           </> 
         }
