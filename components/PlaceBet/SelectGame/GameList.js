@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed'
 
-export default function GameList({ games, selectGame }) {
+export default function GameList({ games, selectGame, selectProp }) {
 
     const getDate = (dateString) => {
         const date = new Date(dateString);
@@ -30,15 +30,21 @@ export default function GameList({ games, selectGame }) {
       return hours >= 12 ? 'PM' : 'AM';
     };
 
-    function BettingLine({ value }) {
+    // Component for each game
+    function GameComponent({ game }) {
+
+      function BettingLine({ value, odds }) {
         return (
-            <TouchableOpacity style={styles.propContainer}>
+            <TouchableOpacity 
+              style={styles.propContainer}
+              onPress={() => selectProp({ game, value, odds })}
+            >
                 <Text>{value}</Text>
             </TouchableOpacity>
         );
-    }
+      }
 
-    function MainBettingLines() {
+      function MainBettingLines() {
         return (
             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 {/* Moneyline */}
@@ -58,11 +64,9 @@ export default function GameList({ games, selectGame }) {
                 </View>
             </View>
         );
-    }
+      }
 
-
-    // Component for each game
-    function GameComponent({ game }) {
+      const { homeTeamAbv, awayTeamAbv, timestamp } = game;
 
         return (
           <TouchableOpacity 
@@ -75,12 +79,12 @@ export default function GameList({ games, selectGame }) {
                     <View style={{ paddingVertical: 8 }}>
                         <View style={styles.gameTeamContainer}>
                             <View style={styles.teamIcon}/>
-                            <Text>{game.awayTeamAbv}</Text>
+                            <Text>{awayTeamAbv}</Text>
                         </View>
                         <View style={styles.divider}/>
                         <View style={styles.gameTeamContainer}>
                             <View style={styles.teamIcon}/>
-                            <Text>{game.homeTeamAbv}</Text>
+                            <Text>{homeTeamAbv}</Text>
                         </View>
                     </View>
                 </View>
@@ -89,11 +93,11 @@ export default function GameList({ games, selectGame }) {
             </View>
             <View style={styles.dateTimeContainer}>
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
-                <Text style={{ fontSize: 18 }}>{getTime(game.timestamp)}</Text>
-                <Text style={{ fontSize: 12 }}>{getAmPm(game.timestamp)}</Text>
+                <Text style={{ fontSize: 18 }}>{getTime(timestamp)}</Text>
+                <Text style={{ fontSize: 12 }}>{getAmPm(timestamp)}</Text>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 14 }}>{getDate(game.timestamp)}</Text>
+                <Text style={{ fontSize: 14 }}>{getDate(timestamp)}</Text>
               </View>
             </View>
           </TouchableOpacity>
