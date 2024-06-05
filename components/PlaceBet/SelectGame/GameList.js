@@ -33,14 +33,26 @@ export default function GameList({ games, selectGame, selectProp }) {
     // Component for each game
     function GameComponent({ game }) {
 
+      const { homeTeamAbv, awayTeamAbv, timestamp } = game;
+
       function BettingLine({ value, odds }) {
         return (
-            <TouchableOpacity 
-              style={styles.propContainer}
-              onPress={() => selectProp({ game, value, odds })}
-            >
-                <Text>{value}</Text>
-            </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.propContainer}
+          onPress={() => selectProp({ game, value, odds })}
+        >
+            {typeof value === 'number' ? (
+          <>
+            <Text>{value}</Text>
+            <Text style={{ fontSize: 8 }}>{odds}</Text>
+          </>
+            ) : (
+          <>
+            <Text>{odds}</Text>
+            <Text style={{ fontSize: 8 }}>{value}</Text>
+          </>
+            )}
+        </TouchableOpacity>
         );
       }
 
@@ -49,24 +61,40 @@ export default function GameList({ games, selectGame, selectProp }) {
             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 {/* Moneyline */}
                 <View>
-                    <BettingLine value="-195"/>
-                    <BettingLine value="+110"/>
+                    <BettingLine 
+                      value={awayTeamAbv} 
+                      odds="-195"
+                    />
+                    <BettingLine 
+                      value={homeTeamAbv} 
+                      odds="+110"
+                    />
                 </View>
                 {/* Spread */}
                 <View>
-                    <BettingLine value="-3.5"/>
-                    <BettingLine value="+3.5"/>
+                    <BettingLine 
+                      value="-3.5" 
+                      odds="-110"  
+                    />
+                    <BettingLine 
+                      value="+3.5"
+                      odds="-110"  
+                    />
                 </View>
                 {/* Total Pts */}
                 <View>
-                    <BettingLine value="O 218.5"/>
-                    <BettingLine value="U 218.5"/>
+                    <BettingLine 
+                      value="O 218.5"
+                      odds="+100"  
+                    />
+                    <BettingLine 
+                      value="U 218.5"
+                      odds="-108"  
+                    />
                 </View>
             </View>
         );
       }
-
-      const { homeTeamAbv, awayTeamAbv, timestamp } = game;
 
         return (
           <TouchableOpacity 
