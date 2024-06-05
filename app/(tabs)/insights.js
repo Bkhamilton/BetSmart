@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import BuildABet from '@/components/Insights/BuildABet';
 import RecommendedBets from '@/components/Insights/RecommendedBets/RecommendedBets';
-import { createTables, dropTables, createSeasonsTable, dropSeasonsTable } from '@/api/sqlite';
-import { insertUser, getAllUsers } from '@/db/user-specific/Users';
-import { insertBalance } from '@/db/user-specific/Balance';
-import { insertBookie } from '@/db/general/Bookies';
-import { insertLeague, getAllLeagues, getLeagueByName } from '@/db/general/Leagues';
 import { useSQLiteContext } from 'expo-sqlite';
-import { insertSeason, getSeasonsByLeague, getCurrentSeason } from '@/db/general/Seasons';
+import { retrieveGamesDB } from '@/api/prop-odds/games';
+import { retrieveMarketsDB } from '@/api/prop-odds/markets';
+import { createLeagueProps } from '@/api/sqlite';
+import { insertLeague, getAllLeagues, getLeagueByName } from '@/db/general/Leagues';
+import { getAllGames, getTodaysGameswithNames, deleteGame } from '@/db/general/Games';
+import { NBAcategories, NHLcategories, MLBcategories } from '@/data/leagueCategoryData';
+import { insertLeagueProp } from '@/db/bet-general/LeagueProps';
 
 export default function InsightScreen() {
   const recentBets = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -26,10 +26,26 @@ export default function InsightScreen() {
     return shuffledData.slice(0, itemsCount); // Return a new array with the random items
   };
 
+  const saveForLater = () => {
+    const date = '2024-05-27'
+    getLeagueByName(db, "NBA").then((league) => {
+      getSeasonByDate(db, league.id, date).then((season) => {
+        getTodaysGameswithNames(db, date, season.id).then((games) => {
+          retrieveMarketsDB(db, games[0].gameId, ['spread']).then((data) => {
+            console.log(data);
+          });
+        });
+      });
+    });
+  }
+
   const generateFunction = () => {
     try {
-      getCurrentSeason(db, 1).then((season) => {
-        console.log('Current season:', season);
+      getLeagueByName(db, "NHL").then((league) => {
+        NHLcategories.forEach((category) => {
+          insertLeagueProp(db, league.id, category.title);
+        });
+        console.log("League props added");
       });
     } catch (error) {
       console.error(error);

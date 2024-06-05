@@ -12,6 +12,13 @@ interface Game {
   awayTeamAbv: string;
 }
 
+interface League {
+  id: number;
+  leagueName: string;
+  sport: string;
+  description: string;
+}
+
 interface BetContextValue {
   betSlip: any[];
   setBetSlip: (betSlip: any[]) => void;
