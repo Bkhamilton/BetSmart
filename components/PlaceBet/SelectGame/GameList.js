@@ -33,15 +33,15 @@ export default function GameList({ games, selectGame, selectProp }) {
     // Component for each game
     function GameComponent({ game }) {
 
-      const { homeTeamAbv, awayTeamAbv, timestamp } = game;
+      const { gameId, homeTeamAbv, awayTeamAbv, timestamp } = game;
 
-      function BettingLine({ value, odds }) {
+      function BettingLine({ type, target, stat, value, odds }) {
         return (
         <TouchableOpacity 
           style={styles.propContainer}
-          onPress={() => selectProp({ game, value, odds })}
+          onPress={() => selectProp({ game, type, target, stat, value, odds })}
         >
-            {typeof value === 'number' ? (
+            {/[0-9]/.test(value) ? (
           <>
             <Text>{value}</Text>
             <Text style={{ fontSize: 8 }}>{odds}</Text>
@@ -61,22 +61,34 @@ export default function GameList({ games, selectGame, selectProp }) {
             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 {/* Moneyline */}
                 <View>
-                    <BettingLine 
+                    <BettingLine
+                      type="Main"
+                      target={awayTeamAbv} 
+                      stat="moneyline"
                       value={awayTeamAbv} 
                       odds="-195"
                     />
-                    <BettingLine 
+                    <BettingLine
+                      type="Main"
+                      target={homeTeamAbv}
+                      stat="moneyline" 
                       value={homeTeamAbv} 
                       odds="+110"
                     />
                 </View>
                 {/* Spread */}
                 <View>
-                    <BettingLine 
+                    <BettingLine
+                      type="Main"
+                      target={awayTeamAbv}
+                      stat="spread"
                       value="-3.5" 
                       odds="-110"  
                     />
                     <BettingLine 
+                      type="Main"
+                      target={homeTeamAbv}
+                      stat="spread"
                       value="+3.5"
                       odds="-110"  
                     />
@@ -84,10 +96,16 @@ export default function GameList({ games, selectGame, selectProp }) {
                 {/* Total Pts */}
                 <View>
                     <BettingLine 
+                      type="Main"
+                      target={gameId}
+                      stat="total_over_under"
                       value="O 218.5"
                       odds="+100"  
                     />
                     <BettingLine 
+                      type="Main"
+                      target={gameId}
+                      stat="total_over_under"
                       value="U 218.5"
                       odds="-108"  
                     />
