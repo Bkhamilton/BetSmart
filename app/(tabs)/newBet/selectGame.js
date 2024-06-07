@@ -4,7 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { retrieveGamesDB } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext';
-import { createLeg, createBet, createBetSlip } from '@/contexts/BetContext/betSlipHelpers';
+import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, Pressable } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
@@ -74,9 +74,24 @@ export default function SelectGameScreen() {
 
     const leg = createLeg(type, target, stat, value, odds);
     const bet = createBet(game.date, curLeague.leagueName, game.homeTeamName, game.awayTeamName, odds, [leg]);
-    const betSlip = createBetSlip(game.gameId, 'Single', game.date, odds, 0, 0, [bet]);
 
-    console.log(JSON.stringify(betSlip, null, 2));
+    const today = new Date();
+
+    if (betSlip) {
+      console.log('Updating bet slip');
+      const newBetSlip = updateBetSlip(betSlip, bet, leg);
+
+      console.log(JSON.stringify(newBetSlip, null, 2));
+    
+      setBetSlip(newBetSlip);
+    } else {
+      console.log('Creating new bet slip');
+      const newBetSlip = createBetSlip(1, 'Single', today, odds, 0, 0, [bet]);
+
+      console.log(JSON.stringify(newBetSlip, null, 2));
+
+      setBetSlip(newBetSlip);
+    }
   }
 
   useFocusEffect(
