@@ -3,7 +3,7 @@ import { StyleSheet, Image } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { retrieveGamesDB } from '@/api/prop-odds/games.js';
-import { BetContext } from '@/contexts/BetContext';
+import { BetContext } from '@/contexts/BetContext/BetContext';
 import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, Pressable } from '@/components/Themed';

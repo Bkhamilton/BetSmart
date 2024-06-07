@@ -1,4 +1,4 @@
-// app/contexts/BetContext.tsx
+// app/contexts/BetContext/BetContext.tsx
 import React, { createContext, useState, ReactNode } from 'react';
 
 interface Game {
@@ -19,9 +19,36 @@ interface League {
   description: string;
 }
 
+interface BetSlip {
+  id: number;
+  type: string;
+  date: string;
+  odds: number;
+  betAmount: number;
+  winnings: number;
+  bets: Bet[];
+}
+
+interface Bet {
+  date: string;
+  sport: string;
+  home: string;
+  away: string;
+  odds: number;
+  legs: Leg[];
+}
+
+interface Leg {
+  type: string;
+  betTarget: string;
+  stat: string;
+  line: string;
+  odds: string;
+}
+
 interface BetContextValue {
-  betSlip: any[];
-  setBetSlip: (betSlip: any[]) => void;
+  betSlip: BetSlip | null;
+  setBetSlip: (betSlip: BetSlip | null) => void;
   currentGame: Game | null;
   setCurrentGame: (game: Game | null) => void;
   league: string | null;
@@ -33,7 +60,7 @@ interface BetContextValue {
 }
 
 export const BetContext = createContext<BetContextValue>({
-  betSlip: [],
+  betSlip: null,
   setBetSlip: () => {},
   currentGame: null,
   setCurrentGame: () => {},
@@ -50,7 +77,7 @@ interface BetContextProviderProps {
 }
 
 export const BetContextProvider = ({ children }: BetContextProviderProps) => {
-  const [betSlip, setBetSlip] = useState<any[]>([]);
+  const [betSlip, setBetSlip] = useState<BetSlip | null>(null);
   const [currentGame, setCurrentGame] = useState<Game | null>(null);
   const [league, setLeague] = useState<string | null>(null);
   const [bookie, setBookie] = useState<string | null>('DraftKings');

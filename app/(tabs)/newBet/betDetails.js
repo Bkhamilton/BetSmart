@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Dimensions, FlatList, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { BetContext } from '@/contexts/BetContext';
+import { BetContext } from '@/contexts/BetContext/BetContext';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, TouchableOpacity, Pressable, ScrollView } from '@/components/Themed';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
-import { BetContext } from '@/contexts/BetContext';
+import { BetContext } from '@/contexts/BetContext/BetContext';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 import useTheme from '@/hooks/useTheme';
