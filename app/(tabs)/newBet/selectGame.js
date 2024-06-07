@@ -4,6 +4,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { retrieveGamesDB } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext';
+import { createLeg, createBet, createBetSlip } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, Pressable } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
@@ -19,7 +20,7 @@ export default function SelectGameScreen() {
 
   const db = useSQLiteContext();
 
-  const { setCurrentGame, setLeague, setBookie, setBookieId } = useContext(BetContext);
+  const { setCurrentGame, setLeague, setBookie, setBookieId, betSlip, setBetSlip } = useContext(BetContext);
 
   const router = useRouter();
 
@@ -68,8 +69,14 @@ export default function SelectGameScreen() {
     }
   }
 
-  const selectProp = (game, value, odds) => {
-    console.log(JSON.stringify(game, null, 2));
+  const selectProp = (props) => {
+    const { game, type, target, stat, value, odds } = props;
+
+    const leg = createLeg(type, target, stat, value, odds);
+    const bet = createBet(game.date, curLeague.leagueName, game.homeTeamName, game.awayTeamName, odds, [leg]);
+    const betSlip = createBetSlip(game.gameId, 'Single', game.date, odds, 0, 0, [bet]);
+
+    console.log(JSON.stringify(betSlip, null, 2));
   }
 
   useFocusEffect(
