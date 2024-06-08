@@ -6,15 +6,16 @@
 
 The `BetMarkets` table stores information about individual betting lines.
 
-| Column    | Data Type | Description                                                            |
-| --------- | --------- | ---------------------------------------------------------------------- |
-| id        | INTEGER   | Primary key, auto-incrementing unique identifier for each betting line |
-| formatId  | INTEGER   | Foreign key referencing the `BetFormats` table (not null)              |
-| date      | TEXT      | Date of the betting line (not null)                                    |
-| odds      | TEXT      | Odds for the betting line (not null)                                   |
-| betAmount | REAL      | Amount of the bet placed (not null)                                    |
-| winnings  | REAL      | Potential winnings for the bet                                         |
-| userId    | INTEGER   | Foreign key referencing the `Users` table (not null)                   |
+| Column      | Data Type | Description                                                            |
+| ----------- | --------- | ---------------------------------------------------------------------- |
+| id          | INTEGER   | Primary key, auto-incrementing unique identifier for each betting line |
+| gameId      | TEXT      | Foreign key referencing the `Games` table (not null)                   |
+| marketType  | TEXT      | Type of the betting market (not null)                                  |
+| value       | REAL      | Value associated with the betting market (not null)                    |
+| odds        | TEXT      | Odds for the betting line                                              |
+| overUnder   | TEXT      | 'over' or 'under' for the line or value                                |
+| betTargetId | INTEGER   | Foreign key referencing the `BetTargets` table (not null)              |
+| bookieId    | INTEGER   | Foreign key referencing the `Bookies` table (not null)                 |
 
 # USER-SPECIFIC
 
@@ -24,10 +25,11 @@ The `Users` table stores user information for authentication and identification 
 
 | Column   | Data Type | Description                                                    |
 | -------- | --------- | -------------------------------------------------------------- |
-| Id       | INTEGER   | Primary key, auto-incrementing unique identifier for each user |
-| Name     | TEXT      | User's full name (not null)                                    |
-| Username | TEXT      | User's unique username (not null)                              |
-| Password | TEXT      | User's password (not null)                                     |
+| id       | INTEGER   | Primary key, auto-incrementing unique identifier for each user |
+| name     | TEXT      | User's full name                                               |
+| email    | TEXT      | User's email address                                           |
+| username | TEXT      | User's unique username (not null)                              |
+| password | TEXT      | User's password (not null)                                     |
 
 ## Balance
 
@@ -56,19 +58,56 @@ The `ParticipantBets` table stores information about individual participant bets
 
 The `Legs` table stores information about individual legs or selections within a participant bet.
 
-| Column           | Data Type | Description                                                                  |
-| ---------------- | --------- | ---------------------------------------------------------------------------- |
-| id               | INTEGER   | Primary key, auto-incrementing unique identifier for each leg                |
-| participantBetId | INTEGER   | Foreign key referencing the `ParticipantBets` table (not null)               |
-| legType          | TEXT      | Type of the leg (e.g., 'Player Points', 'Moneyline') (not null)              |
-| betTargetId      | INTEGER   | Foreign key referencing the `BetTargets` table for the bet target (not null) |
-| stat             | TEXT      | Statistic or metric associated with the leg                                  |
-| line             | REAL      | Line or value for the statistic or metric                                    |
-| overUnder        | TEXT      | 'over' or 'under' for the line or value                                      |
+| Column           | Data Type | Description                                                              |
+| ---------------- | --------- | ------------------------------------------------------------------------ |
+| id               | INTEGER   | Primary key, auto-incrementing unique identifier for each leg            |
+| participantBetId | INTEGER   | Foreign key referencing the `ParticipantBets` table (not null)           |
+| betMarketId      | INTEGER   | Foreign key referencing the `BetMarkets` table for the market (not null) |
 
 ## BetSlips
 
-TO BE ADDED LATER
+The `BetSlips` table stores information about individual bet slips.
+
+| Column    | Data Type | Description                                                        |
+| --------- | --------- | ------------------------------------------------------------------ |
+| id        | INTEGER   | Primary key, auto-incrementing unique identifier for each bet slip |
+| formatId  | INTEGER   | Foreign key referencing the `BetFormats` table (not null)          |
+| date      | TEXT      | Date of the bet slip (not null)                                    |
+| odds      | TEXT      | Odds for the bet slip (not null)                                   |
+| betAmount | REAL      | Amount of the bet (not null)                                       |
+| winnings  | REAL      | Amount of winnings for the bet slip                                |
+| userId    | INTEGER   | Foreign key referencing the `Users` table (not null)               |
+| bookieId  | INTEGER   | Foreign key referencing the `Bookies` table (not null)             |
+
+## Transactions
+
+The `Transactions` table stores information about financial transactions between users and bookies.
+
+| Column          | Data Type | Description                                                           |
+| --------------- | --------- | --------------------------------------------------------------------- |
+| id              | INTEGER   | Primary key, auto-incrementing unique identifier for each transaction |
+| bookieId        | INTEGER   | Foreign key referencing the `Bookies` table (not null)                |
+| userId          | INTEGER   | Foreign key referencing the `Users` table (not null)                  |
+| transactionType | TEXT      | Type of the transaction ('Deposit' or 'Withdraw') (not null)          |
+| initialBalance  | REAL      | Initial balance before the transaction (not null)                     |
+| amount          | REAL      | Amount of the transaction (not null)                                  |
+| finalBalance    | REAL      | Final balance after the transaction (not null)                        |
+| timestamp       | TEXT      | Timestamp of the transaction (not null)                               |
+| description     | TEXT      | Description or additional details about the transaction               |
+
+## Bonuses
+
+The `Bonuses` table stores information about bonuses given to users by bookies.
+
+| Column      | Data Type | Description                                                     |
+| ----------- | --------- | --------------------------------------------------------------- |
+| id          | INTEGER   | Primary key, auto-incrementing unique identifier for each bonus |
+| bookieId    | INTEGER   | Foreign key referencing the `Bookies` table (not null)          |
+| userId      | INTEGER   | Foreign key referencing the `Users` table (not null)            |
+| bonusType   | TEXT      | Type of the bonus (not null)                                    |
+| bonusAmount | REAL      | Amount of the bonus (not null)                                  |
+| timestamp   | TEXT      | Timestamp of when the bonus was given (not null)                |
+| description | TEXT      | Description or additional details about the bonus               |
 
 # BET-GENERAL
 
@@ -103,6 +142,16 @@ The `BetFormats` table stores information about different bet formats or structu
 | formatName  | TEXT      | Name of the bet format (e.g., 'Parlay', 'Single') (not null, unique) |
 | description | TEXT      | Description or additional details about the bet format               |
 
+## LeagueProps
+
+The `LeagueProps` table stores additional properties or attributes associated with each league.
+
+| Column   | Data Type | Description                                                        |
+| -------- | --------- | ------------------------------------------------------------------ |
+| id       | INTEGER   | Primary key, auto-incrementing unique identifier for each property |
+| leagueId | INTEGER   | Foreign key referencing the `Leagues` table (not null)             |
+| propName | TEXT      | Name of the property (not null)                                    |
+
 # GENERAL
 
 ## Teams
@@ -115,9 +164,6 @@ The `Teams` table stores information about sports teams.
 | teamName     | TEXT      | Name of the team (not null)                                    |
 | abbreviation | TEXT      | Abbreviation or short name of the team (not null)              |
 | logoUrl      | TEXT      | URL or path to the team's logo                                 |
-| city         | TEXT      | City where the team is based                                   |
-| state        | TEXT      | State or province where the team is based                      |
-| country      | TEXT      | Country where the team is based                                |
 
 ## Leagues
 
@@ -134,17 +180,37 @@ The `Leagues` table stores information about sports leagues.
 
 The `Seasons` table stores information about seasons for each league.
 
-| Column   | Data Type | Description                                                      |
-| -------- | --------- | ---------------------------------------------------------------- |
-| id       | INTEGER   | Primary key, auto-incrementing unique identifier for each season |
-| leagueId | INTEGER   | Foreign key referencing the `Leagues` table (not null)           |
-| season   | TEXT      | Name or identifier of the season (not null)                      |
+| Column      | Data Type | Description                                                                      |
+| ----------- | --------- | -------------------------------------------------------------------------------- |
+| id          | INTEGER   | Primary key, auto-incrementing unique identifier for each season                 |
+| leagueId    | INTEGER   | Foreign key referencing the `Leagues` table (not null)                           |
+| season      | TEXT      | Name or identifier of the season (not null)                                      |
+| games       | INTEGER   | Number of games in the season (not null)                                         |
+| description | TEXT      | Description or additional details about the season                               |
+| seasonType  | TEXT      | Type of the season (e.g., 'Pre-Season', 'Regular Season', 'Playoffs') (not null) |
+| startDate   | DATE      | Start date of the season (not null)                                              |
+| endDate     | DATE      | End date of the season (not null)                                                |
 
 ## Games
 
-TO BE ADDED LATER
+The `Games` table stores information about individual games.
+
+| Column     | Data Type | Description                                                            |
+| ---------- | --------- | ---------------------------------------------------------------------- |
+| id         | INTEGER   | Primary key, auto-incrementing unique identifier for each game         |
+| gameId     | TEXT      | Unique identifier for the game (not null)                              |
+| seasonId   | INTEGER   | Foreign key referencing the `Seasons` table (not null)                 |
+| date       | TEXT      | Date of the game (not null)                                            |
+| timestamp  | TEXT      | Timestamp of the game (not null)                                       |
+| homeTeamId | INTEGER   | Foreign key referencing the `Teams` table for the home team (not null) |
+| awayTeamId | INTEGER   | Foreign key referencing the `Teams` table for the away team (not null) |
 
 ## Bookies
 
-TO BE ADDED LATER
+The `Bookies` table stores information about bookies.
 
+| Column      | Data Type | Description                                                      |
+| ----------- | --------- | ---------------------------------------------------------------- |
+| id          | INTEGER   | Primary key, auto-incrementing unique identifier for each bookie |
+| name        | TEXT      | Name of the bookie (not null)                                    |
+| description | TEXT      | Description or additional details about the bookie               |
