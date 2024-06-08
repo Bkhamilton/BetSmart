@@ -10,6 +10,8 @@ export default function BetSlipBanner({ betSlip, onPress }) {
 
     const { mainGreen, iconColor } = useTheme();
 
+    const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
+
     return (
         <TouchableOpacity 
             style={styles.container}

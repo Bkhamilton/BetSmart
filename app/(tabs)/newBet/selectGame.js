@@ -15,6 +15,7 @@ import ChooseBookie from '@/components/Modals/ChooseBookie';
 import { getBalance, updateBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getAllLeagues } from '@/db/general/Leagues';
+import BetSlipBanner from '../../../components/PlaceBet/BetSlipBanner';
 
 export default function SelectGameScreen() {
 
@@ -40,6 +41,8 @@ export default function SelectGameScreen() {
   const [bookies, setBookies] = useState([]);
   const [leagues, setLeagues] = useState([]);
   const [userID, setUserID] = useState(1);
+
+  const [totalLegs, setTotalLegs] = useState(0);
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);   
 
@@ -78,19 +81,13 @@ export default function SelectGameScreen() {
     const today = new Date();
 
     if (betSlip) {
-      console.log('Updating bet slip');
       const newBetSlip = updateBetSlip(betSlip, bet, leg);
-
-      console.log(JSON.stringify(newBetSlip, null, 2));
-    
       setBetSlip(newBetSlip);
+      setTotalLegs(newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0));
     } else {
-      console.log('Creating new bet slip');
       const newBetSlip = createBetSlip(1, 'Single', today, odds, 0, 0, [bet]);
-
-      console.log(JSON.stringify(newBetSlip, null, 2));
-
       setBetSlip(newBetSlip);
+      setTotalLegs(1);
     }
   }
 
@@ -99,6 +96,7 @@ export default function SelectGameScreen() {
       getBalance(db, userID).then((balance) => {
         setUserBalance(balance);
       });
+      setTotalLegs(betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
     }, [])
   );
 
@@ -164,6 +162,14 @@ export default function SelectGameScreen() {
               selectGame={game => handleSelectGame({ game })}
               selectProp={selectProp}
             />
+            { 
+              betSlip &&
+              <BetSlipBanner
+                totalLegs={totalLegs}
+                betSlip={betSlip}
+                onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
+              />
+            }
           </> 
         }
         { !leagueSelected && leagues.length > 1 &&

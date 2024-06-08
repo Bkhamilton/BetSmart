@@ -15,10 +15,11 @@ import { getAllBookies } from '@/db/general/Bookies';
 import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
 import { getLeagueByName } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
+import BetSlipBanner from '../../../components/PlaceBet/BetSlipBanner';
 
 export default function BetDetailsScreen() {
    
-  const { league, currentGame, setBookie, setBookieId } = useContext(BetContext);
+  const { league, currentGame, setBookie, setBookieId, betSlip } = useContext(BetContext);
 
   const router = useRouter();
 
@@ -116,6 +117,13 @@ export default function BetDetailsScreen() {
           </>
         }
       </ScrollView>
+      {
+        betSlip &&
+        <BetSlipBanner
+          betSlip={betSlip}
+          onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
+        />
+      }
     </View>
   );
 }
