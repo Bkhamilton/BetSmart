@@ -8,7 +8,7 @@ import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/B
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, Pressable } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
-import GameList from '@/components/PlaceBet/SelectGame/GameList';
+import GameList from '@/components/PlaceBet/SelectGame/GameList/GameList';
 import SportSlider from '@/components/PlaceBet/SelectGame/SportSlider';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
