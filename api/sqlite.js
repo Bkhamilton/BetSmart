@@ -196,3 +196,15 @@ export const dropTables = async (db) => {
   `);
   console.log('Tables dropped');
 };
+
+export const createFetchHistory = async (db) => {
+  await db.execAsync(`
+    CREATE TABLE FetchHistory (
+      league TEXT,
+      lastFetched TEXT NOT NULL,
+      PRIMARY KEY (league, lastFetched),
+      FOREIGN KEY(league) REFERENCES Leagues(leagueName)
+    );
+  `);
+  console.log('FetchHistory table created');
+}

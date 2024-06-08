@@ -5,13 +5,15 @@ import { getTeamIds } from "@/db/general/Teams";
 import { getCurrentSeason, getSeasonByDate } from "@/db/general/Seasons";
 import { getLeagueByName } from "@/db/general/Leagues";
 import { getTodaysGameswithNames } from "../../db/general/Games";
+import { insertFetchHistory, getLastFetchedByLeague } from "../../db/api/FetchHistory";
 
-export const getGames = async (sport) => {
+export const getGames = async (db, sport) => {
     try {
       const today = new Date();
       const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
       const response = await fetch(`https://api.prop-odds.com/beta/games/${sport}?date=${date}&tz=America/New_York&api_key=${secrets.PROP_ODDS_API_KEY}`);
       const data = await response.json();
+      insertFetchHistory(db, sport, date);
       return data;
     } catch (error) {
       console.error(error);
@@ -46,7 +48,7 @@ export const addGameToDB = async (db, game, sport) => {
 // Function to fetch data from API and store it in SQLite DB
 export const fetchGamesDB = async (db, sport) => {
   try {
-    const data = await getGames(sport);
+    const data = await getGames(db, sport);
     for (let game of data.games) {
       await addGameToDB(db, game, sport);
     }
@@ -80,20 +82,39 @@ export const retrieveGamesDB = async (db, sports) => {
           }
         );
       } else {
-        // If the date is from a previous day, fetch the data again
-        await fetchGamesDB(db, sport);
-        const fetchedData = await getTodaysGameswithNames(db, date, curSeason.id);
-        data.push(
-          { sport, 
-            data: {
-              league: league.leagueName,
-              season: curSeason.description,
-              seasonType: curSeason.seasonType,
-              date: date,
-              games: fetchedData
-            } 
-          }
-        );
+        // Check when we last fetched games for this league
+        const lastFetched = await getLastFetchedByLeague(db, league.leagueName);
+
+        // If lastFetched is anything other than today's date, fetch the data again
+        if (lastFetched.lastFetched !== date) {
+
+          await fetchGamesDB(db, sport);
+          const fetchedData = await getTodaysGameswithNames(db, date, curSeason.id);
+          data.push(
+            { sport, 
+              data: {
+                league: league.leagueName,
+                season: curSeason.description,
+                seasonType: curSeason.seasonType,
+                date: date,
+                games: fetchedData
+              } 
+            }
+          );
+        } else {
+          // We have no data for today and we fetched it today
+          data.push(
+            { sport, 
+              data: {
+                league: league.leagueName,
+                season: curSeason.description,
+                seasonType: curSeason.seasonType,
+                date: date,
+                games: []
+              } 
+            }
+          );
+        }
       }
     }
     return data;
