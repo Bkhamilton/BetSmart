@@ -30,11 +30,9 @@ export const updateTeamLogo = async (db, teamId, logoUrl) => {
 export const fetchAndUpdateLogos = async (db) => {
     const teams = await getAllTeams(db);
     for (const team of teams) {
-        if (team.logoUrl === null) {
-            const teamInfo = await getTeamInfo(team.teamName);
-            const logoUrl = teamInfo.teams[0].strTeamLogo;
-            await updateTeamLogo(db, team.id, logoUrl);
-        }
+        const teamInfo = await getTeamInfo(team.teamName);
+        const logoUrl = teamInfo.teams[0].strTeamBadge;
+        await updateTeamLogo(db, team.id, logoUrl);
     }
     console.log('Logos updated');
 };
