@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { retrieveGamesDB } from '@/api/prop-odds/games.js';
+import { retrieveGames } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -102,7 +102,7 @@ export default function SelectGameScreen() {
 
   useEffect(() => {
     const fetchSportsData = async () => {
-      retrieveGamesDB(db, ["NBA", "MLB", "NHL"]).then((data) => {
+      retrieveGames(db, ["NBA", "MLB", "NHL"]).then((data) => {
         setAllSportsData(data);
       });
     };
@@ -178,6 +178,14 @@ export default function SelectGameScreen() {
               leagues={leagues} 
               selectLeague={selectLeague}
             />
+            {
+              betSlip &&
+              <BetSlipBanner
+                totalLegs={totalLegs}
+                betSlip={betSlip}
+                onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
+              />
+            }
           </View>
         }
       </View>
@@ -191,11 +199,8 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
     marginTop: 100,
   },
   headerContainer: {
