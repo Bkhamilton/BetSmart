@@ -1,15 +1,18 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
+import useTheme from '@/hooks/useTheme';
 
 export default function MainBettingLines({ game, selectProp }) {
 
     const { gameId, homeTeamAbv, awayTeamAbv } = game;
 
+    const { grayBorder } = useTheme();
+
     function BettingLine({ type, target, stat, value, odds }) {
         return (
             <TouchableOpacity 
-                style={styles.propContainer}
+                style={[styles.propContainer, { borderColor: grayBorder }]}
                 onPress={() => selectProp({ game, type, target, stat, value, odds })}
             >
                 {/[0-9]/.test(value) ? (
