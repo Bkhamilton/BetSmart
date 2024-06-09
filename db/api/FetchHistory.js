@@ -37,7 +37,7 @@ export const getFetchHistoryByLastFetched = async (db, league, lastFetched) => {
 export const getLastFetchedByLeague = async (db, league) => {
     try {
         const fetchHistory = await db.getAllAsync('SELECT lastFetched FROM FetchHistory WHERE league = ? ORDER BY lastFetched DESC LIMIT 1', [league]);
-        return fetchHistory[0];
+        return fetchHistory.length > 0 ? fetchHistory[0] : null;
     } catch (error) {
         console.error('Error getting fetch history by last fetched:', error);
         throw error;
