@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Dimensions, FlatList, Image } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Text, View, TouchableOpacity, Pressable, ScrollView } from '@/components/Themed';
+import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
@@ -15,7 +15,7 @@ import { getAllBookies } from '@/db/general/Bookies';
 import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
 import { getLeagueByName } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
-import BetSlipBanner from '../../../components/PlaceBet/BetSlipBanner';
+import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 
 export default function BetDetailsScreen() {
    

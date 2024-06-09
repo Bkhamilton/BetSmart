@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useContext } from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { retrieveGamesDB } from '@/api/prop-odds/games.js';
@@ -11,11 +11,11 @@ import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
 import GameList from '@/components/PlaceBet/SelectGame/GameList/GameList';
 import SportSlider from '@/components/PlaceBet/SelectGame/SportSlider';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
+import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
-import { getBalance, updateBalance } from '@/db/user-specific/Balance';
+import { getBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getAllLeagues } from '@/db/general/Leagues';
-import BetSlipBanner from '../../../components/PlaceBet/BetSlipBanner';
 
 export default function SelectGameScreen() {
 
