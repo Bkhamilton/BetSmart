@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed'
-import GameComponent from './GameComponent';
+import { View } from '@/components/Themed'
+import GameComponent from '@/components/PlaceBet/SelectGame/GameList/GameComponent/GameComponent';
 
 export default function GameList({ games, selectGame, selectProp }) {
     return (
@@ -18,6 +18,7 @@ export default function GameList({ games, selectGame, selectProp }) {
                         selectProp={selectProp}
                     />
                 )}
+                ItemSeparatorComponent={() => <View style={{ height: 4, backgroundColor: 'transparent' }} />}
             />
         </View>
   );
