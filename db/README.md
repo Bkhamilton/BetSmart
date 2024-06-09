@@ -17,6 +17,15 @@ The `BetMarkets` table stores information about individual betting lines.
 | betTargetId | INTEGER   | Foreign key referencing the `BetTargets` table (not null)              |
 | bookieId    | INTEGER   | Foreign key referencing the `Bookies` table (not null)                 |
 
+## FetchHistory
+
+The `FetchHistory` table stores information about the last time data was fetched for each league.
+
+| Column      | Data Type | Description                                                           |
+| ----------- | --------- | --------------------------------------------------------------------- |
+| league      | TEXT      | Name of the league (primary key, not null)                            |
+| lastFetched | TEXT      | Timestamp of the last time data was fetched for the league (not null) |
+
 # USER-SPECIFIC
 
 ## Users
