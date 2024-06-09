@@ -57,10 +57,21 @@ export const getTeamByName = async (db, teamName) => {
   }
 };
 
-// Function to insert a team
-export const insertTeam = async (db, teamName, abbreviation, leagueId) => {
+// Function to get a logo URL by team name
+export const getLogoUrl = async (db, teamName) => {
   try {
-    const result = await db.runAsync('INSERT INTO Teams (teamName, abbreviation, leagueId) VALUES (?, ?, ?)', [teamName, abbreviation, leagueId]);
+    const team = await db.getAllAsync('SELECT logoUrl FROM Teams WHERE teamName = ?', [teamName]);
+    return team[0];
+  } catch (error) {
+    console.error('Error getting logo URL:', error);
+    throw error;
+  }
+};
+
+// Function to insert a team
+export const insertTeam = async (db, teamName, abbreviation, leagueId, logoUrl) => {
+  try {
+    const result = await db.runAsync('INSERT INTO Teams (teamName, abbreviation, leagueId, logoUrl) VALUES (?, ?, ?, ?)', [teamName, abbreviation, leagueId, logoUrl]);
     return result.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting team:', error);
