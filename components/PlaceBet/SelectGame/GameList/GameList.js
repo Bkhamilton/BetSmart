@@ -18,7 +18,7 @@ export default function GameList({ games, selectGame, selectProp }) {
                         selectProp={selectProp}
                     />
                 )}
-                ItemSeparatorComponent={() => <View style={{ height: 4, backgroundColor: 'transparent' }} />}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
             />
         </View>
   );
@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
+    backgroundColor: 'transparent',
+  },
+  separator: {
+    height: 4,
     backgroundColor: 'transparent',
   }
 });
