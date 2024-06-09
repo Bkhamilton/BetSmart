@@ -118,7 +118,7 @@ export default function SelectGameScreen() {
     fetchSportsData();
   }, []);
 
-  const curLeagueData = allSportsData.find(sportData => sportData.sport === curLeague?.leagueName);
+  const curLeagueData = allSportsData?.find(sportData => sportData.sport === curLeague?.leagueName);
   const curLeagueGames = curLeagueData ? curLeagueData.data : [];
 
   const SelectGameHeader = () => {

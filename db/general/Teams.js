@@ -38,7 +38,18 @@ export const getTeamIds = async (db, teamNames) => {
 // Function to get a team
 export const getTeam = async (db, teamId) => {
   try {
-    const team = await db.getAsync('SELECT * FROM Teams WHERE id = ?', [teamId]);
+    const team = await db.getAllAsync('SELECT * FROM Teams WHERE id = ?', [teamId]);
+    return team;
+  } catch (error) {
+    console.error('Error getting team:', error);
+    throw error;
+  }
+};
+
+// Function to get a team by team name
+export const getTeamByName = async (db, teamName) => {
+  try {
+    const team = await db.getAllAsync('SELECT * FROM Teams WHERE teamName = ?', [teamName]);
     return team;
   } catch (error) {
     console.error('Error getting team:', error);
@@ -63,6 +74,16 @@ export const updateTeam = async (db, teamId, teamName, abbreviation, leagueId) =
     await db.runAsync('UPDATE Teams SET teamName = ?, abbreviation = ?, leagueId = ? WHERE id = ?', [teamName, abbreviation, leagueId, teamId]);
   } catch (error) {
     console.error('Error updating team:', error);
+    throw error;
+  }
+};
+
+// Function to update a team name
+export const updateTeamName = async (db, teamId, teamName) => {
+  try {
+    await db.runAsync('UPDATE Teams SET teamName = ? WHERE id = ?', [teamName, teamId]);
+  } catch (error) {
+    console.error('Error updating team name:', error);
     throw error;
   }
 };

@@ -202,3 +202,10 @@ export const dropTables = async (db) => {
   `);
   console.log('Tables dropped');
 };
+
+export const addLogoColumn = async (db) => {
+  await db.execAsync(`
+    ALTER TABLE Teams ADD COLUMN logoUrl TEXT;
+  `);
+  console.log('logoUrl column added to Teams table');
+};
