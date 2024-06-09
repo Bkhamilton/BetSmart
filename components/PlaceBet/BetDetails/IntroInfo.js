@@ -5,6 +5,8 @@ import Colors from '@/constants/Colors';
 
 export default function IntroInfo({ currentGame }) {
 
+    const { gameId, homeTeamName, awayTeamName, timestamp } = currentGame;
+
     const getDate = (dateString) => {
         const date = new Date(dateString);
         const estDate = new Date(date.getTime());
@@ -26,7 +28,7 @@ export default function IntroInfo({ currentGame }) {
       
     const getAmPm = (dateString) => {
         const date = new Date(dateString);
-        const estDate = new Date(date.getTime() - (3600000 * 4)); // Subtract 4 hours from UTC to get EST
+        const estDate = new Date(date.getTime()); // Subtract 4 hours from UTC to get EST
         const hours = estDate.getHours();
         return hours >= 12 ? 'PM' : 'AM';
     };
@@ -34,13 +36,13 @@ export default function IntroInfo({ currentGame }) {
     return (
         <View>
           <View style={styles.dateTimeContainer}>
-            <Text>{getDate(currentGame.timestamp)}</Text>
-            <Text>{getTime(currentGame.timestamp)} {getAmPm(currentGame.timestamp)}</Text>
+            <Text>{getDate(timestamp)}</Text>
+            <Text>{getTime(timestamp)} {getAmPm(timestamp)}</Text>
           </View>
           <View style={styles.matchupContainer}>
-            <Text style={styles.matchupTitle}>{currentGame.awayTeamName}</Text>
+            <Text style={styles.matchupTitle}>{awayTeamName}</Text>
             <Text>vs</Text>
-            <Text style={styles.matchupTitle}>{currentGame.homeTeamName}</Text>
+            <Text style={styles.matchupTitle}>{homeTeamName}</Text>
           </View>
         </View>
     )
