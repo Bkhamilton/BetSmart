@@ -1,19 +1,19 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { Text, View } from '@/components/Themed';
 
-export default function HeadToHead({ homeTeam, awayTeam }) {
+export default function HeadToHead({ homeLogo, homeTeam, awayLogo, awayTeam }) {
 
     return (
         <View style={{ flex: 1, backgroundColor: 'transparent' }}>
             <View style={{ paddingVertical: 8, backgroundColor: 'transparent' }}>
                 <View style={styles.gameTeamContainer}>
-                    <View style={styles.teamIcon}/>
+                    <Image style={styles.teamIcon} source={{uri: awayLogo}}/>
                     <Text>{awayTeam}</Text>
                 </View>
                 <View style={styles.divider}/>
                 <View style={styles.gameTeamContainer}>
-                    <View style={styles.teamIcon}/>
+                    <Image style={styles.teamIcon} source={{uri: homeLogo}}/>
                     <Text>{homeTeam}</Text>
                 </View>
             </View>
@@ -34,9 +34,7 @@ const styles = StyleSheet.create({
     },
     teamIcon: {
         width: 32, 
-        height: 32, 
-        borderRadius: 16, 
-        borderWidth: 1,
+        height: 32,  
         marginRight: 8,
     },
     divider: {
