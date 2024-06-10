@@ -148,45 +148,48 @@ export default function SelectGameScreen() {
         selectBookie={selectBookie}
       />
       <View style={styles.mainContainer}>
-        { leagueSelected && leagues.length > 1 &&
-          <>
-            <View style={{ paddingVertical: 10  }}>
-              <SportSlider 
-                leagues={leagues} 
-                curLeague={curLeague}
-                selectLeague={selectLeague}
-              />
-            </View> 
-            <GameList 
-              games={curLeagueGames.games} 
-              selectGame={game => handleSelectGame({ game })}
-              selectProp={selectProp}
-            />
-            { 
-              betSlip &&
-              <BetSlipBanner
-                totalLegs={totalLegs}
-                betSlip={betSlip}
-                onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
-              />
-            }
-          </> 
-        }
-        { !leagueSelected && leagues.length > 1 &&
-          <View style={styles.buttonsContainer}>
-            <MainButtons 
-              leagues={leagues} 
-              selectLeague={selectLeague}
-            />
-            {
-              betSlip &&
-              <BetSlipBanner
-                totalLegs={totalLegs}
-                betSlip={betSlip}
-                onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
-              />
-            }
-          </View>
+        {
+          leagues.length > 1 && (
+            leagueSelected ? (
+              <>
+                <View style={{ paddingVertical: 10 }}>
+                  <SportSlider
+                    leagues={leagues}
+                    curLeague={curLeague}
+                    selectLeague={selectLeague}
+                  />
+                </View>
+                <GameList
+                  games={curLeagueGames.games}
+                  selectGame={game => handleSelectGame({ game })}
+                  selectProp={selectProp}
+                />
+                {
+                  betSlip &&
+                  <BetSlipBanner
+                    totalLegs={totalLegs}
+                    betSlip={betSlip}
+                    onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
+                  />
+                }
+              </>
+            ) : (
+              <View style={styles.buttonsContainer}>
+                <MainButtons
+                  leagues={leagues}
+                  selectLeague={selectLeague}
+                />
+                {
+                  betSlip &&
+                  <BetSlipBanner
+                    totalLegs={totalLegs}
+                    betSlip={betSlip}
+                    onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
+                  />
+                }
+              </View>
+            )
+          )
         }
       </View>
     </View>
