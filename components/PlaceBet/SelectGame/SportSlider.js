@@ -25,7 +25,7 @@ export default function SportSlider({ leagues, curLeague, selectLeague }) {
         'UFC': ufc,
     }
 
-    const { mainBlue, text, borderColor, iconColor, backgroundColor } = useTheme();
+    const { text, backgroundColor, grayBackground, grayBorder } = useTheme();
 
     return (
         <View style={{ height: 78, backgroundColor: 'transparent' }}>
@@ -39,7 +39,7 @@ export default function SportSlider({ leagues, curLeague, selectLeague }) {
                         style={[
                             styles.sportContainer,
                             item.leagueName === curLeague?.leagueName && styles.selectedSport,
-                            item.leagueName === curLeague.leagueName ? { backgroundColor: text } : {}
+                            item.leagueName === curLeague.leagueName ? { backgroundColor: text } : { backgroundColor: grayBackground, borderColor: grayBorder },
                         ]}
                         onPress={() => selectLeague(item)}
                     >
