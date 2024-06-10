@@ -6,25 +6,25 @@ import useTheme from '@/hooks/useTheme';
 
 export default function MainButtons({ leagues, selectLeague }) {
 
-    const { iconColor } = useTheme();
+    const { iconColor, grayBackground, grayBorder } = useTheme();
 
     return (
             <View style={styles.buttonsContainer}>
                 <View style={styles.buttonsRow}>
                     <TouchableOpacity
-                        style={[styles.mainButtonContainer]}
+                        style={[styles.mainButtonContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}
                         onPress={() => selectLeague(leagues[0])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[0].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[styles.mainButtonContainer, { marginTop: 0}]}
+                        style={[styles.mainButtonContainer, { marginTop: 0, backgroundColor: grayBackground, borderColor: grayBorder }]}
                         onPress={() => selectLeague(leagues[1])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[1].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[styles.mainButtonContainer]}
+                        style={[styles.mainButtonContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}
                         onPress={() => selectLeague(leagues[2])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[2].leagueName}</Text>
@@ -32,18 +32,18 @@ export default function MainButtons({ leagues, selectLeague }) {
                 </View>
                 <View style={styles.buttonsRow}>
                     <TouchableOpacity
-                        style={[styles.mainButtonContainer, { marginLeft: 4, marginRight: 28}]}
+                        style={[styles.mainButtonContainer, { marginLeft: 4, marginRight: 28, backgroundColor: grayBackground, borderColor: grayBorder}]}
                         onPress={() => selectLeague(leagues[3])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[3].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={styles.mainButtonContainer}
+                        style={[styles.mainButtonContainer, { backgroundColor: grayBorder, borderColor: grayBorder }]}
                     >
                         <FontAwesome name="plus" size={24} color={iconColor} />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[styles.mainButtonContainer, { marginLeft: 28, marginRight: 4}]}
+                        style={[styles.mainButtonContainer, { marginLeft: 28, marginRight: 4, backgroundColor: grayBackground, borderColor: grayBorder}]}
                         onPress={() => selectLeague(leagues[4])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[4].leagueName}</Text>
@@ -51,19 +51,19 @@ export default function MainButtons({ leagues, selectLeague }) {
                 </View>
                 <View style={styles.buttonsRow}>
                     <TouchableOpacity
-                        style={[styles.mainButtonContainer]}
+                        style={[styles.mainButtonContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}
                         onPress={() => selectLeague(leagues[5])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[5].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[styles.mainButtonContainer, { marginTop: 32}]}
+                        style={[styles.mainButtonContainer, { marginTop: 32, backgroundColor: grayBackground, borderColor: grayBorder }]}
                         onPress={() => selectLeague(leagues[6])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[6].leagueName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[styles.mainButtonContainer]}
+                        style={[styles.mainButtonContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}
                         onPress={() => selectLeague(leagues[7])}
                     >
                         <Text style={styles.mainButtonText}>{leagues[7].leagueName}</Text>
