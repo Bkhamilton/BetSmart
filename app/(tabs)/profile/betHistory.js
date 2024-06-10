@@ -3,14 +3,14 @@ import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
+import useTheme from '@/hooks/useTheme';
 
 import Colors from '@/constants/Colors';
 import ChooseBetType from '@/components/Profile/BetHistory/ChooseBetType';
 
 export default function SettingsScreen() {
-    const colorScheme = useColorScheme();
-
-    const iconColor = colorScheme === 'dark' ? Colors.dark.text : Colors.light.text;
+    
+    const { iconColor } = useTheme();
 
     const router = useRouter();
 

@@ -1,10 +1,14 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View } from '../Themed';
+import useTheme from '@/hooks/useTheme';
 
 export default function Header({ title, children }) {
+
+  const { grayBorder } = useTheme();
+
   return (
-    <View style={styles.HeaderContainer}>
+    <View style={[styles.HeaderContainer, { borderColor: grayBorder }]}>
         <View>
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{title}</Text>
         </View>

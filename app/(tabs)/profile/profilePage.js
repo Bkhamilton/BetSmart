@@ -30,7 +30,7 @@ export default function ProfileScreen() {
     router.navigate('profile/betHistory');
   };
 
-  const { iconColor, backgroundColor } = useTheme();
+  const { iconColor, backgroundColor, grayBorder } = useTheme();
   
   useEffect(() => {
     const fetchUser = async () => {
@@ -75,7 +75,7 @@ export default function ProfileScreen() {
 
   const ProfilePageHeader = ({ user }) => {
     return (
-      <View style={styles.headerContainer}>
+      <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
         <View>
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{user.username}</Text>
         </View>

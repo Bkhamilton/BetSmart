@@ -56,7 +56,7 @@ export default function BetDetailsScreen() {
     setCurLeagueProp(prop);
   };
 
-  const { mainGreen, iconColor } = useTheme();
+  const { mainGreen, iconColor, grayBorder } = useTheme();
 
   useEffect(() => {
     getBalance(db, userID).then((balance) => {
@@ -75,7 +75,7 @@ export default function BetDetailsScreen() {
   
   const GameHeader = () => {
     return (
-      <View style={styles.headerContainer}>
+      <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
         <View style={{ flex: 0.3 }}>
           <TouchableOpacity onPress={handleClose}>
             <FontAwesome5 name="chevron-left" size={24} color={iconColor} />

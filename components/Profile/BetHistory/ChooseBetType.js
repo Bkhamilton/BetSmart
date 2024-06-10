@@ -1,13 +1,15 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '../../Themed';
-
-import Colors from '@/constants/Colors';
+import useTheme from '@/hooks/useTheme';
 
 export default function ChooseBetType({ selectType, type }) {
+
+  const { grayBorder } = useTheme();
+
   return (
     <View>
-      <View style={styles.container}>
+      <View style={[styles.container, { borderColor: grayBorder }]}>
           <TouchableOpacity 
             style={[
               styles.typeContainer, 
@@ -17,7 +19,7 @@ export default function ChooseBetType({ selectType, type }) {
           >
               <Text style={[styles.typeText, type === 'Today' && styles.activeType]}>Today</Text>
           </TouchableOpacity>
-          <View style={styles.border} />
+          <View style={[styles.border, { borderColor: grayBorder }]} />
           <TouchableOpacity
               style={[
                 styles.typeContainer,
@@ -27,7 +29,7 @@ export default function ChooseBetType({ selectType, type }) {
             >
                 <Text style={[styles.typeText, type === 'Settled' && styles.activeType]}>Settled</Text>
             </TouchableOpacity>
-          <View style={styles.border} />
+          <View style={[styles.border, { borderColor: grayBorder }]} />
           <TouchableOpacity 
             style={[
               styles.typeContainer,
