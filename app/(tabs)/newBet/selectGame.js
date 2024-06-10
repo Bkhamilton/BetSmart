@@ -2,11 +2,12 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { retrieveGames } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Text, View, Pressable } from '@/components/Themed';
+import { Text, View, TouchableOpacity } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
 import GameList from '@/components/PlaceBet/SelectGame/GameList/GameList';
 import SportSlider from '@/components/PlaceBet/SelectGame/SportSlider';
@@ -17,6 +18,7 @@ import { getBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getAllLeagues } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
+import DatePicker from '../../../components/PlaceBet/SelectGame/DatePicker';
 
 export default function SelectGameScreen() {
 
@@ -31,6 +33,8 @@ export default function SelectGameScreen() {
     setLeague(curLeague.leagueName);
     router.navigate('newBet/betDetails', { game });
   };
+
+  const [date, setDate] = useState('2000-03-10');
 
   const [header, setHeader] = useState('Place Bet');
 
@@ -92,6 +96,23 @@ export default function SelectGameScreen() {
     }
   }
 
+  const updateDate = (direction) => {
+    const currentDate = new Date(date); // Get the current date
+
+    // Check the direction parameter
+    if (direction === 'prev') {
+      currentDate.setDate(currentDate.getDate()); // Set the date to the previous day
+    } else if (direction === 'next') {
+      currentDate.setDate(currentDate.getDate() + 2); // Set the date to the next day
+    } else {
+      console.log('Invalid direction parameter. Please use "prev" or "next".');
+      return; // Exit the function if the direction parameter is invalid
+    }
+
+    // Update the date state with the new date
+    setDate(`${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`);
+  }
+
   useFocusEffect(
     useCallback(() => {
       getBalance(db, userID).then((balance) => {
@@ -116,13 +137,16 @@ export default function SelectGameScreen() {
       setLeagues(leagues);
     });
 
+    const today = new Date();
+    setDate(`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`);
+
     fetchSportsData();
   }, []);
 
   const curLeagueData = allSportsData?.find(sportData => sportData.sport === curLeague?.leagueName);
   const curLeagueGames = curLeagueData ? curLeagueData.data : [];
 
-  const { grayBorder } = useTheme();
+  const { grayBorder, iconColor } = useTheme();
 
   const SelectGameHeader = () => {
     return (
@@ -140,6 +164,9 @@ export default function SelectGameScreen() {
     );
   }
 
+  const today = new Date();
+  const todaysDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
   return (
     <View style={styles.container}>
       <SelectGameHeader />
@@ -155,11 +182,15 @@ export default function SelectGameScreen() {
           leagues.length > 1 && (
             leagueSelected ? (
               <>
-                <View style={{ paddingVertical: 10 }}>
+                <View style={{ paddingTop: 10, paddingBottom: 6 }}>
                   <SportSlider
                     leagues={leagues}
                     curLeague={curLeague}
                     selectLeague={selectLeague}
+                  />
+                  <DatePicker
+                    date={date}
+                    updateDate={updateDate}
                   />
                 </View>
                 <GameList
