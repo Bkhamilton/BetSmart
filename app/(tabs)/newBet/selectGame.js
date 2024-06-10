@@ -16,6 +16,7 @@ import ChooseBookie from '@/components/Modals/ChooseBookie';
 import { getBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getAllLeagues } from '@/db/general/Leagues';
+import useTheme from '@/hooks/useTheme';
 
 export default function SelectGameScreen() {
 
@@ -121,9 +122,11 @@ export default function SelectGameScreen() {
   const curLeagueData = allSportsData?.find(sportData => sportData.sport === curLeague?.leagueName);
   const curLeagueGames = curLeagueData ? curLeagueData.data : [];
 
+  const { grayBorder } = useTheme();
+
   const SelectGameHeader = () => {
     return (
-      <View style={styles.headerContainer}>
+      <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
         <View style={{ flex: 0.3 }}>
           
         </View>
@@ -204,7 +207,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 100,
+    marginTop: 120,
   },
   headerContainer: {
     height: 84, 
