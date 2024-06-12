@@ -13,6 +13,7 @@ export default function DatePicker({ date, updateDate }) {
             <View>
                 <TouchableOpacity 
                     onPress={() => updateDate('prev')}
+                    style={{ padding: 4 }}
                 >
                     <FontAwesome5 name="chevron-left" size={16} color={iconColor} />
                 </TouchableOpacity> 
@@ -23,6 +24,7 @@ export default function DatePicker({ date, updateDate }) {
             <View>
                 <TouchableOpacity
                     onPress={() => updateDate('next')}
+                    style={{ padding: 4 }}
                 >
                     <FontAwesome5 name="chevron-right" size={16} color={iconColor} />
                 </TouchableOpacity> 
