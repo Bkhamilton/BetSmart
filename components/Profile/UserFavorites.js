@@ -1,14 +1,15 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, ScrollView } from '@/components/Themed';
-
-import Colors from '@/constants/Colors';
+import useTheme from '@/hooks/useTheme';
 
 export default function UserFavorites({ league, team, player, sportsbook, bet }) {
 
+    const { grayBackground, grayBorder } = useTheme();
+
     const FavoriteComponent = ({ type }) => {
         return (
-            <View style={styles.favoriteContainer}>
+            <View style={[styles.favoriteContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
                 <View style={{ alignItems: 'center', backgroundColor: 'transparent', paddingTop: 4 }}>
                     <Text style={styles.favoriteText}>Top {type}</Text>
                 </View>
