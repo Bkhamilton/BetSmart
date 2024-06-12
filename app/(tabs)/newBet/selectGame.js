@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { retrieveGames } from '@/api/prop-odds/games.js';
+import { retrieveGamesDate } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -18,7 +18,7 @@ import { getBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getAllLeagues } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
-import DatePicker from '../../../components/PlaceBet/SelectGame/DatePicker';
+import DatePicker from '@/components/PlaceBet/SelectGame/DatePicker';
 
 export default function SelectGameScreen() {
 
@@ -34,7 +34,9 @@ export default function SelectGameScreen() {
     router.navigate('newBet/betDetails', { game });
   };
 
-  const [date, setDate] = useState('2000-03-10');
+  const today = new Date();
+  const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const [date, setDate] = useState(formattedToday);
 
   const [header, setHeader] = useState('Place Bet');
 
@@ -124,23 +126,23 @@ export default function SelectGameScreen() {
 
   useEffect(() => {
     const fetchSportsData = async () => {
-      retrieveGames(db, ["NBA", "MLB", "NHL"]).then((data) => {
+      retrieveGamesDate(db, ["NBA", "MLB", "NHL"], date).then((data) => {
         setAllSportsData(data);
+        console.log(JSON.stringify(data, null, 2));
       });
     };
-
+  
+    fetchSportsData();
+  }, [date]);
+  
+  useEffect(() => {
     getAllBookies(db).then((bookies) => {
       setBookies(bookies);
     });
-
+  
     getAllLeagues(db).then((leagues) => {
       setLeagues(leagues);
     });
-
-    const today = new Date();
-    setDate(`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`);
-
-    fetchSportsData();
   }, []);
 
   const curLeagueData = allSportsData?.find(sportData => sportData.sport === curLeague?.leagueName);
@@ -164,7 +166,6 @@ export default function SelectGameScreen() {
     );
   }
 
-  const today = new Date();
   const todaysDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   return (
