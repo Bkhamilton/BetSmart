@@ -44,6 +44,17 @@ export const getLastFetchedByLeague = async (db, league) => {
     }
 }
 
+// Function that takes a league name and lastFetched date and returns Boolean if the league has been fetched on that date
+export const leagueFetchedOnDate = async (db, league, lastFetched) => {
+    try {
+        const fetchHistory = await db.getAllAsync('SELECT * FROM FetchHistory WHERE league = ? AND lastFetched = ?', [league, lastFetched]);
+        return fetchHistory.length > 0;
+    } catch (error) {
+        console.error('Error getting fetch history by last fetched:', error);
+        throw error;
+    }
+}
+
 // Function to insert fetch history
 export const insertFetchHistory = async (db, league, lastFetched) => {
     try {
@@ -51,6 +62,7 @@ export const insertFetchHistory = async (db, league, lastFetched) => {
         return result.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting fetch history:', error);
+        console.log('league:', league, 'lastFetched:', lastFetched);
         throw error;
     }
 };
