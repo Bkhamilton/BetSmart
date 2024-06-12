@@ -8,6 +8,9 @@ export default function DatePicker({ date, updateDate }) {
 
     const { iconColor } = useTheme();
 
+    const today = new Date();
+    const todaysDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 8, paddingTop: 2 }}>
             <View>
@@ -19,7 +22,7 @@ export default function DatePicker({ date, updateDate }) {
                 </TouchableOpacity> 
             </View>
             <View>
-                <Text style={{ fontSize: 12, fontWeight: '500' }}>Today, {date}</Text>
+                <Text style={{ fontSize: 12, fontWeight: '500' }}>{todaysDate === date ? 'Today, ' : ''}{date}</Text>
             </View>
             <View>
                 <TouchableOpacity
