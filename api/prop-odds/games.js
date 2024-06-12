@@ -3,7 +3,7 @@ import { insertGame, getTodaysGameswithNames } from "@/db/general/Games";
 import { getTeamIds } from "@/db/general/Teams";
 import { getCurrentSeason, getSeasonByDate } from "@/db/general/Seasons";
 import { getLeagueByName } from "@/db/general/Leagues";
-import { insertFetchHistory, getLastFetchedByLeague } from "../../db/api/FetchHistory";
+import { insertFetchHistory, getLastFetchedByLeague, leagueFetchedOnDate } from "@/db/api/FetchHistory";
 
 export const getGames = async (db, sport) => {
     try {
@@ -17,6 +17,15 @@ export const getGames = async (db, sport) => {
       console.error(error);
     }
 };
+
+export const getGamesDate = async (db, sport, date) => {
+  try {
+    const response = await fetch(`https://api.prop-odds.com/beta/games/${sport}?date=${date}&tz=America/New_York&api_key=${secrets.PROP_ODDS_API_KEY}`);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 const getDate = (dateString) => {
   const date = new Date(dateString);
@@ -55,6 +64,20 @@ export const fetchGamesDB = async (db, sport) => {
     console.error(error);
   }
 };
+
+export const fetchGamesDate = async (db, sport, date) => {
+  try {
+    const response = await getGamesDate(db, sport, date);
+    const data = await response.json();
+    for (let game of data.games) {
+      await addGameToDB(db, game, sport);
+    }
+    insertFetchHistory(db, sport, date);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 // Function to get sport data
 const getSportData = async (db, sport, league, date, curSeason) => {
@@ -107,9 +130,9 @@ export const retrieveGamesDate = async (db, sports, date) => {
       if (value.length > 0) {
         data.push(await getSportData(db, sport, league, date, curSeason));
       } else {
-        const lastFetched = await getLastFetchedByLeague(db, league.leagueName);
-        if (lastFetched && lastFetched.lastFetched !== date) {
-          await fetchGamesDB(db, sport);
+        const fetched = await leagueFetchedOnDate(db, league.leagueName, date);
+        if (!fetched) {
+          await fetchGamesDate(db, sport, date);
           data.push(await getSportData(db, sport, league, date, curSeason));
         }
       }
