@@ -96,3 +96,26 @@ export const retrieveGames = async (db, sports) => {
     console.error(error);
   }
 };
+
+export const retrieveGamesDate = async (db, sports, date) => {
+  try {
+    let data = [];
+    for (let sport of sports) {
+      const league = await getLeagueByName(db, sport);
+      const curSeason = await getSeasonByDate(db, league.id, date);
+      const value = await getTodaysGameswithNames(db, date, curSeason.id);
+      if (value.length > 0) {
+        data.push(await getSportData(db, sport, league, date, curSeason));
+      } else {
+        const lastFetched = await getLastFetchedByLeague(db, league.leagueName);
+        if (lastFetched && lastFetched.lastFetched !== date) {
+          await fetchGamesDB(db, sport);
+          data.push(await getSportData(db, sport, league, date, curSeason));
+        }
+      }
+    }
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
