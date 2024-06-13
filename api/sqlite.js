@@ -25,6 +25,7 @@ export const createTables = async (db) => {
       teamName TEXT NOT NULL,
       abbreviation TEXT NOT NULL,
       leagueId INTEGER NOT NULL,
+      logoUrl TEXT,
       FOREIGN KEY(leagueId) REFERENCES Leagues(id),
       UNIQUE (teamName, abbreviation, leagueId)
     );
@@ -201,11 +202,4 @@ export const dropTables = async (db) => {
     DROP TABLE IF EXISTS Legs;
   `);
   console.log('Tables dropped');
-};
-
-export const addLogoColumn = async (db) => {
-  await db.execAsync(`
-    ALTER TABLE Teams ADD COLUMN logoUrl TEXT;
-  `);
-  console.log('logoUrl column added to Teams table');
 };
