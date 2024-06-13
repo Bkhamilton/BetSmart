@@ -14,6 +14,7 @@ import SportSlider from '@/components/PlaceBet/SelectGame/SportSlider';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
+import BetSlipModal from '@/components/Modals/BetSlipModal';
 import { getBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getAllLeagues } from '@/db/general/Leagues';
@@ -51,7 +52,8 @@ export default function SelectGameScreen() {
 
   const [totalLegs, setTotalLegs] = useState(0);
 
-  const [chooseBookieModal, setChooseBookieModal] = useState(false);   
+  const [chooseBookieModal, setChooseBookieModal] = useState(false);
+  const [betSlipModal, setBetSlipModal] = useState(false);
 
   const openBookieModal = () => {
     setChooseBookieModal(true);
@@ -59,6 +61,14 @@ export default function SelectGameScreen() {
 
   const closeBookieModal = () => {
     setChooseBookieModal(false);
+  }
+
+  const openBetSlipModal = () => {
+    setBetSlipModal(true);
+  }
+
+  const closeBetSlipModal = () => {
+    setBetSlipModal(false);
   }
 
   const selectBookie = (bookie) => {
@@ -120,7 +130,6 @@ export default function SelectGameScreen() {
       getBalance(db, userID).then((balance) => {
         setUserBalance(balance);
       });
-      setTotalLegs(betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
     }, [])
   );
 
@@ -128,6 +137,7 @@ export default function SelectGameScreen() {
     const fetchSportsData = async () => {
       retrieveGamesDate(db, ["NBA", "MLB", "NHL"], date).then((data) => {
         setAllSportsData(data);
+        console.log(JSON.stringify(data, null, 2))
       });
     };
   
@@ -177,6 +187,11 @@ export default function SelectGameScreen() {
         close={closeBookieModal}
         selectBookie={selectBookie}
       />
+      <BetSlipModal
+        visible={betSlipModal}
+        close={closeBetSlipModal}
+        betslip={betSlip}
+      />
       <View style={styles.mainContainer}>
         {
           leagues.length > 1 && (
@@ -201,9 +216,8 @@ export default function SelectGameScreen() {
                 {
                   betSlip &&
                   <BetSlipBanner
-                    totalLegs={totalLegs}
                     betSlip={betSlip}
-                    onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
+                    onPress={openBetSlipModal}
                   />
                 }
               </>
