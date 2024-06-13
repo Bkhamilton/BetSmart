@@ -112,7 +112,6 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      {/*
       <LoginPage visible={loginModalVisible} close={closeLoginModal}/>
       <SignUpPage visible={signUpModalVisible} close={closeSignUpModal}/>
       <TransactionModal 
@@ -139,7 +138,6 @@ export default function HomeScreen() {
         <TodaysBets bets={playoffBets}/>
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
-      */}
     </View>
   );
 }
