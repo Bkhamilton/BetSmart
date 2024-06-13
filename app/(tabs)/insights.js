@@ -7,11 +7,17 @@ import RecommendedBets from '@/components/Insights/RecommendedBets/RecommendedBe
 import { useSQLiteContext } from 'expo-sqlite';
 import { retrieveGamesDB } from '@/api/prop-odds/games';
 import { retrieveMarketsDB } from '@/api/prop-odds/markets';
-import { createLeagueProps } from '@/api/sqlite';
+import { createTables } from '@/api/sqlite';
 import { insertLeague, getAllLeagues, getLeagueByName } from '@/db/general/Leagues';
 import { getAllGames, getTodaysGameswithNames, deleteGame } from '@/db/general/Games';
 import { NBAcategories, NHLcategories, MLBcategories } from '@/data/leagueCategoryData';
 import { insertLeagueProp } from '@/db/bet-general/LeagueProps';
+import { insertBookie } from '@/db/general/Bookies';
+import { insertSeason } from '@/db/general/Seasons';
+import { nbaTeamAbbreviations, mlbTeamAbbreviations, nhlTeamAbbreviations } from '@/data/teamAbbreviations';
+import { insertUser, getUser } from '@/db/user-specific/Users';
+import { insertTeam } from '@/db/general/Teams';
+import { fetchAndUpdateLogos } from '@/api/sportsdb/logos';
 
 export default function InsightScreen() {
   const recentBets = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
@@ -41,13 +47,8 @@ export default function InsightScreen() {
 
   const generateFunction = () => {
     try {
-      getLeagueByName(db, "NHL").then((league) => {
-        NHLcategories.forEach((category) => {
-          insertLeagueProp(db, league.id, category.title);
-        });
-        console.log("League props added");
-      });
-    } catch (error) {
+        fetchAndUpdateLogos(db);
+      } catch (error) {
       console.error(error);
     }
   }
