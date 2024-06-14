@@ -187,11 +187,15 @@ export default function SelectGameScreen() {
         close={closeBookieModal}
         selectBookie={selectBookie}
       />
-      <BetSlipModal
-        visible={betSlipModal}
-        close={closeBetSlipModal}
-        betslip={betSlip}
-      />
+      {
+        betSlip && (
+          <BetSlipModal
+            visible={betSlipModal}
+            close={closeBetSlipModal}
+            betslip={betSlip}
+          />
+        )
+      }
       <View style={styles.mainContainer}>
         {
           leagues.length > 1 && (
