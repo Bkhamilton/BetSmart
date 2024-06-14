@@ -17,7 +17,8 @@ export default function RecentTransactions({ transactions, bookieId }) {
             >
                 {[...bookieTransactions].reverse().slice(0, 6).map((transaction, index) => (
                     <View key={index} style={{ backgroundColor: 'transparent' }}>
-                        <Text style={{ opacity: transaction.transactionType === 'Deposit' ? 1 : 0.7 }}>{formatTransaction(transaction)}</Text>
+                        <Text style={{ opacity: transaction.transactionType === 'Deposit' ? 1 : 0.5, 
+                            fontWeight: transaction.transactionType === 'Deposit' ? '500' : '600' }}>{formatTransaction(transaction)}</Text>
                     </View>
                 ))}
             </View>
