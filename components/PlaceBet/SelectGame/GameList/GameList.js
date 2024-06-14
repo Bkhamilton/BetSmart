@@ -6,28 +6,26 @@ import GameComponent from '@/components/PlaceBet/SelectGame/GameList/GameCompone
 export default function GameList({ games, selectGame, selectProp }) {
     return (
         <View style={styles.container}>
-          {
-            !games &&
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <Text>No games available</Text>
-            </View>
-          }
-          {
-            games &&
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ marginBottom: 100 }}
-              data={games}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <GameComponent 
-                  game={item} 
-                  selectGame={selectGame}
-                  selectProp={selectProp}
+          {  
+            games && games.length > 1 ? 
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  contentContainerStyle={{ marginBottom: 100 }}
+                  data={games}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item }) => (
+                    <GameComponent 
+                      game={item} 
+                      selectGame={selectGame}
+                      selectProp={selectProp}
+                    />
+                  )}
+                  ItemSeparatorComponent={() => <View style={styles.separator} />}
                 />
-              )}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
+            : 
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                  <Text>No games available</Text>
+                </View>
           }
         </View>
   );
