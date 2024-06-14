@@ -5,6 +5,14 @@ export const getDate = (dateString) => {
     const day = estDate.getDate();
     return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}`; // Returns the date in MM/DD format
 };
+
+export const getDateFull = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear(); // Get the year
+    const month = date.getMonth() + 1; // getMonth returns month index starting from 0
+    const day = date.getDate();
+    return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`; // Returns the date in YYYY-MM-DD format
+};
   
 export const getTime = (dateString) => {
     const date = new Date(dateString);
