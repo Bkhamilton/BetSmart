@@ -21,7 +21,7 @@ export const getMarkets = async (gameId) => {
 
 export const getMarketProps = async (gameId, market) => {
     try {
-      const response = await fetch(`https://api.prop-odds.com/beta/odds/94a341a91450aa39f4492d2f49b5e46f/${market}?api_key=${secrets.PROP_ODDS_API_KEY}`);
+      const response = await fetch(`https://api.prop-odds.com/beta/odds/a5863496c9bc277dd749442559eb805c/moneyline?api_key=${secrets.PROP_ODDS_API_KEY}`);
       const data = await response.json();
       console.log(JSON.stringify(data, null, 2));
       return data;
