@@ -103,6 +103,15 @@ export const createTables = async (db) => {
       FOREIGN KEY(leagueId) REFERENCES Leagues(id),
       UNIQUE (leagueId, propName)
     );
+    CREATE TABLE IF NOT EXISTS LeaguePropsInfo (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      leagueId INTEGER NOT NULL,
+      propName TEXT NOT NULL,
+      propValue TEXT NOT NULL,
+      FOREIGN KEY(leagueId) REFERENCES Leagues(id),
+      FOREIGN KEY(propName) REFERENCES LeagueProps(propName),
+      UNIQUE (leagueId, propName, propValue)
+    );
     CREATE TABLE FetchHistory (
       league TEXT,
       lastFetched TEXT NOT NULL,
@@ -202,4 +211,20 @@ export const dropTables = async (db) => {
     DROP TABLE IF EXISTS Legs;
   `);
   console.log('Tables dropped');
+};
+
+// Function to create the LeaguePropsInfo Table
+export const createLeaguePropsInfoTable = async (db) => {
+  await db.execAsync(`
+    CREATE TABLE LeaguePropsInfo (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      leagueId INTEGER NOT NULL,
+      propName TEXT NOT NULL,
+      propValue TEXT NOT NULL,
+      FOREIGN KEY(leagueId) REFERENCES Leagues(id),
+      FOREIGN KEY(propName) REFERENCES LeagueProps(propName),
+      UNIQUE (leagueId, propName, propValue)
+    );
+  `);
+  console.log('LeaguePropsInfo table created');
 };
