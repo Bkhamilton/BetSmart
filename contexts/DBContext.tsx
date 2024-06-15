@@ -20,13 +20,17 @@ interface League {
 interface DBContextValue {
     db: any;
     bookies: Bookie[];
+    setBookies: (bookies: Bookie[]) => void;
     leagues: League[];
+    setLeagues: (leagues: League[]) => void;
 }
 
 export const DBContext = createContext<DBContextValue>({
     db: null,
     bookies: [],
+    setBookies: () => {},
     leagues: [],
+    setLeagues: () => {},
 });
 
 interface DBContextValueProviderProps {

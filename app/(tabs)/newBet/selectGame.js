@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { retrieveGamesDate } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import { DBContext } from '@/contexts/DBContext';
 import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
@@ -26,6 +27,7 @@ export default function SelectGameScreen() {
   const db = useSQLiteContext();
 
   const { setCurrentGame, setLeague, setBookie, setBookieId, betSlip, setBetSlip } = useContext(BetContext);
+  const { bookies, leagues } = useContext(DBContext);
 
   const router = useRouter();
 
@@ -46,8 +48,6 @@ export default function SelectGameScreen() {
   const [leagueSelected, setLeagueSelected] = useState(false);
 
   const [userBalance, setUserBalance] = useState([])
-  const [bookies, setBookies] = useState([]);
-  const [leagues, setLeagues] = useState([]);
   const [userID, setUserID] = useState(1);
 
   const [totalLegs, setTotalLegs] = useState(0);
@@ -142,16 +142,6 @@ export default function SelectGameScreen() {
   
     fetchSportsData();
   }, [date]);
-  
-  useEffect(() => {
-    getAllBookies(db).then((bookies) => {
-      setBookies(bookies);
-    });
-  
-    getAllLeagues(db).then((leagues) => {
-      setLeagues(leagues);
-    });
-  }, []);
 
   const curLeagueData = allSportsData?.find(sportData => sportData.sport === curLeague?.leagueName);
   const curLeagueGames = curLeagueData ? curLeagueData.data : [];
