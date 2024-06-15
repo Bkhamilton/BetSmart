@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { BetContextProvider } from '@/contexts/BetContext/BetContext';
+import { DBContext } from '@/contexts/DBContext';
 
 export default function NewBetLayout() {
   return (
