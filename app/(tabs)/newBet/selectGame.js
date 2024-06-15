@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { retrieveGamesDate } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
@@ -17,8 +16,6 @@ import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
 import BetSlipModal from '@/components/Modals/BetSlipModal';
 import { getBalance } from '@/db/user-specific/Balance';
-import { getAllBookies } from '@/db/general/Bookies';
-import { getAllLeagues } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
 import DatePicker from '@/components/PlaceBet/SelectGame/DatePicker';
 
@@ -26,14 +23,13 @@ export default function SelectGameScreen() {
 
   const db = useSQLiteContext();
 
-  const { setCurrentGame, setLeague, setBookie, setBookieId, betSlip, setBetSlip } = useContext(BetContext);
+  const { setCurrentGame, league, setLeague, setBookie, setBookieId, betSlip, setBetSlip } = useContext(BetContext);
   const { bookies, leagues } = useContext(DBContext);
 
   const router = useRouter();
 
   const handleSelectGame = ({ game }) => {
     setCurrentGame(game);
-    setLeague(curLeague.leagueName);
     router.navigate('newBet/betDetails', { game });
   };
 
@@ -43,7 +39,6 @@ export default function SelectGameScreen() {
 
   const [header, setHeader] = useState('Place Bet');
 
-  const [curLeague, setcurLeague] = useState({});
   const [allSportsData, setAllSportsData] = useState([]);
   const [leagueSelected, setLeagueSelected] = useState(false);
 
@@ -77,14 +72,14 @@ export default function SelectGameScreen() {
     setBookieId(bookie.id);
   }
 
-  const selectLeague = (league) => {
-    if (curLeague?.leagueName === league.leagueName) {
-      setcurLeague({});
+  const selectLeague = (newLeague) => {
+    if (league?.leagueName === newLeague.leagueName) {
+      setLeague({});
       setHeader('Place Bet');
       setLeagueSelected(false);
     } else {
-      setcurLeague(league);
-      setHeader(league.leagueName)
+      setLeague(newLeague);
+      setHeader(newLeague.leagueName);
       setLeagueSelected(true);
     }
   }
@@ -93,7 +88,7 @@ export default function SelectGameScreen() {
     const { game, type, target, stat, value, odds } = props;
 
     const leg = createLeg(type, target, stat, value, odds);
-    const bet = createBet(game.date, curLeague.leagueName, game.homeTeamName, game.awayTeamName, odds, [leg]);
+    const bet = createBet(game.date, league.leagueName, game.homeTeamName, game.awayTeamName, odds, [leg]);
 
     const today = new Date();
 
@@ -143,7 +138,7 @@ export default function SelectGameScreen() {
     fetchSportsData();
   }, [date]);
 
-  const curLeagueData = allSportsData?.find(sportData => sportData.sport === curLeague?.leagueName);
+  const curLeagueData = allSportsData?.find(sportData => sportData.sport === league?.leagueName);
   const curLeagueGames = curLeagueData ? curLeagueData.data : [];
 
   const { grayBorder, iconColor } = useTheme();
@@ -164,14 +159,11 @@ export default function SelectGameScreen() {
     );
   }
 
-  const todaysDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-
   return (
     <View style={styles.container}>
       <SelectGameHeader />
       <ChooseBookie
         userBalance={userBalance}
-        bookies={bookies}
         visible={chooseBookieModal}
         close={closeBookieModal}
         selectBookie={selectBookie}
@@ -192,8 +184,6 @@ export default function SelectGameScreen() {
               <>
                 <View style={{ paddingTop: 10, paddingBottom: 6 }}>
                   <SportSlider
-                    leagues={leagues}
-                    curLeague={curLeague}
                     selectLeague={selectLeague}
                   />
                   <DatePicker
@@ -217,7 +207,6 @@ export default function SelectGameScreen() {
             ) : (
               <View style={styles.buttonsContainer}>
                 <MainButtons
-                  leagues={leagues}
                   selectLeague={selectLeague}
                 />
                 {

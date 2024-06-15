@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import { DBContext } from '@/contexts/DBContext';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
@@ -13,6 +14,7 @@ import LeaguePropInfo from '@/components/PlaceBet/BetDetails/LeaguePropInfo';
 import { getBalance } from '@/db/user-specific/Balance';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
+import { getLeaguePropInfo } from '@/db/bet-general/LeaguePropsInfo';
 import { getLeagueByName } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
@@ -21,13 +23,15 @@ export default function BetDetailsScreen() {
    
   const { league, currentGame, setBookie, setBookieId, betSlip } = useContext(BetContext);
 
+  const { bookies } = useContext(DBContext);
+
   const router = useRouter();
 
   const db = useSQLiteContext();
 
   const [userBalance, setUserBalance] = useState([]);
   const [leagueProps, setLeagueProps] = useState([]); // [ { id: 0, leagueId: 0, propName: '' }
-  const [bookies, setBookies] = useState([{ id: 0, name: '', description: ''}]);
+  const [leaguePropInfo, setLeaguePropInfo] = useState([]); // [ { id: 0, leagueId: 0, propName: '', propValue: '' }
   const [userID, setUserID] = useState(1);
 
   const [curLeagueProp, setCurLeagueProp] = useState('Popular');
@@ -62,16 +66,19 @@ export default function BetDetailsScreen() {
     getBalance(db, userID).then((balance) => {
       setUserBalance(balance);
     });
-    getAllBookies(db).then((bookies) => {
-      setBookies(bookies);
-    });
-    getLeagueByName(db, league).then((league) => {
-      getLeaguePropsForLeague(db, league.id).then((props) => {
-        const sortedProps = props.sort((a, b) => a.id - b.id);
-        setLeagueProps(sortedProps);
-      });
+    getLeaguePropsForLeague(db, league.id).then((props) => {
+      const sortedProps = props.sort((a, b) => a.id - b.id);
+      setLeagueProps(sortedProps);
     });
   }, []);
+
+  useEffect(() => {
+    if (curLeagueProp) {
+      getLeaguePropInfo(db, curLeagueProp).then((info) => {
+        setLeaguePropInfo(info);
+      });
+    }
+  }, [curLeagueProp]);
   
   const GameHeader = () => {
     return (
@@ -82,7 +89,7 @@ export default function BetDetailsScreen() {
           </TouchableOpacity>
         </View>
         <View style={{ flex: 0.4, alignItems: 'center', justifyContent: 'flex-start', marginLeft: -10, }}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league}</Text>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league.leagueName}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
           <BalanceBox userBalance={userBalance} openModal={openBookieModal}/>
@@ -113,6 +120,7 @@ export default function BetDetailsScreen() {
             />
             <LeaguePropInfo 
               leagueProp={curLeagueProp}
+              leaguePropInfo={leaguePropInfo}
             />
           </>
         }

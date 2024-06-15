@@ -51,8 +51,8 @@ interface BetContextValue {
   setBetSlip: (betSlip: BetSlip | null) => void;
   currentGame: Game | null;
   setCurrentGame: (game: Game | null) => void;
-  league: string | null;
-  setLeague: (league: string | null) => void;
+  league: League | null;
+  setLeague: (league: League | null) => void;
   bookie: string | null;
   setBookie: (bookie: string | null) => void;
   bookieId: Number | null;
@@ -79,7 +79,7 @@ interface BetContextProviderProps {
 export const BetContextProvider = ({ children }: BetContextProviderProps) => {
   const [betSlip, setBetSlip] = useState<BetSlip | null>(null);
   const [currentGame, setCurrentGame] = useState<Game | null>(null);
-  const [league, setLeague] = useState<string | null>(null);
+  const [league, setLeague] = useState<League | null>(null);
   const [bookie, setBookie] = useState<string | null>('DraftKings');
   const [bookieId, setBookieId] = useState<Number | null>(1);
 
