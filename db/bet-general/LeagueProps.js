@@ -33,6 +33,17 @@ export const getLeaguePropsForLeague = async (db, leagueId) => {
     }
 };
 
+// Function to get a league prop by name
+export const getLeaguePropByName = async (db, leagueId, propName) => {
+    try {
+        const leagueProp = await db.getAsync('SELECT * FROM LeagueProps WHERE leagueId = ? AND propName = ?', [leagueId, propName]);
+        return leagueProp;
+    } catch (error) {
+        console.error('Error in getLeaguePropByName:', error);
+        throw error;
+    }
+};
+
 // Function to insert a league prop
 export const insertLeagueProp = async (db, leagueId, propName) => {
     try {
