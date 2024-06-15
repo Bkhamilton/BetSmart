@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, FlatList, Image } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
+import { BetContext } from '@/contexts/BetContext/BetContext';
+import { DBContext } from '@/contexts/DBContext';
 import useTheme from '@/hooks/useTheme';
 
 import mlb from '@/assets/images/mlb.png';
@@ -12,7 +14,10 @@ import ncaa from '@/assets/images/ncaa.png';
 import pga from '@/assets/images/pga.png';
 import ufc from '@/assets/images/ufc.png';
 
-export default function SportSlider({ leagues, curLeague, selectLeague }) {
+export default function SportSlider({ selectLeague }) {
+
+    const { league } = useContext(BetContext);
+    const { leagues } = useContext(DBContext);
 
     const nameToIcon = {
         'NBA': nba,
@@ -38,8 +43,8 @@ export default function SportSlider({ leagues, curLeague, selectLeague }) {
                     <TouchableOpacity 
                         style={[
                             styles.sportContainer,
-                            item.leagueName === curLeague?.leagueName && styles.selectedSport,
-                            item.leagueName === curLeague.leagueName ? { backgroundColor: text } : { backgroundColor: grayBackground, borderColor: grayBorder },
+                            item.leagueName === league?.leagueName && styles.selectedSport,
+                            item.leagueName === league.leagueName ? { backgroundColor: text } : { backgroundColor: grayBackground, borderColor: grayBorder },
                         ]}
                         onPress={() => selectLeague(item)}
                     >
@@ -49,7 +54,7 @@ export default function SportSlider({ leagues, curLeague, selectLeague }) {
                         />
                         <Text style={[
                             styles.leagueText,
-                            item.leagueName === curLeague.leagueName ? { color: backgroundColor } : {}
+                            item.leagueName === league.leagueName ? { color: backgroundColor } : {}
                         ]}>{item.leagueName}</Text>
                     </TouchableOpacity>
                 )}

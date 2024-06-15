@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
+import { DBContext } from '@/contexts/DBContext';
 
-export default function MainButtons({ leagues, selectLeague }) {
+export default function MainButtons({ selectLeague }) {
+
+    const { leagues } = useContext(DBContext);
 
     const { iconColor, grayBackground, grayBorder } = useTheme();
 

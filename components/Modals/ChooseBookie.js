@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
-import Colors from '@/constants/Colors';
+import { DBContext } from '@/contexts/DBContext';
 import useTheme from '@/hooks/useTheme';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default function ChooseBookie({ userBalance, bookies, visible, close, selectBookie }) {
+export default function ChooseBookie({ userBalance, visible, close, selectBookie }) {
 
     const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor } = useTheme();
+
+    const { bookies } = useContext(DBContext);
 
     const [balance, setBalance] = useState([]);
 
