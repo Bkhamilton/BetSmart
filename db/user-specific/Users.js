@@ -11,10 +11,10 @@ export const getAllUsers = async (db) => {
   }
 };
 
-// Function to get a user
-export const getUser = async (db, username) => {
+// Function to get a user by uysername and password
+export const getUser = async (db, username, password) => {
   try {
-    const user = await db.getAllAsync('SELECT * FROM Users WHERE username = ?', [username]);
+    const user = await db.getAllAsync('SELECT * FROM Users WHERE username = ? AND password = ?', [username, password]);
     return user[0];
   } catch (error) {
     console.error('Error getting user:', error);
