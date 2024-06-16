@@ -7,25 +7,25 @@ export default function GameList({ games, selectGame, selectProp }) {
     return (
         <View style={styles.container}>
           {  
-            games && games.length > 1 ? 
-                <FlatList
-                  showsVerticalScrollIndicator={false}
-                  contentContainerStyle={{ marginBottom: 100 }}
-                  data={games}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item }) => (
-                    <GameComponent 
-                      game={item} 
-                      selectGame={selectGame}
-                      selectProp={selectProp}
-                    />
-                  )}
-                  ItemSeparatorComponent={() => <View style={styles.separator} />}
-                />
+            games && games.length > 0 ? 
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ marginBottom: 100 }}
+                data={games}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                  <GameComponent 
+                    game={item} 
+                    selectGame={selectGame}
+                    selectProp={selectProp}
+                  />
+                )}
+                ItemSeparatorComponent={() => <View style={styles.separator} />}
+              />
             : 
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                  <Text>No games available</Text>
-                </View>
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>No games available</Text>
+              </View>
           }
         </View>
   );
