@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { UserContext } from '@/contexts/UserContext';
 import ProfileMainInfo from '../../../components/Profile/ProfileMainInfo';
 import UserFavorites from '@/components/Profile/UserFavorites';
 import Achievements from '../../../components/Profile/Achievements';
@@ -16,9 +17,8 @@ import useTheme from '@/hooks/useTheme';
 export default function ProfileScreen() {
 
   const db = useSQLiteContext();
-
-  const [user, setUser] = useState({id: 0, name: '', email: '', username: '', password: ''});
-  const [loading, setLoading] = useState(true);
+  
+  const { user } = useContext(UserContext);
 
   const router = useRouter();
 
@@ -31,27 +31,6 @@ export default function ProfileScreen() {
   };
 
   const { iconColor, backgroundColor, grayBorder } = useTheme();
-  
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await getUserById(db, 1);
-        setLoading(false); // Set loading to false when done
-        return user; // Return user data if successful
-      } catch (error) {
-        console.error('Error fetching user:', error);
-      }
-    };
-    
-    fetchUser().then((user) => {
-      setUser(user);
-    } );
-  }
-  , []);
-
-  if (loading) {
-    return <ActivityIndicator size="large" color={backgroundColor} />; // Display loading indicator while loading
-  }
 
   const LoadingHeader = () => {
     return (
@@ -100,7 +79,7 @@ export default function ProfileScreen() {
   
   return (
     <View style={styles.container}>
-      {loading ? <LoadingHeader /> : <ProfilePageHeader user={user} />}
+      {user ? <ProfilePageHeader user={user} /> : <LoadingHeader /> }
       <ScrollView>
         <ProfileMainInfo user={user} /> 
         <UserFavorites league={"NBA"} team={"BOS"} player={"Zion Williamson"} bet={"Spread"}/>

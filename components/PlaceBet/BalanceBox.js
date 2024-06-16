@@ -2,12 +2,14 @@ import React, { useContext } from 'react';
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import { UserContext } from '@/contexts/UserContext';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 import useTheme from '@/hooks/useTheme';
 
-export default function BalanceBox({ userBalance, openModal }) {
+export default function BalanceBox({ openModal }) {
 
+    const { userBalance } = useContext(UserContext);
     const { bookie, setBookie, bookieId, setBookieId } = useContext(BetContext);
 
     const curBookie = userBalance.length > 0 ? userBalance.find(obj => obj.bookieId === bookieId) : { balance: 0 };

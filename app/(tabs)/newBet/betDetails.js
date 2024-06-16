@@ -92,7 +92,7 @@ export default function BetDetailsScreen() {
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league.leagueName}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <BalanceBox userBalance={userBalance} openModal={openBookieModal}/>
+          <BalanceBox openModal={openBookieModal}/>
         </View>
       </View>
     )
@@ -101,8 +101,6 @@ export default function BetDetailsScreen() {
   return (
     <View style={styles.container}>
       <ChooseBookie
-        userBalance={userBalance}
-        bookies={bookies}
         visible={chooseBookieModal}
         close={closeBookieModal}
         selectBookie={selectBookie}

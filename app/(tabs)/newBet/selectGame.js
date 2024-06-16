@@ -42,9 +42,6 @@ export default function SelectGameScreen() {
   const [allSportsData, setAllSportsData] = useState([]);
   const [leagueSelected, setLeagueSelected] = useState(false);
 
-  const [userBalance, setUserBalance] = useState([])
-  const [userID, setUserID] = useState(1);
-
   const [totalLegs, setTotalLegs] = useState(0);
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);
@@ -120,14 +117,6 @@ export default function SelectGameScreen() {
     setDate(`${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`);
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      getBalance(db, userID).then((balance) => {
-        setUserBalance(balance);
-      });
-    }, [])
-  );
-
   useEffect(() => {
     const fetchSportsData = async () => {
       retrieveGamesDate(db, ["NBA", "MLB", "NHL"], date).then((data) => {
@@ -153,7 +142,7 @@ export default function SelectGameScreen() {
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{header}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <BalanceBox userBalance={userBalance} openModal={openBookieModal}/>
+          <BalanceBox openModal={openBookieModal}/>
         </View>
       </View>
     );
@@ -163,7 +152,6 @@ export default function SelectGameScreen() {
     <View style={styles.container}>
       <SelectGameHeader />
       <ChooseBookie
-        userBalance={userBalance}
         visible={chooseBookieModal}
         close={closeBookieModal}
         selectBookie={selectBookie}
@@ -173,7 +161,6 @@ export default function SelectGameScreen() {
           <BetSlipModal
             visible={betSlipModal}
             close={closeBetSlipModal}
-            betslip={betSlip}
           />
         )
       }
@@ -213,7 +200,7 @@ export default function SelectGameScreen() {
                   betSlip &&
                   <BetSlipBanner
                     betSlip={betSlip}
-                    onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
+                    onPress={openBetSlipModal}
                   />
                 }
               </View>

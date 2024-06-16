@@ -14,10 +14,32 @@ export const getAllUserSessions = async (db) => {
 // Function to get a user session
 export const getUserSession = async (db, userSessionId) => {
     try {
-        const userSession = await db.getAsync('SELECT * FROM UserSessions WHERE id = ?', [userSessionId]);
+        const userSession = await db.getAllAsync('SELECT * FROM UserSessions WHERE id = ?', [userSessionId]);
         return userSession;
     } catch (error) {
         console.error('Error getting user session:', error);
+        throw error;
+    }
+};
+
+// Function to return the active user session
+export const getActiveUserSession = async (db, userId) => {
+    try {
+        const userSession = await db.getAllAsync('SELECT * FROM UserSessions WHERE userId = ? AND isActive = 1', [userId]);
+        return userSession;
+    } catch (error) {
+        console.error('Error getting active user session:', error);
+        throw error;
+    }
+};
+
+// Function to get the most recently active user session
+export const getMostRecentActiveUserSession = async (db) => {
+    try {
+        const userSession = await db.getAllAsync('SELECT * FROM UserSessions WHERE isActive = 1 ORDER BY loginTimestamp DESC LIMIT 1');
+        return userSession[0];
+    } catch (error) {
+        console.error('Error getting most recently active user session:', error);
         throw error;
     }
 };

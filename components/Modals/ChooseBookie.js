@@ -2,31 +2,31 @@ import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
+import { UserContext } from '@/contexts/UserContext';
 import useTheme from '@/hooks/useTheme';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 import { FontAwesome } from '@expo/vector-icons';
 
-export default function ChooseBookie({ userBalance, visible, close, selectBookie }) {
+export default function ChooseBookie({ visible, close, selectBookie }) {
 
     const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor } = useTheme();
 
+    const { userBalance } = useContext(UserContext);
     const { bookies } = useContext(DBContext);
 
     const [balance, setBalance] = useState([]);
 
     useEffect(() => {
-        if (userBalance && bookies) {
-            const updatedBalance = userBalance.map((b) => {
-                const bookie = bookies.find((bookie) => bookie.id === b.bookieId);
-                return {
-                    bookie: bookie ? bookie.name : '',
-                    balance: b.balance,
-                };
-            });
-            setBalance(updatedBalance);
-        }
-    }, [userBalance, bookies]);
+        const updatedBalance = userBalance.map((b) => {
+            const bookie = bookies.find((bookie) => bookie.id === b.bookieId);
+            return {
+                bookie: bookie ? bookie.name : '',
+                balance: b.balance,
+            };
+        });
+        setBalance(updatedBalance);
+    }, []);
 
     const getBalance = (bookieName) => {
         const bookie = balance.find((b) => b.bookie === bookieName);
