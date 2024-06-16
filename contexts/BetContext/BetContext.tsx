@@ -46,6 +46,12 @@ interface Leg {
   odds: string;
 }
 
+interface Bookie {
+  id: number;
+  name: string;
+  description: string;
+}
+
 interface BetContextValue {
   betSlip: BetSlip | null;
   setBetSlip: (betSlip: BetSlip | null) => void;
