@@ -12,9 +12,9 @@ export const getAllLeaguePropsInfo = async (db) => {
 };
 
 // Function to get a league prop info
-export const getLeaguePropInfo = async (db, propName) => {
+export const getLeaguePropInfo = async (db, leagueId, propName) => {
     try {
-        const leaguePropInfo = await db.getAllAsync('SELECT * FROM LeaguePropsInfo WHERE propName = ?', [propName]);
+        const leaguePropInfo = await db.getAllAsync('SELECT * FROM LeaguePropsInfo WHERE leagueId = ? AND propName = ?', [leagueId, propName]);
         return leaguePropInfo;
     } catch (error) {
         console.error('Error in getLeaguePropInfo:', error);

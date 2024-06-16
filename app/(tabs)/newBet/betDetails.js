@@ -74,7 +74,7 @@ export default function BetDetailsScreen() {
 
   useEffect(() => {
     if (curLeagueProp) {
-      getLeaguePropInfo(db, curLeagueProp).then((info) => {
+      getLeaguePropInfo(db, league.id, curLeagueProp).then((info) => {
         setLeaguePropInfo(info);
       });
     }
