@@ -24,7 +24,7 @@ export default function SelectGameScreen() {
   const db = useSQLiteContext();
 
   const { setCurrentGame, league, setLeague, setBookie, setBookieId, betSlip, setBetSlip } = useContext(BetContext);
-  const { bookies, leagues } = useContext(DBContext);
+  const { leagues } = useContext(DBContext);
 
   const router = useRouter();
 
@@ -212,7 +212,6 @@ export default function SelectGameScreen() {
                 {
                   betSlip &&
                   <BetSlipBanner
-                    totalLegs={totalLegs}
                     betSlip={betSlip}
                     onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
                   />
