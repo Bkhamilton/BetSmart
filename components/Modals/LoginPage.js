@@ -1,12 +1,28 @@
 import React, { useState } from 'react';
-import { StyleSheet, Modal, StatusBar, TextInput } from 'react-native';
+import { StyleSheet, Modal, StatusBar, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { TouchableOpacity, Text, View, TextInput } from '@/components/Themed';
+import useTheme from '@/hooks/useTheme';
 
-import Colors from '@/constants/Colors';
-import { FontStyle } from '@shopify/react-native-skia';
+export default function LoginPage({ visible, close, login }) {
 
-export default function LoginPage({ visible, close }) {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const { iconColor } = useTheme();
+
+    const handleLogin = async () => {
+        try {
+            const result = await login(username, password);
+            if (result) {
+                Alert.alert("Success", "You have successfully logged in!");
+            } else {
+                Alert.alert("Error", "Invalid username or password.");
+            }
+        } catch (error) {
+            Alert.alert("Error", "An error occurred while trying to log in.");
+        }
+    };
 
     return (
         <Modal
@@ -36,10 +52,12 @@ export default function LoginPage({ visible, close }) {
                     <View style={styles.infoBox}>
                         <Text style={styles.BoxTitle}>Username</Text>
                         <View style={styles.inputBox}>
-                            <FontAwesome name='user' size={24} color={Colors.primary} />
+                            <FontAwesome name='user' size={24} color={iconColor} />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Username"
+                                onChangeText={setUsername}
+                                autoCorrect={false}
                                 // Add necessary props and event handlers for username input
                             />
                         </View>
@@ -49,16 +67,25 @@ export default function LoginPage({ visible, close }) {
                     <View style={styles.infoBox}>
                         <Text style={styles.BoxTitle}>Password</Text>
                         <View style={styles.inputBox}>
-                            <FontAwesome name='lock' size={24} color={Colors.primary} />
+                            <FontAwesome name='lock' size={24} color={iconColor} />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Password"
                                 secureTextEntry={true}
+                                onChangeText={setPassword}
+                                autoCorrect={false}
                                 // Add necessary props and event handlers for password input
                             />
                         </View>
                     </View>
                 </View>
+                {/* Login Button */}
+                <TouchableOpacity 
+                    style={styles.button}
+                    onPress={() => handleLogin()}
+                >
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
             </View>
         </Modal>
     );
@@ -69,7 +96,6 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 56,
         paddingHorizontal: 10, 
-        borderWidth: 1,
     },
     mainPage: {
         flex: .50,
@@ -112,7 +138,7 @@ const styles = StyleSheet.create({
     button: {
         width: 300,
         height: 40,
-        backgroundColor: Colors.primary,
+        backgroundColor: 'pink',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 5,

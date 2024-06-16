@@ -13,7 +13,9 @@ import TransactionModal from '@/components/Modals/TransactionModal';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalanceByUser, updateBalance } from '@/db/user-specific/Balance';
 import { getAllBookies, getBookies } from '@/db/general/Bookies';
+import { getUser } from '@/db/user-specific/Users';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
+import { insertUserSession } from '@/db/user-specific/UserSessions';
 import useTheme from '@/hooks/useTheme';
 import HomeHeader from '@/components/Home/HomeHeader';
 
@@ -46,6 +48,24 @@ export default function HomeScreen() {
   }
   function closeLoginModal() {
     setLoginModalVisible(false);
+  }
+
+  async function login(username, password) {
+    
+    // Check if the username and password match
+    const user = await getUser(db, username, password);
+
+    if (!user) {
+      return false;
+    }
+
+    // If the username and password match, create a new session
+    const today = new Date().toISOString();
+    await insertUserSession(db, user.id, today);
+
+    closeLoginModal();
+
+    return true;
   }
 
   function updateTransactionInfo(title, balance, bookie) {
@@ -112,7 +132,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <LoginPage visible={loginModalVisible} close={closeLoginModal}/>
+      <LoginPage visible={loginModalVisible} close={closeLoginModal} login={login}/>
       <SignUpPage visible={signUpModalVisible} close={closeSignUpModal}/>
       <TransactionModal 
         visible={transactionModalVisible} 
