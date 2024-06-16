@@ -213,18 +213,17 @@ export const dropTables = async (db) => {
   console.log('Tables dropped');
 };
 
-// Function to create the LeaguePropsInfo Table
-export const createLeaguePropsInfoTable = async (db) => {
+export const createUserSessionsTable = async (db) => {
   await db.execAsync(`
-    CREATE TABLE LeaguePropsInfo (
+    CREATE TABLE IF NOT EXISTS UserSessions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      leagueId INTEGER NOT NULL,
-      propName TEXT NOT NULL,
-      propValue TEXT NOT NULL,
-      FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-      FOREIGN KEY(propName) REFERENCES LeagueProps(propName),
-      UNIQUE (leagueId, propName, propValue)
+      userId INTEGER,
+      loginTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      logoutTimestamp DATETIME,
+      isActive BOOLEAN DEFAULT 1,
+      FOREIGN KEY(userId) REFERENCES Users(id),
+      UNIQUE (userId, loginTimestamp, logoutTimestamp, isActive)
     );
   `);
-  console.log('LeaguePropsInfo table created');
+  console.log('UserSessions table created');
 };
