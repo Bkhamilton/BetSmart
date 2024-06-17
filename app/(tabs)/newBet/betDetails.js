@@ -29,10 +29,8 @@ export default function BetDetailsScreen() {
 
   const db = useSQLiteContext();
 
-  const [userBalance, setUserBalance] = useState([]);
   const [leagueProps, setLeagueProps] = useState([]); // [ { id: 0, leagueId: 0, propName: '' }
   const [leaguePropInfo, setLeaguePropInfo] = useState([]); // [ { id: 0, leagueId: 0, propName: '', propValue: '' }
-  const [userID, setUserID] = useState(1);
 
   const [curLeagueProp, setCurLeagueProp] = useState('Popular');
 
@@ -63,9 +61,6 @@ export default function BetDetailsScreen() {
   const { mainGreen, iconColor, grayBorder } = useTheme();
 
   useEffect(() => {
-    getBalance(db, userID).then((balance) => {
-      setUserBalance(balance);
-    });
     getLeaguePropsForLeague(db, league.id).then((props) => {
       const sortedProps = props.sort((a, b) => a.id - b.id);
       setLeagueProps(sortedProps);
@@ -75,7 +70,8 @@ export default function BetDetailsScreen() {
   useEffect(() => {
     if (curLeagueProp) {
       getLeaguePropInfo(db, league.id, curLeagueProp).then((info) => {
-        setLeaguePropInfo(info);
+        const sortedInfo = info.sort((a, b) => a.id - b.id);
+        setLeaguePropInfo(sortedInfo);
       });
     }
   }, [curLeagueProp]);
