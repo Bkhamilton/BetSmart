@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
+import { BetContext } from '@/contexts/BetContext/BetContext';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
 
-export default function IntroInfo({ currentGame }) {
+export default function IntroInfo() {
+
+    const { currentGame } = useContext(BetContext);
 
     const { gameId, homeTeamName, awayTeamName, timestamp } = currentGame;
 

@@ -103,7 +103,7 @@ export default function BetDetailsScreen() {
       />
       <GameHeader />
       <ScrollView>
-        <IntroInfo currentGame={currentGame} />
+        <IntroInfo/>
         {
           leagueProps.length > 0 &&
           <>
