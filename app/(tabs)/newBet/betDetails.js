@@ -95,7 +95,7 @@ export default function BetDetailsScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <>
       <ChooseBookie
         visible={chooseBookieModal}
         close={closeBookieModal}
@@ -126,7 +126,7 @@ export default function BetDetailsScreen() {
           onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
         />
       }
-    </View>
+    </>
   );
 }
 

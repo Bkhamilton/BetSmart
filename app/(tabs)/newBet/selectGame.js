@@ -149,7 +149,7 @@ export default function SelectGameScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <>
       <SelectGameHeader />
       <ChooseBookie
         visible={chooseBookieModal}
@@ -208,7 +208,7 @@ export default function SelectGameScreen() {
           )
         }
       </View>
-    </View>
+    </>
   );
 }
 
