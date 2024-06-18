@@ -46,7 +46,7 @@ export const updateBalance = async (db, bookieId, balance, userId) => {
 // Function to delete a balance
 export const deleteBalance = async (db, bookieId, userId) => {
   try {
-    await db.runAsync('DELETE FROM Balance WHERE Bookie = ? AND UserID = ?', [bookie, userId]);
+    await db.runAsync('DELETE FROM Balance WHERE bookieId = ? AND UserID = ?', [bookieId, userId]);
   } catch (error) {
     console.error('Error deleting balance:', error);
     throw error;
