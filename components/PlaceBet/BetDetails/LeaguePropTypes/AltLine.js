@@ -3,25 +3,20 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import PropBanner from './PropBanner/PropBanner';
 import useTheme from '@/hooks/useTheme';
 
-export default function AltLine() {
+export default function AltLine({ info }) {
 
     const { league, currentGame } = useContext(BetContext);
 
     const { iconColor } = useTheme();
 
+    const title = 'Alternate' + JSON.stringify(info) + 'Line';
+
     return (
         <View style={styles.container}>
-            <View style={{ justifyContent: 'center', paddingHorizontal: 8, }}>
-                <FontAwesome5 name="chevron-down" size={16} color={iconColor} />
-            </View>
-            <View>
-                <Text style={{ fontSize: 16 }}>Alternate Line</Text>
-            </View>
-            <View>
-
-            </View>
+            <PropBanner title={title} />
         </View>
     );
 }
