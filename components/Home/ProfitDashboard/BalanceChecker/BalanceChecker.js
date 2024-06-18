@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { TouchableOpacity, Text, View, ScrollView } from '@/components/Themed';
+import { UserContext } from '@/contexts/UserContext';
 import useTheme from '@/hooks/useTheme';
 import BankButtons from './BankButtons';
 import RecentTransactions from './RecentTransactions';
 
-export default function BalanceChecker({ openTransaction, balance, bookies, transactions }) {
+export default function BalanceChecker({ openTransaction, bookies, transactions }) {
+
+    const { userBalance } = useContext(UserContext);
 
     const { mainGreen, mainBlue, accentBlue } = useTheme();
 
@@ -34,7 +37,7 @@ export default function BalanceChecker({ openTransaction, balance, bookies, tran
     };
 
     const selectTransaction = (type) => {
-        openTransaction(type, balance, bookie);
+        openTransaction(type, userBalance, bookie);
     };
 
     const bookieColors = {
@@ -53,8 +56,8 @@ export default function BalanceChecker({ openTransaction, balance, bookies, tran
     }
     
     const balanceValue = bookie === 'Total' 
-      ? balance?.reduce((total, item) => total + item.balance, 0) 
-      : balance?.find(item => item.bookieId === bookieId)?.balance || 0;
+      ? userBalance?.reduce((total, item) => total + item.balance, 0) 
+      : userBalance?.find(item => item.bookieId === bookieId)?.balance || 0;
 
     const RecentTransactionsEmpty = () => {
       return (

@@ -5,7 +5,7 @@ import { TouchableOpacity, Text, View, Pressable } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import BalanceChecker from '@/components/Home/ProfitDashboard/BalanceChecker/BalanceChecker';
 
-export default function ProfitDashboard({ wagered, won, openTransaction, balance, bookies, transactions }) {
+export default function ProfitDashboard({ wagered, won, openTransaction, bookies, transactions }) {
     const profit = won - wagered;
     const arrowDirection = profit > 0 ? 'chevron-up' : 'chevron-down';
     const arrowColor = profit > 0 ? 'green' : 'red';
@@ -36,7 +36,6 @@ export default function ProfitDashboard({ wagered, won, openTransaction, balance
     <>
         <BalanceChecker 
             openTransaction={openTransaction} 
-            balance={balance} 
             bookies={bookies}
             transactions={transactions}
         />

@@ -6,7 +6,6 @@ import { UserContext } from '@/contexts/UserContext';
 import useTheme from '@/hooks/useTheme';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
-import { FontAwesome } from '@expo/vector-icons';
 
 export default function ChooseBookie({ visible, close, selectBookie }) {
 
@@ -15,21 +14,8 @@ export default function ChooseBookie({ visible, close, selectBookie }) {
     const { userBalance } = useContext(UserContext);
     const { bookies } = useContext(DBContext);
 
-    const [balance, setBalance] = useState([]);
-
-    useEffect(() => {
-        const updatedBalance = userBalance.map((b) => {
-            const bookie = bookies.find((bookie) => bookie.id === b.bookieId);
-            return {
-                bookie: bookie ? bookie.name : '',
-                balance: b.balance,
-            };
-        });
-        setBalance(updatedBalance);
-    }, []);
-
     const getBalance = (bookieName) => {
-        const bookie = balance.find((b) => b.bookie === bookieName);
+        const bookie = userBalance.find((b) => b.bookieName === bookieName);
         return bookie ? bookie.balance : 0;
     };
 

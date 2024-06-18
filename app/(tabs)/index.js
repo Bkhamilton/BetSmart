@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Dimensions } from 'react-native';
@@ -10,6 +10,7 @@ import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
 import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
+import { UserContext } from '@/contexts/UserContext';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalanceByUser, updateBalance } from '@/db/user-specific/Balance';
 import { getAllBookies, getBookies } from '@/db/general/Bookies';
@@ -23,6 +24,8 @@ export default function HomeScreen() {
 
   const db = useSQLiteContext();
 
+  const { user, setUserBalance } = useContext(UserContext);
+
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
   const [transactionModalVisible, setTransactionModalVisible] = useState(false);
@@ -31,10 +34,8 @@ export default function HomeScreen() {
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
   const [transactionBookieId, setTransactionBookieId] = useState(1);
   
-  const [userBalance, setUserBalance] = useState([{ bookieId: 1, balance: 0 }, { bookieId: 2, balance: 0 }])
   const [userBookies, setUserBookies] = useState([]);
   const [userTransactions, setUserTransactions] = useState([]);
-  const [userID, setUserID] = useState(1);
 
   function openSignUpModal() {
     setSignUpModalVisible(true);
@@ -92,23 +93,20 @@ export default function HomeScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      getTransactionsByUser(db, userID).then((transactions) => {
+      getTransactionsByUser(db, user.id).then((transactions) => {
         setUserTransactions(transactions);
       });
     }, [])
   );
 
   useEffect(() => {
-    getBalanceByUser(db, userID).then((balance) => {
-      setUserBalance(balance);
-    });
     getAllBookies(db).then((bookies) => {
       setUserBookies(bookies);
     });
   }, []);
 
   const onConfirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
-    updateBalance(db, bookieId, updatedBalance, userID).then(() => {
+    updateBalance(db, bookieId, updatedBalance, user.id).then(() => {
       setUserBalance(prevBalances => 
         prevBalances.map(item => 
           item.bookieId === bookieId ? { ...item, balance: Number(updatedBalance) } : item
@@ -118,10 +116,10 @@ export default function HomeScreen() {
     });
     const timestamp = new Date().toISOString();
     const description = `${title} for ${transactionAmount} with ${transactionBookie}`;
-    insertTransaction(db, bookieId, userID, title, initialAmount, transactionAmount, updatedBalance, timestamp, description).then(() => {
+    insertTransaction(db, bookieId, user.id, title, initialAmount, transactionAmount, updatedBalance, timestamp, description).then(() => {
       console.log('Transaction inserted');
     });
-    getTransactionsByUser(db, userID).then((transactions) => {
+    getTransactionsByUser(db, user.id).then((transactions) => {
       setUserTransactions(transactions);
     });
   }
@@ -131,7 +129,7 @@ export default function HomeScreen() {
   const amountWagered = 120.00;
 
   return (
-    <View style={styles.container}>
+    <>
       <LoginPage visible={loginModalVisible} close={closeLoginModal} login={login}/>
       <SignUpPage visible={signUpModalVisible} close={closeSignUpModal}/>
       <TransactionModal 
@@ -140,7 +138,6 @@ export default function HomeScreen() {
         title={transactionTitle}
         bookie={transactionBookie}
         bookieId={transactionBookieId}
-        balance={userBalance}
         onConfirm={onConfirmTransaction}
       />
       <HomeHeader history={handleBetHistory} login={openLoginModal} signup={openSignUpModal} />
@@ -151,14 +148,13 @@ export default function HomeScreen() {
           wagered={amountWagered} 
           won={amountWon} 
           openTransaction={openTransactionModal} 
-          balance={userBalance} 
           bookies={userBookies}
           transactions={userTransactions}
         />
         <TodaysBets bets={playoffBets}/>
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
-    </View>
+    </>
   );
 }
 

@@ -1,32 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Platform } from 'react-native';
 import { TouchableOpacity, Text, View, Modal, TextInput } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
+import { UserContext } from '@/contexts/UserContext';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 import useTheme from '@/hooks/useTheme';
 
-export default function TransactionModal({ visible, close, title, bookie, bookieId, balance, onConfirm  }) {
+export default function TransactionModal({ visible, close, title, bookie, bookieId, onConfirm  }) {
+
+  const { userBalance } = useContext(UserContext);
 
   const [amount, setAmount] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
 
-  if (balance) {
-    balance = balance.map(item => {
-      return {
-        bookieId: item.bookieId,
-        balance: Number(item.balance),
-      };
-    });
-  } else {
-    balance = [];
-  }
-
   const { grayBorder } = useTheme();
 
-  var selectedBookie = balance.find(item => item.bookieId === bookieId);
+  var selectedBookie = userBalance.find(item => item.bookieId === bookieId);
   if (!selectedBookie) {
-    const totalBalance = balance.reduce((sum, item) => sum + item.balance, 0);
+    const totalBalance = userBalance.reduce((sum, item) => sum + item.balance, 0);
     selectedBookie = { bookie: 'Total', balance: totalBalance };
   }
   const initialAmount = selectedBookie.balance;
