@@ -11,15 +11,19 @@ export default function MainLine() {
 
     const { iconColor } = useTheme();
 
+    const DisplayLine = ({ line }) => {
+        return (
+            <View style={{ flexDirection: 'row' }}>
+                <View style={{ borderWidth: 1, borderRadius: 20, width: 40, height: 40 }}/>
+                <Text>{line.name}</Text>
+                <Text>{line.value}</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
-            <View style={{ justifyContent: 'center', paddingHorizontal: 8, }}>
-                <FontAwesome5 name="chevron-down" size={16} color={iconColor} />
-            </View>
-            <View>
-                <Text style={{ fontSize: 16 }}>Main Line</Text>
-            </View>
-            <View>
+            <View style={styles.mainLine}>
 
             </View>
         </View>
@@ -28,7 +32,12 @@ export default function MainLine() {
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        width: '100%',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
     },
+    mainLine: {
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingVertical: 10,
+    }
 });

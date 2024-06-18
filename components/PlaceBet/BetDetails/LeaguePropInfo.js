@@ -3,21 +3,30 @@ import { StyleSheet } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import AltLine from './LeaguePropTypes/AltLine';
 import MainLine from './LeaguePropTypes/MainLine';
-import Colors from '@/constants/Colors';
+import GameLines from './LeaguePropTypes/GameLines';
+import FirstBasket from './LeaguePropTypes/FirstBasket';
+import PlayerSpecial from './LeaguePropTypes/PlayerSpecial';
+import TeamSpecial from './LeaguePropTypes/TeamSpecial';
+import AltSpread from './LeaguePropTypes/AltSpread';
+import AltTotal from './LeaguePropTypes/AltTotal';
+import AltPlayerLine from './LeaguePropTypes/AltPlayerLine';
+
+import useTheme from '@/hooks/useTheme';
+
 
 export default function LeaguePropInfo({ leaguePropInfo }) {
 
     const componentMapping = {
-        'alt-line': <AltLine />,
+        'alt-line': <AltLine/>,
         'main-line': <MainLine />,
-        'game-lines': <Text>Game Lines</Text>,
-        'first-basket': <Text>First Basket</Text>,
-        'player-special': <Text>Player Special</Text>,
-        'team-special': <Text>Team Special</Text>,
-        'alt-spread': <Text>Alternate Spread</Text>,
-        'alt-total': <Text>Alternate Total</Text>,
-        'alt-player-line': <Text>Alternate Player Line</Text>,
-        'first-to-reach': <Text>First to Reach</Text>,
+        'game-lines': <GameLines />,
+        'first-basket': <FirstBasket />,
+        'player-special': <PlayerSpecial />,
+        'team-special': <TeamSpecial />,
+        'alt-spread': <AltSpread />,
+        'alt-total': <AltTotal />,
+        'alt-player-line': <AltPlayerLine />,
+        'first-to-reach': <></>,
         'stat-leaders': <Text>Stat Leaders</Text>,
         'half-lines': <Text>Half Lines</Text>,
         'quarter-lines': <Text>Quarter Lines</Text>,
@@ -46,9 +55,9 @@ export default function LeaguePropInfo({ leaguePropInfo }) {
     return (
         <>
             {leaguePropInfo.map((info, index) => {
-    
+                const Component = componentMapping[info.propValue];
                 return (
-                    <View key={index} style={{ borderWidth: 1, width: '100%' }}>
+                    <View key={index} style={{ width: '100%' }}>
                         {componentMapping[info.propValue]}
                     </View>
                 );
