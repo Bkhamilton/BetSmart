@@ -16,9 +16,9 @@ export default function TransactionModal({ visible, close, title, bookie, bookie
 
   const { grayBorder } = useTheme();
 
-  var selectedBookie = userBalance.find(item => item.bookieId === bookieId);
+  var selectedBookie = userBalance?.find(item => item.bookieId === bookieId);
   if (!selectedBookie) {
-    const totalBalance = userBalance.reduce((sum, item) => sum + item.balance, 0);
+    const totalBalance = userBalance ? userBalance.reduce((sum, item) => sum + item.balance, 0) : 0;
     selectedBookie = { bookie: 'Total', balance: totalBalance };
   }
   const initialAmount = selectedBookie.balance;

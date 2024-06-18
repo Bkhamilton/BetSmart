@@ -36,7 +36,7 @@ export default function HomeScreen() {
   
   const [userBookies, setUserBookies] = useState([]);
   const [userTransactions, setUserTransactions] = useState([]);
-
+  
   function openSignUpModal() {
     setSignUpModalVisible(true);
   }
@@ -91,19 +91,19 @@ export default function HomeScreen() {
     router.navigate('profile/betHistory');
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      getTransactionsByUser(db, user.id).then((transactions) => {
-        setUserTransactions(transactions);
-      });
-    }, [])
-  );
-
   useEffect(() => {
     getAllBookies(db).then((bookies) => {
       setUserBookies(bookies);
     });
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      getTransactionsByUser(db, user.id).then((transactions) => {
+        setUserTransactions(transactions);
+      });
+    }
+  }, [user]);
 
   const onConfirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
     updateBalance(db, bookieId, updatedBalance, user.id).then(() => {
