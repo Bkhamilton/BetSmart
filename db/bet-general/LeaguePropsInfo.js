@@ -11,6 +11,17 @@ export const getAllLeaguePropsInfo = async (db) => {
     }
 };
 
+// Function to get all league prop info by propValue
+export const getLeaguePropsInfoByPropValue = async (db, propValue) => {
+    try {
+        const allRows = await db.getAllAsync('SELECT * FROM LeaguePropsInfo WHERE propValue = ?', [propValue]);
+        return allRows;
+    } catch (error) {
+        console.error('Error in getAllLeaguePropsInfoByPropValue:', error);
+        throw error;
+    }
+};
+
 // Function to get a league prop info
 export const getLeaguePropInfo = async (db, leagueId, propName) => {
     try {
@@ -49,6 +60,16 @@ export const deleteLeaguePropInfo = async (db, leaguePropInfoId) => {
         await db.runAsync('DELETE FROM LeaguePropsInfo WHERE id = ?', [leaguePropInfoId]);
     } catch (error) {
         console.error('Error in deleteLeaguePropInfo:', error);
+        throw error;
+    }
+};
+
+// Function to delete all league prop info with a specific propValue
+export const deleteLeaguePropInfoByPropValue = async (db, propValue) => {
+    try {
+        await db.runAsync('DELETE FROM LeaguePropsInfo WHERE propValue = ?', [propValue]);
+    } catch (error) {
+        console.error('Error in deleteLeaguePropInfoByPropValue:', error);
         throw error;
     }
 };
