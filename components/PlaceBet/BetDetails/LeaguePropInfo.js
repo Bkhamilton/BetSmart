@@ -10,6 +10,28 @@ import TeamSpecial from './LeaguePropTypes/TeamSpecial';
 import AltSpread from './LeaguePropTypes/AltSpread';
 import AltTotal from './LeaguePropTypes/AltTotal';
 import AltPlayerLine from './LeaguePropTypes/AltPlayerLine';
+import StatLeaders from './LeaguePropTypes/StatLeaders';
+import HalfLines from './LeaguePropTypes/HalfLines';
+import QuarterLines from './LeaguePropTypes/QuarterLines';
+import TeamProps from './LeaguePropTypes/TeamProps';
+import AltGameProps from './LeaguePropTypes/AltGameProps';
+import FirstToX from './LeaguePropTypes/FirstToX';
+import GameProps from './LeaguePropTypes/GameProps';
+import FirstToScore from './LeaguePropTypes/FirstToScore';
+import HitProps from './LeaguePropTypes/HitProps';
+import HRProps from './LeaguePropTypes/HRProps';
+import RBIProps from './LeaguePropTypes/RBIProps';
+import RunProps from './LeaguePropTypes/RunProps';
+import PitcherProps from './LeaguePropTypes/PitcherProps';
+import StrikeoutProps from './LeaguePropTypes/StrikeoutProps';
+import FirstXInnings from './LeaguePropTypes/FirstXInnings';
+import InningsLines from './LeaguePropTypes/InningsLines';
+import FirstGoal from './LeaguePropTypes/FirstGoal';
+import GoalScorer from './LeaguePropTypes/GoalScorer';
+import PlayerProps from './LeaguePropTypes/PlayerProps';
+import GoalieProps from './LeaguePropTypes/GoalieProps';
+import FirstXPeriods from './LeaguePropTypes/FirstXPeriods';
+import PeriodLines from './LeaguePropTypes/PeriodLines';
 
 import useTheme from '@/hooks/useTheme';
 
@@ -17,39 +39,37 @@ import useTheme from '@/hooks/useTheme';
 export default function LeaguePropInfo({ leaguePropInfo }) {
 
     const componentMapping = {
-        'alt-line': <AltLine/>,
-        'main-line': <MainLine />,
-        'game-lines': <GameLines />,
-        'first-basket': <FirstBasket />,
-        'player-special': <PlayerSpecial />,
-        'team-special': <TeamSpecial />,
-        'alt-spread': <AltSpread />,
-        'alt-total': <AltTotal />,
-        'alt-player-line': <AltPlayerLine />,
-        'first-to-reach': <></>,
-        'stat-leaders': <Text>Stat Leaders</Text>,
-        'half-lines': <Text>Half Lines</Text>,
-        'quarter-lines': <Text>Quarter Lines</Text>,
-        'team-props': <Text>Team Props</Text>,
-        'alt-game-props': <Text>Alternate Game Props</Text>,
-        'first-to-x': <Text>First to X</Text>,
-        'game-props': <Text>Game Props</Text>,
-        'first-to-score': <Text>First to Score</Text>,
-        'hit-props': <Text>Hit Props</Text>,
-        'hr-props': <Text>HR Props</Text>,
-        'rbi-props': <Text>RBI Props</Text>,
-        'run-props': <Text>Run Props</Text>,
-        'total-bases': <Text>Total Bases</Text>,
-        'pitcher-props': <Text>Pitcher Props</Text>,
-        'strikeout-props': <Text>Strikeout Props</Text>,
-        'first-x-innings': <Text>First X Innings</Text>,
-        'innings-lines': <Text>Innings Lines</Text>,
-        'first-goal': <Text>First Goal</Text>,
-        'goal-scorer': <Text>Goal Scorer</Text>,
-        'player-props': <Text>Player Props</Text>,
-        'goalie-props': <Text>Goalie Props</Text>,
-        'first-x-periods': <Text>First X Periods</Text>,
-        'period-lines': <Text>Period Lines</Text>,
+        'alt-line': AltLine,
+        'main-line': MainLine,
+        'game-lines': GameLines,
+        'first-basket': FirstBasket,
+        'player-special': PlayerSpecial,
+        'team-special': TeamSpecial,
+        'alt-spread': AltSpread,
+        'alt-total': AltTotal,
+        'alt-player-line': AltPlayerLine,
+        'stat-leaders': StatLeaders,
+        'half-lines': HalfLines,
+        'quarter-lines': QuarterLines,
+        'team-props': TeamProps,
+        'alt-game-props': AltGameProps,
+        'first-to-x': FirstToX,
+        'game-props': GameProps,
+        'first-to-score': FirstToScore,
+        'hit-props': HitProps,
+        'hr-props': HRProps,
+        'rbi-props': RBIProps,
+        'run-props': RunProps,
+        'pitcher-props': PitcherProps,
+        'strikeout-props': StrikeoutProps,
+        'first-x-innings': FirstXInnings,
+        'innings-lines': InningsLines,
+        'first-goal': FirstGoal,
+        'goal-scorer': GoalScorer,
+        'player-props': PlayerProps,
+        'goalie-props': GoalieProps,
+        'first-x-periods': FirstXPeriods,
+        'period-lines': PeriodLines,
     }
 
     return (
@@ -58,7 +78,7 @@ export default function LeaguePropInfo({ leaguePropInfo }) {
                 const Component = componentMapping[info.propValue];
                 return (
                     <View key={index} style={{ width: '100%' }}>
-                        {componentMapping[info.propValue]}
+                        <Component info={info}/>
                     </View>
                 );
             })}

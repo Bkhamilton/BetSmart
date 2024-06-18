@@ -6,13 +6,13 @@ import { BetContext } from '@/contexts/BetContext/BetContext';
 import PropBanner from './PropBanner/PropBanner';
 import useTheme from '@/hooks/useTheme';
 
-export default function AltLine({ info }) {
+export default function TeamProps() {
 
     const { league, currentGame } = useContext(BetContext);
 
     const { iconColor } = useTheme();
 
-    const title = 'Alternate ' + info.propName + ' Lines';
+    const title = 'Team Props';
 
     return (
         <View style={styles.container}>

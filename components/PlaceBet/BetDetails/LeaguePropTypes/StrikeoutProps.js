@@ -6,13 +6,13 @@ import { BetContext } from '@/contexts/BetContext/BetContext';
 import PropBanner from './PropBanner/PropBanner';
 import useTheme from '@/hooks/useTheme';
 
-export default function AltLine({ info }) {
+export default function StrikeoutProps() {
 
     const { league, currentGame } = useContext(BetContext);
 
     const { iconColor } = useTheme();
 
-    const title = 'Alternate ' + info.propName + ' Lines';
+    const title = 'Strikeout Props';
 
     return (
         <View style={styles.container}>
