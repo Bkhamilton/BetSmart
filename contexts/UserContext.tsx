@@ -64,10 +64,15 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
             }
         };
 
+        fetchUser();
+    }, []);
+
+    useEffect(() => {
         const fetchUserBalance = async () => {
             const mostRecentActiveUserSession = await getMostRecentActiveUserSession(db);
             if (mostRecentActiveUserSession) {
                 getBalanceByUser(db, mostRecentActiveUserSession.userId).then((newUserBalance) => {
+                    console.log('newUserBalance', newUserBalance);
                     setUserBalance(newUserBalance);
                 });
             } else {
@@ -82,7 +87,6 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
             }
         }
 
-        fetchUser();
         fetchUserBalance();
     }, []);
 
