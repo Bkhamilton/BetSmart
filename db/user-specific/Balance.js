@@ -26,7 +26,6 @@ export const getBalanceByUser = async (db, userId) => {
 export const insertBalance = async (db, bookieId, balance, userId) => {
   try {
     const result = await db.runAsync('INSERT INTO Balance (bookieId, balance, userID) VALUES (?, ?, ?)', [bookieId, balance, userId]);
-    console.log(result);
     return result.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting balance:', error);
@@ -38,7 +37,6 @@ export const insertBalance = async (db, bookieId, balance, userId) => {
 export const updateBalance = async (db, bookieId, balance, userId) => {
   try {
     await db.runAsync('UPDATE Balance SET balance = ? WHERE bookieId = ? AND userID = ?', [balance, bookieId, userId]);
-    console.log("Balance updated");
   } catch (error) {
     console.error('Error updating balance:', error);
     throw error;

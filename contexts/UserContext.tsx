@@ -72,7 +72,6 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
             const mostRecentActiveUserSession = await getMostRecentActiveUserSession(db);
             if (mostRecentActiveUserSession) {
                 getBalanceByUser(db, mostRecentActiveUserSession.userId).then((newUserBalance) => {
-                    console.log('newUserBalance', newUserBalance);
                     setUserBalance(newUserBalance);
                 });
             } else {

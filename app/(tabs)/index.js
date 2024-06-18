@@ -116,9 +116,7 @@ export default function HomeScreen() {
     });
     const timestamp = new Date().toISOString();
     const description = `${title} for ${transactionAmount} with ${transactionBookie}`;
-    insertTransaction(db, bookieId, user.id, title, initialAmount, transactionAmount, updatedBalance, timestamp, description).then(() => {
-      console.log('Transaction inserted');
-    });
+    insertTransaction(db, bookieId, user.id, title, initialAmount, transactionAmount, updatedBalance, timestamp, description)
     getTransactionsByUser(db, user.id).then((transactions) => {
       setUserTransactions(transactions);
     });
