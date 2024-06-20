@@ -77,7 +77,7 @@ export default function LeaguePropInfo({ leaguePropInfo }) {
             {leaguePropInfo.map((info, index) => {
                 const Component = componentMapping[info.propValue];
                 return (
-                    <View key={index} style={{ width: '100%' }}>
+                    <View key={index} style={styles.container}>
                         <Component info={info}/>
                     </View>
                 );
@@ -88,9 +88,7 @@ export default function LeaguePropInfo({ leaguePropInfo }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
+    width: '100%',
+    backgroundColor: 'transparent',
   },
 });
