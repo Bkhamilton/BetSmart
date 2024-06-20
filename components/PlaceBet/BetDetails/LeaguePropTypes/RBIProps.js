@@ -16,14 +16,16 @@ export default function RBIProps() {
 
     return (
         <View style={styles.container}>
-            <PropBanner title={title} />
+            <PropBanner title={"To Record an RBI"} />
+            <PropBanner title={"To Record 2+ RBIs"} />
+            <PropBanner title={"To Record 3+ RBIs"} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
         width: '100%',
+        backgroundColor: 'transparent'
     },
 });

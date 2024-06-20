@@ -16,14 +16,16 @@ export default function HitProps() {
 
     return (
         <View style={styles.container}>
-            <PropBanner title={title} />
+            <PropBanner title={"To Record A Hit"} />
+            <PropBanner title={"To Record 2+ Hits"} />
+            <PropBanner title={"To Record 3+ Hits"} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
         width: '100%',
+        backgroundColor: 'transparent'
     },
 });

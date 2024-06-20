@@ -16,14 +16,15 @@ export default function HRProps() {
 
     return (
         <View style={styles.container}>
-            <PropBanner title={title} />
+            <PropBanner title={"To Hit A Home Run"} />
+            <PropBanner title={"To Hit 2+ Home Runs"} />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
         width: '100%',
+        backgroundColor: 'transparent'
     },
 });
