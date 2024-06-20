@@ -13,27 +13,30 @@ export default function PropBanner({ title }) {
     };
 
     return (
-        <TouchableOpacity onPress={handlePress} style={styles.container}>
-            <View style={{ justifyContent: 'center', paddingHorizontal: 8, }}>
-                <FontAwesome5 name="chevron-down" size={16} color={iconColor} />
-            </View>
-            <View>
-                <Text style={{ fontSize: 16 }}>{title}</Text>
-            </View>
-            {detailsOpen && (
-                <View>
-                    {/* Detailed view goes here */}
+        <View style={{ paddingVertical: 6, width: '100%' }}>
+            <TouchableOpacity onPress={handlePress} style={styles.propContainer}>
+                <View style={{ justifyContent: 'center', paddingHorizontal: 8, }}>
+                    <FontAwesome5 name="chevron-down" size={16} color={iconColor} />
                 </View>
-            )}
-        </TouchableOpacity>
+                <View>
+                    <Text style={{ fontSize: 16 }}>{title}</Text>
+                </View>
+                {detailsOpen && (
+                    <View>
+                        {/* Detailed view goes here */}
+                    </View>
+                )}
+            </TouchableOpacity>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    propContainer: {
         flexDirection: 'row',
         width: '100%',
         borderWidth: 1,
-        borderRadius: 4
+        borderRadius: 8,
+        paddingVertical: 8,
     },
 });
