@@ -15,17 +15,10 @@ export default function HitProps() {
     const title = 'Hit Props';
 
     return (
-        <View style={styles.container}>
+        <>
             <PropBanner title={"To Record A Hit"} />
             <PropBanner title={"To Record 2+ Hits"} />
             <PropBanner title={"To Record 3+ Hits"} />
-        </View>
+        </>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        backgroundColor: 'transparent'
-    },
-});

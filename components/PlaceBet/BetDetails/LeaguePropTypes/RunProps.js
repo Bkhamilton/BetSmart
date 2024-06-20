@@ -15,16 +15,9 @@ export default function RunProps() {
     const title = 'Run Props';
 
     return (
-        <View style={styles.container}>
+        <>
             <PropBanner title={"To Record A Run"} />
             <PropBanner title={"To Record 2+ Runs"} />
-        </View>
+        </>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        backgroundColor: 'transparent'
-    },
-});

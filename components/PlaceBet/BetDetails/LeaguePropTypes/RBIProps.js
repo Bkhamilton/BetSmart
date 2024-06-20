@@ -15,17 +15,10 @@ export default function RBIProps() {
     const title = 'RBI Props';
 
     return (
-        <View style={styles.container}>
+        <>
             <PropBanner title={"To Record an RBI"} />
             <PropBanner title={"To Record 2+ RBIs"} />
             <PropBanner title={"To Record 3+ RBIs"} />
-        </View>
+        </>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        backgroundColor: 'transparent'
-    },
-});

@@ -12,19 +12,10 @@ export default function HRProps() {
 
     const { iconColor } = useTheme();
 
-    const title = 'HR Props';
-
     return (
-        <View style={styles.container}>
+        <>
             <PropBanner title={"To Hit A Home Run"} />
             <PropBanner title={"To Hit 2+ Home Runs"} />
-        </View>
+        </>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        backgroundColor: 'transparent'
-    },
-});

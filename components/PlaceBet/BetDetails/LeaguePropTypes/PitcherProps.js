@@ -10,20 +10,15 @@ export default function PitcherProps() {
 
     const { league, currentGame } = useContext(BetContext);
 
-    const { iconColor } = useTheme();
-
-    const title = 'Pitcher Props';
-
     return (
-        <View style={styles.container}>
-            <PropBanner title={title} />
-        </View>
+        <>
+            <PropBanner title={'Player Strikeouts'} />
+            <PropBanner title={'Player A - Alt Strikeouts'} />
+            <PropBanner title={'Player B - Alt Strikeouts'} />
+            <PropBanner title={'Starting Pitcher Combined Strikeouts'} />
+            <PropBanner title={'Starting Pitcher Combined Alt Strikeouts'} />
+            <PropBanner title={"Player A Outs Recorded"} />
+            <PropBanner title={"Player B Outs Recorded"} />
+        </>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        width: '100%',
-    },
-});
