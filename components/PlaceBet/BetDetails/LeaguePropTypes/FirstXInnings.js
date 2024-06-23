@@ -16,7 +16,10 @@ export default function FirstXInnings() {
 
     return (
         <View style={styles.container}>
-            <PropBanner title={title} />
+            <PropBanner title={"First 5 Innings Moneyline"} />
+            <PropBanner title={"First 5 Innings Result"} />
+            <PropBanner title={"First 5 Innings Alt Run Lines"} /> 
+            <PropBanner title={"First 5 Innings Alt Total Runs"} />        
         </View>
     );
 }
