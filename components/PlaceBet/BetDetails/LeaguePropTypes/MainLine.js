@@ -4,8 +4,9 @@ import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import useTheme from '@/hooks/useTheme';
+import PropBanner from './PropBanner/PropBanner';
 
-export default function MainLine() {
+export default function MainLine({ info }) {
 
     const { league, currentGame } = useContext(BetContext);
 
@@ -21,12 +22,12 @@ export default function MainLine() {
         );
     }
 
-    return (
-        <View style={styles.container}>
-            <View style={styles.mainLine}>
+    const title = 'Main ' + info.propName + ' Lines';
 
-            </View>
-        </View>
+    return (
+        <>
+            <PropBanner title={title} type={"Player"}/>
+        </>
     );
 }
 

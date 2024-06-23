@@ -12,7 +12,7 @@ export default function PitcherProps() {
 
     return (
         <>
-            <PropBanner title={'Player Strikeouts'} />
+            <PropBanner title={'Player Strikeouts'} type={"Player"}/>
             <PropBanner title={'Player A - Alt Strikeouts'} />
             <PropBanner title={'Player B - Alt Strikeouts'} />
             <PropBanner title={'Starting Pitcher Combined Strikeouts'} />
