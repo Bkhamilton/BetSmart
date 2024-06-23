@@ -6,9 +6,10 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getLogoUrl } from '@/db/general/Teams';
 import MainPlayer from './PropTypes/MainPlayer';
+import AltPlayer from './PropTypes/AltPlayer';
 import useTheme from '@/hooks/useTheme';
 
-export default function PropBanner({ title, type }) {
+export default function PropBanner({ title, type, player, stat }) {
 
     const { league, currentGame } = useContext(BetContext);
 
@@ -56,16 +57,27 @@ export default function PropBanner({ title, type }) {
     // Mapping of type to display components
     const displayMapping = {
         Player: MainPlayer,
+        'Player Alt': AltPlayer,
         Alt: AltDisplay,
         Alternate: AltDisplay,
         Main: MainDisplay,
+    };
+
+    const getLogo = () => {
+        if ( player ) {
+            if ( player === 'Player A' ) {
+                return awayLogo;
+            } else if ( player === 'Player B' ) {
+                return homeLogo;
+            }
+        }
     };
 
     // Function to get the display component based on type
     const getDisplayComponent = () => {
         // Use MainDisplay as a fallback if type is not found in the mapping
         const DisplayComponent = displayMapping[type] || MainDisplay;
-        return <DisplayComponent awayLogo={awayLogo} homeLogo={homeLogo}/>;
+        return <DisplayComponent awayLogo={awayLogo} homeLogo={homeLogo} player={player} logo={getLogo()} stat={stat}/>;
     };
 
     return (
