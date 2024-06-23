@@ -16,8 +16,8 @@ export default function RunProps() {
 
     return (
         <>
-            <PropBanner title={"To Record A Run"} />
-            <PropBanner title={"To Record 2+ Runs"} />
+            <PropBanner title={"To Record A Run"} type={"To Achieve"}/>
+            <PropBanner title={"To Record 2+ Runs"} type={"To Achieve"}/>
         </>
     );
 }

@@ -16,9 +16,9 @@ export default function RBIProps() {
 
     return (
         <>
-            <PropBanner title={"To Record an RBI"} />
-            <PropBanner title={"To Record 2+ RBIs"} />
-            <PropBanner title={"To Record 3+ RBIs"} />
+            <PropBanner title={"To Record an RBI"} type={"To Achieve"}/>
+            <PropBanner title={"To Record 2+ RBIs"} type={"To Achieve"}/>
+            <PropBanner title={"To Record 3+ RBIs"} type={"To Achieve"}/>
         </>
     );
 }
