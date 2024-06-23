@@ -14,9 +14,16 @@ export default function AltLine({ info }) {
 
     const title = 'Alternate ' + info.propName + ' Lines';
 
+    const pointLines = ["10", "15", "20", "25", "30"];
+    const reboundLines = ["6", "8", "10", "12", "14"];
+    const assistLines = ["4", "6", "8", "10"];
+    const stealLines = ["1", "2", "3"];
+    const blockLines = ["1", "2", "3"];
+    const threesLines = ["1", "2", "3", "4", "5"];
+
     return (
         <View style={styles.container}>
-            <PropBanner title={title} />
+            <PropBanner title={title} type={"Player Alt"} player={"Player"} stat={info.propName}/>
         </View>
     );
 }
