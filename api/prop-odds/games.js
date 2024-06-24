@@ -126,6 +126,9 @@ export const retrieveGamesDate = async (db, sports, date) => {
     for (let sport of sports) {
       const league = await getLeagueByName(db, sport);
       const curSeason = await getSeasonByDate(db, league.id, date);
+      if (!curSeason) {
+        continue;
+      }
       const value = await getTodaysGameswithNames(db, date, curSeason.id);
       if (value.length > 0) {
         data.push(await getSportData(db, sport, league, date, curSeason));
