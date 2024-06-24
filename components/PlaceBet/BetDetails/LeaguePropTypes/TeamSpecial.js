@@ -16,7 +16,7 @@ export default function TeamSpecial() {
 
     return (
         <View style={styles.container}>
-            <PropBanner title={title} />
+            <PropBanner title={title} type={"Generic"}/>
         </View>
     );
 }

@@ -16,7 +16,7 @@ export default function PlayerSpecial() {
 
     return (
         <View style={styles.container}>
-            <PropBanner title={title} />
+            <PropBanner title={title} type={"Generic"}/>
         </View>
     );
 }

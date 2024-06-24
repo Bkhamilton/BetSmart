@@ -8,6 +8,7 @@ import { getLogoUrl } from '@/db/general/Teams';
 import MainPlayer from './PropTypes/MainPlayer';
 import AltPlayer from './PropTypes/AltPlayer';
 import ToAchieve from './PropTypes/ToAchieve';
+import GenericProp from './PropTypes/GenericProp';
 import useTheme from '@/hooks/useTheme';
 
 export default function PropBanner({ title, type, player, stat }) {
@@ -63,6 +64,7 @@ export default function PropBanner({ title, type, player, stat }) {
         Alternate: AltDisplay,
         Main: MainDisplay,
         'To Achieve': ToAchieve,
+        Generic: GenericProp,
     };
 
     const getLogo = () => {
