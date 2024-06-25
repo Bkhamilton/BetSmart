@@ -21,10 +21,11 @@ export default function BetSlipModal({ visible, close }) {
     const Bet = ({ bet }) => {
         return (
             <View>
-                <Text>{bet.date}</Text>
-                <Text>{bet.league}</Text>
-                <Text>{bet.home}</Text>
-                <Text>{bet.away}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                    <Text>{bet.date}</Text>
+                    <Text>{bet.league}</Text>
+                </View>
+                <Text>{bet.away} vs {bet.home}</Text>
                 <Text>{bet.odds}</Text>
                 {bet.legs.map((leg, index) => (
                     <Leg key={index} leg={leg} />
@@ -45,23 +46,22 @@ export default function BetSlipModal({ visible, close }) {
             >
                 <View style={styles.container}>
                     <View style={styles.modalContent}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={styles.modalText}>
-                                {getDate(betSlip.date) + ' ' + getTime(betSlip.date) + ' ' + getAmPm(betSlip.date)}
-                            </Text>
-                            <Text style={styles.modalText}>
-                                {betSlip.odds}
-                            </Text>
+                        <View style={styles.headerContainer}>
+                            <View>
+                                <Text style={styles.modalText}>Bet Slip</Text>
+                            </View>
+                            <View>
+                                <TouchableOpacity
+                                    style={styles.closeButton}
+                                    onPress={close}
+                                >
+                                    <Text style={styles.closeButtonText}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                        <Text style={styles.modalText}>{betSlip.type}</Text>
-                        <Text style={styles.modalText}>{betSlip.betAmount}</Text>
-                        <Text style={styles.modalText}>{getTime(betSlip.date) + ' ' + getAmPm(betSlip.date) + ' ' + getDate(betSlip.date)}</Text>
                         {betSlip.bets.map((bet, index) => (
                             <Bet key={index} bet={bet} />
                         ))}
-                        <TouchableOpacity style={styles.closeButton} onPress={close}>
-                            <Text style={styles.closeButtonText}>Close</Text>
-                        </TouchableOpacity>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -77,13 +77,19 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        backgroundColor: 'white',
         width: '100%',
         height: '95%',
         marginTop: 'auto',
         paddingTop: 20,
         borderRadius: 10,
         alignItems: 'center',
+    },
+    headerContainer: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        width: '100%',
+        borderBottomWidth: 1,
+        borderColor: 'green',
     },
     modalText: {
         fontSize: 16,
