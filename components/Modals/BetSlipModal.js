@@ -66,7 +66,7 @@ export default function BetSlipModal({ visible, close }) {
                         {betSlip.bets.map((bet, index) => (
                             <Bet key={index} bet={bet} />
                         ))}
-                        <View>
+                        <View style={styles.confirmContainer}>
                             <View>
                                 <Text>Amount</Text>
                             </View>
@@ -117,4 +117,9 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
     },
+    confirmContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%'
+    }
 });
