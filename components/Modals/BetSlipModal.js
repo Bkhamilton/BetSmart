@@ -25,8 +25,12 @@ export default function BetSlipModal({ visible, close }) {
                     <Text>{bet.date}</Text>
                     <Text>{bet.league}</Text>
                 </View>
-                <Text>{bet.away} vs {bet.home}</Text>
-                <Text>{bet.odds}</Text>
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <Text>{bet.away} vs {bet.home}</Text>
+                </View>
+                <View style={{ alignItems: 'flex-end', justifyContent: 'center' }}>
+                    <Text>{bet.odds}</Text>
+                </View>
                 {bet.legs.map((leg, index) => (
                     <Leg key={index} leg={leg} />
                 ))}
