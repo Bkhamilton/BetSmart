@@ -62,6 +62,14 @@ export default function BetSlipModal({ visible, close }) {
                         {betSlip.bets.map((bet, index) => (
                             <Bet key={index} bet={bet} />
                         ))}
+                        <View>
+                            <View>
+                                <Text>Amount</Text>
+                            </View>
+                            <View>
+                                <Text>Winnings</Text>
+                            </View>
+                        </View>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
