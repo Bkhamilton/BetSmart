@@ -77,6 +77,12 @@ export default function PropBanner({ title, type, player, stat }) {
         }
     };
 
+    const getData = () => {
+        if ( stat ) {
+            // Get market Data based on stat and targets involved
+        }
+    }
+
     // Function to get the display component based on type
     const getDisplayComponent = () => {
         // Use MainDisplay as a fallback if type is not found in the mapping
