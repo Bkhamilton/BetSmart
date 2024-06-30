@@ -17,6 +17,7 @@ export default function useTheme() {
     greenText: colorScheme === 'dark' ? Colors.dark.greenText : Colors.light.greenText,
     grayBackground: colorScheme === 'dark' ? Colors.dark.grayBackground : Colors.light.grayBackground,
     grayBorder: colorScheme === 'dark' ? Colors.dark.grayBorder : Colors.light.grayBorder,
+    redText: colorScheme === 'dark' ? Colors.dark.redText : Colors.light.redText,
     // Add other color definitions here...
   };
 }
