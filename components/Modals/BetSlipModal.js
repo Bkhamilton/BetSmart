@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { View, Text, TouchableOpacity, Modal, TextInput } from '@/components/Themed';
+import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView, Pressable } from '@/components/Themed';
 import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
@@ -26,7 +26,7 @@ export default function BetSlipModal({ visible, close }) {
 
     const Bet = ({ bet }) => {
         return (
-            <View>
+            <Pressable>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
                     <Text>{bet.date}</Text>
                     <Text>{bet.league}</Text>
@@ -40,7 +40,7 @@ export default function BetSlipModal({ visible, close }) {
                 {bet.legs.map((leg, index) => (
                     <Leg key={index} leg={leg} />
                 ))}
-            </View>
+            </Pressable>
         );
     }
 
@@ -55,6 +55,16 @@ export default function BetSlipModal({ visible, close }) {
                         <Text style={{ fontSize: 16 }}>{title}</Text>
                     </View>
                 </TouchableOpacity>
+            </View>
+        );
+    }
+
+    const BetSlip = () => {
+        return (
+            <View>
+                {betSlip.bets.map((bet, index) => (
+                    <Bet key={index} bet={bet} />
+                ))}
             </View>
         );
     }
@@ -86,17 +96,20 @@ export default function BetSlipModal({ visible, close }) {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        {betSlip.bets.map((bet, index) => (
-                            <Bet key={index} bet={bet} />
-                        ))}
-                        <Banner title={"Same Game Parlays"}/>
-                        <Banner title={"Straight Bets"}/>
-                        <TouchableOpacity style={{ paddingVertical: 6, borderWidth: 1, width: '100%' }}>
-                            <View style={styles.removeContainer}>
-                                <Ionicons name="trash-outline" size={16} color={redText} />
-                                <Text style={{ color: redText }}>Remove all legs</Text>
-                            </View>
-                        </TouchableOpacity>
+                        <ScrollView 
+                            style={{ width: '100%', paddingVertical: 8 }}
+                            showsVerticalScrollIndicator={false}
+                        >
+                            <BetSlip />
+                            <Banner title={"Same Game Parlays"}/>
+                            <Banner title={"Straight Bets"}/>
+                            <TouchableOpacity style={{ paddingVertical: 6, borderWidth: 1, width: '100%' }}>
+                                <View style={styles.removeContainer}>
+                                    <Ionicons name="trash-outline" size={16} color={redText} />
+                                    <Text style={{ color: redText }}>Remove all legs</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </ScrollView>
                     </View>
                     <View style={styles.confirmContainer}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20 }}>
