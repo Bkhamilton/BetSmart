@@ -15,11 +15,41 @@ export default function BetSlipModal({ visible, close }) {
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
 
     const Leg = ({ leg }) => {
+
+        const { type, betTarget, stat, line, overUnder } = leg;
+
+        const displayLeg = () => {
+            switch (type) {
+            case 'Player Points':
+                return `${betTarget} ${stat} ${line} ${overUnder}`;
+            case 'Player Threes':
+                return `${betTarget} ${stat} ${line} ${overUnder}`;
+            case 'Main':
+                switch (stat) {
+                case 'moneyline':
+                    return `${line} ${stat.toUpperCase()}`;
+                case 'spread':
+                    return `${betTarget} ${stat} ${line}`;
+                case 'total_over_under':
+                    return `${stat} ${line}`;
+                default:
+                    return '';
+                }
+            default:
+                return '';
+            }
+        }
+
         return (
-            <View>
-                <Text>{leg.betTarget} {leg.stat} {leg.line}</Text>
-                <Text>{leg.odds}</Text>
-            </View>
+            <>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16, paddingVertical: 4 }}>
+                    <Text>{displayLeg()}</Text>
+                    <TouchableOpacity>
+                        <Ionicons name="close" size={16} color={redText} />
+                    </TouchableOpacity>
+                </View>
+
+            </>
         );
     }
 
@@ -28,7 +58,7 @@ export default function BetSlipModal({ visible, close }) {
         const numLegs = bet.legs.length;
 
         return (
-            <Pressable>
+            <Pressable style={styles.betContainer}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
                     <Text>{bet.date}</Text>
                     <Text>{bet.league}</Text>
@@ -36,7 +66,7 @@ export default function BetSlipModal({ visible, close }) {
                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                     <Text><Text style={{ fontWeight: 'bold' }}>{bet.away}</Text> vs <Text style={{ fontWeight: 'bold' }}>{bet.home}</Text></Text>
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', paddingHorizontal: 8 }}>
                     <View>
 
                     </View>
@@ -71,11 +101,11 @@ export default function BetSlipModal({ visible, close }) {
 
     const BetSlip = () => {
         return (
-            <View>
+            <>
                 {betSlip.bets.map((bet, index) => (
                     <Bet key={index} bet={bet} />
                 ))}
-            </View>
+            </>
         );
     }
 
@@ -107,7 +137,7 @@ export default function BetSlipModal({ visible, close }) {
                             </View>
                         </View>
                         <ScrollView 
-                            style={{ width: '100%', paddingVertical: 8 }}
+                            style={{ width: '100%' }}
                             showsVerticalScrollIndicator={false}
                         >
                             <BetSlip />
@@ -230,5 +260,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-    }
+    },
+    betContainer: {
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        paddingVertical: 8,
+    },
 });
