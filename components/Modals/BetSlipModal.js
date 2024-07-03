@@ -8,7 +8,7 @@ import useTheme from '@/hooks/useTheme';
 
 export default function BetSlipModal({ visible, close }) {
 
-    const { betSlip } = useContext(BetContext);
+    const { betSlip, currentGame } = useContext(BetContext);
 
     const { iconColor, redText, mainGreen } = useTheme();
 
@@ -17,7 +17,6 @@ export default function BetSlipModal({ visible, close }) {
     const Leg = ({ leg }) => {
         return (
             <View>
-                <Text>{leg.type}</Text>
                 <Text>{leg.betTarget} {leg.stat} {leg.line}</Text>
                 <Text>{leg.odds}</Text>
             </View>
@@ -25,6 +24,9 @@ export default function BetSlipModal({ visible, close }) {
     }
 
     const Bet = ({ bet }) => {
+
+        const numLegs = bet.legs.length;
+
         return (
             <Pressable>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
@@ -32,10 +34,18 @@ export default function BetSlipModal({ visible, close }) {
                     <Text>{bet.league}</Text>
                 </View>
                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    <Text>{bet.away} vs {bet.home}</Text>
+                    <Text><Text style={{ fontWeight: 'bold' }}>{bet.away}</Text> vs <Text style={{ fontWeight: 'bold' }}>{bet.home}</Text></Text>
                 </View>
-                <View style={{ alignItems: 'flex-end', justifyContent: 'center' }}>
-                    <Text>{bet.odds}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                    <View>
+
+                    </View>
+                    <View>
+                        <Text style={{ fontWeight: '500' }}>{numLegs} Leg{numLegs > 1 ? 's' : '' }</Text>
+                    </View>
+                    <View>
+                        <Text>{bet.odds}</Text>
+                    </View>                                        
                 </View>
                 {bet.legs.map((leg, index) => (
                     <Leg key={index} leg={leg} />
