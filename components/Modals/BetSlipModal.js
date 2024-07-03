@@ -36,7 +36,7 @@ export default function BetSlipModal({ visible, close }) {
                     return '';
                 }
             default:
-                return '';
+                return `${betTarget} ${stat} ${line} ${overUnder}`;
             }
         }
 
