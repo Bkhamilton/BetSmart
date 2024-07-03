@@ -70,14 +70,14 @@ export default function MainBettingLines({ game, selectProp }) {
             <View>
                 <BettingLine 
                     type="Main"
-                    target={gameId}
+                    target={'Total'}
                     stat="total_over_under"
                     value="O 218.5"
                     odds="+100"  
                 />
                 <BettingLine 
                     type="Main"
-                    target={gameId}
+                    target={'Total'}
                     stat="total_over_under"
                     value="U 218.5"
                     odds="-108"  
