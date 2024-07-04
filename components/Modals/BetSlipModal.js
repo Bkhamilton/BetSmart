@@ -6,7 +6,7 @@ import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
-export default function BetSlipModal({ visible, close }) {
+export default function BetSlipModal({ visible, close, removeProp }) {
 
     const { betSlip, currentGame } = useContext(BetContext);
 
@@ -14,7 +14,11 @@ export default function BetSlipModal({ visible, close }) {
 
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
 
-    const Leg = ({ leg }) => {
+    const onRemove = (bet, leg) => {
+        removeProp(bet, leg);
+    }
+
+    const Leg = ({ leg, currentBet }) => {
 
         const { type, betTarget, stat, line, overUnder } = leg;
 
@@ -44,11 +48,10 @@ export default function BetSlipModal({ visible, close }) {
             <>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16, paddingVertical: 4 }}>
                     <Text>{displayLeg()}</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => onRemove(currentBet, leg)}>
                         <Ionicons name="close" size={16} color={redText} />
                     </TouchableOpacity>
                 </View>
-
             </>
         );
     }
@@ -78,7 +81,7 @@ export default function BetSlipModal({ visible, close }) {
                     </View>                                        
                 </View>
                 {bet.legs.map((leg, index) => (
-                    <Leg key={index} leg={leg} />
+                    <Leg key={index} leg={leg} currentBet={bet}/>
                 ))}
             </Pressable>
         );

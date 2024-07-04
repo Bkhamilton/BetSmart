@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
+import { removeLeg } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
@@ -18,10 +19,11 @@ import { getLeaguePropInfo } from '@/db/bet-general/LeaguePropsInfo';
 import { getLeagueByName } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
+import BetSlipModal from '../../../components/Modals/BetSlipModal';
 
 export default function BetDetailsScreen() {
    
-  const { league, currentGame, setBookie, setBookieId, betSlip } = useContext(BetContext);
+  const { league, currentGame, setBookie, setBookieId, betSlip, setBetSlip } = useContext(BetContext);
 
   const { bookies } = useContext(DBContext);
 
@@ -35,6 +37,9 @@ export default function BetDetailsScreen() {
   const [curLeagueProp, setCurLeagueProp] = useState('Popular');
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);
+  const [betSlipModal, setBetSlipModal] = useState(false);
+
+  const [totalLegs, setTotalLegs] = useState(0);
 
   const openBookieModal = () => {
     setChooseBookieModal(true);
@@ -42,6 +47,14 @@ export default function BetDetailsScreen() {
 
   const closeBookieModal = () => {
     setChooseBookieModal(false);
+  }
+
+  const openBetSlipModal = () => {
+    setBetSlipModal(true);
+  }
+
+  const closeBetSlipModal = () => {
+    setBetSlipModal(false);
   }
 
   const selectBookie = (bookie) => {
@@ -75,6 +88,15 @@ export default function BetDetailsScreen() {
       });
     }
   }, [curLeagueProp]);
+
+  const removeProp = (bet, leg) => {
+    const newBetSlip = removeLeg(betSlip, bet, leg);
+    if (!newBetSlip) {
+      closeBetSlipModal();
+    }
+    setBetSlip(newBetSlip);
+    setTotalLegs(newBetSlip ? newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
+  }
   
   const GameHeader = () => {
     return (
@@ -101,6 +123,15 @@ export default function BetDetailsScreen() {
         close={closeBookieModal}
         selectBookie={selectBookie}
       />
+      {
+        betSlip && (
+          <BetSlipModal
+            visible={betSlipModal}
+            close={closeBetSlipModal}
+            removeProp={removeProp}
+          />
+        )
+      }
       <GameHeader />
       <ScrollView>
         <IntroInfo/>
@@ -123,7 +154,7 @@ export default function BetDetailsScreen() {
         betSlip &&
         <BetSlipBanner
           betSlip={betSlip}
-          onPress={() => console.log(JSON.stringify(betSlip, null, 2))}
+          onPress={openBetSlipModal}
         />
       }
     </>
