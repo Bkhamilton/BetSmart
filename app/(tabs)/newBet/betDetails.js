@@ -12,14 +12,12 @@ import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
 import LeaguePropSlider from '@/components/PlaceBet/BetDetails/LeaguePropSlider';
 import LeaguePropInfo from '@/components/PlaceBet/BetDetails/LeaguePropInfo';
-import { getBalance } from '@/db/user-specific/Balance';
-import { getAllBookies } from '@/db/general/Bookies';
 import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
 import { getLeaguePropInfo } from '@/db/bet-general/LeaguePropsInfo';
 import { getLeagueByName } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
-import BetSlipModal from '../../../components/Modals/BetSlipModal';
+import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
 
 export default function BetDetailsScreen() {
    

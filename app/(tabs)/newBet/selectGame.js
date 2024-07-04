@@ -14,8 +14,7 @@ import SportSlider from '@/components/PlaceBet/SelectGame/SportSlider';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
-import BetSlipModal from '@/components/Modals/BetSlipModal';
-import { getBalance } from '@/db/user-specific/Balance';
+import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
 import useTheme from '@/hooks/useTheme';
 import DatePicker from '@/components/PlaceBet/SelectGame/DatePicker';
 
