@@ -111,3 +111,43 @@ export function updateBetSlip(betSlip, bet, leg) {
 
   return betSlip;
 }
+
+export function removeLeg(betSlip, bet, leg) {
+  // Find the bet
+  const betToRemove = betSlip.bets.find(b => 
+    b.date === bet.date && 
+    b.sport === bet.sport && 
+    b.home === bet.home && 
+    b.away === bet.away
+  );
+
+  // Find the leg
+  const legToRemove = betToRemove.legs.find(l => 
+    l.type === leg.type && 
+    l.betTarget === leg.betTarget && 
+    l.stat === leg.stat
+  );
+
+  // Remove the leg
+  betToRemove.legs = betToRemove.legs.filter(l => l !== legToRemove);
+
+  // If there are no legs left in the bet, remove the bet
+  if (betToRemove.legs.length === 0) {
+    betSlip.bets = betSlip.bets.filter(b => b !== betToRemove);
+
+    // Update the betSlip type
+    if (betSlip.bets.length === 1) {
+      betSlip.type = 'Single';
+    }
+  }
+
+  // If there are no bets left in the betSlip, return null
+  if (betSlip.bets.length === 0) {
+    return null;
+  }
+
+  // Update the betSlip odds
+  betSlip.odds = calculateCombinedOdds(betSlip.bets.map(bet => bet.odds));
+
+  return betSlip;
+}
