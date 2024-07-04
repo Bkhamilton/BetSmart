@@ -6,7 +6,7 @@ import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
-export default function BetSlipModal({ visible, close, removeProp }) {
+export default function BetSlipModal({ visible, close, removeProp, removeBetSlip }) {
 
     const { betSlip, currentGame } = useContext(BetContext);
 
@@ -66,7 +66,7 @@ export default function BetSlipModal({ visible, close, removeProp }) {
                     <Text>{bet.date}</Text>
                     <Text>{bet.league}</Text>
                 </View>
-                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 2 }}>
                     <Text><Text style={{ fontWeight: 'bold' }}>{bet.away}</Text> vs <Text style={{ fontWeight: 'bold' }}>{bet.home}</Text></Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', paddingHorizontal: 8 }}>
@@ -146,7 +146,10 @@ export default function BetSlipModal({ visible, close, removeProp }) {
                             <BetSlip />
                             <Banner title={"Same Game Parlays"}/>
                             <Banner title={"Straight Bets"}/>
-                            <TouchableOpacity style={{ paddingVertical: 6, borderWidth: 1, width: '100%' }}>
+                            <TouchableOpacity 
+                                style={{ paddingVertical: 6, borderWidth: 1, width: '100%' }}
+                                onPress={removeBetSlip}
+                            >
                                 <View style={styles.removeContainer}>
                                     <Ionicons name="trash-outline" size={16} color={redText} />
                                     <Text style={{ color: redText }}>Remove all legs</Text>

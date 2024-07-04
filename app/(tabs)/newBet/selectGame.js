@@ -109,6 +109,12 @@ export default function SelectGameScreen() {
     setTotalLegs(newBetSlip ? newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
   }
 
+  const removeBetSlip = () => {
+    closeBetSlipModal();
+    setBetSlip(null);
+    setTotalLegs(0);
+  }
+
 
   const updateDate = (direction) => {
     const currentDate = new Date(date); // Get the current date
@@ -172,6 +178,7 @@ export default function SelectGameScreen() {
             visible={betSlipModal}
             close={closeBetSlipModal}
             removeProp={removeProp}
+            removeBetSlip={removeBetSlip}
           />
         )
       }

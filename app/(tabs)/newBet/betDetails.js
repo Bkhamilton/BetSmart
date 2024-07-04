@@ -97,6 +97,12 @@ export default function BetDetailsScreen() {
     setBetSlip(newBetSlip);
     setTotalLegs(newBetSlip ? newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
   }
+
+  const removeBetSlip = () => {
+    closeBetSlipModal();
+    setBetSlip(null);
+    setTotalLegs(0);
+  }
   
   const GameHeader = () => {
     return (
@@ -129,6 +135,7 @@ export default function BetDetailsScreen() {
             visible={betSlipModal}
             close={closeBetSlipModal}
             removeProp={removeProp}
+            removeBetSlip={removeBetSlip}
           />
         )
       }
