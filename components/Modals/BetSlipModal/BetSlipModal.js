@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView, Pressable } from '@/components/Themed';
@@ -12,10 +12,34 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
 
     const { iconColor, redText, mainGreen } = useTheme();
 
+    const [wager, setWager] = useState(0);
+
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
+
+    // Function to convert American odds to decimal odds
+    const convertAmericanToDecimalOdds = (americanOdds) => {
+        if (americanOdds.startsWith('+')) {
+            // For positive odds
+            return (parseInt(americanOdds.substring(1), 10) / 100) + 1;
+        } else {
+            // For negative odds
+            return (100 / Math.abs(parseInt(americanOdds, 10))) + 1;
+        }
+    };
+
+    // Modified getWinnings function
+    const getWinnings = (wager) => {
+        const decimalOdds = convertAmericanToDecimalOdds(betSlip.odds);
+        return (wager * decimalOdds).toFixed(2);
+    };
 
     const onRemove = (bet, leg) => {
         removeProp(bet, leg);
+    }
+
+    const onClose = () => {
+        setWager(0);
+        close();
     }
 
     const Leg = ({ leg, currentBet }) => {
@@ -133,7 +157,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                                 <Text>{betSlip.odds}</Text>
                                 <TouchableOpacity
                                     style={styles.closeButton}
-                                    onPress={close}
+                                    onPress={onClose}
                                 >
                                     <Text style={styles.closeButtonText}>Close</Text>
                                 </TouchableOpacity>
@@ -147,7 +171,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                             <Banner title={"Same Game Parlays"}/>
                             <Banner title={"Straight Bets"}/>
                             <TouchableOpacity 
-                                style={{ paddingVertical: 6, borderWidth: 1, width: '100%' }}
+                                style={{ paddingVertical: 6, width: '100%', backgroundColor: 'pink' }}
                                 onPress={removeBetSlip}
                             >
                                 <View style={styles.removeContainer}>
@@ -168,8 +192,10 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                                 <View style={styles.wagerInnerContainer}>
                                     <Text style={{ fontSize: 16 }}>$</Text>
                                     <TextInput
-                                        style={{ fontSize: 16, borderWidth: 1, width: '80%' }}
+                                        style={{ fontSize: 16, width: '80%' }}
                                         placeholder=""
+                                        value={wager}
+                                        onChangeText={setWager}
                                         keyboardType="numeric"
                                     />
                                 </View>
@@ -178,11 +204,11 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                                 <Text style={{ fontSize: 16 }}>To Win</Text>
                                 <View style={styles.wagerInnerContainer}>
                                     <Text style={{ fontSize: 16 }}>$</Text>
-                                    <Text></Text>
+                                    <Text style={{ fontSize: 16 }}>{getWinnings(wager)}</Text>
                                 </View>
                             </View>                        
                         </View>
-                        <TouchableOpacity style={{ paddingVertical: 8, backgroundColor: mainGreen, borderRadius: 8 }}>
+                        <TouchableOpacity style={[styles.confirmButtonContainer, { backgroundColor: mainGreen }]}>
                             <Text style={{ color: 'white', fontSize: 16 }}>Confirm Bet</Text>
                         </TouchableOpacity>
                     </View>
@@ -244,6 +270,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 8,
+        backgroundColor: 'transparent'
     },
     legsContainer: {
         borderWidth: 1, 
@@ -271,5 +298,12 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderBottomWidth: 1,
         paddingVertical: 8,
+    },
+    confirmButtonContainer: {
+        padding: 12, 
+        borderRadius: 8, 
+        margin: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
