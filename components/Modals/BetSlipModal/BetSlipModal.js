@@ -6,13 +6,14 @@ import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
-export default function BetSlipModal({ visible, close, removeProp, removeBetSlip }) {
+export default function BetSlipModal({ visible, close, removeProp, removeBetSlip, confirm }) {
 
     const { betSlip, currentGame } = useContext(BetContext);
 
     const { iconColor, redText, mainGreen } = useTheme();
 
     const [wager, setWager] = useState(0);
+    const [winnings, setWinnings] = useState(0);
 
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
 
@@ -40,6 +41,15 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
     const onClose = () => {
         setWager(0);
         close();
+    }
+
+    const onConfirm = () => {
+        confirm(wager, getWinnings(wager));
+    }
+
+    const onDismiss = () => {
+        setWinnings(getWinnings(wager));
+        Keyboard.dismiss();
     }
 
     const Leg = ({ leg, currentBet }) => {
@@ -136,6 +146,45 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
         );
     }
 
+    const ConfirmView = () => {
+        return (
+            <View style={styles.confirmContainer}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 2 }}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{totalLegs} leg Bet</Text>
+                    <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlip.odds}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={styles.wagerContainer}>
+                        <Text style={{ fontSize: 16 }}>Wager</Text>
+                        <View style={styles.wagerInnerContainer}>
+                            <Text style={{ fontSize: 16 }}>$</Text>
+                            <TextInput
+                                style={{ fontSize: 16, width: '80%' }}
+                                placeholder=""
+                                value={wager}
+                                onChangeText={setWager}
+                                keyboardType="numeric"
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.wagerContainer}>
+                        <Text style={{ fontSize: 16 }}>To Win</Text>
+                        <View style={styles.wagerInnerContainer}>
+                            <Text style={{ fontSize: 16 }}>$</Text>
+                            <Text style={{ fontSize: 16 }}>{winnings}</Text>
+                        </View>
+                    </View>                        
+                </View>
+                <TouchableOpacity 
+                    style={[styles.confirmButtonContainer, { backgroundColor: mainGreen }]}
+                    onPress={onConfirm}    
+                >
+                    <Text style={{ color: 'white', fontSize: 16 }}>Confirm Bet</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
     return (
         <Modal
             animationType="slide"
@@ -143,7 +192,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
             visible={visible}
             onRequestClose={close}
         >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <TouchableWithoutFeedback onPress={onDismiss}>
                 <View style={styles.container}>
                     <View style={styles.modalContent}>
                         <View style={styles.headerContainer}>
@@ -182,9 +231,9 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                         </ScrollView>
                     </View>
                     <View style={styles.confirmContainer}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20 }}>
-                            <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{totalLegs} leg Bet</Text>
-                            <Text style={{ fontWeight: '500' }}>{betSlip.odds}</Text>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 2 }}>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{totalLegs} leg Bet</Text>
+                            <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlip.odds}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                             <View style={styles.wagerContainer}>
@@ -208,7 +257,10 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                                 </View>
                             </View>                        
                         </View>
-                        <TouchableOpacity style={[styles.confirmButtonContainer, { backgroundColor: mainGreen }]}>
+                        <TouchableOpacity 
+                            style={[styles.confirmButtonContainer, { backgroundColor: mainGreen }]}
+                            onPress={onConfirm} 
+                        >
                             <Text style={{ color: 'white', fontSize: 16 }}>Confirm Bet</Text>
                         </TouchableOpacity>
                     </View>

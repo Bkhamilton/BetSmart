@@ -114,6 +114,12 @@ export default function SelectGameScreen() {
     setTotalLegs(0);
   }
 
+  const confirmBet = (wager, winnings) => {
+    console.log('Wager:', wager);
+    console.log('Winnings:', winnings);
+    console.log('Bet Slip:', JSON.stringify(betSlip));
+    closeBetSlipModal();
+  }
 
   const updateDate = (direction) => {
     const currentDate = new Date(date); // Get the current date
@@ -178,6 +184,7 @@ export default function SelectGameScreen() {
             close={closeBetSlipModal}
             removeProp={removeProp}
             removeBetSlip={removeBetSlip}
+            confirm={confirmBet}
           />
         )
       }
