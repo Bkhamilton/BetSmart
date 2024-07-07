@@ -32,28 +32,28 @@ export function createLeg(type, betTarget, stat, line, odds) {
 }
 
 function calculateCombinedOdds(oddsArray) {
-
-  // If there is only one odds, return it
   if (oddsArray.length === 1) {
     return oddsArray[0];
   }
 
   let combinedDecimalOdds = 1;
 
-  // Convert each American odds to decimal odds and multiply them together
   for (let i = 0; i < oddsArray.length; i++) {
     const numOdds = Number(oddsArray[i]);
     const decimalOdds = numOdds > 0 ? (numOdds / 100) + 1 : (100 / Math.abs(numOdds)) + 1;
     combinedDecimalOdds *= decimalOdds;
   }
 
-  // Subtract 1 from the combined decimal odds
   combinedDecimalOdds -= 1;
 
-  // Convert the combined decimal odds back to American odds
-  const combinedOdds = combinedDecimalOdds >= 1 ? (combinedDecimalOdds - 1) * 100 : -100 / (combinedDecimalOdds - 1);
+  let combinedOdds = combinedDecimalOdds >= 1 ? (combinedDecimalOdds - 1) * 100 : -100 / (combinedDecimalOdds - 1);
 
-  const americanOdds = combinedOdds >= 1 ? `+${Math.round(combinedOdds)}` : `-${Math.round(combinedOdds)}`;
+  // Adjust for combined odds that result in a positive value between 00 and 100
+  if (combinedOdds > 0 && combinedOdds < 100) {
+    combinedOdds += 100;
+  }
+
+  const americanOdds = combinedOdds >= 0 ? `+${Math.round(combinedOdds)}` : `${Math.round(combinedOdds)}`;
 
   return americanOdds;
 }
