@@ -31,7 +31,7 @@ export function createLeg(type, betTarget, stat, line, odds) {
   };
 }
 
-function calculateCombinedOdds(oddsArray) {
+export function calculateCombinedOdds(oddsArray) {
   if (oddsArray.length === 1) {
     return oddsArray[0];
   }
@@ -145,6 +145,28 @@ export function removeLeg(betSlip, bet, leg) {
   if (betSlip.bets.length === 0) {
     return null;
   }
+
+  // Update the betSlip odds
+  betSlip.odds = calculateCombinedOdds(betSlip.bets.map(bet => bet.odds));
+
+  return betSlip;
+}
+
+export function removeBetSlip(betSlip) {
+  return null;
+}
+
+export function updateBetOdds(betSlip, bet, newOdds) {
+  // Find the bet
+  const betToUpdate = betSlip.bets.find(b => 
+    b.date === bet.date && 
+    b.sport === bet.sport && 
+    b.home === bet.home && 
+    b.away === bet.away
+  );
+
+  // Update the bet odds
+  betToUpdate.odds = newOdds;
 
   // Update the betSlip odds
   betSlip.odds = calculateCombinedOdds(betSlip.bets.map(bet => bet.odds));
