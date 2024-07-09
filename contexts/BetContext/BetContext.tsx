@@ -1,5 +1,6 @@
 // app/contexts/BetContext/BetContext.tsx
 import React, { createContext, useState, ReactNode } from 'react';
+import { createLeg, createBet, createBetSlip, updateBetSlip, removeLeg } from '@/contexts/BetContext/betSlipHelpers';
 
 interface Game {
   id: number;
