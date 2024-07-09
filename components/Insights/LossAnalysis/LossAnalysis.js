@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, ScrollView } from '@/components/Themed';
 import InsightCard from './InsightCard';
-import Colors from '@/constants/Colors';
 
 export default function LossAnalysis({  }) {
   return (
