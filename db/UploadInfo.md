@@ -117,8 +117,36 @@ I only have myself inserted as a user, I have the default User hardcoded into th
 manual inserts
 
 ```javascript
-insertBalance(db, getBookieByName("DraftKings").id, 100, getUser("username"))
-insertBalance(db, getBookieByName("FanDuel").id, 100, getUser("username"))
+insertBalance(db, getBookieByName("DraftKings").id, 100, getUser("username"));
+insertBalance(db, getBookieByName("FanDuel").id, 100, getUser("username"));
 ```
 
 This adds $100 to your current balance for FanDuel and DraftKings
+
+MORE
+
+```javascript
+const addLeaguePropInfo = () => {
+  getLeagueByName(db, "NBA").then((league) => {
+    NBAcategories.forEach((category) => {
+      category.info.map((info) => {
+        insertLeaguePropInfo(db, league.id, category.title, info);
+      });
+    });
+  });
+  getLeagueByName(db, "NHL").then((league) => {
+    NHLcategories.forEach((category) => {
+      category.info.map((info) => {
+        insertLeaguePropInfo(db, league.id, category.title, info);
+      });
+    });
+  });
+  getLeagueByName(db, "MLB").then((league) => {
+    MLBcategories.forEach((category) => {
+      category.info.map((info) => {
+        insertLeaguePropInfo(db, league.id, category.title, info);
+      });
+    });
+  });
+};
+```
