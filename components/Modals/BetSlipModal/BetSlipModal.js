@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView, Pressable } from '@/components/Themed';
 import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { calculateCombinedOdds, updateBetOdds } from '@/contexts/BetContext/betSlipHelpers';
 import useTheme from '@/hooks/useTheme';
 
 export default function BetSlipModal({ visible, close, removeProp, removeBetSlip, confirm }) {
@@ -14,6 +15,8 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
 
     const [wager, setWager] = useState(0);
     const [winnings, setWinnings] = useState(0);
+
+    const [betSlipOdds, setBetSlipOdds] = useState(betSlip.odds);
 
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
 
@@ -51,6 +54,12 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
         setWinnings(getWinnings(wager));
         Keyboard.dismiss();
     }
+
+    // add useEffect function to sum up the odds of all the bets in the betSlip
+    useEffect(() => {
+        const oddsArray = betSlip.bets.map(bet => bet.odds);
+        setBetSlipOdds(calculateCombinedOdds(oddsArray));
+    }, [betSlip]);
 
     const Leg = ({ leg, currentBet }) => {
 
@@ -94,6 +103,8 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
 
         const numLegs = bet.legs.length;
 
+        const [betOdds, setBetOdds] = useState(bet.odds.slice(1));
+
         return (
             <Pressable style={styles.betContainer}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
@@ -104,14 +115,20 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                     <Text><Text style={{ fontWeight: 'bold' }}>{bet.away}</Text> vs <Text style={{ fontWeight: 'bold' }}>{bet.home}</Text></Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', paddingHorizontal: 8 }}>
-                    <View>
+                    <View style={{ flex: 0.2 }}>
 
                     </View>
-                    <View>
+                    <View style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontWeight: '500' }}>{numLegs} Leg{numLegs > 1 ? 's' : '' }</Text>
                     </View>
-                    <View>
-                        <Text>{bet.odds}</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 0.2 }}>
+                        <Text style={{ fontSize: 16 }}>{bet.odds.charAt(0)}</Text>
+                        <TextInput
+                            style={{ fontSize: 16, borderWidth: 1 }}
+                            value={betOdds}
+                            onChangeText={setBetOdds}
+                            keyboardType="numeric"
+                        />
                     </View>                                        
                 </View>
                 {bet.legs.map((leg, index) => (
@@ -143,45 +160,6 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                     <Bet key={index} bet={bet} />
                 ))}
             </>
-        );
-    }
-
-    const ConfirmView = () => {
-        return (
-            <View style={styles.confirmContainer}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 2 }}>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{totalLegs} leg Bet</Text>
-                    <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlip.odds}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                    <View style={styles.wagerContainer}>
-                        <Text style={{ fontSize: 16 }}>Wager</Text>
-                        <View style={styles.wagerInnerContainer}>
-                            <Text style={{ fontSize: 16 }}>$</Text>
-                            <TextInput
-                                style={{ fontSize: 16, width: '80%' }}
-                                placeholder=""
-                                value={wager}
-                                onChangeText={setWager}
-                                keyboardType="numeric"
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.wagerContainer}>
-                        <Text style={{ fontSize: 16 }}>To Win</Text>
-                        <View style={styles.wagerInnerContainer}>
-                            <Text style={{ fontSize: 16 }}>$</Text>
-                            <Text style={{ fontSize: 16 }}>{winnings}</Text>
-                        </View>
-                    </View>                        
-                </View>
-                <TouchableOpacity 
-                    style={[styles.confirmButtonContainer, { backgroundColor: mainGreen }]}
-                    onPress={onConfirm}    
-                >
-                    <Text style={{ color: 'white', fontSize: 16 }}>Confirm Bet</Text>
-                </TouchableOpacity>
-            </View>
         );
     }
 
@@ -233,7 +211,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                     <View style={styles.confirmContainer}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 2 }}>
                             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{totalLegs} leg Bet</Text>
-                            <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlip.odds}</Text>
+                            <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlipOdds}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                             <View style={styles.wagerContainer}>
