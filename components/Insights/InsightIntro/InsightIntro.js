@@ -34,6 +34,7 @@ export default function InsightIntro({ streak }) {
   return (
     <View style={{ marginVertical: 8 }}>
       {streak === 'hot' ? <HotStreak /> : <ColdStreak />}
+      {/* Bets Placed, Bets Won, Money Won */}
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { Text, View, TouchableOpacity } from '@/components/Themed';
+import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { useSQLiteContext } from 'expo-sqlite';
 import { retrieveMarketsDB } from '@/api/prop-odds/markets';
@@ -54,10 +54,12 @@ export default function InsightScreen() {
           <FontAwesome name="refresh" size={20} color={iconColor} />
         </TouchableOpacity>
       </Header>
-      <View>
+      <ScrollView style={styles.container}>
         {streak && <InsightIntro streak={streak}/>}
         {streak === 'hot' ? <WinAnalysis /> : <LossAnalysis />}
-      </View>
+        {/* BankRoll Management */}
+        {/* Top Props / Top Bets */}
+      </ScrollView>
     </>
   );
 }
