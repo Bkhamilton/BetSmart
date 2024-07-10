@@ -3,25 +3,24 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, ScrollView } from '@/components/Themed';
 import InsightCard from '@/components/Insights/InsightCard';
 
-export default function LossAnalysis({  }) {
+export default function WinAnalysis({  }) {
   return (
     <View style={styles.container}>
       <View>
         <View style={{ paddingHorizontal: 10 }}>
-            <Text style={{ fontSize: 16 }}>Loss Analysis</Text>
+            <Text style={{ fontSize: 16 }}>Win Analysis</Text>
         </View>
         <ScrollView
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             style={{ flexDirection: 'row' }}
         >
-            <InsightCard title="Bad Beats" />
-            <InsightCard title="Longshots" />
-            <InsightCard title="Chasing A Loss" />
-            <InsightCard title="Overconfidence" />
-            <InsightCard title="Parlay Pitfalls" />
-            <InsightCard title="Bankroll Management" />
-            <InsightCard title="Lack of Research" />
+            <InsightCard title="Value Victory" />
+            <InsightCard title="Research Rewards" />
+            <InsightCard title="Trend Spotting" />
+            <InsightCard title="Discipline Decision" />
+            <InsightCard title="Timing Triumphs" />
+            <InsightCard title="Parlay Perfection" />
         </ScrollView>
       </View>
     </View>
