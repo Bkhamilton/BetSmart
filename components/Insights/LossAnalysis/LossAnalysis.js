@@ -8,7 +8,7 @@ export default function LossAnalysis({  }) {
     <View style={styles.container}>
       <View>
         <View style={{ paddingHorizontal: 10 }}>
-            <Text style={{ fontSize: 16 }}>Loss Analysis</Text>
+            <Text style={{ fontSize: 20, fontWeight: '500' }}>Loss Analysis</Text>
         </View>
         <ScrollView
             horizontal={true}
