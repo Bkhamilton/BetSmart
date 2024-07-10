@@ -5,16 +5,35 @@ import Colors from '@/constants/Colors';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
-export default function InsightIntro({ props }) {
+export default function InsightIntro({ streak }) {
 
-  const { redText } = useTheme();
+  const { redText, accentBlue } = useTheme();
+
+  const HotStreak = () => {
+    return (
+      <View style={styles.container}>
+        <View style={[styles.streakContainer, { borderColor: redText }]}>
+          <FontAwesome5 name="fire" size={20} color={redText} style={{ marginHorizontal: 2 }}/>
+          <Text style={{ fontSize: 20, fontWeight: '500', color: redText }}>Hot Streak</Text>
+        </View>
+      </View>
+    );
+  }
+
+  const ColdStreak = () => {
+    return (
+      <View style={styles.container}>
+        <View style={[styles.streakContainer, { borderColor: accentBlue }]}>
+          <FontAwesome5 name="snowflake" size={20} color={accentBlue} style={{ marginHorizontal: 2 }}/>
+          <Text style={{ fontSize: 20, fontWeight: '500', color: accentBlue }}>Cold Streak</Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.streakContainer, { borderColor: redText }]}>
-        <FontAwesome5 name="fire" size={20} color={redText} style={{ marginHorizontal: 2 }}/>
-        <Text style={{ fontSize: 20, fontWeight: '500', color: redText }}>Hot Streak</Text>
-      </View>
+    <View style={{ marginVertical: 8 }}>
+      {streak === 'hot' ? <HotStreak /> : <ColdStreak />}
     </View>
   );
 }
