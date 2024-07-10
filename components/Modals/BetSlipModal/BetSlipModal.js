@@ -9,14 +9,14 @@ import useTheme from '@/hooks/useTheme';
 
 export default function BetSlipModal({ visible, close, removeProp, removeBetSlip, confirm }) {
 
-    const { betSlip, currentGame } = useContext(BetContext);
+    const { betSlip, currentGame, setBetSlip } = useContext(BetContext);
 
     const { iconColor, redText, mainGreen } = useTheme();
 
     const [wager, setWager] = useState(0);
     const [winnings, setWinnings] = useState(0);
 
-    const [betSlipOdds, setBetSlipOdds] = useState(betSlip.odds);
+    const [betSlipOdds, setBetSlipOdds] = useState("Boo!");
 
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
 
@@ -89,7 +89,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
 
         return (
             <>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16, paddingVertical: 4 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16, paddingVertical: 6 }}>
                     <Text>{displayLeg()}</Text>
                     <TouchableOpacity onPress={() => onRemove(currentBet, leg)}>
                         <Ionicons name="close" size={16} color={redText} />
@@ -104,6 +104,16 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
         const numLegs = bet.legs.length;
 
         const [betOdds, setBetOdds] = useState(bet.odds.slice(1));
+
+        const [lock, setLock] = useState(false);
+
+        const toggleLock = () => {
+            const newBetOdds = bet.odds.charAt(0) + betOdds;
+            const newBetSlip = updateBetOdds(betSlip, bet, newBetOdds);
+            setBetSlip(newBetSlip);
+            setBetSlipOdds(newBetSlip.odds);
+            setLock(!lock);
+        }
 
         return (
             <Pressable style={styles.betContainer}>
@@ -124,11 +134,17 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 0.2 }}>
                         <Text style={{ fontSize: 16 }}>{bet.odds.charAt(0)}</Text>
                         <TextInput
-                            style={{ fontSize: 16, borderWidth: 1 }}
+                            style={{ fontSize: 16 }}
                             value={betOdds}
                             onChangeText={setBetOdds}
                             keyboardType="numeric"
                         />
+                        <TouchableOpacity 
+                            onPress={toggleLock}
+                            style={{ paddingHorizontal: 4 }}
+                        >
+                            {lock ? <FontAwesome5 name={"lock"} size={16} color={iconColor} /> : <FontAwesome5 name={"unlock"} size={16} color={iconColor} />}
+                        </TouchableOpacity>
                     </View>                                        
                 </View>
                 {bet.legs.map((leg, index) => (
@@ -211,7 +227,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                     <View style={styles.confirmContainer}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 2 }}>
                             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{totalLegs} leg Bet</Text>
-                            <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlipOdds}</Text>
+                            <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlip.odds}</Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                             <View style={styles.wagerContainer}>
