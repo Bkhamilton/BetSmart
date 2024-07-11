@@ -8,6 +8,9 @@ import { getLeagueByName } from '@/db/general/Leagues';
 import InsightIntro from '@/components/Insights/InsightIntro/InsightIntro';
 import LossAnalysis from '@/components/Insights/LossAnalysis/LossAnalysis';
 import { getTodaysGameswithNames } from '@/db/general/Games';
+import { getSeasonByDate } from '@/db/general/Seasons';
+import { getTeamByAbbreviation } from '@/db/general/Teams';
+import { getAllBetTargets, getBetTargetId } from '@/db/bet-general/BetTargets';
 import WinAnalysis from '@/components/Insights/WinAnalysis/WinAnalysis';
 import { FontAwesome } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
@@ -17,15 +20,24 @@ export default function InsightScreen() {
   const [streak, setStreak] = useState('hot');
 
   const saveForLater = () => {
-    const date = '2024-05-27'
-    getLeagueByName(db, "NBA").then((league) => {
+    const date = '2024-07-11'
+    getLeagueByName(db, "MLB").then((league) => {
       getSeasonByDate(db, league.id, date).then((season) => {
         getTodaysGameswithNames(db, date, season.id).then((games) => {
-          retrieveMarketsDB(db, games[0].gameId, ['spread']).then((data) => {
+          retrieveMarketsDB(db, games[0].gameId, ['moneyline']).then((data) => {
             console.log(data);
           });
         });
       });
+    });
+  }
+
+  const getTeam = () => {
+    getTeamByAbbreviation(db, 'CIN').then((team) => {
+      console.log(team);
+    });
+    getTeamByAbbreviation(db, 'COL').then((team) => {
+      console.log(team);
     });
   }
   
@@ -48,7 +60,7 @@ export default function InsightScreen() {
     <>
       <Header title={"Insights"}>
         <TouchableOpacity
-          onPress={cycleStreak}
+          onPress={saveForLater}
           style={{ marginRight: 10 }}
         >
           <FontAwesome name="refresh" size={20} color={iconColor} />
