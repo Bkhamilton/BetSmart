@@ -11,6 +11,17 @@ export const getAllBetTargets = async (db) => {
   }
 };
 
+// Function to get all bet targets by type
+export const getAllBetTargetsByType = async (db, targetType) => {
+  try {
+    const allRows = await db.getAllAsync('SELECT * FROM BetTargets WHERE targetType = ?', [targetType]);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting all bet targets by type:', error);
+    throw error;
+  }
+};
+
 // Function to get a bet target
 export const getBetTarget = async (db, betTargetId) => {
   try {
@@ -34,9 +45,9 @@ export const getBetTargetId = async (db, targetName) => {
 };
 
 // Function to insert a bet target
-export const insertBetTarget = async (db, targetType, targetName, teamId) => {
+export const insertBetTarget = async (db, targetType, targetName, teamId, gameId) => {
   try {
-    const result = await db.runAsync('INSERT INTO BetTargets (targetType, targetName, teamId) VALUES (?, ?, ?)', [targetType, targetName, teamId]);
+    const result = await db.runAsync('INSERT INTO BetTargets (targetType, targetName, teamId, gameId) VALUES (?, ?, ?, ?)', [targetType, targetName, teamId, gameId]);
     return result.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting bet target:', error);
@@ -45,9 +56,9 @@ export const insertBetTarget = async (db, targetType, targetName, teamId) => {
 };
 
 // Function to update a bet target
-export const updateBetTarget = async (db, betTargetId, targetType, targetName, teamId) => {
+export const updateBetTarget = async (db, betTargetId, targetType, targetName, teamId, gameId) => {
   try {
-    await db.runAsync('UPDATE BetTargets SET targetType = ?, targetName = ?, teamId = ? WHERE id = ?', [targetType, targetName, teamId, betTargetId]);
+    await db.runAsync('UPDATE BetTargets SET targetType = ?, targetName = ?, teamId = ?, gameId = ? WHERE id = ?', [targetType, targetName, teamId, gameId, betTargetId]);
   } catch (error) {
     console.error('Error updating bet target:', error);
     throw error;
