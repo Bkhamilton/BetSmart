@@ -123,8 +123,10 @@ export const createTables = async (db) => {
       targetType TEXT NOT NULL,
       targetName TEXT NOT NULL,
       teamId INTEGER,
+      gameId TEXT,
       FOREIGN KEY(teamId) REFERENCES Teams(id),
-      UNIQUE (targetType, targetName, teamId)
+      FOREIGN KEY(gameId) REFERENCES Games(gameId),
+      UNIQUE (targetType, targetName, teamId, gameId)
     );
     CREATE TABLE BetTypes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -227,3 +229,26 @@ export const createUserSessionsTable = async (db) => {
   `);
   console.log('UserSessions table created');
 };
+
+export const dropBetTargetsTable = async (db) => {
+  await db.execAsync(`
+    DROP TABLE IF EXISTS BetTargets;
+  `);
+  console.log('BetTargets table dropped');
+}
+
+export const createBetTargetsTable = async (db) => {
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS BetTargets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      targetType TEXT NOT NULL,
+      targetName TEXT NOT NULL,
+      teamId INTEGER,
+      gameId TEXT,
+      FOREIGN KEY(teamId) REFERENCES Teams(id),
+      FOREIGN KEY(gameId) REFERENCES Games(gameId),
+      UNIQUE (targetType, targetName, teamId, gameId)
+    );
+  `);
+  console.log('BetTargets table created');
+}
