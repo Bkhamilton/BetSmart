@@ -4,6 +4,7 @@ import { getTeamIds } from "@/db/general/Teams";
 import { getCurrentSeason, getSeasonByDate } from "@/db/general/Seasons";
 import { getLeagueByName } from "@/db/general/Leagues";
 import { insertFetchHistory, getLastFetchedByLeague, leagueFetchedOnDate } from "@/db/api/FetchHistory";
+import { insertBetTarget } from "@/db/bet-general/BetTargets";
 
 export const getGames = async (db, sport) => {
     try {
@@ -47,6 +48,7 @@ export const addGameToDB = async (db, game, sport) => {
     const date = getDate(start_timestamp);
     const curSeason = await getSeasonByDate(db, league.id, date);
     await insertGame(db, game_id, curSeason.id, date, start_timestamp, homeTeamId, awayTeamId);
+    await insertBetTarget(db, 'Game', `${away_team} vs ${home_team}`, null, game_id);
   } catch (error) {
     console.error(error);
   }
