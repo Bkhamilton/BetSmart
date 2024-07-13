@@ -93,8 +93,8 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
       const overUnder = outcome.outcome.name === 'Over' || outcome.outcome.name === 'Under' ? outcome.outcome.name : '';
       getBetTargetId(db, betTarget).then((target) => {
         console.log(`Inserting ${gameId}, ${market}, ${value}, ${odds}, ${overUnder}, ${target.id}, ${bookieId}`);
+        //await insertBetMarket(db, gameId, market, value, odds, overUnder, betTargetId, bookieId);
       });
-      //await insertBetMarket(db, gameId, market, value, odds, overUnder, betTargetId, bookieId);
     }
   } catch (error) {
     console.error(error);
@@ -102,6 +102,7 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
 }
 
 export const fetchMarketProps = async (db, gameId, market) => {
+  console.log(`Fetching ${market} for game ${gameId}`);
   try {
     const data = await getMarketProps(gameId, market);
     const filteredData = data.sportsbooks.filter(book => ['draftkings', 'fanduel'].includes(book.bookie_key));
