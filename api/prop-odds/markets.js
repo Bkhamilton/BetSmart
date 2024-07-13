@@ -1,7 +1,7 @@
 import secrets from "@/secrets";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getGamesByDate, insertGame } from "@/db/general/Games";
-import { getTeamIds, getTeamByAbbreviation } from "@/db/general/Teams";
+import { getTeamIds, getTeamsByAbbreviation } from "@/db/general/Teams";
 import { getCurrentSeason } from "@/db/general/Seasons";
 import { getLeagueByName } from "@/db/general/Leagues";
 import { getTodaysGameswithNames } from "@/db/general/Games";
@@ -70,8 +70,12 @@ const getBetTargetName = (db, name) => {
 
     if (trimmedName.includes(' - ')) {
       const [firstPart] = trimmedName.split(' - ');
+      // If firstPart is a single string, return it
+      if (!firstPart.includes(' ')) {
+        resolve(firstPart);
+      }
       const [abbreviation, partialTeamName] = firstPart.split(' ', 2);
-      getTeamByAbbreviation(db, abbreviation).then((teams) => {
+      getTeamsByAbbreviation(db, abbreviation).then((teams) => {
         const matchedTeam = teams.find(team => team.teamName.includes(partialTeamName));
         resolve(matchedTeam ? matchedTeam.teamName : 'Team not found');
       }).catch(reject);
@@ -81,6 +85,22 @@ const getBetTargetName = (db, name) => {
   });
 };
 
+const getValue = (outcome) => {
+  if (outcome.handicap === 0) {
+    if (outcome.participant_name) {
+      return outcome.participant_name;
+    } else {
+      return outcome.name;
+    }
+  } else {
+    return outcome.handicap;
+  }
+}
+
+const getOverUnder = (outcome) => {
+  return outcome.name.includes('Over') || outcome.name.includes('Under') ? outcome.name : '';
+}
+
 const addBetMarketToDB = async (db, gameId, market, book) => {
   try {
     const bookie = await getBookieByName(db, book.bookie_key);
@@ -88,12 +108,12 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
     const marketValues = fetchMarketValues(book);
     for (let outcome of marketValues) {
       const betTarget = await getBetTargetName(db, outcome.name);
-      const value = outcome.outcome.handicap === 0 ? outcome.outcome.description : outcome.outcome.handicap;
+      const value = getValue(outcome.outcome);
       const odds = outcome.outcome.odds;
-      const overUnder = outcome.outcome.name === 'Over' || outcome.outcome.name === 'Under' ? outcome.outcome.name : '';
+      const overUnder = getOverUnder(outcome.outcome);
       getBetTargetId(db, betTarget).then((target) => {
         console.log(`Inserting ${gameId}, ${market}, ${value}, ${odds}, ${overUnder}, ${target.id}, ${bookieId}`);
-        //await insertBetMarket(db, gameId, market, value, odds, overUnder, betTargetId, bookieId);
+        //await insertBetMarket(db, gameId, market, value, odds, overUnder, target.id, bookieId);
       });
     }
   } catch (error) {
