@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { retrieveGamesDate } from '@/api/prop-odds/games.js';
+import { retrieveMarketsDB } from '@/api/prop-odds/markets.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
 import { createLeg, createBet, createBetSlip, updateBetSlip, removeLeg } from '@/contexts/BetContext/betSlipHelpers';
@@ -140,8 +141,8 @@ export default function SelectGameScreen() {
 
   useEffect(() => {
     const fetchSportsData = async () => {
-      retrieveGamesDate(db, ["NBA", "MLB", "NHL"], date).then((data) => {
-        setAllSportsData(data);
+      retrieveGamesDate(db, ["NBA", "MLB", "NHL"], date).then((games) => {
+        setAllSportsData(games);
       });
     };
   
