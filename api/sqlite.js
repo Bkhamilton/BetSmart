@@ -230,25 +230,16 @@ export const createUserSessionsTable = async (db) => {
   console.log('UserSessions table created');
 };
 
-export const dropBetTargetsTable = async (db) => {
+export const createMarketFetchHistoryTable = async (db) => {
   await db.execAsync(`
-    DROP TABLE IF EXISTS BetTargets;
-  `);
-  console.log('BetTargets table dropped');
-}
-
-export const createBetTargetsTable = async (db) => {
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS BetTargets (
+    CREATE TABLE IF NOT EXISTS MarketFetchHistory (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      targetType TEXT NOT NULL,
-      targetName TEXT NOT NULL,
-      teamId INTEGER,
       gameId TEXT,
-      FOREIGN KEY(teamId) REFERENCES Teams(id),
+      marketType TEXT,
+      lastFetched TEXT NOT NULL,
       FOREIGN KEY(gameId) REFERENCES Games(gameId),
-      UNIQUE (targetType, targetName, teamId, gameId)
+      UNIQUE (gameId, marketType, lastFetched)
     );
   `);
-  console.log('BetTargets table created');
+  console.log('MarketFetchHistory table created');
 }
