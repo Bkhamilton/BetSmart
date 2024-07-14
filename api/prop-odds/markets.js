@@ -19,7 +19,7 @@ export const getMarkets = async (gameId) => {
     }
 }
 
-export const getMarketProps = async (gameId, market) => {
+export const getMarketProps = async (db, gameId, market) => {
     try {
       const today = new Date();
       const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -125,7 +125,7 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
 
 export const fetchMarketProps = async (db, gameId, market) => {
   try {
-    const data = await getMarketProps(gameId, market);
+    const data = await getMarketProps(db, gameId, market);
     const filteredData = data.sportsbooks.filter(book => ['draftkings', 'fanduel'].includes(book.bookie_key));
     for (let book of filteredData) {
       await addBetMarketToDB(db, gameId, market, book);
