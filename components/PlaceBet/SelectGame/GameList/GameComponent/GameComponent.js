@@ -36,6 +36,10 @@ export default function GameComponent({ game, selectGame, selectProp }) {
     useEffect(() => {
         fetchLogos();
     }, [game]);
+    
+        useEffect(() => {
+        fetchMarketProps();
+    }, []);
 
     return (
         <TouchableOpacity 
