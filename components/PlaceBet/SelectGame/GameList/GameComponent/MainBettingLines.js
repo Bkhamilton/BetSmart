@@ -5,11 +5,46 @@ import useTheme from '@/hooks/useTheme';
 
 export default function MainBettingLines({ game, selectProp, marketProps }) {
 
-    const { gameId, homeTeamAbv, awayTeamAbv } = game;
+    const { gameId, homeTeamAbv, awayTeamAbv, homeTeamName, awayTeamName } = game;
 
     const { grayBorder } = useTheme();
 
-    function BettingLine({ type, target, stat, value, odds }) {
+    function BettingLine({ type, target, stat, value, overUnder, odds }) {
+
+        const getOdds = (odds) => {
+            if (odds > 0) {
+                return '+' + odds;
+            } else {
+                return odds.toString();
+            }
+        }
+
+        const getValue = (value) => {
+            // If value is a number, return it as is
+            if (/[0-9]/.test(value)) {
+                if (overUnder) {
+                    return overUnder.charAt(0) + ' ' + value;
+                } else {
+                    return value;
+                }
+            }
+            
+            // If value is a string, it will be in the form "LOC TeamName". Return TeamName
+            const teamName = value.split(' ')[1];
+
+            // if teamName is included in homeTeamName, return homeTeamAbv
+            if (homeTeamName.includes(teamName)) {
+                return homeTeamAbv;
+            }
+
+            // if teamName is included in awayTeamName, return awayTeamAbv
+            if (awayTeamName.includes(teamName)) {
+                return awayTeamAbv;
+            }
+
+            return value;
+        }
+
         return (
             <TouchableOpacity 
                 style={[styles.propContainer, { borderColor: grayBorder }]}
@@ -17,16 +52,67 @@ export default function MainBettingLines({ game, selectProp, marketProps }) {
             >
                 {/[0-9]/.test(value) ? (
                     <>
-                        <Text>{value}</Text>
-                        <Text style={{ fontSize: 8 }}>{odds}</Text>
+                        <Text>{getValue(value)}</Text>
+                        <Text style={{ fontSize: 8 }}>{getOdds(odds)}</Text>
                     </>
                 ) : (
                     <>
-                        <Text>{odds}</Text>
-                        <Text style={{ fontSize: 8 }}>{value}</Text>
+                        <Text>{getOdds(odds)}</Text>
+                        <Text style={{ fontSize: 8 }}>{getValue(value)}</Text>
                     </>
                 )}
             </TouchableOpacity>
+        );
+    }
+
+    function DisplayMarketLines({ marketProps, marketType }) {
+        // Find the market data for the specified marketType
+        const marketData = marketProps.find(market => market.market === marketType)?.data;
+      
+        if (!marketData) {
+          return <Text>No data available</Text>;
+        }
+      
+        // Group data by bookieId
+        const groupedByBookie = marketData.reduce((acc, item) => {
+          acc[item.bookieId] = [...(acc[item.bookieId] || []), item];
+          return acc;
+        }, {});
+      
+        // Select data for display
+        let displayData = [];
+        const bookieIds = Object.keys(groupedByBookie);
+        if (bookieIds.length === 1) {
+            // Only one bookie, use all data
+            displayData = groupedByBookie[bookieIds[0]];
+        } else {
+            // Multiple bookies, select the one with more data
+            let maxCount = 0;
+            let maxBookieId = null;
+            for (let bookieId of bookieIds) {
+                const count = groupedByBookie[bookieId].length;
+                if (count > maxCount) {
+                    maxCount = count;
+                    maxBookieId = bookieId;
+                }
+            }
+            displayData = groupedByBookie[maxBookieId];
+        }
+      
+        return (
+          <View>
+            {displayData.reverse().map((line) => (
+              <BettingLine
+                key={line.id}
+                type={marketType}
+                target={line.betTargetId} // Assuming you want to use betTargetId as target
+                stat={line.marketType}
+                value={line.value.toString()}
+                overUnder={line.overUnder}
+                odds={line.odds}
+              />
+            ))}
+          </View>
         );
     }
 
@@ -96,11 +182,11 @@ export default function MainBettingLines({ game, selectProp, marketProps }) {
     return (
         <View style={styles.container}>
             {/* Moneyline */}
-            <MoneyLineLines />
+            <DisplayMarketLines marketProps={marketProps} marketType="moneyline" />
             {/* Spread */}
-            <SpreadLines />
+            <DisplayMarketLines marketProps={marketProps} marketType="spread" />
             {/* Total Pts */}
-            <TotalLines />
+            <DisplayMarketLines marketProps={marketProps} marketType="total_over_under" />
         </View>
     );
 }
