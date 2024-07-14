@@ -37,7 +37,7 @@ export default function GameComponent({ game, selectGame, selectProp }) {
         fetchLogos();
     }, [game]);
     
-        useEffect(() => {
+    useEffect(() => {
         fetchMarketProps();
     }, []);
 
