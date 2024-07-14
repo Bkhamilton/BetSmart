@@ -70,7 +70,24 @@ export default function MainBettingLines({ game, selectProp, marketProps }) {
         const marketData = marketProps.find(market => market.market === marketType)?.data;
       
         if (!marketData) {
-          return <Text>No data available</Text>;
+            return (
+                <View>
+                    <BettingLine
+                        type="Main"
+                        target={awayTeamAbv} 
+                        stat="moneyline"
+                        value={awayTeamAbv} 
+                        odds="N/A"
+                    />
+                    <BettingLine
+                        type="Main"
+                        target={homeTeamAbv}
+                        stat="moneyline" 
+                        value={homeTeamAbv} 
+                        odds="N/A"
+                    />
+                </View>
+            );
         }
       
         // Group data by bookieId
