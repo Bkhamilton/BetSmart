@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getLogoUrl } from '@/db/general/Teams';
+import { retrieveMarketsDB } from '@/api/prop-odds/markets';
 import useTheme from '@/hooks/useTheme';
 import MainBettingLines from './MainBettingLines';
 import HeadToHead from './HeadToHead';
@@ -13,7 +14,9 @@ export default function GameComponent({ game, selectGame, selectProp }) {
     const [homeLogo, setHomeLogo] = useState('');
     const [awayLogo, setAwayLogo] = useState('');
 
-    const { homeTeamName, homeTeamAbv, awayTeamName, awayTeamAbv, timestamp } = game;
+    const [marketProps, setMarketProps] = useState([]);
+
+    const { gameId, homeTeamName, homeTeamAbv, awayTeamName, awayTeamAbv, timestamp } = game;
 
     const { grayBackground, grayBorder } = useTheme();
 
@@ -22,6 +25,12 @@ export default function GameComponent({ game, selectGame, selectProp }) {
     const fetchLogos = async () => {
         getLogoUrl(db, homeTeamName).then((url) => setHomeLogo(url.logoUrl + '/preview'));
         getLogoUrl(db, awayTeamName).then((url) => setAwayLogo(url.logoUrl + '/preview'));
+    };
+
+    const fetchMarketProps = async () => {
+        retrieveMarketsDB(db, gameId, ['spread', 'moneyline', 'total_over_under']).then((data) => {
+            setMarketProps(data);
+        });
     };
 
     useEffect(() => {
@@ -46,6 +55,7 @@ export default function GameComponent({ game, selectGame, selectProp }) {
                 <MainBettingLines 
                     game={game} 
                     selectProp={selectProp}
+                    marketProps={marketProps}
                 />
             </View>
             <DateTime timestamp={timestamp} />

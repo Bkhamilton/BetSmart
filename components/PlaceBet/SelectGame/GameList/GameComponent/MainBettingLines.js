@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
-export default function MainBettingLines({ game, selectProp }) {
+export default function MainBettingLines({ game, selectProp, marketProps }) {
 
     const { gameId, homeTeamAbv, awayTeamAbv } = game;
 
@@ -30,9 +30,8 @@ export default function MainBettingLines({ game, selectProp }) {
         );
     }
 
-    return (
-        <View style={styles.container}>
-            {/* Moneyline */}
+    function MoneyLineLines() {
+        return (
             <View>
                 <BettingLine
                     type="Main"
@@ -49,7 +48,11 @@ export default function MainBettingLines({ game, selectProp }) {
                     odds="+110"
                 />
             </View>
-            {/* Spread */}
+        );
+    }
+
+    function SpreadLines() {
+        return (
             <View>
                 <BettingLine
                     type="Main"
@@ -66,7 +69,11 @@ export default function MainBettingLines({ game, selectProp }) {
                     odds="-110"  
                 />
             </View>
-            {/* Total Pts */}
+        );
+    }
+
+    function TotalLines() {
+        return (
             <View>
                 <BettingLine 
                     type="Main"
@@ -83,6 +90,17 @@ export default function MainBettingLines({ game, selectProp }) {
                     odds="-108"  
                 />
             </View>
+        );
+    }
+
+    return (
+        <View style={styles.container}>
+            {/* Moneyline */}
+            <MoneyLineLines />
+            {/* Spread */}
+            <SpreadLines />
+            {/* Total Pts */}
+            <TotalLines />
         </View>
     );
 }
