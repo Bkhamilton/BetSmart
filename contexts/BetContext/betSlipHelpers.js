@@ -140,6 +140,9 @@ export function removeLeg(betSlip, bet, leg) {
     if (betSlip.bets.length === 1) {
       betSlip.type = 'Single';
     }
+  } else {
+    // Else, update the odds for the bet
+    betToRemove.odds = calculateCombinedOdds(betToRemove.legs.map(l => l.odds));
   }
 
   // If there are no bets left in the betSlip, return null
