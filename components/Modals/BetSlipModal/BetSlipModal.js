@@ -90,7 +90,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
         return (
             <>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16, paddingVertical: 6 }}>
-                    <Text>{displayLeg()}</Text>
+                    <Text>{JSON.stringify(leg, null, 2)}</Text>
                     <TouchableOpacity onPress={() => onRemove(currentBet, leg)}>
                         <Ionicons name="close" size={16} color={redText} />
                     </TouchableOpacity>
