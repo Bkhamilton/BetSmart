@@ -121,7 +121,7 @@ export default function MainBettingLines({ game, selectProp, marketProps }) {
             {displayData.reverse().map((line) => (
               <BettingLine
                 key={line.id}
-                type={marketType}
+                type={'Main'}
                 target={line.betTargetId} // Assuming you want to use betTargetId as target
                 stat={line.marketType}
                 value={line.value.toString()}
