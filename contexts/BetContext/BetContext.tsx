@@ -64,6 +64,9 @@ interface BetContextValue {
   setBookie: (bookie: string | null) => void;
   bookieId: Number | null;
   setBookieId: (bookieId: Number | null) => void;
+  selectProp: (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; }) => void;
+  totalLegs: Number | null;
+  setTotalLegs: (totalLegs: number) => void;
 }
 
 export const BetContext = createContext<BetContextValue>({
@@ -77,6 +80,9 @@ export const BetContext = createContext<BetContextValue>({
   setBookie: () => {},
   bookieId: null,
   setBookieId: () => {},
+  selectProp: () => {},
+  totalLegs: null,
+  setTotalLegs: () => {},
 });
 
 interface BetContextProviderProps {
@@ -90,6 +96,27 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
   const [bookie, setBookie] = useState<string | null>('DraftKings');
   const [bookieId, setBookieId] = useState<Number | null>(1);
 
+  const [totalLegs, setTotalLegs] = useState<Number | null>(0);
+
+  const selectProp = (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; }) => {
+    const { game, type, target, stat, value, overUnder, odds } = props;
+
+    const leg = createLeg(type, target, stat, value, overUnder, odds);
+    const bet = createBet(game.date, league.leagueName, game.homeTeamName, game.awayTeamName, odds, [leg]);
+
+    const today = new Date();
+
+    if (betSlip) {
+      const newBetSlip = updateBetSlip(betSlip, bet, leg);
+      setBetSlip(newBetSlip);
+      setTotalLegs(newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0));
+    } else {
+      const newBetSlip = createBetSlip(1, 'Single', today, odds, 0, 0, [bet]);
+      setBetSlip(newBetSlip);
+      setTotalLegs(1);
+    }
+  }
+
   const value = {
     betSlip,
     setBetSlip,
@@ -101,6 +128,9 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     setBookie,
     bookieId,
     setBookieId,
+    selectProp,
+    totalLegs,
+    setTotalLegs,
   };
 
   return (

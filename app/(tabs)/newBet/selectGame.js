@@ -81,25 +81,6 @@ export default function SelectGameScreen() {
     }
   }
 
-  const selectProp = (props) => {
-    const { game, type, target, stat, value, overUnder, odds } = props;
-
-    const leg = createLeg(type, target, stat, value, overUnder, odds);
-    const bet = createBet(game.date, league.leagueName, game.homeTeamName, game.awayTeamName, odds, [leg]);
-
-    const today = new Date();
-
-    if (betSlip) {
-      const newBetSlip = updateBetSlip(betSlip, bet, leg);
-      setBetSlip(newBetSlip);
-      setTotalLegs(newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0));
-    } else {
-      const newBetSlip = createBetSlip(1, 'Single', today, odds, 0, 0, [bet]);
-      setBetSlip(newBetSlip);
-      setTotalLegs(1);
-    }
-  }
-
   const removeProp = (bet, leg) => {
     const newBetSlip = removeLeg(betSlip, bet, leg);
     if (!newBetSlip) {
@@ -206,7 +187,6 @@ export default function SelectGameScreen() {
                 <GameList
                   games={curLeagueGames.games}
                   selectGame={game => handleSelectGame({ game })}
-                  selectProp={selectProp}
                 />
                 {
                   betSlip &&

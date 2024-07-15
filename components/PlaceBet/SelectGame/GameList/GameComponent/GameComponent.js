@@ -9,7 +9,7 @@ import MainBettingLines from './MainBettingLines';
 import HeadToHead from './HeadToHead';
 import DateTime from './DateTime';
 
-export default function GameComponent({ game, selectGame, selectProp }) {
+export default function GameComponent({ game, selectGame }) {
 
     const [homeLogo, setHomeLogo] = useState('');
     const [awayLogo, setAwayLogo] = useState('');
@@ -58,7 +58,6 @@ export default function GameComponent({ game, selectGame, selectProp }) {
                 }
                 <MainBettingLines 
                     game={game} 
-                    selectProp={selectProp}
                     marketProps={marketProps}
                 />
             </View>

@@ -11,7 +11,7 @@ export default function GameLines() {
 
     const [marketProps, setMarketProps] = useState([]);
 
-    const { league, currentGame } = useContext(BetContext);
+    const { league, currentGame, selectProp } = useContext(BetContext);
 
     const { gameId, homeTeamAbv, awayTeamAbv, homeTeamName, awayTeamName } = currentGame;
 
@@ -68,6 +68,7 @@ export default function GameLines() {
         return (
             <TouchableOpacity 
                 style={[styles.propContainer, { borderColor: grayBorder }]}
+                onPress={() => selectProp({ game: currentGame, type, target, stat, value, overUnder, odds })}
             >
                 {/[0-9]/.test(value) ? (
                     <>
@@ -140,7 +141,7 @@ export default function GameLines() {
             {displayData.reverse().map((line) => (
               <BettingLine
                 key={line.id}
-                type={marketType}
+                type={'Main'}
                 target={line.betTargetId} // Assuming you want to use betTargetId as target
                 stat={line.marketType}
                 value={line.value.toString()}

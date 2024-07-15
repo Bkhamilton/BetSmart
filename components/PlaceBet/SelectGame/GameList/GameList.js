@@ -3,7 +3,7 @@ import { StyleSheet, FlatList } from 'react-native';
 import { View, Text } from '@/components/Themed'
 import GameComponent from '@/components/PlaceBet/SelectGame/GameList/GameComponent/GameComponent';
 
-export default function GameList({ games, selectGame, selectProp }) {
+export default function GameList({ games, selectGame }) {
     return (
         <View style={styles.container}>
           {  
@@ -17,7 +17,6 @@ export default function GameList({ games, selectGame, selectProp }) {
                   <GameComponent 
                     game={item} 
                     selectGame={selectGame}
-                    selectProp={selectProp}
                   />
                 )}
                 ItemSeparatorComponent={() => <View style={styles.separator} />}

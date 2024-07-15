@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { BetContext } from '@/contexts/BetContext/BetContext';
 import useTheme from '@/hooks/useTheme';
 
-export default function MainBettingLines({ game, selectProp, marketProps }) {
+export default function MainBettingLines({ game, marketProps }) {
 
     const { gameId, homeTeamAbv, awayTeamAbv, homeTeamName, awayTeamName } = game;
+
+    const { selectProp } = useContext(BetContext);
 
     const { grayBorder } = useTheme();
 
