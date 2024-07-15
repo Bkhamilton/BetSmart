@@ -5,6 +5,9 @@ import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView, Pressable }
 import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { calculateCombinedOdds, updateBetOdds } from '@/contexts/BetContext/betSlipHelpers';
+import { getBetTargetName, getBetTarget } from '@/db/bet-general/BetTargets';
+import { getTeamAbbreviationByName } from '@/db/general/Teams';
+import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
 
 export default function BetSlipModal({ visible, close, removeProp, removeBetSlip, confirm }) {
@@ -17,6 +20,8 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
     const [winnings, setWinnings] = useState(0);
 
     const [betSlipOdds, setBetSlipOdds] = useState("Boo!");
+
+    const db = useSQLiteContext();
 
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
 
@@ -63,7 +68,18 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
 
     const Leg = ({ leg, currentBet }) => {
 
-        const { type, betTarget, stat, line, overUnder } = leg;
+        const { type, betTarget, stat, line, overUnder, odds } = leg;
+
+        const [betTargetName, setBetTargetName] = useState('');
+
+        useEffect(() => {
+            const fetchName = async () => {
+                const name = await getName(leg.betTarget);
+                setBetTargetName(name);
+            };
+    
+            fetchName();
+        }, []);
 
         const displayLeg = () => {
             switch (type) {
@@ -74,11 +90,11 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
             case 'Main':
                 switch (stat) {
                 case 'moneyline':
-                    return `${line} ${stat.toUpperCase()}`;
+                    return `${betTargetName} ${stat.toUpperCase()}`;
                 case 'spread':
-                    return `${betTarget} ${stat} ${line}`;
+                    return `${betTargetName} ${stat} ${line}`;
                 case 'total_over_under':
-                    return `${stat} ${line}`;
+                    return `${betTargetName} Total ${overUnder} ${line}`;
                 default:
                     return '';
                 }
@@ -87,10 +103,25 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
             }
         }
 
+        const getName = async (betTargetId) => {
+            const target = await getBetTarget(db, betTargetId);
+            if (target.targetType === 'Team') {
+                const team = await getTeamAbbreviationByName(db, target.targetName);
+                return team.abbreviation;
+            } else if (target.targetType === 'Game') {
+                return 'Game';
+            } else {
+                return target.targetName;
+            }
+        }
+
         return (
             <>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16, paddingVertical: 6 }}>
-                    <Text>{JSON.stringify(leg, null, 2)}</Text>
+                    <View>
+                        <Text>{displayLeg()}</Text>
+                        <Text>{odds}</Text>
+                    </View>
                     <TouchableOpacity onPress={() => onRemove(currentBet, leg)}>
                         <Ionicons name="close" size={16} color={redText} />
                     </TouchableOpacity>
