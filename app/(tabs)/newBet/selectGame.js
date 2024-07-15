@@ -82,9 +82,9 @@ export default function SelectGameScreen() {
   }
 
   const selectProp = (props) => {
-    const { game, type, target, stat, value, odds } = props;
+    const { game, type, target, stat, value, overUnder, odds } = props;
 
-    const leg = createLeg(type, target, stat, value, odds);
+    const leg = createLeg(type, target, stat, value, overUnder, odds);
     const bet = createBet(game.date, league.leagueName, game.homeTeamName, game.awayTeamName, odds, [leg]);
 
     const today = new Date();

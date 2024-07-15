@@ -48,7 +48,7 @@ export default function MainBettingLines({ game, selectProp, marketProps }) {
         return (
             <TouchableOpacity 
                 style={[styles.propContainer, { borderColor: grayBorder }]}
-                onPress={() => selectProp({ game, type, target, stat, value, odds })}
+                onPress={() => selectProp({ game, type, target, stat, value, overUnder, odds })}
             >
                 {/[0-9]/.test(value) ? (
                     <>

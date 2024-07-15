@@ -21,12 +21,13 @@ export function createBet(date, league, home, away, odds, legs) {
   };
 }
 
-export function createLeg(type, betTarget, stat, line, odds) {
+export function createLeg(type, betTarget, stat, line, overUnder, odds) {
   return {
     type,
     betTarget,
     stat,
     line,
+    overUnder,
     odds,
   };
 }
