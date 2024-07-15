@@ -26,12 +26,23 @@ export const getAllBetTargetsByType = async (db, targetType) => {
 export const getBetTarget = async (db, betTargetId) => {
   try {
     const betTarget = await db.getAllAsync('SELECT * FROM BetTargets WHERE id = ?', [betTargetId]);
-    return betTarget;
+    return betTarget[0];
   } catch (error) {
     console.error('Error getting bet target:', error);
     throw error;
   }
 };
+
+// Function to get bet target name
+export const getBetTargetName = async (db, betTargetId) => {
+  try {
+    const betTarget = await db.getAllAsync('SELECT targetName FROM BetTargets WHERE id = ?', [betTargetId]);
+    return betTarget[0].targetName;
+  } catch (error) {
+    console.error('Error getting bet target:', error);
+    throw error;
+  }
+}
 
 // Function to get bet target ID by name
 export const getBetTargetId = async (db, targetName) => {
