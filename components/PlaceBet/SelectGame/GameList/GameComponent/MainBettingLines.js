@@ -133,76 +133,10 @@ export default function MainBettingLines({ game, selectProp, marketProps }) {
         );
     }
 
-    function MoneyLineLines() {
-        return (
-            <View>
-                <BettingLine
-                    type="Main"
-                    target={awayTeamAbv} 
-                    stat="moneyline"
-                    value={awayTeamAbv} 
-                    odds="-195"
-                />
-                <BettingLine
-                    type="Main"
-                    target={homeTeamAbv}
-                    stat="moneyline" 
-                    value={homeTeamAbv} 
-                    odds="+110"
-                />
-            </View>
-        );
-    }
-
-    function SpreadLines() {
-        return (
-            <View>
-                <BettingLine
-                    type="Main"
-                    target={awayTeamAbv}
-                    stat="spread"
-                    value="-3.5" 
-                    odds="-110"  
-                />
-                <BettingLine 
-                    type="Main"
-                    target={homeTeamAbv}
-                    stat="spread"
-                    value="+3.5"
-                    odds="-110"  
-                />
-            </View>
-        );
-    }
-
-    function TotalLines() {
-        return (
-            <View>
-                <BettingLine 
-                    type="Main"
-                    target={'Total'}
-                    stat="total_over_under"
-                    value="O 218.5"
-                    odds="+100"  
-                />
-                <BettingLine 
-                    type="Main"
-                    target={'Total'}
-                    stat="total_over_under"
-                    value="U 218.5"
-                    odds="-108"  
-                />
-            </View>
-        );
-    }
-
     return (
         <View style={styles.container}>
-            {/* Moneyline */}
             <DisplayMarketLines marketProps={marketProps} marketType="moneyline" />
-            {/* Spread */}
             <DisplayMarketLines marketProps={marketProps} marketType="spread" />
-            {/* Total Pts */}
             <DisplayMarketLines marketProps={marketProps} marketType="total_over_under" />
         </View>
     );
