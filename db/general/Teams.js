@@ -57,6 +57,17 @@ export const getTeamByName = async (db, teamName) => {
   }
 };
 
+// Function to get a team abbreviation by team name
+export const getTeamAbbreviationByName = async (db, teamName) => {
+  try {
+    const team = await db.getAllAsync('SELECT abbreviation FROM Teams WHERE teamName = ?', [teamName]);
+    return team[0];
+  } catch (error) {
+    console.error('Error getting team abbreviation:', error);
+    throw error;
+  }
+}
+
 // Function to get teams by abbreviation prefix
 export const getTeamsByAbbreviation = async (db, abbreviationPrefix) => {
   try {
