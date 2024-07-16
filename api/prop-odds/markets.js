@@ -97,6 +97,14 @@ const getOverUnder = (outcome) => {
   }
 }
 
+const getOdds = (odds) => {
+  if (odds > 0) {
+    return '+' + odds;
+  } else {
+    return odds.toString();
+  }
+}
+
 // Function to add bet market to the DB
 const addBetMarketToDB = async (db, gameId, market, book) => {
   try {
@@ -106,7 +114,7 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
     for (let outcome of marketValues) {
       const betTarget = await getBetTargetName(db, outcome.name, gameId);
       const value = getValue(outcome.outcome);
-      const odds = outcome.outcome.odds;
+      const odds = getOdds(outcome.outcome.odds);
       const overUnder = getOverUnder(outcome.outcome);
       if (betTarget === gameId) {
         getBetTargetIdByGameId(db, gameId).then(async (target) => {
