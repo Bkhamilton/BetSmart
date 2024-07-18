@@ -12,7 +12,7 @@ import useTheme from '@/hooks/useTheme';
 
 export default function BetSlipModal({ visible, close, removeProp, removeBetSlip, confirm }) {
 
-    const { betSlip, currentGame, setBetSlip } = useContext(BetContext);
+    const { betSlip, setBetSlip } = useContext(BetContext);
 
     const { iconColor, redText, mainGreen } = useTheme();
 
