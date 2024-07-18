@@ -6,7 +6,7 @@ import { retrieveGamesDate } from '@/api/prop-odds/games.js';
 import { retrieveMarketsDB } from '@/api/prop-odds/markets.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
-import { createLeg, createBet, createBetSlip, updateBetSlip, removeLeg } from '@/contexts/BetContext/betSlipHelpers';
+import { removeLeg, updateBetSlipAmounts } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
@@ -82,12 +82,12 @@ export default function SelectGameScreen() {
   }
 
   const removeProp = (bet, leg) => {
-    const newBetSlip = removeLeg(betSlip, bet, leg);
-    if (!newBetSlip) {
+    const isEmpty = removeLeg(betSlip, bet, leg);
+    if (isEmpty) {
       closeBetSlipModal();
+      setBetSlip(null);
     }
-    setBetSlip(newBetSlip);
-    setTotalLegs(newBetSlip ? newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
+    setTotalLegs(betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
   }
 
   const removeBetSlip = () => {
@@ -97,9 +97,9 @@ export default function SelectGameScreen() {
   }
 
   const confirmBet = (wager, winnings) => {
-    console.log('Wager:', wager);
-    console.log('Winnings:', winnings);
+    updateBetSlipAmounts(betSlip, wager, winnings);
     console.log('Bet Slip:', JSON.stringify(betSlip));
+
     closeBetSlipModal();
   }
 
