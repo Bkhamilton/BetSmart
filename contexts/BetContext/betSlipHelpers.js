@@ -147,13 +147,13 @@ export function removeLeg(betSlip, bet, leg) {
 
   // If there are no bets left in the betSlip, return null
   if (betSlip.bets.length === 0) {
-    return null;
+    return true;
   }
 
   // Update the betSlip odds
   betSlip.odds = calculateCombinedOdds(betSlip.bets.map(bet => bet.odds));
 
-  return betSlip;
+  return false;
 }
 
 export function removeBetSlip(betSlip) {
@@ -176,4 +176,10 @@ export function updateBetOdds(betSlip, bet, newOdds) {
   betSlip.odds = calculateCombinedOdds(betSlip.bets.map(bet => bet.odds));
 
   return betSlip;
+}
+
+// function to update the betSlip's betAmount and winnings
+export function updateBetSlipAmounts(betSlip, betAmount, winnings) {
+  betSlip.betAmount = betAmount;
+  betSlip.winnings = winnings;
 }
