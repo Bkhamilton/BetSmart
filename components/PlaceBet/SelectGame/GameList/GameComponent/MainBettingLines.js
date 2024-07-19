@@ -56,11 +56,11 @@ export default function MainBettingLines({ game, marketProps }) {
                 {/[0-9]/.test(value) ? (
                     <>
                         <Text>{getValue(value)}</Text>
-                        <Text style={{ fontSize: 8 }}>{getOdds(odds)}</Text>
+                        <Text style={{ fontSize: 8 }}>{odds}</Text>
                     </>
                 ) : (
                     <>
-                        <Text>{getOdds(odds)}</Text>
+                        <Text>{odds}</Text>
                         <Text style={{ fontSize: 8 }}>{getValue(value)}</Text>
                     </>
                 )}
