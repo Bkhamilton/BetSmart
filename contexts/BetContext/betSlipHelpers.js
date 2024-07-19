@@ -59,7 +59,7 @@ export function calculateCombinedOdds(oddsArray) {
   return americanOdds;
 }
 
-export function updateBet(bet, leg) {
+export function updateBet(betSlip, bet, leg) {
   // Find the leg
   const legToUpdate = bet.legs.find(l => 
     l.type === leg.type && 
@@ -72,9 +72,14 @@ export function updateBet(bet, leg) {
     bet.legs.push(leg);
     bet.odds = calculateCombinedOdds([bet.odds, leg.odds]);
   } else {
-    // If the leg does exist, update it
-    legToUpdate.line = leg.line;
-    legToUpdate.odds = leg.odds;
+    // If the leg does exist, if legUpdate = leg, remove it
+    if (legToUpdate.type === leg.type && legToUpdate.betTarget === leg.betTarget && legToUpdate.stat === leg.stat) {
+      removeLeg(betSlip, bet, leg);
+    } else {
+      // Else, update the leg
+      legToUpdate.line = leg.line;
+      legToUpdate.odds = leg.odds;
+    }
   }
 
   return bet;
@@ -99,7 +104,7 @@ export function updateBetSlip(betSlip, bet, leg) {
     }
   } else {
     // If the bet does exist, update it using updateBet function
-    betToUpdate = updateBet(betToUpdate, leg);
+    betToUpdate = updateBet(betSlip, betToUpdate, leg);
 
     // Update the betSlip type
     if (betSlip.type === 'Single') {
