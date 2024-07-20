@@ -122,8 +122,12 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
         });
       } else {
         getBetTargetId(db, betTarget).then(async (target) => {
+          if (!target) {
+            console.log('Target not found:', betTarget);
+            return;
+          }
           await insertBetMarket(db, gameId, market, value, odds, overUnder, target.id, bookieId);
-        });
+        })
       }
     }
   } catch (error) {
