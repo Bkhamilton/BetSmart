@@ -74,7 +74,8 @@ export function updateBet(betSlip, bet, leg) {
   } else {
     // If the leg does exist, if legUpdate = leg, remove it
     if (legToUpdate.type === leg.type && legToUpdate.betTarget === leg.betTarget && legToUpdate.stat === leg.stat) {
-      removeLeg(betSlip, bet, leg);
+      const newSlip = removeLeg(betSlip, bet, leg);
+      return newSlip;
     } else {
       // Else, update the leg
       legToUpdate.line = leg.line;
@@ -105,6 +106,11 @@ export function updateBetSlip(betSlip, bet, leg) {
   } else {
     // If the bet does exist, update it using updateBet function
     betToUpdate = updateBet(betSlip, betToUpdate, leg);
+
+    // If the betToUpdate is null, return null
+    if (!betToUpdate) {
+      return null;
+    }
 
     // Update the betSlip type
     if (betSlip.type === 'Single') {
@@ -152,13 +158,13 @@ export function removeLeg(betSlip, bet, leg) {
 
   // If there are no bets left in the betSlip, return null
   if (betSlip.bets.length === 0) {
-    return true;
+    return null;
   }
 
   // Update the betSlip odds
   betSlip.odds = calculateCombinedOdds(betSlip.bets.map(bet => bet.odds));
 
-  return false;
+  return betSlip;
 }
 
 export function removeBetSlip(betSlip) {
