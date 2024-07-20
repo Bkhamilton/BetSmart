@@ -1,14 +1,12 @@
-import { useEffect, useState, useCallback, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { retrieveGamesDate } from '@/api/prop-odds/games.js';
-import { retrieveMarketsDB } from '@/api/prop-odds/markets.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
 import { removeLeg, updateBetSlipAmounts } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Text, View, TouchableOpacity } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
 import GameList from '@/components/PlaceBet/SelectGame/GameList/GameList';
 import SportSlider from '@/components/PlaceBet/SelectGame/SportSlider';
@@ -82,8 +80,8 @@ export default function SelectGameScreen() {
   }
 
   const removeProp = (bet, leg) => {
-    const isEmpty = removeLeg(betSlip, bet, leg);
-    if (isEmpty) {
+    const newBetSlip = removeLeg(betSlip, bet, leg);
+    if (!newBetSlip) {
       closeBetSlipModal();
       setBetSlip(null);
     }
