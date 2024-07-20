@@ -108,8 +108,10 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
 
     if (betSlip) {
       const newBetSlip = updateBetSlip(betSlip, bet, leg);
-      setBetSlip(newBetSlip);
-      setTotalLegs(newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0));
+      if (!newBetSlip) {
+        setBetSlip(null);
+      }
+      setTotalLegs(newBetSlip? newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
     } else {
       const newBetSlip = createBetSlip(1, 'Single', today, odds, 0, 0, [bet]);
       setBetSlip(newBetSlip);
