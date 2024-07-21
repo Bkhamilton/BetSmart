@@ -74,6 +74,33 @@ export const ToAchieveComponent = ({ player, logo, odds }) => {
     );
 }
 
+export const ToRecordComponent = ({ player, logo, odds, team }) => {
+
+    const { grayBackground, grayBorder } = useTheme();
+
+    return (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
+                    <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
+                    <Image style={styles.teamIcon} source={{ uri: logo }} />
+                </View>
+                <View style={styles.playerContainer}>
+                    <Text style={{ fontWeight: '400', fontSize: 13, }}>{team}</Text>
+                </View>
+                <TouchableOpacity style={styles.oddsContainer}>
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds}</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TouchableOpacity style={[styles.valueContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
+                    <Text style={{ fontSize: 24, fontWeight: '500' }}>+</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+}
+
 export const GenericComponent = ({ title, odds }) => {
 
     const { grayBackground, grayBorder } = useTheme();
@@ -124,4 +151,22 @@ const styles = StyleSheet.create({
         position: 'absolute',
         right: 10,
     },
+    playerContainer: {
+        flexDirection: 'row', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        borderWidth: 1,
+        paddingVertical: 14,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        width: 180,
+    },
+    oddsContainer: {
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        borderWidth: 1,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderRadius: 8,        
+    }
 });

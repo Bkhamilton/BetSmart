@@ -16,7 +16,7 @@ export default function HitProps() {
 
     return (
         <>
-            <PropBanner title={"To Record A Hit"} type={"To Achieve"}/>
+            <PropBanner title={"To Record A Hit"} type={"To Record"}/>
             <PropBanner title={"To Record 2+ Hits"} type={"To Achieve"}/>
             <PropBanner title={"To Record 3+ Hits"} type={"To Achieve"}/>
         </>

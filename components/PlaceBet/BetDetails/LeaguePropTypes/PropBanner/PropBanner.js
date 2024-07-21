@@ -8,6 +8,7 @@ import { getLogoUrl } from '@/db/general/Teams';
 import MainPlayer from './PropTypes/MainPlayer';
 import AltPlayer from './PropTypes/AltPlayer';
 import ToAchieve from './PropTypes/ToAchieve';
+import ToRecord from './PropTypes/ToRecord';
 import GenericProp from './PropTypes/GenericProp';
 import useTheme from '@/hooks/useTheme';
 
@@ -15,7 +16,7 @@ export default function PropBanner({ title, type, player, stat }) {
 
     const { league, currentGame } = useContext(BetContext);
 
-    const { homeTeamName, awayTeamName } = currentGame;
+    const { homeTeamName, awayTeamName, homeTeamAbv, awayTeamAbv } = currentGame;
 
     const { grayBackground, grayBorder } = useTheme();
 
@@ -65,6 +66,7 @@ export default function PropBanner({ title, type, player, stat }) {
         Main: MainDisplay,
         'To Achieve': ToAchieve,
         Generic: GenericProp,
+        'To Record': ToRecord,
     };
 
     const getLogo = () => {
@@ -83,11 +85,31 @@ export default function PropBanner({ title, type, player, stat }) {
         }
     }
 
+    const homeTeam = {
+        name: homeTeamName,
+        abv: homeTeamAbv,
+        logo: homeLogo,
+    };
+
+    const awayTeam = {
+        name: awayTeamName,
+        abv: awayTeamAbv,
+        logo: awayLogo,
+    };
+
     // Function to get the display component based on type
     const getDisplayComponent = () => {
         // Use MainDisplay as a fallback if type is not found in the mapping
         const DisplayComponent = displayMapping[type] || MainDisplay;
-        return <DisplayComponent awayLogo={awayLogo} homeLogo={homeLogo} player={player} logo={getLogo()} stat={stat}/>;
+        return <DisplayComponent 
+                    awayLogo={awayLogo} 
+                    homeLogo={homeLogo} 
+                    player={player} 
+                    logo={getLogo()} 
+                    stat={stat} 
+                    homeTeam={homeTeam} 
+                    awayTeam={awayTeam}
+                />;
     };
 
     return (
