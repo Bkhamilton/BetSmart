@@ -31,14 +31,6 @@ export default function GameLines() {
 
     function BettingLine({ type, target, stat, value, overUnder, odds }) {
 
-        const getOdds = (odds) => {
-            if (odds > 0) {
-                return '+' + odds;
-            } else {
-                return odds.toString();
-            }
-        }
-
         const getValue = (value) => {
             // If value is a number, return it as is
             if (/[0-9]/.test(value)) {
@@ -73,11 +65,11 @@ export default function GameLines() {
                 {/[0-9]/.test(value) ? (
                     <>
                         <Text>{getValue(value)}</Text>
-                        <Text style={{ fontSize: 8 }}>{getOdds(odds)}</Text>
+                        <Text style={{ fontSize: 8 }}>{odds}</Text>
                     </>
                 ) : (
                     <>
-                        <Text>{getOdds(odds)}</Text>
+                        <Text>{odds}</Text>
                         <Text style={{ fontSize: 8 }}>{getValue(value)}</Text>
                     </>
                 )}
