@@ -6,7 +6,9 @@ import useTheme from '@/hooks/useTheme';
 
 import Colors from '@/constants/Colors';
 
-export default function BetSlipBanner({ betSlip, onPress }) {
+export default function BetSlipBanner({ onPress }) {
+
+    const { betSlip } = useContext(BetContext);
 
     const { mainGreen, iconColor } = useTheme();
 

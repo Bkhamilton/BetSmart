@@ -189,7 +189,6 @@ export default function SelectGameScreen() {
                 {
                   betSlip &&
                   <BetSlipBanner
-                    betSlip={betSlip}
                     onPress={openBetSlipModal}
                   />
                 }
@@ -202,7 +201,6 @@ export default function SelectGameScreen() {
                 {
                   betSlip &&
                   <BetSlipBanner
-                    betSlip={betSlip}
                     onPress={openBetSlipModal}
                   />
                 }
