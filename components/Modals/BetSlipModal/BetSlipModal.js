@@ -14,7 +14,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
 
     const { betSlip, setBetSlip } = useContext(BetContext);
 
-    const { iconColor, redText, mainGreen } = useTheme();
+    const { iconColor, redText, mainGreen, grayBackground, grayBorder } = useTheme();
 
     const [wager, setWager] = useState(0);
     const [winnings, setWinnings] = useState(0);
@@ -117,12 +117,12 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
 
         return (
             <>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16, paddingVertical: 6 }}>
-                    <View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 16, paddingVertical: 6, backgroundColor: grayBorder }}>
+                    <View style={{ backgroundColor: 'transparent' }}>
                         <Text>{displayLeg()}</Text>
-                        <Text>{odds}</Text>
+                        <Text style={{ marginLeft: 6 }}>{odds}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => onRemove(currentBet, leg)}>
+                    <TouchableOpacity style={{ backgroundColor: 'transparent' }} onPress={() => onRemove(currentBet, leg)}>
                         <Ionicons name="close" size={16} color={redText} />
                     </TouchableOpacity>
                 </View>
@@ -147,32 +147,32 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
         }
 
         return (
-            <Pressable style={styles.betContainer}>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+            <Pressable style={[styles.betContainer, { backgroundColor: grayBackground }]}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', backgroundColor: 'transparent' }}>
                     <Text>{bet.date}</Text>
                     <Text>{bet.league}</Text>
                 </View>
-                <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 2 }}>
+                <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 2, backgroundColor: 'transparent' }}>
                     <Text><Text style={{ fontWeight: 'bold' }}>{bet.away}</Text> vs <Text style={{ fontWeight: 'bold' }}>{bet.home}</Text></Text>
                 </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', paddingHorizontal: 8 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', paddingHorizontal: 8, backgroundColor: 'transparent' }}>
                     <View style={{ flex: 0.2 }}>
 
                     </View>
-                    <View style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent' }}>
                         <Text style={{ fontWeight: '500' }}>{numLegs} Leg{numLegs > 1 ? 's' : '' }</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 0.2 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 0.2, backgroundColor: 'transparent' }}>
                         <Text style={{ fontSize: 16 }}>{bet.odds.charAt(0)}</Text>
                         <TextInput
-                            style={{ fontSize: 16 }}
+                            style={{ fontSize: 16, backgroundColor: 'transparent' }}
                             value={betOdds}
                             onChangeText={setBetOdds}
                             keyboardType="numeric"
                         />
                         <TouchableOpacity 
                             onPress={toggleLock}
-                            style={{ paddingHorizontal: 4 }}
+                            style={{ paddingHorizontal: 4, backgroundColor: 'transparent' }}
                         >
                             {lock ? <FontAwesome5 name={"lock"} size={16} color={iconColor} /> : <FontAwesome5 name={"unlock"} size={16} color={iconColor} />}
                         </TouchableOpacity>
@@ -316,7 +316,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between', 
         width: '100%',
         borderBottomWidth: 1,
-        borderColor: 'green',
     },
     modalText: {
         fontSize: 16,
@@ -374,7 +373,7 @@ const styles = StyleSheet.create({
     betContainer: {
         borderTopWidth: 1,
         borderBottomWidth: 1,
-        paddingVertical: 8,
+        paddingTop: 8,
     },
     confirmButtonContainer: {
         padding: 12, 
