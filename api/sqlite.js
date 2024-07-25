@@ -62,6 +62,15 @@ export const createTables = async (db) => {
       password TEXT NOT NULL,
       UNIQUE (username)
     );
+    CREATE TABLE IF NOT EXISTS UserSessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      userId INTEGER,
+      loginTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      logoutTimestamp DATETIME,
+      isActive BOOLEAN DEFAULT 1,
+      FOREIGN KEY(userId) REFERENCES Users(id),
+      UNIQUE (userId, loginTimestamp, logoutTimestamp, isActive)
+    );
     CREATE TABLE IF NOT EXISTS Balance (
       bookieId INTEGER NOT NULL, 
       balance REAL NOT NULL, 
@@ -118,6 +127,14 @@ export const createTables = async (db) => {
       PRIMARY KEY (league, lastFetched),
       FOREIGN KEY(league) REFERENCES Leagues(leagueName)
     );
+    CREATE TABLE IF NOT EXISTS MarketFetchHistory (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      gameId TEXT,
+      marketType TEXT,
+      lastFetched TEXT NOT NULL,
+      FOREIGN KEY(gameId) REFERENCES Games(gameId),
+      UNIQUE (gameId, marketType, lastFetched)
+    );
     CREATE TABLE IF NOT EXISTS BetTargets (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       targetType TEXT NOT NULL,
@@ -170,21 +187,20 @@ export const createTables = async (db) => {
     CREATE TABLE ParticipantBets (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       betSlipId INTEGER NOT NULL,
-      sport TEXT NOT NULL,
-      homeTeamId INTEGER NOT NULL,
-      awayTeamId INTEGER NOT NULL,
+      gameId TEXT NOT NULL,
       odds TEXT NOT NULL,
       FOREIGN KEY (betSlipId) REFERENCES BetSlips(id),
-      FOREIGN KEY (homeTeamId) REFERENCES BetTargets(id),
-      FOREIGN KEY (awayTeamId) REFERENCES BetTargets(id),
-      UNIQUE (betSlipId, sport, homeTeamId, awayTeamId, odds)
+      FOREIGN KEY (gameId) REFERENCES Games(gameId),
+      UNIQUE (betSlipId, gameId, odds)
     );
     CREATE TABLE Legs (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       participantBetId INTEGER NOT NULL,
       betMarketId INTEGER NOT NULL,
+      betTypeId INTEGER NOT NULL,
       FOREIGN KEY (participantBetId) REFERENCES ParticipantBets(id),
       FOREIGN KEY (betMarketId) REFERENCES BetMarkets(id),
+      FOREIGN KEY (betTypeId) REFERENCES BetTypes(id),
       UNIQUE (participantBetId, betMarketId)
     );
   `);
@@ -214,32 +230,3 @@ export const dropTables = async (db) => {
   `);
   console.log('Tables dropped');
 };
-
-export const createUserSessionsTable = async (db) => {
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS UserSessions (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER,
-      loginTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-      logoutTimestamp DATETIME,
-      isActive BOOLEAN DEFAULT 1,
-      FOREIGN KEY(userId) REFERENCES Users(id),
-      UNIQUE (userId, loginTimestamp, logoutTimestamp, isActive)
-    );
-  `);
-  console.log('UserSessions table created');
-};
-
-export const createMarketFetchHistoryTable = async (db) => {
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS MarketFetchHistory (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      gameId TEXT,
-      marketType TEXT,
-      lastFetched TEXT NOT NULL,
-      FOREIGN KEY(gameId) REFERENCES Games(gameId),
-      UNIQUE (gameId, marketType, lastFetched)
-    );
-  `);
-  console.log('MarketFetchHistory table created');
-}
