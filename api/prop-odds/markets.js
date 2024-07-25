@@ -69,7 +69,7 @@ const getBetTargetName = (db, name, gameId) => {
       const [abbreviation, partialTeamName] = firstPart.split(' ', 2);
       getTeamsByAbbreviation(db, abbreviation).then((teams) => {
         const matchedTeam = teams.find(team => team.teamName.includes(partialTeamName));
-        resolve(matchedTeam ? matchedTeam.teamName : 'Team not found');
+        resolve(matchedTeam ? matchedTeam.teamName : abbreviation + ' ' + partialTeamName);
       }).catch(reject);
     } else {
       resolve(trimmedName);
