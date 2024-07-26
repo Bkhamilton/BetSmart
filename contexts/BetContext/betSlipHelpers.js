@@ -10,10 +10,11 @@ export function createBetSlip(id, type, date, odds, betAmount, winnings, bets) {
   };
 }
 
-export function createBet(date, league, home, away, odds, legs) {
+export function createBet(date, league, gameId, home, away, odds, legs) {
   return {
     date,
     league,
+    gameId,
     home,
     away,
     odds,
