@@ -156,11 +156,6 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
       });
     });
 
-    // For each betSlip.bets, create ParticipantBet in DB
-    // ParticipantBets - (db, betSlipId, gameId, odds)
-
-    // For each betSlip.bets.legs, create Leg in DB using ParticipantBetId
-    // Legs - (db, participantBetId, betMarketId, betTypeId)
     setBetSlip(null);
     setTotalLegs(0);
   }
