@@ -231,3 +231,17 @@ export const dropTables = async (db) => {
   `);
   console.log('Tables dropped');
 };
+
+// Function to create Table to track results from Legs
+export const createResultsTable = async (db) => {
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS Results (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      legId INTEGER NOT NULL,
+      result TEXT NOT NULL,
+      FOREIGN KEY(legId) REFERENCES Legs(id),
+      UNIQUE (legId, result)
+    );
+  `);
+  console.log('Results table created');
+};
