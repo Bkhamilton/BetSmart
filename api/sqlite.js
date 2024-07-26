@@ -154,7 +154,8 @@ export const createTables = async (db) => {
     CREATE TABLE BetFormats (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       formatName TEXT NOT NULL UNIQUE,
-      description TEXT
+      description TEXT,
+      UNIQUE (formatName, description)
     );
     CREATE TABLE BetMarkets (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
