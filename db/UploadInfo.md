@@ -149,4 +149,16 @@ const addLeaguePropInfo = () => {
     });
   });
 };
+
+insertBetType(db, "Main", "Main Game Lines");
+
+insertBetFormat(db, "Single", "Single bet").then(() => {
+  insertBetFormat(db, "Parlay", "Parlay bet").then(() => {
+    insertBetFormat(db, "Teaser", "Teaser bet").then(() => {
+      insertBetFormat(db, "Round Robin", "Round Robin bet").then(() => {
+        console.log("Bet formats inserted");
+      });
+    });
+  });
+});
 ```
