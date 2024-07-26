@@ -21,7 +21,7 @@ export default function SelectGameScreen() {
 
   const db = useSQLiteContext();
 
-  const { setCurrentGame, league, setLeague, setBookie, setBookieId, betSlip, setBetSlip } = useContext(BetContext);
+  const { setCurrentGame, league, setLeague, setBookie, setBookieId, betSlip, setBetSlip, confirmBetSlip } = useContext(BetContext);
   const { leagues } = useContext(DBContext);
 
   const router = useRouter();
@@ -96,9 +96,9 @@ export default function SelectGameScreen() {
 
   const confirmBet = (wager, winnings) => {
     updateBetSlipAmounts(betSlip, wager, winnings);
-    console.log('Bet Slip:', JSON.stringify(betSlip));
 
     closeBetSlipModal();
+    confirmBetSlip();
   }
 
   const updateDate = (direction) => {

@@ -67,6 +67,7 @@ interface BetContextValue {
   selectProp: (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; }) => void;
   totalLegs: Number | null;
   setTotalLegs: (totalLegs: number) => void;
+  confirmBetSlip: () => void;
 }
 
 export const BetContext = createContext<BetContextValue>({
@@ -83,6 +84,7 @@ export const BetContext = createContext<BetContextValue>({
   selectProp: () => {},
   totalLegs: null,
   setTotalLegs: () => {},
+  confirmBetSlip: () => {},
 });
 
 interface BetContextProviderProps {
@@ -119,6 +121,16 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     }
   }
 
+  const confirmBetSlip = () => {
+    // Create BetSlip in DB
+
+    // For each betSlip.bets, create ParticipantBet in DB
+
+    // For each betSlip.bets.legs, create Leg in DB using ParticipantBetId
+    setBetSlip(null);
+    setTotalLegs(0);
+  }
+
   const value = {
     betSlip,
     setBetSlip,
@@ -133,6 +145,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     selectProp,
     totalLegs,
     setTotalLegs,
+    confirmBetSlip,
   };
 
   return (
