@@ -22,6 +22,17 @@ export const getBetMarket = async (db, betMarketId) => {
   }
 };
 
+// Function to get bet market that matches Leg object
+export const getBetMarketByLeg = async (db, leg) => {
+  try {
+    const betMarket = await db.getAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = ? AND value = ? AND odds = ? AND overUnder = ? AND betTargetId = ? AND bookieId = ?', [leg.gameId, leg.marketType, leg.value, leg.odds, leg.overUnder, leg.betTargetId, leg.bookieId]);
+    return betMarket;
+  } catch (error) {
+    console.error('Error getting bet market by leg:', error);
+    throw error;
+  }
+};
+
 // Function to get all bet markets for a game and market type
 export const getBetMarketByGame = async (db, gameId, marketType) => {
   try {

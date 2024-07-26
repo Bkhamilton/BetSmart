@@ -7,6 +7,8 @@ import { insertBetSlip } from '@/db/user-specific/BetSlips';
 import { insertParticipantBet } from '@/db/user-specific/ParticipantBets';
 import { insertLeg } from '@/db/user-specific/Legs';
 import { getBetFormat } from '@/db/bet-general/BetFormats';
+import { getBetType } from '@/db/bet-general/BetTypes';
+import { getBetMarketByLeg } from '@/db/api/BetMarkets';
 
 interface Game {
   id: number;
@@ -51,6 +53,7 @@ interface Leg {
   betTarget: string;
   stat: string;
   line: string;
+  overUnder: string;
   odds: string;
 }
 
@@ -142,12 +145,14 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     betSlip.bets.forEach(bet => {
       // Create ParticipantBet in DB
       // ParticipantBets - (db, betSlipId, gameId, odds)
-      const participantBetId = insertParticipantBet(betSlipId, bet.gameId, bet.odds);
+      const participantBetId = insertParticipantBet(db, betSlipId, bet.gameId, bet.odds);
 
       bet.legs.forEach(leg => {
         // Create Leg in DB using ParticipantBetId
-        // Legs - (db, participantBetId, betMarketId, betTypeId, result)
-        insertLeg(participantBetId, 1, 1, 1, 0);
+        // Legs - (db, participantBetId, betMarketId, betTypeId)
+        const betMarket = getBetMarketByLeg(db, leg.type, leg.stat, leg.line, leg.overUnder);
+        const betType = getBetType(db, leg.type);
+        insertLeg(db, participantBetId, betMarket.id, betType.id);
       });
     });
 
@@ -155,7 +160,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     // ParticipantBets - (db, betSlipId, gameId, odds)
 
     // For each betSlip.bets.legs, create Leg in DB using ParticipantBetId
-    // Legs - (db, participantBetId, betMarketId, betTypeId, result)
+    // Legs - (db, participantBetId, betMarketId, betTypeId)
     setBetSlip(null);
     setTotalLegs(0);
   }
