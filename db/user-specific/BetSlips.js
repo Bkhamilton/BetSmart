@@ -23,9 +23,9 @@ export const getBetSlip = async (db, betSlipId) => {
 };
 
 // Function to insert a bet slip
-export const insertBetSlip = async (db, participantBetId, result) => {
+export const insertBetSlip = async (db, formatId, date, odds, betAmount, winnings, userId, bookieId) => {
     try {
-        const resultDB = await db.runAsync('INSERT INTO BetSlips (participantBetId, result) VALUES (?, ?)', [participantBetId, result]);
+        const resultDB = await db.runAsync('INSERT INTO BetSlips (formatId, date, odds, betAmount, winnings, userId, bookieId) VALUES (?, ?, ?, ?, ?, ?, ?)', [formatId, date, odds, betAmount, winnings, userId, bookieId]);
         return resultDB.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting bet slip:', error);
@@ -34,9 +34,9 @@ export const insertBetSlip = async (db, participantBetId, result) => {
 };
 
 // Function to update a bet slip
-export const updateBetSlip = async (db, betSlipId, participantBetId, result) => {
+export const updateBetSlip = async (db, betSlipId, formatId, date, odds, betAmount, winnings, userId, bookieId) => {
     try {
-        await db.runAsync('UPDATE BetSlips SET participantBetId = ?, result = ? WHERE id = ?', [participantBetId, result, betSlipId]);
+        await db.runAsync('UPDATE BetSlips SET formatId = ?, date = ?, odds = ?, betAmount = ?, winnings = ?, userId = ?, bookieId = ? WHERE id = ?', [formatId, date, odds, betAmount, winnings, userId, bookieId, betSlipId]);
     } catch (error) {
         console.error('Error updating bet slip:', error);
         throw error;

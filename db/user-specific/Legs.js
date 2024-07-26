@@ -23,9 +23,9 @@ export const getLeg = async (db, legId) => {
 };
 
 // Function to insert a leg
-export const insertLeg = async (db, participantBetId, result) => {
+export const insertLeg = async (db, participantBetId, betMarketId, betTypeId, result) => {
   try {
-    const resultDB = await db.runAsync('INSERT INTO Legs (participantBetId, result) VALUES (?, ?)', [participantBetId, result]);
+    const resultDB = await db.runAsync('INSERT INTO Legs (participantBetId, betMarketId, betTypeId, result) VALUES (?, ?, ?, ?)', [participantBetId, betMarketId, betTypeId, result]);
     return resultDB.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting leg:', error);
@@ -34,9 +34,9 @@ export const insertLeg = async (db, participantBetId, result) => {
 };
 
 // Function to update a leg
-export const updateLeg = async (db, legId, participantBetId, result) => {
+export const updateLeg = async (db, legId, participantBetId, betMarketId, betTypeId, result) => {
   try {
-    await db.runAsync('UPDATE Legs SET participantBetId = ?, result = ? WHERE id = ?', [participantBetId, result, legId]);
+    await db.runAsync('UPDATE Legs SET participantBetId = ?, betMarketId = ?, betTypeId = ?, result = ? WHERE id = ?', [participantBetId, betMarketId, betTypeId, result, legId]);
   } catch (error) {
     console.error('Error updating leg:', error);
     throw error;

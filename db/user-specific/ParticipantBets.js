@@ -23,9 +23,9 @@ export const getParticipantBet = async (db, participantBetId) => {
 };
 
 // Function to insert a participant bet
-export const insertParticipantBet = async (db, userId, bettingLineId, amount) => {
+export const insertParticipantBet = async (db, betSlipId, gameId, odds) => {
   try {
-    const result = await db.runAsync('INSERT INTO ParticipantBets (userId, bettingLineId, amount) VALUES (?, ?, ?)', [userId, bettingLineId, amount]);
+    const result = await db.runAsync('INSERT INTO ParticipantBets (betSlipId, gameId, odds) VALUES (?, ?, ?)', [betSlipId, gameId, odds]);
     return result.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting participant bet:', error);
@@ -34,9 +34,9 @@ export const insertParticipantBet = async (db, userId, bettingLineId, amount) =>
 };
 
 // Function to update a participant bet
-export const updateParticipantBet = async (db, participantBetId, userId, bettingLineId, amount) => {
+export const updateParticipantBet = async (db, participantBetId, betSlipId, gameId, odds) => {
   try {
-    await db.runAsync('UPDATE ParticipantBets SET userId = ?, bettingLineId = ?, amount = ? WHERE id = ?', [userId, bettingLineId, amount, participantBetId]);
+    await db.runAsync('UPDATE ParticipantBets SET betSlipId = ?, gameId = ?, odds = ? WHERE id = ?', [betSlipId, gameId, odds, participantBetId]);
   } catch (error) {
     console.error('Error updating participant bet:', error);
     throw error;
