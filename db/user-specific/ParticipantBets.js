@@ -14,7 +14,7 @@ export const getAllParticipantBets = async (db) => {
 // Function to get a participant bet
 export const getParticipantBet = async (db, participantBetId) => {
   try {
-    const participantBet = await db.getAsync('SELECT * FROM ParticipantBets WHERE id = ?', [participantBetId]);
+    const participantBet = await db.getAllAsync('SELECT * FROM ParticipantBets WHERE id = ?', [participantBetId]);
     return participantBet;
   } catch (error) {
     console.error('Error getting participant bet:', error);

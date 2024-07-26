@@ -14,7 +14,7 @@ export const getAllBetSlips = async (db) => {
 // Function to get a bet slip
 export const getBetSlip = async (db, betSlipId) => {
     try {
-        const betSlip = await db.getAsync('SELECT * FROM BetSlips WHERE id = ?', [betSlipId]);
+        const betSlip = await db.getAllAsync('SELECT * FROM BetSlips WHERE id = ?', [betSlipId]);
         return betSlip;
     } catch (error) {
         console.error('Error retrieving bet slip:', error);

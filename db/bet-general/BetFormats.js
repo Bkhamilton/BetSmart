@@ -14,7 +14,7 @@ export const getAllBetFormats = async (db) => {
 // Function to get a bet format by formatName
 export const getBetFormat = async (db, formatName) => {
   try {
-    const betFormat = await db.getAsync('SELECT * FROM BetFormats WHERE formatName = ?', [formatName]);
+    const betFormat = await db.getAllAsync('SELECT * FROM BetFormats WHERE formatName = ?', [formatName]);
     return betFormat[0];
   } catch (error) {
     console.error('Error getting bet format:', error);
