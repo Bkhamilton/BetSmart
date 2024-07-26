@@ -1,6 +1,12 @@
 // app/contexts/BetContext/BetContext.tsx
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { createLeg, createBet, createBetSlip, updateBetSlip, removeLeg } from '@/contexts/BetContext/betSlipHelpers';
+import { UserContext } from '../UserContext';
+import { useSQLiteContext } from 'expo-sqlite';
+import { insertBetSlip } from '@/db/user-specific/BetSlips';
+import { insertParticipantBet } from '@/db/user-specific/ParticipantBets';
+import { insertLeg } from '@/db/user-specific/Legs';
+import { getBetFormat } from '@/db/bet-general/BetFormats';
 
 interface Game {
   id: number;
@@ -32,7 +38,8 @@ interface BetSlip {
 
 interface Bet {
   date: string;
-  sport: string;
+  league: string;
+  gameId: string;
   home: string;
   away: string;
   odds: number;
@@ -92,6 +99,11 @@ interface BetContextProviderProps {
 }
 
 export const BetContextProvider = ({ children }: BetContextProviderProps) => {
+
+  const { user } = useContext(UserContext);
+
+  const db = useSQLiteContext();
+
   const [betSlip, setBetSlip] = useState<BetSlip | null>(null);
   const [currentGame, setCurrentGame] = useState<Game | null>(null);
   const [league, setLeague] = useState<League | null>(null);
@@ -104,7 +116,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     const { game, type, target, stat, value, overUnder, odds } = props;
 
     const leg = createLeg(type, target, stat, value, overUnder, odds);
-    const bet = createBet(game.date, league.leagueName, game.homeTeamName, game.awayTeamName, odds, [leg]);
+    const bet = createBet(game.date, league.leagueName, game.gameId, game.homeTeamName, game.awayTeamName, odds, [leg]);
 
     const today = new Date();
 
@@ -123,10 +135,27 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
 
   const confirmBetSlip = () => {
     // Create BetSlip in DB
+    // BetSlips - (db, formatId, date, odds, betAmount, winnings, userId, bookieId)
+    const betSlipFormat = getBetFormat(db, betSlip.type);
+    const betSlipId = insertBetSlip(db, betSlipFormat, betSlip.date, betSlip.odds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
+
+    betSlip.bets.forEach(bet => {
+      // Create ParticipantBet in DB
+      // ParticipantBets - (db, betSlipId, gameId, odds)
+      const participantBetId = insertParticipantBet(betSlipId, bet.gameId, bet.odds);
+
+      bet.legs.forEach(leg => {
+        // Create Leg in DB using ParticipantBetId
+        // Legs - (db, participantBetId, betMarketId, betTypeId, result)
+        insertLeg(participantBetId, 1, 1, 1, 0);
+      });
+    });
 
     // For each betSlip.bets, create ParticipantBet in DB
+    // ParticipantBets - (db, betSlipId, gameId, odds)
 
     // For each betSlip.bets.legs, create Leg in DB using ParticipantBetId
+    // Legs - (db, participantBetId, betMarketId, betTypeId, result)
     setBetSlip(null);
     setTotalLegs(0);
   }
