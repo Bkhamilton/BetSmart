@@ -51,6 +51,12 @@ const fetchMarketValues = (data) => {
   }));
 };
 
+const betTargetCases = {
+  'WAS Nationals': 'Washington Nationals',
+  'CHI White' : 'Chicago White Sox',
+  'CHI Cubs' : 'Chicago Cubs',
+}
+
 const getBetTargetName = (db, name, gameId) => {
   return new Promise((resolve, reject) => {
     const trimmedName = name.trim();
@@ -65,6 +71,10 @@ const getBetTargetName = (db, name, gameId) => {
       // If firstPart is a single string, return it
       if (!firstPart.includes(' ')) {
         resolve(firstPart);
+      }
+      // If firstPart is in betTargetCases, return the value
+      if (betTargetCases[firstPart]) {
+        resolve(betTargetCases[firstPart]);
       }
       const [abbreviation, partialTeamName] = firstPart.split(' ', 2);
       getTeamsByAbbreviation(db, abbreviation).then((teams) => {
