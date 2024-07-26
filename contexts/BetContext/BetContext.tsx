@@ -136,23 +136,23 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     }
   }
 
-  const confirmBetSlip = () => {
+  const confirmBetSlip = async () => {
     // Create BetSlip in DB
     // BetSlips - (db, formatId, date, odds, betAmount, winnings, userId, bookieId)
-    const betSlipFormat = getBetFormat(db, betSlip.type);
-    const betSlipId = insertBetSlip(db, betSlipFormat, betSlip.date, betSlip.odds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
+    const betSlipFormat = await getBetFormat(db, betSlip.type);
+    const betSlipId = await insertBetSlip(db, betSlipFormat, betSlip.date, betSlip.odds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
 
-    betSlip.bets.forEach(bet => {
+    betSlip.bets.forEach(async bet => {
       // Create ParticipantBet in DB
       // ParticipantBets - (db, betSlipId, gameId, odds)
-      const participantBetId = insertParticipantBet(db, betSlipId, bet.gameId, bet.odds);
+      const participantBetId = await insertParticipantBet(db, betSlipId, bet.gameId, bet.odds);
 
-      bet.legs.forEach(leg => {
+      bet.legs.forEach(async leg => {
         // Create Leg in DB using ParticipantBetId
         // Legs - (db, participantBetId, betMarketId, betTypeId)
-        const betMarket = getBetMarketByLeg(db, leg.type, leg.stat, leg.line, leg.overUnder);
-        const betType = getBetType(db, leg.type);
-        insertLeg(db, participantBetId, betMarket.id, betType.id);
+        const betMarket = await getBetMarketByLeg(db, leg);
+        const betType = await getBetType(db, leg.type);
+        await insertLeg(db, participantBetId, betMarket.id, betType.id);
       });
     });
 
