@@ -49,7 +49,7 @@ export default function InsightScreen() {
     <>
       <Header title={"Insights"}>
         <TouchableOpacity
-          onPress={saveForLater}
+          onPress={cycleStreak}
           style={{ marginRight: 10 }}
         >
           <FontAwesome name="refresh" size={20} color={iconColor} />
