@@ -14,7 +14,7 @@ export const getAllBetMarkets = async (db) => {
 // Function to get a bet market
 export const getBetMarket = async (db, betMarketId) => {
   try {
-    const betMarket = await db.getAsync('SELECT * FROM BetMarkets WHERE id = ?', [betMarketId]);
+    const betMarket = await db.getAllAsync('SELECT * FROM BetMarkets WHERE id = ?', [betMarketId]);
     return betMarket;
   } catch (error) {
     console.error('Error getting bet market:', error);
@@ -23,10 +23,10 @@ export const getBetMarket = async (db, betMarketId) => {
 };
 
 // Function to get bet market that matches Leg object
-export const getBetMarketByLeg = async (db, leg) => {
+export const getBetMarketByLeg = async (db, gameId, leg) => {
   try {
-    const betMarket = await db.getAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = ? AND value = ? AND odds = ? AND overUnder = ? AND betTargetId = ? AND bookieId = ?', [leg.gameId, leg.marketType, leg.value, leg.odds, leg.overUnder, leg.betTargetId, leg.bookieId]);
-    return betMarket;
+    const betMarket = await db.getAllAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = ? AND value = ? AND odds = ? AND overUnder = ? AND betTargetId = ?', [gameId, leg.stat, leg.line, leg.odds, leg.overUnder, leg.betTarget]);
+    return betMarket[0];
   } catch (error) {
     console.error('Error getting bet market by leg:', error);
     throw error;

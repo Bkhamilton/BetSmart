@@ -25,8 +25,8 @@ export const getBetSlip = async (db, betSlipId) => {
 // Function to insert a bet slip
 export const insertBetSlip = async (db, formatId, date, odds, betAmount, winnings, userId, bookieId) => {
     try {
-        const resultDB = await db.runAsync('INSERT INTO BetSlips (formatId, date, odds, betAmount, winnings, userId, bookieId) VALUES (?, ?, ?, ?, ?, ?, ?)', [formatId, date, odds, betAmount, winnings, userId, bookieId]);
-        return resultDB.lastInsertRowId;
+        const result = await db.runAsync('INSERT INTO BetSlips (formatId, date, odds, betAmount, winnings, userId, bookieId) VALUES (?, ?, ?, ?, ?, ?, ?)', [formatId, date, odds, betAmount, winnings, userId, bookieId]);
+        return result.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting bet slip:', error);
         throw error;
