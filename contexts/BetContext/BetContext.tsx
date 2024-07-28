@@ -161,18 +161,12 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
         }
       }
 
-<<<<<<< HEAD
       setBetSlip(null);
       setTotalLegs(0);
     } catch (error) {
       console.error('Error inserting bet slip:', error);
     }
   };
-=======
-    setBetSlip(null);
-    setTotalLegs(0);
-  }
->>>>>>> ed6b2cfc058231b4b6dc1e69bbee7f9ca9817a71
 
   const value = {
     betSlip,
