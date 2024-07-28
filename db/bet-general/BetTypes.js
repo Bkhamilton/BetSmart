@@ -14,8 +14,8 @@ export const getAllBetTypes = async (db) => {
 // Function to get a bet type
 export const getBetType = async (db, betType) => {
   try {
-    const betType = await db.getAllAsync('SELECT * FROM BetTypes WHERE betType = ?', [betType]);
-    return betType[0];
+    const result = await db.getAllAsync('SELECT * FROM BetTypes WHERE betType = ?', [betType]);
+    return result[0];
   } catch (error) {
     console.error('Error in getBetType:', error);
     throw error;
