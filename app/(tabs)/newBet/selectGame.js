@@ -98,7 +98,7 @@ export default function SelectGameScreen() {
     updateBetSlipAmounts(betSlip, wager, winnings);
 
     closeBetSlipModal();
-    confirmBetSlip();
+    confirmBetSlip(db);
   }
 
   const updateDate = (direction) => {

@@ -105,8 +105,6 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
 
   const { user } = useContext(UserContext);
 
-  const db = useSQLiteContext();
-
   const [betSlip, setBetSlip] = useState<BetSlip | null>(null);
   const [currentGame, setCurrentGame] = useState<Game | null>(null);
   const [league, setLeague] = useState<League | null>(null);
@@ -136,34 +134,39 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     }
   }
 
-  const confirmBetSlip = async () => {
-    // Create BetSlip in DB
-    // BetSlips - (db, formatId, date, odds, betAmount, winnings, userId, bookieId)
-    const betSlipFormat = await getBetFormat(db, betSlip.type);
-    const betSlipId = await insertBetSlip(db, betSlipFormat, betSlip.date, betSlip.odds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
+  const confirmBetSlip = async (db: any) => {
+    try {
+      // Create BetSlip in DB
+      const betSlipFormat = await getBetFormat(db, betSlip.type);
+      console.log('Inserting :', betSlipFormat.id, betSlip.date, betSlip.odds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
+      const betSlipId = await insertBetSlip(db, betSlipFormat.id, betSlip.date, betSlip.odds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
 
-    betSlip.bets.forEach(async bet => {
-      // Create ParticipantBet in DB
-      // ParticipantBets - (db, betSlipId, gameId, odds)
-      const participantBetId = await insertParticipantBet(db, betSlipId, bet.gameId, bet.odds);
+      for (const bet of betSlip.bets) {
+        try {
+          // Create ParticipantBet in DB
+          const participantBetId = await insertParticipantBet(db, betSlipId, bet.gameId, bet.odds);
 
-      bet.legs.forEach(async leg => {
-        // Create Leg in DB using ParticipantBetId
-        // Legs - (db, participantBetId, betMarketId, betTypeId)
-        const betMarket = await getBetMarketByLeg(db, leg);
-        const betType = await getBetType(db, leg.type);
-        await insertLeg(db, participantBetId, betMarket.id, betType.id);
-      });
-    });
+          for (const leg of bet.legs) {
+            try {
+              // Create Leg in DB using ParticipantBetId
+              const betMarket = await getBetMarketByLeg(db, leg);
+              const betType = await getBetType(db, leg.type);
+              await insertLeg(db, participantBetId, betMarket.id, betType.id);
+            } catch (legError) {
+              console.error('Error inserting leg:', legError);
+            }
+          }
+        } catch (betError) {
+          console.error('Error inserting participant bet:', betError);
+        }
+      }
 
-    // For each betSlip.bets, create ParticipantBet in DB
-    // ParticipantBets - (db, betSlipId, gameId, odds)
-
-    // For each betSlip.bets.legs, create Leg in DB using ParticipantBetId
-    // Legs - (db, participantBetId, betMarketId, betTypeId)
-    setBetSlip(null);
-    setTotalLegs(0);
-  }
+      setBetSlip(null);
+      setTotalLegs(0);
+    } catch (error) {
+      console.error('Error inserting bet slip:', error);
+    }
+  };
 
   const value = {
     betSlip,
