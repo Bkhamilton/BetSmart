@@ -55,6 +55,7 @@ const betTargetCases = {
   'WAS Nationals': 'Washington Nationals',
   'CHI White' : 'Chicago White Sox',
   'CHI Cubs' : 'Chicago Cubs',
+  'CHI White ' : 'Chicago White Sox',
 }
 
 const getBetTargetName = (db, name, gameId) => {
@@ -72,17 +73,21 @@ const getBetTargetName = (db, name, gameId) => {
       if (!firstPart.includes(' ')) {
         resolve(firstPart);
       }
-      // If firstPart is in betTargetCases, return the value
-      if (betTargetCases[firstPart]) {
-        resolve(betTargetCases[firstPart]);
-      }
       const [abbreviation, partialTeamName] = firstPart.split(' ', 2);
+      // If abbrev + partialTeamName is in betTargetCases, return the value
+      if (betTargetCases[abbreviation + ' ' + partialTeamName]) {
+        resolve(betTargetCases[abbreviation + ' ' + partialTeamName]);
+      }
       getTeamsByAbbreviation(db, abbreviation).then((teams) => {
         const matchedTeam = teams.find(team => team.teamName.includes(partialTeamName));
         resolve(matchedTeam ? matchedTeam.teamName : abbreviation + ' ' + partialTeamName);
       }).catch(reject);
     } else {
-      resolve(trimmedName);
+      if (betTargetCases[trimmedName]) {
+        resolve(betTargetCases[trimmedName]);
+      } else {
+        resolve(trimmedName);
+      }
     }
   });
 };
@@ -133,7 +138,7 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
       } else {
         getBetTargetId(db, betTarget).then(async (target) => {
           if (!target) {
-            console.log('Target not found:', betTarget);
+            console.log(`Target not found: '${betTarget}'`);
             return;
           }
           await insertBetMarket(db, gameId, market, value, odds, overUnder, target.id, bookieId);
