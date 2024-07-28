@@ -138,8 +138,11 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     try {
       // Create BetSlip in DB
       const betSlipFormat = await getBetFormat(db, betSlip.type);
-      console.log('Inserting :', betSlipFormat.id, betSlip.date, betSlip.odds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
-      const betSlipId = await insertBetSlip(db, betSlipFormat.id, betSlip.date, betSlip.odds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
+      const betSlipDate = betSlip.date.toISOString();
+      const betSlipOdds = betSlip.odds.toString();
+  
+      console.log('Inserting :', betSlipFormat.id, betSlipDate, betSlipOdds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
+      const betSlipId = await insertBetSlip(db, betSlipFormat.id, betSlipDate, betSlipOdds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
 
       for (const bet of betSlip.bets) {
         try {
@@ -149,7 +152,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
           for (const leg of bet.legs) {
             try {
               // Create Leg in DB using ParticipantBetId
-              const betMarket = await getBetMarketByLeg(db, leg);
+              const betMarket = await getBetMarketByLeg(db, bet.gameId, leg);
               const betType = await getBetType(db, leg.type);
               await insertLeg(db, participantBetId, betMarket.id, betType.id);
             } catch (legError) {
