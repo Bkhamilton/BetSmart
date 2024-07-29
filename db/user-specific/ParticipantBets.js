@@ -11,6 +11,18 @@ export const getAllParticipantBets = async (db) => {
   }
 };
 
+// Function to get all ParticipantBets for a given array of betSlipIds
+export const getAllValidParticipantBets = async (db, betSlipIds) => {
+  try {
+    idString = betSlipIds.join(', ');
+    const allRows = await db.getAllAsync('SELECT * FROM ParticipantBets WHERE betSlipId IN (?)', [idString]);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting all valid participant bets:', error);
+    throw error;
+  }
+};
+
 // Function to get a participant bet
 export const getParticipantBet = async (db, participantBetId) => {
   try {

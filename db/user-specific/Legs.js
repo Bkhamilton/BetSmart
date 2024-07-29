@@ -11,6 +11,18 @@ export const getAllLegs = async (db) => {
   }
 };
 
+// Function to get all Legs for a given array of participantBetIds
+export const getAllValidLegs = async (db, participantBetIds) => {
+  try {
+    const idString = participantBetIds.join(', ');
+    const allRows = await db.getAllAsync('SELECT * FROM Legs WHERE participantBetId IN (?)', [idString]);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting all legs for participant bets:', error);
+    throw error;
+  }
+};
+
 // Function to get a leg
 export const getLeg = async (db, legId) => {
   try {
