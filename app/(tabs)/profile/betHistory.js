@@ -1,8 +1,12 @@
 import { StyleSheet, useColorScheme } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useSQLiteContext } from 'expo-sqlite';
+import { getAllBetSlips } from '@/db/user-specific/BetSlips';
+import { getAllParticipantBets } from '@/db/user-specific/ParticipantBets';
+import { getAllLegs } from '@/db/user-specific/Legs';
 import useTheme from '@/hooks/useTheme';
 
 import Colors from '@/constants/Colors';
@@ -11,6 +15,8 @@ import ChooseBetType from '@/components/Profile/BetHistory/ChooseBetType';
 export default function SettingsScreen() {
     
     const { iconColor } = useTheme();
+
+    const db = useSQLiteContext();
 
     const router = useRouter();
 
@@ -23,6 +29,39 @@ export default function SettingsScreen() {
     function changeType(type) {
       setSelectedType(type);
     }
+
+    useEffect(() => {
+      const fetchBetSlips = async () => {
+        try {
+          const betSlips = await getAllBetSlips(db);
+          console.log('All bet slips:', betSlips);
+        } catch (error) {
+          console.error('Error fetching bet slips:', error);
+        }
+      };
+
+      const fetchParticipantBets = async () => {
+        try {
+          const participantBets = await getAllParticipantBets(db);
+          console.log('All participant bets:', participantBets);
+        } catch (error) {
+          console.error('Error fetching participant bets:', error);
+        }
+      };
+
+      const fetchLegs = async () => {
+        try {
+          const legs = await getAllLegs(db);
+          console.log('All legs:', legs);
+        } catch (error) {
+          console.error('Error fetching legs:', error);
+        }
+      };
+
+      fetchBetSlips();
+      fetchParticipantBets();
+      fetchLegs();
+    }, []);
 
     return (
     <View style={styles.container}>
