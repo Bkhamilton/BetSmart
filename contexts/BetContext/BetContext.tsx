@@ -141,7 +141,6 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
       const betSlipDate = betSlip.date.toISOString();
       const betSlipOdds = betSlip.odds.toString();
   
-      console.log('Inserting :', betSlipFormat.id, betSlipDate, betSlipOdds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
       const betSlipId = await insertBetSlip(db, betSlipFormat.id, betSlipDate, betSlipOdds, betSlip.betAmount, betSlip.winnings, user.id, bookieId);
 
       for (const bet of betSlip.bets) {
