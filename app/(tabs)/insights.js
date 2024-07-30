@@ -29,7 +29,11 @@ export default function InsightScreen() {
       });
     });
   }
-  
+
+  const tempFunction = () => {
+
+  }
+
   // function to cycle betwen hot, cold, and no streaks
   const cycleStreak = () => {
     if (streak === 'hot') {
@@ -49,7 +53,7 @@ export default function InsightScreen() {
     <>
       <Header title={"Insights"}>
         <TouchableOpacity
-          onPress={cycleStreak}
+          onPress={tempFunction}
           style={{ marginRight: 10 }}
         >
           <FontAwesome name="refresh" size={20} color={iconColor} />
