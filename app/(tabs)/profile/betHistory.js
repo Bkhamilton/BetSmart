@@ -4,9 +4,9 @@ import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useSQLiteContext } from 'expo-sqlite';
-import { getAllBetSlips } from '@/db/user-specific/BetSlips';
-import { getAllParticipantBets } from '@/db/user-specific/ParticipantBets';
-import { getAllLegs } from '@/db/user-specific/Legs';
+import { getTodaysBetSlips } from '@/db/user-specific/BetSlips';
+import { getAllValidParticipantBets } from '@/db/user-specific/ParticipantBets';
+import { getAllValidLegs } from '@/db/user-specific/Legs';
 import useTheme from '@/hooks/useTheme';
 
 import Colors from '@/constants/Colors';
@@ -26,41 +26,44 @@ export default function SettingsScreen() {
 
     const [selectedType, setSelectedType] = useState('Today');
 
+    const [betSlips, setBetSlips] = useState([]);
+
     function changeType(type) {
       setSelectedType(type);
     }
 
+    const today = new Date();
+    const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;  
+
     useEffect(() => {
-      const fetchBetSlips = async () => {
+      const fetchData = async () => {
         try {
-          const betSlips = await getAllBetSlips(db);
-          console.log('All bet slips:', betSlips);
+          const betSlips = await getTodaysBetSlips(db, formattedToday);
+          const betSlipIds = [6, 7];
+          const participantBets = await getAllValidParticipantBets(db, betSlipIds);
+          const participantBetIds = participantBets.map(participantBet => participantBet.id);
+          const legs = await getAllValidLegs(db, participantBetIds);
+  
+          // Add legs to participantBets
+          const participantBetsWithLegs = participantBets.map(participantBet => ({
+            ...participantBet,
+            legs: legs.filter(leg => leg.participantBetId === participantBet.id)
+          }));
+    
+          // Add participantBets to betSlips
+          const betSlipsWithBets = betSlips.map(betSlip => ({
+            ...betSlip,
+            bets: participantBetsWithLegs.filter(participantBet => participantBet.betSlipId === betSlip.id)
+          }));
+    
+          setBetSlips(betSlipsWithBets);
+          console.log('Today\'s bet slips with bets and legs:', JSON.stringify(betSlipsWithBets, null, 2));
         } catch (error) {
-          console.error('Error fetching bet slips:', error);
+          console.error('Error fetching data:', error);
         }
       };
-
-      const fetchParticipantBets = async () => {
-        try {
-          const participantBets = await getAllParticipantBets(db);
-          console.log('All participant bets:', participantBets);
-        } catch (error) {
-          console.error('Error fetching participant bets:', error);
-        }
-      };
-
-      const fetchLegs = async () => {
-        try {
-          const legs = await getAllLegs(db);
-          console.log('All legs:', legs);
-        } catch (error) {
-          console.error('Error fetching legs:', error);
-        }
-      };
-
-      fetchBetSlips();
-      fetchParticipantBets();
-      fetchLegs();
+    
+      fetchData();
     }, []);
 
     return (
