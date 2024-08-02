@@ -18,7 +18,7 @@ export const getAllValidParticipantBets = async (db, betSlipIds) => {
     const placeholders = betSlipIds.map(() => '?').join(',');
 
     // Construct the SQL query
-    const query = `SELECT * FROM ParticipantBets WHERE betSlipId IN (${placeholders})`;
+    const query = `SELECT * FROM ParticipantBets JOIN Games on ParticipantBets.gameId = Games.gameId WHERE betSlipId IN (${placeholders})`;
 
     const allRows = await db.getAllAsync(query, betSlipIds);
     return allRows;

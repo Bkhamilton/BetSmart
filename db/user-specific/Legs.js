@@ -18,7 +18,12 @@ export const getAllValidLegs = async (db, participantBetIds) => {
     const placeholders = participantBetIds.map(() => '?').join(',');
 
     // Construct the SQL query
-    const query = `SELECT * FROM Legs WHERE participantBetId IN (${placeholders})`;
+    const query = `
+      SELECT * 
+      FROM Legs 
+      JOIN BetMarkets ON Legs.betMarketId = BetMarkets.id 
+      WHERE participantBetId IN (${placeholders})
+    `;
 
     const allRows = await db.getAllAsync(query, participantBetIds);
     return allRows;
@@ -31,7 +36,12 @@ export const getAllValidLegs = async (db, participantBetIds) => {
 // Function to get a leg
 export const getLeg = async (db, legId) => {
   try {
-    const leg = await db.getAsync('SELECT * FROM Legs WHERE id = ?', [legId]);
+    const query = `
+      SELECT * 
+      FROM Legs 
+      WHERE id = ?
+    `;
+    const leg = await db.getAsync(query, [legId]);
     return leg;
   } catch (error) {
     console.error('Error getting leg:', error);
@@ -42,7 +52,11 @@ export const getLeg = async (db, legId) => {
 // Function to insert a leg
 export const insertLeg = async (db, participantBetId, betMarketId, betTypeId) => {
   try {
-    const resultDB = await db.runAsync('INSERT INTO Legs (participantBetId, betMarketId, betTypeId) VALUES (?, ?, ?)', [participantBetId, betMarketId, betTypeId]);
+    const query = `
+      INSERT INTO Legs (participantBetId, betMarketId, betTypeId) 
+      VALUES (?, ?, ?)
+    `;
+    const resultDB = await db.runAsync(query, [participantBetId, betMarketId, betTypeId]);
     return resultDB.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting leg:', error);
@@ -53,7 +67,12 @@ export const insertLeg = async (db, participantBetId, betMarketId, betTypeId) =>
 // Function to update a leg
 export const updateLeg = async (db, legId, participantBetId, betMarketId, betTypeId) => {
   try {
-    await db.runAsync('UPDATE Legs SET participantBetId = ?, betMarketId = ?, betTypeId = ? WHERE id = ?', [participantBetId, betMarketId, betTypeId, legId]);
+    const query = `
+      UPDATE Legs 
+      SET participantBetId = ?, betMarketId = ?, betTypeId = ? 
+      WHERE id = ?
+    `;
+    await db.runAsync(query, [participantBetId, betMarketId, betTypeId, legId]);
   } catch (error) {
     console.error('Error updating leg:', error);
     throw error;
