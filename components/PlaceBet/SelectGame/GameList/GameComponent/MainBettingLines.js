@@ -72,7 +72,7 @@ export default function MainBettingLines({ game, marketProps }) {
         // Find the market data for the specified marketType
         const marketData = marketProps.find(market => market.market === marketType)?.data;
       
-        if (!marketData) {
+        if (!marketData || marketData.length === 0) {
             return (
                 <View>
                     <BettingLine
