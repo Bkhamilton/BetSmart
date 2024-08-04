@@ -19,11 +19,23 @@ export const getAllValidLegs = async (db, participantBetIds) => {
 
     // Construct the SQL query
     const query = `
-      SELECT * 
-      FROM Legs 
-      JOIN BetMarkets ON Legs.betMarketId = BetMarkets.id 
-      JOIN BetTypes ON Legs.betTypeId = BetTypes.id
-      WHERE participantBetId IN (${placeholders})
+      SELECT 
+        Legs.id, 
+        BetMarkets.marketType,
+        BetMarkets.value,
+        BetMarkets.odds,
+        BetMarkets.overUnder,
+        BetMarkets.betTargetId,
+        BetMarkets.bookieId, 
+        BetTypes.betType 
+      FROM 
+        Legs 
+      JOIN 
+        BetMarkets ON Legs.betMarketId = BetMarkets.id 
+      JOIN 
+        BetTypes ON Legs.betTypeId = BetTypes.id
+      WHERE 
+        Legs.participantBetId IN (${placeholders})
     `;
 
     const allRows = await db.getAllAsync(query, participantBetIds);
