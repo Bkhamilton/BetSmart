@@ -39,7 +39,7 @@ export default function SettingsScreen() {
       const fetchData = async () => {
         try {
           const betSlips = await getTodaysBetSlips(db, formattedToday);
-          const betSlipIds = [6, 7];
+          const betSlipIds = betSlips.map(betSlip => betSlip.id);
           const participantBets = await getAllValidParticipantBets(db, betSlipIds);
           const participantBetIds = participantBets.map(participantBet => participantBet.id);
           const legs = await getAllValidLegs(db, participantBetIds);
