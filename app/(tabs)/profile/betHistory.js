@@ -11,6 +11,7 @@ import useTheme from '@/hooks/useTheme';
 
 import Colors from '@/constants/Colors';
 import ChooseBetType from '@/components/Profile/BetHistory/ChooseBetType';
+import BetSlipDisplay from '@/components/Profile/BetHistory/BetSlipDisplay/BetSlipDisplay';
 
 export default function SettingsScreen() {
     
@@ -85,7 +86,11 @@ export default function SettingsScreen() {
         </View>
         <ChooseBetType selectType={changeType} type={selectedType}/>
         <ScrollView>
-          
+          <BetSlipDisplay
+            betSlips={betSlips}
+            selectedType={selectedType}
+          >
+          </BetSlipDisplay>
         </ScrollView>
     </View>
     );
