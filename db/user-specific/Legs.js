@@ -20,18 +20,22 @@ export const getAllValidLegs = async (db, participantBetIds) => {
     // Construct the SQL query
     const query = `
       SELECT 
-        Legs.id, 
-        BetMarkets.marketType,
-        BetMarkets.value,
-        BetMarkets.odds,
-        BetMarkets.overUnder,
-        BetMarkets.betTargetId,
-        BetMarkets.bookieId, 
-        BetTypes.betType 
+        Legs.id AS legId,
+        Legs.participantBetId AS participantBetId, 
+        BetMarkets.marketType AS marketType, 
+        BetMarkets.value AS value, 
+        BetMarkets.odds AS odds, 
+        BetMarkets.overUnder AS overUnder, 
+        BetTargets.targetName AS targetName,
+        BetTargets.targetType AS targetType,
+        BetTypes.id AS betTypeId, 
+        BetTypes.betType AS betType
       FROM 
         Legs 
       JOIN 
         BetMarkets ON Legs.betMarketId = BetMarkets.id 
+      JOIN
+        BetTargets ON BetMarkets.betTargetId = BetTargets.id
       JOIN 
         BetTypes ON Legs.betTypeId = BetTypes.id
       WHERE 
