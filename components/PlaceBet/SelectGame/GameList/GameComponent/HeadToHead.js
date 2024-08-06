@@ -5,7 +5,7 @@ import { Text, View } from '@/components/Themed';
 export default function HeadToHead({ homeLogo, homeTeam, awayLogo, awayTeam }) {
 
     return (
-        <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+        <View style={{ flex: 1, backgroundColor: 'transparent', justifyContent: 'center' }}>
             <View style={{ paddingVertical: 8, backgroundColor: 'transparent' }}>
                 <View style={styles.gameTeamContainer}>
                     <Image style={styles.teamIcon} source={{uri: awayLogo}}/>

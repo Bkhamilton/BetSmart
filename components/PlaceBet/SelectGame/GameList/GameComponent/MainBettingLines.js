@@ -137,11 +137,13 @@ export default function MainBettingLines({ game, marketProps }) {
     }
 
     return (
-        <View style={styles.container}>
-            <DisplayMarketLines marketProps={marketProps} marketType="moneyline" />
-            <DisplayMarketLines marketProps={marketProps} marketType="spread" />
-            <DisplayMarketLines marketProps={marketProps} marketType="total_over_under" />
-        </View>
+        <>
+            <View style={styles.container}>
+                <DisplayMarketLines marketProps={marketProps} marketType="moneyline" />
+                <DisplayMarketLines marketProps={marketProps} marketType="spread" />
+                <DisplayMarketLines marketProps={marketProps} marketType="total_over_under" />
+            </View>
+        </>
     );
 }
 
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center', 
     backgroundColor: 'transparent', 
-    paddingTop: 4
+    paddingTop: 2
   },
   propContainer: {
     borderWidth: 1,
