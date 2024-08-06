@@ -53,10 +53,24 @@ export default function GameComponent({ game, selectGame }) {
                     /> : 
                     <Text>Loading...</Text>
                 }
-                <MainBettingLines 
-                    game={game} 
-                    marketProps={marketProps}
-                />
+                <View style={{ backgroundColor: 'transparent' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'transparent' }}>
+                        <View style={styles.bettingLineContainer}>
+                            <Text style={styles.bettingLineTitle}>GAME</Text>
+                        </View>
+                        <View style={styles.bettingLineContainer}>
+                            <Text style={styles.bettingLineTitle}>SPREAD</Text>
+                        </View>
+                        <View style={styles.bettingLineContainer}>
+                            <Text style={styles.bettingLineTitle}>TOTAL</Text>
+                        </View>
+                    </View>
+                    
+                    <MainBettingLines 
+                        game={game} 
+                        marketProps={marketProps}
+                    />
+                </View>
             </View>
             <DateTime timestamp={timestamp} />
         </TouchableOpacity>
@@ -72,5 +86,15 @@ const styles = StyleSheet.create({
     mainBlock: {
         flexDirection: 'row',
         backgroundColor: 'transparent',
-    }
+    },
+    bettingLineTitle: {
+        fontSize: 10,
+        fontWeight: '600',
+    },
+    bettingLineContainer: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+        paddingTop: 2
+    },
 });
