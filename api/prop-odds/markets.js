@@ -92,10 +92,22 @@ const getBetTargetName = (db, name, gameId) => {
   });
 };
 
-const getValue = (outcome) => {
+const getValue = async (db, outcome) => {
   if (outcome.handicap === 0) {
     if (outcome.participant_name) {
-      return outcome.participant_name;
+      const [abbreviation, partialTeamName] = outcome.participant_name.split(' ', 2);
+      if (betTargetCases[abbreviation + ' ' + partialTeamName]) {
+        return betTargetCases[abbreviation + ' ' + partialTeamName];
+      }
+
+      try {
+        const teams = await getTeamsByAbbreviation(db, abbreviation);
+        const matchedTeam = teams.find(team => team.teamName.includes(partialTeamName));
+        return matchedTeam ? matchedTeam.teamName : outcome.participant_name;
+      } catch (error) {
+        console.error('Error fetching teams by abbreviation:', error);
+        return outcome.participant_name;
+      }
     } else {
       return outcome.name;
     }
@@ -128,7 +140,7 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
     const marketValues = fetchMarketValues(book);
     for (let outcome of marketValues) {
       const betTarget = await getBetTargetName(db, outcome.name, gameId);
-      const value = getValue(outcome.outcome);
+      const value = await getValue(db, outcome.outcome);
       const odds = getOdds(outcome.outcome.odds);
       const overUnder = getOverUnder(outcome.outcome);
       if (betTarget === gameId) {
