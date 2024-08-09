@@ -4,9 +4,9 @@ import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useSQLiteContext } from 'expo-sqlite';
-import { getTodaysBetSlips } from '@/db/user-specific/BetSlips';
-import { getAllValidParticipantBets } from '@/db/user-specific/ParticipantBets';
-import { getAllValidLegs } from '@/db/user-specific/Legs';
+import { getTodaysBetSlips } from '@/db/betslips/BetSlips';
+import { getAllValidParticipantBets } from '@/db/betslips/ParticipantBets';
+import { getAllValidLegs } from '@/db/betslips/Legs';
 import useTheme from '@/hooks/useTheme';
 
 import Colors from '@/constants/Colors';
