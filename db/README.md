@@ -50,44 +50,6 @@ The `Balance` table stores the balance information for each user and bookie comb
 | Balance | REAL      | User's balance with the bookie (not null)  |
 | UserID  | INTEGER   | Foreign key referencing the `Users` table  |
 
-## ParticipantBets
-
-The `ParticipantBets` table stores information about individual participant bets within a betting line.
-
-| Column        | Data Type | Description                                                                 |
-| ------------- | --------- | --------------------------------------------------------------------------- |
-| id            | INTEGER   | Primary key, auto-incrementing unique identifier for each participant bet   |
-| bettingLineId | INTEGER   | Foreign key referencing the `BettingLines` table (not null)                 |
-| sport         | TEXT      | Sport associated with the participant bet (not null)                        |
-| homeTeamId    | INTEGER   | Foreign key referencing the `BetTargets` table for the home team (not null) |
-| awayTeamId    | INTEGER   | Foreign key referencing the `BetTargets` table for the away team (not null) |
-| odds          | TEXT      | Odds for the participant bet (not null)                                     |
-
-## Legs
-
-The `Legs` table stores information about individual legs or selections within a participant bet.
-
-| Column           | Data Type | Description                                                              |
-| ---------------- | --------- | ------------------------------------------------------------------------ |
-| id               | INTEGER   | Primary key, auto-incrementing unique identifier for each leg            |
-| participantBetId | INTEGER   | Foreign key referencing the `ParticipantBets` table (not null)           |
-| betMarketId      | INTEGER   | Foreign key referencing the `BetMarkets` table for the market (not null) |
-
-## BetSlips
-
-The `BetSlips` table stores information about individual bet slips.
-
-| Column    | Data Type | Description                                                        |
-| --------- | --------- | ------------------------------------------------------------------ |
-| id        | INTEGER   | Primary key, auto-incrementing unique identifier for each bet slip |
-| formatId  | INTEGER   | Foreign key referencing the `BetFormats` table (not null)          |
-| date      | TEXT      | Date of the bet slip (not null)                                    |
-| odds      | TEXT      | Odds for the bet slip (not null)                                   |
-| betAmount | REAL      | Amount of the bet (not null)                                       |
-| winnings  | REAL      | Amount of winnings for the bet slip                                |
-| userId    | INTEGER   | Foreign key referencing the `Users` table (not null)               |
-| bookieId  | INTEGER   | Foreign key referencing the `Bookies` table (not null)             |
-
 ## Transactions
 
 The `Transactions` table stores information about financial transactions between users and bookies.
@@ -117,6 +79,52 @@ The `Bonuses` table stores information about bonuses given to users by bookies.
 | bonusAmount | REAL      | Amount of the bonus (not null)                                  |
 | timestamp   | TEXT      | Timestamp of when the bonus was given (not null)                |
 | description | TEXT      | Description or additional details about the bonus               |
+
+# BETSLIPS
+
+## BetSlips
+
+The `BetSlips` table stores information about individual bet slips.
+
+| Column    | Data Type | Description                                                        |
+| --------- | --------- | ------------------------------------------------------------------ |
+| id        | INTEGER   | Primary key, auto-incrementing unique identifier for each bet slip |
+| formatId  | INTEGER   | Foreign key referencing the `BetFormats` table (not null)          |
+| date      | TEXT      | Date of the bet slip (not null)                                    |
+| odds      | TEXT      | Odds for the bet slip (not null)                                   |
+| betAmount | REAL      | Amount of the bet (not null)                                       |
+| winnings  | REAL      | Amount of winnings for the bet slip                                |
+| userId    | INTEGER   | Foreign key referencing the `Users` table (not null)               |
+| bookieId  | INTEGER   | Foreign key referencing the `Bookies` table (not null)             |
+
+## ParticipantBets
+
+The `ParticipantBets` table stores information about individual participant bets within a betting line.
+
+| Column        | Data Type | Description                                                                 |
+| ------------- | --------- | --------------------------------------------------------------------------- |
+| id            | INTEGER   | Primary key, auto-incrementing unique identifier for each participant bet   |
+| bettingLineId | INTEGER   | Foreign key referencing the `BettingLines` table (not null)                 |
+| sport         | TEXT      | Sport associated with the participant bet (not null)                        |
+| homeTeamId    | INTEGER   | Foreign key referencing the `BetTargets` table for the home team (not null) |
+| awayTeamId    | INTEGER   | Foreign key referencing the `BetTargets` table for the away team (not null) |
+| odds          | TEXT      | Odds for the participant bet (not null)                                     |
+
+## Legs
+
+The `Legs` table stores information about individual legs or selections within a participant bet.
+
+| Column           | Data Type | Description                                                              |
+| ---------------- | --------- | ------------------------------------------------------------------------ |
+| id               | INTEGER   | Primary key, auto-incrementing unique identifier for each leg            |
+| participantBetId | INTEGER   | Foreign key referencing the `ParticipantBets` table (not null)           |
+| betMarketId      | INTEGER   | Foreign key referencing the `BetMarkets` table for the market (not null) |
+
+## BetSlipsResults
+
+## ParticipantBetsResults
+
+## LegsResults
 
 # BET-GENERAL
 
