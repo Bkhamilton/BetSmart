@@ -34,6 +34,22 @@ export const getTodaysBetSlips = async (db, day) => {
     }
 };
 
+// Function to get all open bet slips
+export const getOpenBetSlips = async (db) => {
+    try {
+      const openBetSlips = await db.allAsync(`
+        SELECT bs.*
+        FROM BetSlips bs
+        LEFT JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
+        WHERE bsr.betSlipId IS NULL
+      `);
+      return openBetSlips;
+    } catch (error) {
+      console.error('Error querying open BetSlips:', error);
+      throw error;
+    }
+};
+
 // Function to get a bet slip
 export const getBetSlip = async (db, betSlipId) => {
     try {
