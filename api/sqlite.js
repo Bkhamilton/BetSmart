@@ -204,6 +204,27 @@ export const createTables = async (db) => {
       FOREIGN KEY (betTypeId) REFERENCES BetTypes(id),
       UNIQUE (participantBetId, betMarketId)
     );
+    CREATE TABLE IF NOT EXISTS BetSlipsResults (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      betSlipId INTEGER NOT NULL,
+      result TEXT NOT NULL,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (betSlipId) REFERENCES BetSlips(id)
+    );
+    CREATE TABLE IF NOT EXISTS ParticipantBetsResults (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      participantBetId INTEGER NOT NULL,
+      result TEXT NOT NULL,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (participantBetId) REFERENCES ParticipantBets(id)
+    );
+    CREATE TABLE IF NOT EXISTS LegsResults (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      legId INTEGER NOT NULL,
+      result TEXT NOT NULL,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (legId) REFERENCES Legs(id)
+    );        
   `);
   console.log('Tables created');
 };
@@ -230,18 +251,4 @@ export const dropTables = async (db) => {
     DROP TABLE IF EXISTS Legs;
   `);
   console.log('Tables dropped');
-};
-
-// Function to create Table to track results from Legs
-export const createResultsTable = async (db) => {
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS Results (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      legId INTEGER NOT NULL,
-      result TEXT NOT NULL,
-      FOREIGN KEY(legId) REFERENCES Legs(id),
-      UNIQUE (legId, result)
-    );
-  `);
-  console.log('Results table created');
 };
