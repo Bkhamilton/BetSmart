@@ -19,6 +19,7 @@ import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Tra
 import { insertUserSession } from '@/db/user-specific/UserSessions';
 import useTheme from '@/hooks/useTheme';
 import HomeHeader from '@/components/Home/HomeHeader';
+import OpenBets from '../../components/Home/BetReview/OpenBets';
 
 export default function HomeScreen() {
 
@@ -149,7 +150,7 @@ export default function HomeScreen() {
           bookies={userBookies}
           transactions={userTransactions}
         />
-        <TodaysBets bets={playoffBets}/>
+        <OpenBets bets={playoffBets}/>
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
     </>
