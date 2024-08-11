@@ -118,6 +118,20 @@ export default function MainBettingLines({ game, marketProps }) {
             }
             displayData = groupedByBookie[maxBookieId];
         }
+
+        // Handle total_over_under marketType
+        if (marketType === 'total_over_under') {
+            // Sort the data by value
+            displayData.sort((a, b) => a.value - b.value);
+
+            // Find the median values
+            const midIndex = Math.floor(displayData.length / 2);
+            const medianOver = displayData[midIndex];
+            const medianUnder = displayData[midIndex - 1] || displayData[midIndex];
+
+            // Set displayData to only include the median over and under values
+            displayData = [medianOver, medianUnder];
+        }
       
         return (
           <View>
