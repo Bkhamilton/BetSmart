@@ -52,6 +52,10 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
     }
 
     const onConfirm = () => {
+        // if wager is 0, return
+        if (wager === 0) {
+            return;
+        }
         confirm(wager, getWinnings(wager));
     }
 
