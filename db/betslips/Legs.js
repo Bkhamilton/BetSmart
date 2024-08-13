@@ -26,7 +26,7 @@ export const getAllValidLegs = async (db, participantBetIds) => {
         BetMarkets.value AS value, 
         BetMarkets.odds AS odds, 
         BetMarkets.overUnder AS overUnder, 
-        BetTargets.targetName AS targetName,
+        BetTargets.targetName AS betTarget,
         BetTargets.targetType AS targetType,
         BetTypes.id AS betTypeId, 
         BetTypes.betType AS betType
