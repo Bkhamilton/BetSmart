@@ -12,6 +12,7 @@ import useTheme from '@/hooks/useTheme';
 import Colors from '@/constants/Colors';
 import ChooseBetType from '@/components/Profile/BetHistory/ChooseBetType';
 import BetSlipDisplay from '@/components/Profile/BetHistory/BetSlipDisplay/BetSlipDisplay';
+import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 
 export default function SettingsScreen() {
     
@@ -40,23 +41,7 @@ export default function SettingsScreen() {
       const fetchData = async () => {
         try {
           const betSlips = await getTodaysBetSlips(db, formattedToday);
-          const betSlipIds = betSlips.map(betSlip => betSlip.id);
-          const participantBets = await getAllValidParticipantBets(db, betSlipIds);
-          const participantBetIds = participantBets.map(participantBet => participantBet.id);
-          const legs = await getAllValidLegs(db, participantBetIds);
-  
-          // Add legs to participantBets
-          const participantBetsWithLegs = participantBets.map(participantBet => ({
-            ...participantBet,
-            legs: legs.filter(leg => leg.participantBetId === participantBet.id)
-          }));
-    
-          // Add participantBets to betSlips
-          const betSlipsWithBets = betSlips.map(betSlip => ({
-            ...betSlip,
-            bets: participantBetsWithLegs.filter(participantBet => participantBet.betSlipId === betSlip.id)
-          }));
-    
+          const betSlipsWithBets = await fillBetSlips(db, betSlips);
           setBetSlips(betSlipsWithBets);
           console.log('Today\'s bet slips with bets and legs:', JSON.stringify(betSlipsWithBets, null, 2));
         } catch (error) {
