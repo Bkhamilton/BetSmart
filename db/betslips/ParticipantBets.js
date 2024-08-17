@@ -28,14 +28,20 @@ export const getAllValidParticipantBets = async (db, betSlipIds) => {
         Teams.teamName as homeTeamName, 
         Teams.abbreviation as homeTeamAbv, 
         Teams2.teamName as awayTeamName, 
-        Teams2.abbreviation as awayTeamAbv   
+        Teams2.abbreviation as awayTeamAbv,
+        Seasons.leagueId,
+        Leagues.sport
       FROM ParticipantBets
       JOIN 
         Games ON ParticipantBets.gameId = Games.gameId
       JOIN 
         Teams ON Games.homeTeamId = Teams.id 
       JOIN 
-        Teams as Teams2 ON Games.awayTeamId = Teams2.id  
+        Teams as Teams2 ON Games.awayTeamId = Teams2.id
+      JOIN
+        Seasons ON Games.seasonId = Seasons.id
+      JOIN
+        Leagues ON Seasons.leagueId = Leagues.id
       WHERE betSlipId IN (${placeholders})
     `;
 
