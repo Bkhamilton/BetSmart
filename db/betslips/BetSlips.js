@@ -37,7 +37,7 @@ export const getTodaysBetSlips = async (db, day) => {
 // Function to get all open bet slips
 export const getOpenBetSlips = async (db) => {
     try {
-      const openBetSlips = await db.allAsync(`
+      const openBetSlips = await db.getAllAsync(`
         SELECT bs.*
         FROM BetSlips bs
         LEFT JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
