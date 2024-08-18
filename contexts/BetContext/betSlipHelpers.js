@@ -1,3 +1,6 @@
+import { getAllValidParticipantBets } from '@/db/betslips/ParticipantBets';
+import { getAllValidLegs } from '@/db/betslips/Legs';
+
 export function createBetSlip(id, type, date, odds, betAmount, winnings, bets) {
   return {
     id,
@@ -218,7 +221,7 @@ export const fillBetSlips = async (db, betSlips) => {
 
     return betSlipsWithBets;
   } catch (error) {
-    console.error('Error enriching bet slips:', error);
+    console.error('Error filling bet slips:', error);
     throw error;
   }
 };
