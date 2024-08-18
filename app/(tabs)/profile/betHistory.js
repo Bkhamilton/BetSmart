@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useSQLiteContext } from 'expo-sqlite';
-import { getTodaysBetSlips } from '@/db/betslips/BetSlips';
+import { getTodaysBetSlips, getOpenBetSlips } from '@/db/betslips/BetSlips';
 import { getAllValidParticipantBets } from '@/db/betslips/ParticipantBets';
 import { getAllValidLegs } from '@/db/betslips/Legs';
 import useTheme from '@/hooks/useTheme';
@@ -40,7 +40,7 @@ export default function SettingsScreen() {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const betSlips = await getTodaysBetSlips(db, formattedToday);
+          const betSlips = await getOpenBetSlips(db);
           const betSlipsWithBets = await fillBetSlips(db, betSlips);
           setBetSlips(betSlipsWithBets);
           console.log('Today\'s bet slips with bets and legs:', JSON.stringify(betSlipsWithBets, null, 2));
