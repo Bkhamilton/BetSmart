@@ -20,6 +20,8 @@ import { insertUserSession } from '@/db/user-specific/UserSessions';
 import useTheme from '@/hooks/useTheme';
 import HomeHeader from '@/components/Home/HomeHeader';
 import OpenBets from '../../components/Home/BetReview/OpenBets';
+import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
+import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 
 export default function HomeScreen() {
 
@@ -37,6 +39,8 @@ export default function HomeScreen() {
   
   const [userBookies, setUserBookies] = useState([]);
   const [userTransactions, setUserTransactions] = useState([]);
+
+  const [betSlips, setBetSlips] = useState([]);
   
   function openSignUpModal() {
     setSignUpModalVisible(true);
@@ -99,6 +103,21 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const betSlips = await getOpenBetSlips(db);
+        const betSlipsWithBets = await fillBetSlips(db, betSlips);
+        setBetSlips(betSlipsWithBets);
+        console.log('Today\'s bet slips with bets and legs:', JSON.stringify(betSlipsWithBets, null, 2));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     if (user) {
       getTransactionsByUser(db, user.id).then((transactions) => {
         setUserTransactions(transactions);
@@ -150,7 +169,7 @@ export default function HomeScreen() {
           bookies={userBookies}
           transactions={userTransactions}
         />
-        <OpenBets bets={playoffBets}/>
+        { betSlips && betSlips.length > 0 && <OpenBets bets={betSlips}/> }
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
     </>
