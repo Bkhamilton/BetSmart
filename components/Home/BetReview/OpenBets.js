@@ -18,11 +18,11 @@ export default function OpenBets({ bets }) {
         <View style={{ justifyContent: 'center', alignItems: 'flex-start' }}>
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
               <Text style={{ fontSize: 18, marginTop: 16, marginRight: 4 }}>Wager:</Text>
-              <Text style={{ fontSize: 24, fontWeight: '600' }}>${betAmount}</Text>
+              <Text style={{ fontSize: 24, fontWeight: '600' }}>${betAmount.toFixed(2)}</Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
               <Text style={{ fontSize: 18, marginTop: 16, marginRight: 4 }}>To Win:</Text>
-              <Text style={{ fontSize: 24, fontWeight: '600' }}>${toWin}</Text>
+              <Text style={{ fontSize: 24, fontWeight: '600' }}>${toWin.toFixed(2)}</Text>
           </View>
         </View>
       </View>

@@ -12,19 +12,19 @@ export default function DetailedInfo({ bets }) {
   const BetLegsDetail = ({ legs }) => {
 
     const displayLegInfo = (leg) => {
-      const isWholeNumber = 'line' in leg && (Number.isInteger(parseFloat(leg.line)) || parseFloat(leg.line) % 1 === 0);
+      const isWholeNumber = 'line' in leg && (Number.isInteger(parseFloat(leg.value)) || parseFloat(leg.value) % 1 === 0);
     
       if ('overUnder' in leg && 'line' in leg) {
         if (isWholeNumber) {
-          return `${leg.line}+ ${leg.stat}`;
+          return `${leg.value}+ ${leg.stat}`;
         } else {
-          return `${leg.overUnder} ${leg.line} ${leg.stat}`;
+          return `${leg.overUnder} ${leg.value} ${leg.stat}`;
         }
       } else if ('line' in leg) {
         if (isWholeNumber) {
-          return `${leg.line}+ ${leg.stat}`;
+          return `${leg.value}+ ${leg.stat}`;
         } else {
-          return `${leg.line} ${leg.stat}`;
+          return `${leg.value} ${leg.stat}`;
         }
       } else {
         return `${leg.betTarget} ${leg.stat}`;
@@ -56,7 +56,7 @@ export default function DetailedInfo({ bets }) {
           <Text>{bet.odds}</Text>
         </View>
         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent' }}>
-          <Text style={{ fontSize: 18, fontWeight: '600' }}>{bet.home} vs {bet.away}</Text>
+          <Text style={{ fontSize: 18, fontWeight: '600' }}>{bet.homeTeamAbv} vs {bet.awayTeamAbv}</Text>
         </View>
         <BetLegsDetail legs={bet.legs} />
       </View>
@@ -90,19 +90,19 @@ export default function DetailedInfo({ bets }) {
   const BetLegsNoDetail = ({ legs }) => {
 
     const displayLegInfo = (leg) => {
-      const isWholeNumber = 'line' in leg && (Number.isInteger(parseFloat(leg.line)) || parseFloat(leg.line) % 1 === 0);
+      const isWholeNumber = 'line' in leg && (Number.isInteger(parseFloat(leg.value)) || parseFloat(leg.value) % 1 === 0);
     
       if ('overUnder' in leg && 'line' in leg) {
         if (isWholeNumber) {
-          return `${leg.line}+ ${leg.stat}`;
+          return `${leg.value}+ ${leg.stat}`;
         } else {
-          return `${leg.overUnder} ${leg.line} ${leg.stat}`;
+          return `${leg.overUnder} ${leg.value} ${leg.stat}`;
         }
       } else if ('line' in leg) {
         if (isWholeNumber) {
-          return `${leg.line}+ ${leg.stat}`;
+          return `${leg.value}+ ${leg.stat}`;
         } else {
-          return `${leg.line} ${leg.stat}`;
+          return `${leg.value} ${leg.stat}`;
         }
       } else {
         return `${leg.betTarget} ${leg.stat}`;
@@ -134,7 +134,7 @@ export default function DetailedInfo({ bets }) {
           <Text>{bet.odds}</Text>
         </View>
         <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent' }}>
-          <Text style={{ fontSize: 18, fontWeight: '600' }}>{bet.home} vs {bet.away}</Text>
+          <Text style={{ fontSize: 18, fontWeight: '600' }}>{bet.homeTeamAbv} vs {bet.awayTeamAbv}</Text>
         </View>
         <BetLegsNoDetail legs={bet.legs} />
       </View>
