@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, ScrollView, Pressable } from '../../Themed';
 import useTheme from '@/hooks/useTheme';
-import DetailedInfo from './DetailedInfo';
+import DetailedInfo from '@/components/Home/BetReview/DetailedInfo/DetailedInfo';
 
 export default function OpenBets({ bets }) {
 
