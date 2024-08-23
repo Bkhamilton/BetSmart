@@ -108,7 +108,6 @@ export default function HomeScreen() {
         const betSlips = await getOpenBetSlips(db);
         const betSlipsWithBets = await fillBetSlips(db, betSlips);
         setBetSlips(betSlipsWithBets);
-        console.log('Today\'s bet slips with bets and legs:', JSON.stringify(betSlipsWithBets, null, 2));
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -169,7 +168,7 @@ export default function HomeScreen() {
           bookies={userBookies}
           transactions={userTransactions}
         />
-        { betSlips && betSlips.length > 0 && <OpenBets bets={betSlips}/> }
+        { betSlips && betSlips.length > 0 && <OpenBets betSlips={betSlips}/> }
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
     </>

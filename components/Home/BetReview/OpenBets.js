@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, View, ScrollView, Pressable } from '../../Theme
 import useTheme from '@/hooks/useTheme';
 import DetailedInfo from '@/components/Home/BetReview/DetailedInfo/DetailedInfo';
 
-export default function OpenBets({ bets }) {
+export default function OpenBets({ betSlips }) {
 
   const { iconColor, grayBackground, grayBorder, mainGreen } = useTheme();
 
@@ -29,9 +29,9 @@ export default function OpenBets({ bets }) {
     );
   }
 
-  const totalBets = bets.length;
-  const totalBetAmount = bets.reduce((total, bet) => total + bet.betAmount, 0);
-  const totalWinnings = bets.reduce((total, bet) => total + bet.winnings, 0);
+  const totalBets = betSlips.length;
+  const totalBetAmount = betSlips.reduce((total, bet) => total + bet.betAmount, 0);
+  const totalWinnings = betSlips.reduce((total, bet) => total + bet.winnings, 0);
 
   return (
     <View style={styles.container}>
@@ -39,7 +39,7 @@ export default function OpenBets({ bets }) {
         <Text style={{ fontSize: 20, fontWeight: '600' }}>Open Bets</Text>
       </View>
       <BigPictureInfo totalBets={totalBets} betAmount={totalBetAmount} toWin={totalWinnings} />
-      <DetailedInfo bets={bets} />
+      <DetailedInfo betSlips={betSlips} />
     </View>
   );
 }

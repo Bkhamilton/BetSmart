@@ -5,38 +5,38 @@ import useTheme from '@/hooks/useTheme';
 import ShowDetails from './ShowDetails';
 import NoDetails from './NoDetails';
 
-export default function DetailedInfo({ bets }) {
+export default function DetailedInfo({ betSlips }) {
 
   const [showDetails, setShowDetails] = useState(false);
 
   const { grayBackground, grayBorder } = useTheme();
 
-  const Bet = ({ bet }) => {
-    const [showDetails, setShowDetails] = React.useState(false);
-  
-    return (
-      <Pressable 
-        key={bet.id} 
-        style={[styles.betContainer, { backgroundColor: showDetails ? grayBorder: grayBackground, borderColor: grayBorder }]}
-        onPress={() => setShowDetails(!showDetails)}
-      >
-        {showDetails ? <ShowDetails bet={bet} /> : <NoDetails bet={bet} />}
-      </Pressable>
-    );
-  };
+    const BetSlip = ({ betSlip }) => {
+        const [showDetails, setShowDetails] = React.useState(false);
+    
+        return (
+            <Pressable 
+                key={betSlip.id} 
+                style={[styles.betContainer, { backgroundColor: showDetails ? grayBorder: grayBackground, borderColor: grayBorder }]}
+                onPress={() => setShowDetails(!showDetails)}
+            >
+                {showDetails ? <ShowDetails betSlip={betSlip} /> : <NoDetails betSlip={betSlip} />}
+            </Pressable>
+        );
+    };
 
-  return (
-      <ScrollView 
+    return (
+        <ScrollView 
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ alignItems: 'flex-start' }}
         style={{ paddingLeft: 10 }}
-      >
-        {bets.map((bet) => (
-          <Bet key={bet.id} bet={bet}/>
-        ))}
-      </ScrollView>
-  );
+        >
+            {betSlips.map((betSlip) => (
+                <BetSlip key={betSlip.id} betSlip={betSlip}/>
+            ))}
+        </ScrollView>
+    );
 }
 
 const styles = StyleSheet.create({
