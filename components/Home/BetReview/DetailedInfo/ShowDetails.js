@@ -3,12 +3,13 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import Colors from '@/constants/Colors';
 import useTheme from '@/hooks/useTheme';
+import { getDateFull } from '@/utils/dateFunctions';
 
-export default function ShowDetails({ bet }) {
+export default function ShowDetails({ betSlip }) {
 
     const { iconColor, grayBackground, grayBorder, mainGreen } = useTheme();
 
-    const BetLegsDetail = ({ legs }) => {
+    const LegComponent = ({ legs }) => {
 
         const displayLegInfo = (leg) => {
         const isWholeNumber = 'line' in leg && (Number.isInteger(parseFloat(leg.value)) || parseFloat(leg.value) % 1 === 0);
@@ -47,17 +48,17 @@ export default function ShowDetails({ bet }) {
         );
     }; 
       
-    const BetListDetail = ({ bet }) => {
+    const BetComponent = ({ bet }) => {
         return (
         <View style={{ backgroundColor: 'transparent' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                <Text>{bet.sport}</Text>
+                <Text>{bet.league}</Text>
                 <Text>{bet.odds}</Text>
             </View>
             <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent' }}>
                 <Text style={{ fontSize: 18, fontWeight: '600' }}>{bet.homeTeamAbv} vs {bet.awayTeamAbv}</Text>
             </View>
-            <BetLegsDetail legs={bet.legs} />
+            <LegComponent legs={bet.legs} />
         </View>
         );
     }; 
@@ -65,21 +66,21 @@ export default function ShowDetails({ bet }) {
     return (
         <View style={{ backgroundColor: 'transparent' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                <Text style={styles.betText}>{bet.date}</Text>
-                <Text style={styles.betText}>{bet.odds}</Text>
+                <Text style={styles.betText}>{getDateFull(betSlip.date)}</Text>
+                <Text style={styles.betText}>{betSlip.odds}</Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
                 <View style={{ backgroundColor: 'transparent' }}>
                     <Text style={styles.betText}>Bet</Text>
-                    <Text style={styles.betText}>${bet.betAmount.toFixed(2)}</Text>
+                    <Text style={styles.betText}>${betSlip.betAmount.toFixed(2)}</Text>
                 </View>
                 <View style={{ backgroundColor: 'transparent' }}>
                     <Text style={styles.betText}>To Win</Text>
-                    <Text style={styles.betText}>${bet.winnings.toFixed(2)}</Text>
+                    <Text style={styles.betText}>${betSlip.winnings.toFixed(2)}</Text>
                 </View>
             </View>
-            {bet.bets.map((betDetail, index) => (
-                <BetListDetail key={index} bet={betDetail} />
+            {betSlip.bets.map((betDetail, index) => (
+                <BetComponent key={index} bet={betDetail} />
             ))}
         </View>
     );
