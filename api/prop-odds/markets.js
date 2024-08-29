@@ -67,6 +67,13 @@ const getBetTargetName = (db, name, gameId) => {
       resolve(gameId);
     }
 
+    // Check if the name ends with a spread value (e.g., "-3.5" or "+2.5")
+    const spreadPattern = /[-+]\d+(\.\d+)?$/;
+    if (spreadPattern.test(trimmedName)) {
+      const teamName = trimmedName.replace(spreadPattern, '').trim();
+      resolve(teamName);
+    }
+    
     if (trimmedName.includes(' - ')) {
       const [firstPart] = trimmedName.split(' - ');
       // If firstPart is a single string, return it
