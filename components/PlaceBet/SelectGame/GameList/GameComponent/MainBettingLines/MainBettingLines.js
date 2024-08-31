@@ -92,6 +92,44 @@ export default function MainBettingLines({ game, marketProps }) {
                 </View>
             );
         }
+
+        // Function to fill display data
+        const fillDisplayData = (groupedByBookie, marketType) => {
+            let displayData = [];
+            const bookieIds = Object.keys(groupedByBookie);
+            if (bookieIds.length === 1) {
+                // Only one bookie, use all data
+                displayData = groupedByBookie[bookieIds[0]];
+            } else {
+                // Multiple bookies, select the one with more data
+                let maxCount = 0;
+                let maxBookieId = null;
+                for (let bookieId of bookieIds) {
+                    const count = groupedByBookie[bookieId].length;
+                    if (count > maxCount) {
+                        maxCount = count;
+                        maxBookieId = bookieId;
+                    }
+                }
+                displayData = groupedByBookie[maxBookieId];
+            }
+    
+            // Handle total_over_under marketType
+            if (marketType === 'total_over_under') {
+                // Sort the data by value
+                displayData.sort((a, b) => a.value - b.value);
+    
+                // Find the median values
+                const midIndex = Math.floor(displayData.length / 2);
+                const medianOver = displayData[midIndex];
+                const medianUnder = displayData[midIndex - 1] || displayData[midIndex];
+    
+                // Set displayData to only include the median over and under values
+                displayData = [medianOver, medianUnder];
+            }
+
+            return displayData;
+        }
       
         // Group data by bookieId
         const groupedByBookie = marketData.reduce((acc, item) => {
@@ -100,39 +138,8 @@ export default function MainBettingLines({ game, marketProps }) {
         }, {});
       
         // Select data for display
-        let displayData = [];
-        const bookieIds = Object.keys(groupedByBookie);
-        if (bookieIds.length === 1) {
-            // Only one bookie, use all data
-            displayData = groupedByBookie[bookieIds[0]];
-        } else {
-            // Multiple bookies, select the one with more data
-            let maxCount = 0;
-            let maxBookieId = null;
-            for (let bookieId of bookieIds) {
-                const count = groupedByBookie[bookieId].length;
-                if (count > maxCount) {
-                    maxCount = count;
-                    maxBookieId = bookieId;
-                }
-            }
-            displayData = groupedByBookie[maxBookieId];
-        }
+        let displayData = fillDisplayData(groupedByBookie, marketType);
 
-        // Handle total_over_under marketType
-        if (marketType === 'total_over_under') {
-            // Sort the data by value
-            displayData.sort((a, b) => a.value - b.value);
-
-            // Find the median values
-            const midIndex = Math.floor(displayData.length / 2);
-            const medianOver = displayData[midIndex];
-            const medianUnder = displayData[midIndex - 1] || displayData[midIndex];
-
-            // Set displayData to only include the median over and under values
-            displayData = [medianOver, medianUnder];
-        }
-      
         return (
           <View>
             {displayData.reverse().map((line) => (

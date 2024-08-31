@@ -5,7 +5,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { getLogoUrl } from '@/db/general/Teams';
 import { retrieveMarketsDB } from '@/api/prop-odds/markets';
 import useTheme from '@/hooks/useTheme';
-import MainBettingLines from './MainBettingLines';
+import MainBettingLines from './MainBettingLines/MainBettingLines';
 import HeadToHead from './HeadToHead';
 import DateTime from './DateTime';
 
