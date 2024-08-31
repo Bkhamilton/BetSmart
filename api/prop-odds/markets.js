@@ -99,6 +99,22 @@ const getBetTargetName = (db, name, gameId) => {
   });
 };
 
+const getOverUnder = (outcome) => {
+  if (outcome.name.includes('Over') || outcome.name.includes('Under')) {
+    return outcome.name.replace(/[^a-zA-Z]/g, '');
+  } else {
+    return '';
+  }
+}
+
+const getOdds = (odds) => {
+  if (odds > 0) {
+    return '+' + odds;
+  } else {
+    return odds.toString();
+  }
+}
+
 const getValue = async (db, outcome) => {
   if (outcome.handicap === 0) {
     if (outcome.participant_name) {
@@ -120,22 +136,6 @@ const getValue = async (db, outcome) => {
     }
   } else {
     return outcome.handicap;
-  }
-}
-
-const getOverUnder = (outcome) => {
-  if (outcome.name.includes('Over') || outcome.name.includes('Under')) {
-    return outcome.name.replace(/[^a-zA-Z]/g, '');
-  } else {
-    return '';
-  }
-}
-
-const getOdds = (odds) => {
-  if (odds > 0) {
-    return '+' + odds;
-  } else {
-    return odds.toString();
   }
 }
 
