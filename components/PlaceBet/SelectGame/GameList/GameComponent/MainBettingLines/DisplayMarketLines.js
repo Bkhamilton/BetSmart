@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import { getBetTargetId } from '@/db/bet-general/BetTargets';
 
 export default function DisplayMarketLines({ game, marketProps, marketType }) {
 
@@ -103,8 +104,14 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
 
         // Handle spread marketType
         if (marketType === 'spread') {
+            // Sort the data by value
+            displayData.sort((a, b) => a.value - b.value);
 
-        }        
+            // Find the median value
+            const midIndex = Math.floor(displayData.length / 2);
+            const medianValue = displayData[midIndex].value;
+
+        }     
 
         // Handle total_over_under marketType
         if (marketType === 'total_over_under') {
@@ -139,13 +146,13 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
         <View>
             {displayData.reverse().map((line) => (
                 <BettingLine
-                key={line.id}
-                type={'Main'}
-                target={line.betTargetId} // Assuming you want to use betTargetId as target
-                stat={line.marketType}
-                value={line.value.toString()}
-                overUnder={line.overUnder}
-                odds={line.odds}
+                    key={line.id}
+                    type={'Main'}
+                    target={line.betTargetId} // Assuming you want to use betTargetId as target
+                    stat={line.marketType}
+                    value={line.value.toString()}
+                    overUnder={line.overUnder}
+                    odds={line.odds}
                 />
             ))}
         </View>
