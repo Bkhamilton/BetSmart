@@ -113,7 +113,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
 
   const [totalLegs, setTotalLegs] = useState<Number | null>(0);
 
-  const selectProp = (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; }) => {
+  const selectProp = (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; bookieId: any; }) => {
     const { game, type, target, stat, value, overUnder, odds } = props;
 
     const leg = createLeg(type, target, stat, value, overUnder, odds);

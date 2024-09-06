@@ -44,7 +44,7 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
         return (
             <TouchableOpacity 
                 style={[styles.propContainer, { borderColor: grayBorder }]}
-                onPress={() => selectProp({ game, type, target, stat, value, overUnder, odds })}
+                onPress={() => selectProp({ game, type, target, stat, value, overUnder, odds, bookieId })}
             >
                 {/[0-9]/.test(value) ? (
                     <>
@@ -111,6 +111,11 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
             const midIndex = Math.floor(displayData.length / 2);
             const medianValue = displayData[midIndex].value;
 
+            // Find the favorite and underdog objects
+
+            // If the median value is positive, the favorite is the team with the negative value
+
+            // If the median value is negative, the favorite is the team with the positive value
         }     
 
         // Handle total_over_under marketType
