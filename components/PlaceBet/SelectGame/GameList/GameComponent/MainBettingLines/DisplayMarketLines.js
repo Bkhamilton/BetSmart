@@ -13,7 +13,7 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
 
     const { grayBorder } = useTheme();
 
-    function BettingLine({ type, target, stat, value, overUnder, odds }) {
+    function BettingLine({ type, target, stat, value, overUnder, odds, bookieId }) {
 
         const getValue = (value) => {
             // If value is a number, return it as is
@@ -158,6 +158,7 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
                     value={line.value.toString()}
                     overUnder={line.overUnder}
                     odds={line.odds}
+                    bookieId={line.bookieId}
                 />
             ))}
         </View>
