@@ -85,6 +85,22 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
         );
     }
 
+    // Function that takes an array of market data and returns the object with the "Best Odds" meaning the odds closest to -100 or +100
+    const getBestOdds = (marketData) => {
+        let bestOdds = marketData[0];
+        let bestOddsDiff = Math.min(Math.abs(100 - marketData[0].odds), Math.abs(-100 - marketData[0].odds));
+        
+        marketData.forEach((line) => {
+            const diff = Math.min(Math.abs(100 - line.odds), Math.abs(-100 - line.odds));
+            if (diff < bestOddsDiff) {
+                bestOdds = line;
+                bestOddsDiff = diff;
+            }
+        });
+        
+        return bestOdds;
+    }
+
     // Function to fill display data
     const fillDisplayData = (groupedByBookie, marketType) => {
         let displayData = [];
@@ -99,7 +115,16 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
 
         // Handle moneyline marketType
         if (marketType === 'moneyline') {
-        
+
+            // select the object with the most recent timestamp data for each of the betTargetIds in the displayData (there will only be two)
+            displayData = displayData.reduce((acc, item) => {
+                const existingItem = acc.find(i => i.betTargetId === item.betTargetId);
+                if (!existingItem || item.timestamp > existingItem.timestamp) {
+                    acc = acc.filter(i => i.betTargetId !== item.betTargetId);
+                    acc.push(item);
+                }
+                return acc;
+            }, []);
         }
 
         // Handle spread marketType
@@ -107,15 +132,15 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
             // Sort the data by value
             displayData.sort((a, b) => a.value - b.value);
 
-            // Find the median value
-            const midIndex = Math.floor(displayData.length / 2);
-            const medianValue = displayData[midIndex].value;
+            // Find the object with the Best Odds
+            const bestOdds = getBestOdds(displayData);
 
-            // Find the favorite and underdog objects
+            // The object to be included alongside bestOdds is the one with the inverse value and a different betTargetId
+            const inverseValue = -bestOdds.value;
+            const inverseLine = displayData.find(item => item.value === inverseValue && item.betTargetId !== bestOdds.betTargetId);
 
-            // If the median value is positive, the favorite is the team with the negative value
-
-            // If the median value is negative, the favorite is the team with the positive value
+            // Set displayData to only include the bestOdds and the inverseLine
+            displayData = [bestOdds, inverseLine].filter(Boolean); // Filter out any undefined values
         }     
 
         // Handle total_over_under marketType
