@@ -120,7 +120,8 @@ export default function SelectGameScreen() {
 
   useEffect(() => {
     const fetchSportsData = async () => {
-      retrieveGamesDate(db, ["NBA", "MLB", "NHL"], date).then((games) => {
+      const leagues = ["MLB", "NFL"];
+      retrieveGamesDate(db, leagues, date).then((games) => {
         setAllSportsData(games);
       });
     };
