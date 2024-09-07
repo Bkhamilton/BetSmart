@@ -161,6 +161,7 @@ export const createTables = async (db) => {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       gameId TEXT NOT NULL,
       marketType TEXT NOT NULL,
+      timestamp TEXT;
       value REAL NOT NULL,
       odds TEXT,
       overUnder TEXT,
@@ -251,4 +252,13 @@ export const dropTables = async (db) => {
     DROP TABLE IF EXISTS Legs;
   `);
   console.log('Tables dropped');
+};
+
+// Function to add timestamp field to BetMarkets table
+export const addTimestampToBetMarkets = async (db) => {
+  await db.execAsync(`
+    ALTER TABLE BetMarkets
+    ADD COLUMN timestamp TEXT;
+  `);
+  console.log('Timestamp added to BetMarkets');
 };

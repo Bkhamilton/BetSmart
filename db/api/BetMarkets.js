@@ -45,9 +45,9 @@ export const getBetMarketByGame = async (db, gameId, marketType) => {
 };
 
 // Function to insert a bet market
-export const insertBetMarket = async (db, gameId, marketType, value, odds, overUnder, betTargetId, bookieId) => {
+export const insertBetMarket = async (db, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) => {
   try {
-    const result = await db.runAsync('INSERT INTO BetMarkets (gameId, marketType, value, odds, overUnder, betTargetId, bookieId) VALUES (?, ?, ?, ?, ?, ?, ?)', [gameId, marketType, value, odds, overUnder, betTargetId, bookieId]);
+    const result = await db.runAsync('INSERT INTO BetMarkets (gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId]);
     return result.lastInsertRowId;
   } catch (error) {
     console.error('Error inserting bet market:', error);
@@ -56,9 +56,9 @@ export const insertBetMarket = async (db, gameId, marketType, value, odds, overU
 };
 
 // Function to update a bet market
-export const updateBetMarket = async (db, betMarketId, gameId, marketType, value, odds, overUnder, betTargetId, bookieId) => {
+export const updateBetMarket = async (db, betMarketId, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) => {
   try {
-    await db.runAsync('UPDATE BetMarkets SET gameId = ?, marketType = ?, value = ?, odds = ?, overUnder = ?, betTargetId = ? bookieId = ? WHERE id = ?', [gameId, marketType, value, odds, overUnder, betTargetId, betMarketId, bookieId]);
+    await db.runAsync('UPDATE BetMarkets SET gameId = ?, marketType = ?, timestamp = ?, value = ?, odds = ?, overUnder = ?, betTargetId = ?, bookieId = ? WHERE id = ?', [gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId, betMarketId]);
   } catch (error) {
     console.error('Error updating bet market:', error);
     throw error;

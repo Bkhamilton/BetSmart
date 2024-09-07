@@ -150,9 +150,10 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
       const value = await getValue(db, outcome.outcome);
       const odds = getOdds(outcome.outcome.odds);
       const overUnder = getOverUnder(outcome.outcome);
+      const timestamp = new Date(outcome.outcome.timestamp).toISOString();
       if (betTarget === gameId) {
         getBetTargetIdByGameId(db, gameId).then(async (target) => {
-          await insertBetMarket(db, gameId, market, value, odds, overUnder, target.id, bookieId);
+          await insertBetMarket(db, gameId, market, timestamp, value, odds, overUnder, target.id, bookieId);
         });
       } else {
         getBetTargetId(db, betTarget).then(async (target) => {
@@ -160,7 +161,7 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
             console.log(`Target not found: '${betTarget}'`);
             return;
           }
-          await insertBetMarket(db, gameId, market, value, odds, overUnder, target.id, bookieId);
+          await insertBetMarket(db, gameId, market, timestamp, value, odds, overUnder, target.id, bookieId);
         })
       }
     }
