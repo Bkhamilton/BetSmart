@@ -45,7 +45,7 @@ export const getMarketFetchHistoryByLastFetched = async (db, market, lastFetched
     }
 };
 
-// Function that takes a league name and lastFetched date and returns Boolean if the league has been fetched on that date
+// Function that takes a market, gameId, and lastFetched date and returns Boolean if the league has been fetched on that date
 export const marketFetchedOnDate = async (db, market, gameId, lastFetched) => {
     try {
         const fetchHistory = await db.getAllAsync('SELECT * FROM MarketFetchHistory WHERE marketType = ? AND gameId = ? AND lastFetched = ?', [market, gameId, lastFetched]);
@@ -74,6 +74,16 @@ export const deleteMarketFetchHistory = async (db, league) => {
         await db.runAsync('DELETE FROM MarketFetchHistory WHERE league = ?', [league]);
     } catch (error) {
         console.error('Error deleting fetch history:', error);
+        throw error;
+    }
+};
+
+// Function to clear fetch history for a given date and market
+export const clearMarketFetchHistory = async (db, market, lastFetched) => {
+    try {
+        await db.runAsync('DELETE FROM MarketFetchHistory WHERE marketType = ? AND lastFetched = ?', [market, lastFetched]);
+    } catch (error) {
+        console.error('Error clearing fetch history:', error);
         throw error;
     }
 };

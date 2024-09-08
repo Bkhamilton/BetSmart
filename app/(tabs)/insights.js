@@ -4,7 +4,10 @@ import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { useSQLiteContext } from 'expo-sqlite';
 import { retrieveMarketsDB } from '@/api/prop-odds/markets';
+import { resetBetMarkets } from '@/api/sqlite';
 import { getLeagueByName } from '@/db/general/Leagues';
+import { getAllSeasons, insertSeason, getCurrentSeason } from '@/db/general/Seasons';
+import { clearMarketFetchHistory, getMarketFetchHistoryByLastFetched } from '@/db/api/MarketFetchHistory';
 import InsightIntro from '@/components/Insights/InsightIntro/InsightIntro';
 import LossAnalysis from '@/components/Insights/LossAnalysis/LossAnalysis';
 import { getTodaysGameswithNames } from '@/db/general/Games';
@@ -31,7 +34,11 @@ export default function InsightScreen() {
   }
 
   const tempFunction = () => {
-
+    const today = new Date();
+    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    getMarketFetchHistoryByLastFetched(db, 'spread', date).then((data) => {
+      console.log(JSON.stringify(data, null, 2));
+    });
   }
 
   // function to cycle betwen hot, cold, and no streaks
