@@ -150,7 +150,7 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
       const value = await getValue(db, outcome.outcome);
       const odds = getOdds(outcome.outcome.odds);
       const overUnder = getOverUnder(outcome.outcome);
-      const timestamp = new Date(outcome.outcome.timestamp).toISOString();
+      const timestamp = outcome.outcome.timestamp;
       if (betTarget === gameId) {
         getBetTargetIdByGameId(db, gameId).then(async (target) => {
           await insertBetMarket(db, gameId, market, timestamp, value, odds, overUnder, target.id, bookieId);
