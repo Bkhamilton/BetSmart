@@ -170,7 +170,7 @@ export const createTables = async (db) => {
       FOREIGN KEY(betTargetId) REFERENCES BetTargets(id),
       FOREIGN KEY(gameId) REFERENCES Games(gameId),
       FOREIGN KEY(bookieId) REFERENCES Bookies(Id),
-      UNIQUE (gameId, marketType, value, odds, overUnder, betTargetId, bookieId)
+      UNIQUE (gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
     );
     CREATE TABLE BetSlips (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -254,11 +254,25 @@ export const dropTables = async (db) => {
   console.log('Tables dropped');
 };
 
-// Function to add timestamp field to BetMarkets table
-export const addTimestampToBetMarkets = async (db) => {
+// Function to drop and recreate BetMarkets table
+export const resetBetMarkets = async (db) => {
   await db.execAsync(`
-    ALTER TABLE BetMarkets
-    ADD COLUMN timestamp TEXT;
+    DROP TABLE IF EXISTS BetMarkets;
+    CREATE TABLE BetMarkets (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      gameId TEXT NOT NULL,
+      marketType TEXT NOT NULL,
+      timestamp TEXT NOT NULL,
+      value REAL NOT NULL,
+      odds TEXT,
+      overUnder TEXT,
+      betTargetId INTEGER NOT NULL,
+      bookieId INTEGER NOT NULL,
+      FOREIGN KEY(betTargetId) REFERENCES BetTargets(id),
+      FOREIGN KEY(gameId) REFERENCES Games(gameId),
+      FOREIGN KEY(bookieId) REFERENCES Bookies(Id),
+      UNIQUE (gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
+    );
   `);
-  console.log('Timestamp added to BetMarkets');
+  console.log('BetMarkets table reset');
 };
