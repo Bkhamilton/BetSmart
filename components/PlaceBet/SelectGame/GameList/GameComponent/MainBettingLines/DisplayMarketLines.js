@@ -15,7 +15,24 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
 
     function BettingLine({ type, target, stat, value, overUnder, odds, bookieId }) {
 
+        const exceptions = ["San Francisco 49ers", "Philadelphia 76ers"]
+
         const getValue = (value) => {
+
+            if (exceptions.includes(value)) {
+                const teamName = value.split(' ')[1];
+    
+                if (homeTeamName.includes(teamName)) {
+                    return homeTeamAbv;
+                }
+    
+                if (awayTeamName.includes(teamName)) {
+                    return awayTeamAbv;
+                }
+    
+                return value;
+            }
+
             // If value is a number, return it as is
             if (/[0-9]/.test(value)) {
                 if (overUnder) {
