@@ -114,9 +114,9 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
   const [totalLegs, setTotalLegs] = useState<Number | null>(0);
 
   const selectProp = (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; bookieId: any; }) => {
-    const { game, type, target, stat, value, overUnder, odds } = props;
+    const { game, type, target, stat, value, overUnder, odds, bookieId } = props;
 
-    const leg = createLeg(type, target, stat, value, overUnder, odds);
+    const leg = createLeg(type, target, stat, value, overUnder, odds, bookieId);
     const bet = createBet(game.date, league.leagueName, game.gameId, game.homeTeamName, game.awayTeamName, odds, [leg]);
 
     const today = new Date();
@@ -128,7 +128,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
       }
       setTotalLegs(newBetSlip? newBetSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
     } else {
-      const newBetSlip = createBetSlip(1, 'Single', today, odds, 0, 0, [bet]);
+      const newBetSlip = createBetSlip(1, 'Single', today, bookieId, odds, 0, 0, [bet]);
       setBetSlip(newBetSlip);
       setTotalLegs(1);
     }

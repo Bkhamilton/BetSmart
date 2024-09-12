@@ -1,11 +1,12 @@
 import { getAllValidParticipantBets } from '@/db/betslips/ParticipantBets';
 import { getAllValidLegs } from '@/db/betslips/Legs';
 
-export function createBetSlip(id, type, date, odds, betAmount, winnings, bets) {
+export function createBetSlip(id, type, date, bookieId, odds, betAmount, winnings, bets) {
   return {
     id,
     type,
     date,
+    bookieId,
     odds, 
     betAmount,
     winnings,
@@ -25,7 +26,7 @@ export function createBet(date, league, gameId, home, away, odds, legs) {
   };
 }
 
-export function createLeg(type, betTarget, stat, line, overUnder, odds) {
+export function createLeg(type, betTarget, stat, line, overUnder, odds, bookieId) {
   return {
     type,
     betTarget,
@@ -33,6 +34,7 @@ export function createLeg(type, betTarget, stat, line, overUnder, odds) {
     line,
     overUnder,
     odds,
+    bookieId
   };
 }
 
