@@ -32,6 +32,12 @@ import PlayerProps from './LeaguePropTypes/PlayerProps';
 import GoalieProps from './LeaguePropTypes/GoalieProps';
 import FirstXPeriods from './LeaguePropTypes/FirstXPeriods';
 import PeriodLines from './LeaguePropTypes/PeriodLines';
+import TDScorer from './LeaguePropTypes/TDScorer';
+import PassProps from './LeaguePropTypes/PassProps';
+import RushProps from './LeaguePropTypes/RushProps';
+import RecieveProps from './LeaguePropTypes/RecieveProps';
+import DefenseProps from './LeaguePropTypes/DefenseProps';
+import SpecTeamProps from './LeaguePropTypes/SpecTeamProps';
 
 import useTheme from '@/hooks/useTheme';
 
@@ -70,6 +76,12 @@ export default function LeaguePropInfo({ leaguePropInfo }) {
         'goalie-props': GoalieProps,
         'first-x-periods': FirstXPeriods,
         'period-lines': PeriodLines,
+        'td-scorer': TDScorer,
+        'pass-props': PassProps,
+        'rush-props': RushProps,
+        'receiving-props': RecieveProps,
+        'defense-props': DefenseProps,
+        'special-teams-props': SpecTeamProps,
     }
 
     return (

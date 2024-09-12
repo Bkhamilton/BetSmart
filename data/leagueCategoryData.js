@@ -103,29 +103,34 @@ export const NFLcategories = [
     id: 6,
   },
   {
-    title: 'Receiving Props'
-    info: ['receiving-props']
+    title: 'Receiving Props',
+    info: ['receiving-props'],
     id: 7,
   },
   {
-    title: 'D/ST Props'
-    info: ['defense-props', 'special-teams-props']
+    title: 'D/ST Props',
+    info: ['defense-props', 'special-teams-props'],
     id: 8,
   },
   {
-    title: 'Game Props'
-    info: ['game-props', 'alt-game-props']
+    title: 'Game Props',
+    info: ['game-props', 'alt-game-props'],
     id: 9,
   },
   {
-    title: 'Quarters'
-    info: ['quarter-lines', 'first-x-quarters']
+    title: 'Team Props',
+    info: ['team-props', 'team-special'],
     id: 10,
   },
   {
-    title: 'Halves'
-    info: ['half-lines']
+    title: 'Quarters',
+    info: ['quarter-lines', 'first-x-quarters'],
     id: 11,
+  },
+  {
+    title: 'Halves',
+    info: ['half-lines'],
+    id: 12,
   },
 ]
 

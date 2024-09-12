@@ -148,6 +148,13 @@ const addLeaguePropInfo = () => {
       });
     });
   });
+  getLeagueByName(db, "NFL").then((league) => {
+    NFLcategories.forEach((category) => {
+      category.info.map((info) => {
+        insertLeaguePropInfo(db, league.id, category.title, info);
+      });
+    });
+  });
 };
 
 insertBetType(db, "Main", "Main Game Lines");
