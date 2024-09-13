@@ -22,6 +22,7 @@ import HomeHeader from '@/components/Home/HomeHeader';
 import OpenBets from '../../components/Home/BetReview/OpenBets';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
+import ConfirmBetSlip from '../../components/Modals/ConfirmBetSlip';
 
 export default function HomeScreen() {
 
@@ -32,10 +33,13 @@ export default function HomeScreen() {
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
   const [transactionModalVisible, setTransactionModalVisible] = useState(false);
+  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
   const [transactionTitle, setTransactionTitle] = useState('Deposit');
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
   const [transactionBookieId, setTransactionBookieId] = useState(1);
+
+  const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
   
   const [userBookies, setUserBookies] = useState([]);
   const [userTransactions, setUserTransactions] = useState([]);
@@ -54,6 +58,13 @@ export default function HomeScreen() {
   }
   function closeLoginModal() {
     setLoginModalVisible(false);
+  }
+  function openConfirmModal(betSlip) {
+    setConfirmedBetSlip(betSlip);
+    setConfirmModalVisible(true);
+  }
+  function closeConfirmModal() {
+    setConfirmModalVisible(false);
   }
 
   async function login(username, password) {
@@ -157,6 +168,15 @@ export default function HomeScreen() {
         bookieId={transactionBookieId}
         onConfirm={onConfirmTransaction}
       />
+      {
+        confirmedBetSlip && (
+          <ConfirmBetSlip
+            visible={confirmModalVisible}
+            close={closeConfirmModal}
+            betSlip={confirmedBetSlip}
+          />
+        )
+      }
       <HomeHeader history={handleBetHistory} login={openLoginModal} signup={openSignUpModal} />
       <ScrollView
         showVerticalScrollIndicator={false}
@@ -168,7 +188,7 @@ export default function HomeScreen() {
           bookies={userBookies}
           transactions={userTransactions}
         />
-        { betSlips && betSlips.length > 0 && <OpenBets betSlips={betSlips}/> }
+        { betSlips && betSlips.length > 0 && <OpenBets betSlips={betSlips} confirm={openConfirmModal}/> }
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
     </>

@@ -1,13 +1,16 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
-import Colors from '@/constants/Colors';
 import useTheme from '@/hooks/useTheme';
 import { getDateFull } from '@/utils/dateFunctions';
 
-export default function ShowDetails({ betSlip }) {
+export default function ShowDetails({ betSlip, confirm }) {
 
     const { iconColor, grayBackground, grayBorder, mainGreen } = useTheme();
+
+    const confirmBetSlip = () => {
+        confirm(betSlip);
+    };
 
     const LegComponent = ({ legs }) => {
 
@@ -82,6 +85,12 @@ export default function ShowDetails({ betSlip }) {
             {betSlip.bets.map((betDetail, index) => (
                 <BetComponent key={index} bet={betDetail} />
             ))}
+            <TouchableOpacity 
+                style={[styles.confirmButton, {backgroundColor: mainGreen}]}
+                onPress={confirmBetSlip}
+            >
+                <Text style={{ color: iconColor }}>Confirm Bet</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -98,4 +107,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
+    confirmButton: {
+        padding: 8, 
+        borderRadius: 8, 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        marginTop: 10,
+    }
 });

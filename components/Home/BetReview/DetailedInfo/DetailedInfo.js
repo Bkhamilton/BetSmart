@@ -5,7 +5,7 @@ import useTheme from '@/hooks/useTheme';
 import ShowDetails from './ShowDetails';
 import NoDetails from './NoDetails';
 
-export default function DetailedInfo({ betSlips }) {
+export default function DetailedInfo({ betSlips, confirm }) {
 
   const [showDetails, setShowDetails] = useState(false);
 
@@ -19,8 +19,9 @@ export default function DetailedInfo({ betSlips }) {
                 key={betSlip.id} 
                 style={[styles.betContainer, { backgroundColor: showDetails ? grayBorder: grayBackground, borderColor: grayBorder }]}
                 onPress={() => setShowDetails(!showDetails)}
+                onLongPress={() => confirm(betSlip)}
             >
-                {showDetails ? <ShowDetails betSlip={betSlip} /> : <NoDetails betSlip={betSlip} />}
+                {showDetails ? <ShowDetails betSlip={betSlip} confirm={confirm}/> : <NoDetails betSlip={betSlip} />}
             </Pressable>
         );
     };

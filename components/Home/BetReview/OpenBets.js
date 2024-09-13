@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, View, ScrollView, Pressable } from '../../Theme
 import useTheme from '@/hooks/useTheme';
 import DetailedInfo from '@/components/Home/BetReview/DetailedInfo/DetailedInfo';
 
-export default function OpenBets({ betSlips }) {
+export default function OpenBets({ betSlips, confirm }) {
 
   const { iconColor, grayBackground, grayBorder, mainGreen } = useTheme();
 
@@ -39,7 +39,7 @@ export default function OpenBets({ betSlips }) {
         <Text style={{ fontSize: 20, fontWeight: '600' }}>Open Bets</Text>
       </View>
       <BigPictureInfo totalBets={totalBets} betAmount={totalBetAmount} toWin={totalWinnings} />
-      <DetailedInfo betSlips={betSlips} />
+      <DetailedInfo betSlips={betSlips} confirm={confirm}/>
     </View>
   );
 }
