@@ -169,7 +169,7 @@ export default function HomeScreen() {
         onConfirm={onConfirmTransaction}
       />
       {
-        confirmedBetSlip && (
+        confirmedBetSlip && confirmedBetSlip.bets && (
           <ConfirmBetSlip
             visible={confirmModalVisible}
             close={closeConfirmModal}
