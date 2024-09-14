@@ -3,6 +3,7 @@ import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
+import { Feather } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import { getDateFull } from '@/utils/dateFunctions';
 import draftkings from '@/assets/images/DraftKings.png';
@@ -10,7 +11,7 @@ import fanduel from '@/assets/images/FanDuel.jpg';
 
 export default function ConfirmBetSlip({ visible, close, betSlip }) {
 
-    const { iconColor, grayBackground, grayBorder, mainGreen } = useTheme();
+    const { iconColor, grayBackground, grayBorder, mainGreen, redText } = useTheme();
 
     const LegComponent = ({ legs }) => {
 
@@ -62,6 +63,14 @@ export default function ConfirmBetSlip({ visible, close, betSlip }) {
                 <Text style={{ fontSize: 18, fontWeight: '600' }}>{bet.homeTeamAbv} vs {bet.awayTeamAbv}</Text>
             </View>
             <LegComponent legs={bet.legs} />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                <TouchableOpacity style={styles.iconButton}>
+                    <Feather name="x" size={24} color={redText} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconButton}>
+                    <Feather name="check" size={24} color="green" />
+                </TouchableOpacity>
+            </View>
         </View>
         );
     }; 
@@ -74,29 +83,31 @@ export default function ConfirmBetSlip({ visible, close, betSlip }) {
             onRequestClose={close}
             style={styles.modalContainer}
         >
-            <TouchableWithoutFeedback 
-                onPress={close}
-            >
-                <View style={styles.container}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                        <Text style={styles.betText}>{getDateFull(betSlip.date)}</Text>
-                        <Text style={styles.betText}>{betSlip.odds}</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                        <View style={{ backgroundColor: 'transparent' }}>
-                            <Text style={styles.betText}>Bet</Text>
-                            <Text style={styles.betText}>${betSlip.betAmount.toFixed(2)}</Text>
-                        </View>
-                        <View style={{ backgroundColor: 'transparent' }}>
-                            <Text style={styles.betText}>To Win</Text>
-                            <Text style={styles.betText}>${betSlip.winnings.toFixed(2)}</Text>
-                        </View>
-                    </View>
-                    {betSlip.bets.map((betDetail, index) => (
-                        <BetComponent key={index} bet={betDetail} />
-                    ))}
+            <View style={styles.container}>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.betText}>{getDateFull(betSlip.date)}</Text>
+                    <Text style={styles.betText}>{betSlip.odds}</Text>
                 </View>
-            </TouchableWithoutFeedback>
+                <TouchableOpacity 
+                    style={{ width: '100%', borderRadius: 8, justifyContent: 'center', alignItems: 'center', paddingVertical: 6, backgroundColor: redText }}
+                    onPress={close}
+                >
+                    <Text>Close</Text>
+                </TouchableOpacity>
+                <View style={styles.titleContainer}>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={styles.betText}>Bet</Text>
+                        <Text style={styles.betText}>${betSlip.betAmount.toFixed(2)}</Text>
+                    </View>
+                    <View style={{ backgroundColor: 'transparent' }}>
+                        <Text style={styles.betText}>To Win</Text>
+                        <Text style={styles.betText}>${betSlip.winnings.toFixed(2)}</Text>
+                    </View>
+                </View>
+                {betSlip.bets.map((betDetail, index) => (
+                    <BetComponent key={index} bet={betDetail} />
+                ))}
+            </View>
         </Modal>
     );
 }
@@ -138,4 +149,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         width: 80,
     },
+    titleContainer: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        backgroundColor: 'transparent', 
+        width: '100%',
+        paddingHorizontal: 16,
+    }
 });
