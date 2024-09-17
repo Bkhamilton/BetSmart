@@ -1,5 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import { UserContext } from '@/contexts/UserContext';
+import { DBContext } from '@/contexts/DBContext';
 import { StyleSheet, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
 import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView, Pressable } from '@/components/Themed';
 import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
@@ -15,6 +17,8 @@ import fanduel from '@/assets/images/FanDuel.jpg';
 export default function BetSlipModal({ visible, close, removeProp, removeBetSlip, confirm }) {
 
     const { betSlip, setBetSlip } = useContext(BetContext);
+    const { user, userBalance } = useContext(UserContext);
+    const { bookies } = useContext(DBContext);
 
     const { iconColor, redText, mainGreen, grayBackground, grayBorder } = useTheme();
 
@@ -221,6 +225,28 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
         );
     }
 
+    const Header = () => {
+        return (
+            <View style={styles.headerContainer}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={[styles.legsContainer, { backgroundColor: mainGreen }]}>
+                        <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{totalLegs}</Text>
+                    </View>
+                    <Text style={styles.modalText}>Bet Slip</Text>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <Text>{betSlip.odds}</Text>
+                    <TouchableOpacity
+                        style={styles.closeButton}
+                        onPress={onClose}
+                    >
+                        <Text style={styles.closeButtonText}>Close</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    }
+
     return (
         <Modal
             animationType="slide"
@@ -231,23 +257,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
             <TouchableWithoutFeedback onPress={onDismiss}>
                 <View style={styles.container}>
                     <View style={styles.modalContent}>
-                        <View style={styles.headerContainer}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={[styles.legsContainer, { backgroundColor: mainGreen }]}>
-                                    <Text style={{ fontSize: 14, fontWeight: 'bold' }}>{totalLegs}</Text>
-                                </View>
-                                <Text style={styles.modalText}>Bet Slip</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                                <Text>{betSlip.odds}</Text>
-                                <TouchableOpacity
-                                    style={styles.closeButton}
-                                    onPress={onClose}
-                                >
-                                    <Text style={styles.closeButtonText}>Close</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                        <Header />
                         <ScrollView 
                             style={{ width: '100%' }}
                             showsVerticalScrollIndicator={false}
@@ -276,7 +286,11 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                         <TouchableOpacity 
                             style={[styles.bookieSelectContainer, { backgroundColor: mainGreen }]}
                         >
-                            <Image source={bookieImages[betSlip.bookieId]} style={{ width: 32, height: 32, borderRadius: 4 }}/>
+                            <View style={{ flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
+                                <Image source={bookieImages[betSlip.bookieId]} style={{ width: 32, height: 32, borderRadius: 4 }}/>
+                                <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', marginLeft: 4 }}>DraftKings</Text>
+                            </View>
+                            <Text style={{ color: 'white', fontSize: 16, fontWeight: '500' }}>$100.00</Text>
                         </TouchableOpacity>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                             <View style={styles.wagerContainer}>
@@ -404,7 +418,8 @@ const styles = StyleSheet.create({
         padding: 10, 
         borderRadius: 8, 
         margin: 8,
-        justifyContent: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
     }
 });
