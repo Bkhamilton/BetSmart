@@ -24,7 +24,6 @@ import { getUser } from '@/db/user-specific/Users';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
 import { insertUserSession } from '@/db/user-specific/UserSessions';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
-
 import { insertBetSlipResult } from '@/db/betslips/BetSlipsResults';
 import { insertLegResult } from '@/db/betslips/LegsResults';
 import { insertParticipantBetResult } from '@/db/betslips/ParticipantBetsResults';
@@ -165,9 +164,6 @@ export default function HomeScreen() {
   }
 
   const onConfirmBetSlip = (betSlip) => {
-    // Need current timestamp in DateTime form for DB
-    const timestamp = new Date().toISOString();
-
     // For each Leg in betslip.bets.legs, insert into LegResults table with betslipId, legId, result
     betSlip.bets.forEach(bet => {
       bet.legs.forEach(leg => {
@@ -223,7 +219,11 @@ export default function HomeScreen() {
           />
         )
       }
-      <HomeHeader history={handleBetHistory} login={openLoginModal} signup={openSignUpModal} />
+      <HomeHeader 
+        history={handleBetHistory} 
+        login={openLoginModal} 
+        signup={openSignUpModal} 
+      />
       <ScrollView
         showVerticalScrollIndicator={false}
         refreshControl={
