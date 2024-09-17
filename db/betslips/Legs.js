@@ -22,6 +22,7 @@ export const getAllValidLegs = async (db, participantBetIds) => {
       SELECT 
         Legs.id AS legId,
         Legs.participantBetId AS participantBetId, 
+        Legs.betMarketId AS betMarketId,
         BetMarkets.marketType AS marketType, 
         BetMarkets.value AS value, 
         BetMarkets.odds AS odds, 
