@@ -5,7 +5,6 @@ import { DBContextProvider } from '@/contexts/DBContext';
 export default function NewBetLayout() {
   return (
     <BetContextProvider>
-      <DBContextProvider>
         <Stack>
           <Stack.Screen
             name="selectGame"
@@ -21,7 +20,6 @@ export default function NewBetLayout() {
             }}
           />
         </Stack>
-      </DBContextProvider>
     </BetContextProvider>
   );
 }
