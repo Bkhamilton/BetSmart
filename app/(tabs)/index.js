@@ -4,25 +4,29 @@ import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, Dimensions } from 'react-native';
 import { Text, View, ScrollView } from '@/components/Themed';
 import { myBetList, playoffBets } from '@/data/exampleBetData';
+import useTheme from '@/hooks/useTheme';
 import ProfitDashboard from '@/components/Home/ProfitDashboard/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
 import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets';
 import TodaysBets from '@/components/Home/BetReview/TodaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
-import { UserContext } from '@/contexts/UserContext';
+import HomeHeader from '@/components/Home/HomeHeader';
+import OpenBets from '@/components/Home/BetReview/OpenBets';
+import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
 import { useSQLiteContext } from 'expo-sqlite';
+import { UserContext } from '@/contexts/UserContext';
+import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import { getBalanceByUser, updateBalance } from '@/db/user-specific/Balance';
 import { getAllBookies, getBookies } from '@/db/general/Bookies';
 import { getUser } from '@/db/user-specific/Users';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
 import { insertUserSession } from '@/db/user-specific/UserSessions';
-import useTheme from '@/hooks/useTheme';
-import HomeHeader from '@/components/Home/HomeHeader';
-import OpenBets from '../../components/Home/BetReview/OpenBets';
-import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
-import ConfirmBetSlip from '../../components/Modals/ConfirmBetSlip';
+
+import { insertBetSlipResult } from '@/db/betslips/BetSlipsResults';
+import { insertLegResult } from '@/db/betslips/LegsResults';
+import { insertParticipantBetResult } from '@/db/betslips/ParticipantBetsResults';
 
 export default function HomeScreen() {
 
@@ -45,6 +49,8 @@ export default function HomeScreen() {
   const [userTransactions, setUserTransactions] = useState([]);
 
   const [betSlips, setBetSlips] = useState([]);
+
+  const [triggerFetch, setTriggerFetch] = useState(false);
   
   function openSignUpModal() {
     setSignUpModalVisible(true);
@@ -125,7 +131,7 @@ export default function HomeScreen() {
     };
   
     fetchData();
-  }, []);
+  }, [triggerFetch]);
 
   useEffect(() => {
     if (user) {
@@ -152,14 +158,50 @@ export default function HomeScreen() {
     });
   }
 
+  const onConfirmBetSlip = (betSlip) => {
+
+    console.log(JSON.stringify(betSlip, null, 2));
+
+    // Need current timestamp in DateTime form for DB
+    const timestamp = new Date().toISOString();
+
+    // For each Leg in betslip.bets.legs, insert into LegResults table with betslipId, legId, result
+    betSlip.bets.forEach(bet => {
+      bet.legs.forEach(leg => {
+        console.log(JSON.stringify(leg));
+        insertLegResult(db, leg.legId, leg.result);
+      });
+    });
+
+    // For each Bet in betslip.bets, insert into BetResults table with betslipId, betId, result
+    betSlip.bets.forEach(bet => {
+      console.log(JSON.stringify(bet));
+      insertParticipantBetResult(db, bet.id, bet.result);
+    });
+
+    // Insert into BetSlipResults table with betslipId, result
+    insertBetSlipResult(db, betSlip.id, betSlip.result);
+
+    setConfirmModalVisible(false);
+
+    setTriggerFetch(prev => !prev);
+  }
+
   // Dummy data for ProfitDashboard
   const amountWon = 240.00;
   const amountWagered = 120.00;
 
   return (
     <>
-      <LoginPage visible={loginModalVisible} close={closeLoginModal} login={login}/>
-      <SignUpPage visible={signUpModalVisible} close={closeSignUpModal}/>
+      <LoginPage 
+        visible={loginModalVisible} 
+        close={closeLoginModal} 
+        login={login}
+      />
+      <SignUpPage 
+        visible={signUpModalVisible} 
+        close={closeSignUpModal}
+      />
       <TransactionModal 
         visible={transactionModalVisible} 
         close={closeTransactionModal}
@@ -174,6 +216,7 @@ export default function HomeScreen() {
             visible={confirmModalVisible}
             close={closeConfirmModal}
             betSlip={confirmedBetSlip}
+            confirm={onConfirmBetSlip}
           />
         )
       }
@@ -188,7 +231,14 @@ export default function HomeScreen() {
           bookies={userBookies}
           transactions={userTransactions}
         />
-        { betSlips && betSlips.length > 0 && <OpenBets betSlips={betSlips} confirm={openConfirmModal}/> }
+        { 
+          betSlips && betSlips.length > 0 && (
+            <OpenBets 
+              betSlips={betSlips} 
+              confirm={openConfirmModal}
+            />
+          ) 
+        }
         <YesterdaysBets bets={myBetList}/>
       </ScrollView>
     </>
