@@ -159,23 +159,18 @@ export default function HomeScreen() {
   }
 
   const onConfirmBetSlip = (betSlip) => {
-
-    console.log(JSON.stringify(betSlip, null, 2));
-
     // Need current timestamp in DateTime form for DB
     const timestamp = new Date().toISOString();
 
     // For each Leg in betslip.bets.legs, insert into LegResults table with betslipId, legId, result
     betSlip.bets.forEach(bet => {
       bet.legs.forEach(leg => {
-        console.log(JSON.stringify(leg));
         insertLegResult(db, leg.legId, leg.result);
       });
     });
 
     // For each Bet in betslip.bets, insert into BetResults table with betslipId, betId, result
     betSlip.bets.forEach(bet => {
-      console.log(JSON.stringify(bet));
       insertParticipantBetResult(db, bet.id, bet.result);
     });
 
@@ -185,6 +180,8 @@ export default function HomeScreen() {
     setConfirmModalVisible(false);
 
     setTriggerFetch(prev => !prev);
+
+    //TODO: Update user balance based on betslip result
   }
 
   // Dummy data for ProfitDashboard

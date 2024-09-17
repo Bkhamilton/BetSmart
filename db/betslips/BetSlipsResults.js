@@ -15,7 +15,6 @@ export const getBetSlipResult = async (db, betSlipId) => {
 export const insertBetSlipResult = async (db, betSlipId, result) => {
     try {
         const res = await db.runAsync('INSERT INTO BetSlipsResults (betSlipId, result) VALUES (?, ?)', [betSlipId, result]);
-        console.log(res);
         return res.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting bet slip result:', error);
