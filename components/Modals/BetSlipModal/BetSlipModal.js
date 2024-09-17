@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
 import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView, Pressable } from '@/components/Themed';
 import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,8 @@ import { getBetTargetName, getBetTarget } from '@/db/bet-general/BetTargets';
 import { getTeamAbbreviationByName } from '@/db/general/Teams';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
+import draftkings from '@/assets/images/DraftKings.png';
+import fanduel from '@/assets/images/FanDuel.jpg';
 
 export default function BetSlipModal({ visible, close, removeProp, removeBetSlip, confirm }) {
 
@@ -24,6 +26,11 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
     const db = useSQLiteContext();
 
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
+
+    const bookieImages = {
+        1: draftkings,
+        2: fanduel,
+    };
 
     // Function to convert American odds to decimal odds
     const convertAmericanToDecimalOdds = (americanOdds) => {
@@ -263,10 +270,14 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 2 }}>
                             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{totalLegs} leg Bet</Text>
                             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                                {/* ADD Bookie */}
                                 <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlip.odds}</Text>
                             </View>  
                         </View>
+                        <TouchableOpacity 
+                            style={[styles.bookieSelectContainer, { backgroundColor: mainGreen }]}
+                        >
+                            <Image source={bookieImages[betSlip.bookieId]} style={{ width: 32, height: 32, borderRadius: 4 }}/>
+                        </TouchableOpacity>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                             <View style={styles.wagerContainer}>
                                 <Text style={{ fontSize: 16 }}>Wager</Text>
@@ -311,7 +322,7 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '100%',
-        height: '75%',
+        height: '68%',
         marginTop: 'auto',
         paddingTop: 20,
         borderTopLeftRadius: 12,
@@ -389,4 +400,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    bookieSelectContainer: {
+        padding: 10, 
+        borderRadius: 8, 
+        margin: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 });
