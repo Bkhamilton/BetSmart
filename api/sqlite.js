@@ -276,3 +276,37 @@ export const resetBetMarkets = async (db) => {
   `);
   console.log('BetMarkets table reset');
 };
+
+// Function to drop and recreate BetSlips table
+export const resetBetSlipResults = async (db) => {
+  await db.execAsync(`
+    DROP TABLE IF EXISTS BetSlipsResults;
+    DROP TABLE IF EXISTS ParticipantBetsResults;
+    DROP TABLE IF EXISTS LegsResults;
+    CREATE TABLE IF NOT EXISTS BetSlipsResults (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      betSlipId INTEGER NOT NULL,
+      result BOOLEAN NOT NULL,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (betSlipId) REFERENCES BetSlips(id),
+      UNIQUE (betSlipId)
+    );
+    CREATE TABLE IF NOT EXISTS ParticipantBetsResults (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      participantBetId INTEGER NOT NULL,
+      result BOOLEAN NOT NULL,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (participantBetId) REFERENCES ParticipantBets(id),
+      UNIQUE (participantBetId)
+    );
+    CREATE TABLE IF NOT EXISTS LegsResults (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      legId INTEGER NOT NULL,
+      result BOOLEAN NOT NULL,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (legId) REFERENCES Legs(id),
+      UNIQUE (legId)
+    );  
+  `);
+  console.log('BetSlips table reset');
+};

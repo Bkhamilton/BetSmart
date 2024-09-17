@@ -14,9 +14,9 @@ export const getParticipantBetResult = async (db, participantBetId) => {
 // Function to insert a participant bet result
 export const insertParticipantBetResult = async (db, participantBetId, result) => {
     try {
-        const result = await db.runAsync('INSERT INTO ParticipantBetsResults (participantBetId, result) VALUES (?, ?)', [participantBetId, result]);
-        console.log(result);
-        return result.lastInsertRowId;
+        const res = await db.runAsync('INSERT INTO ParticipantBetsResults (participantBetId, result) VALUES (?, ?)', [participantBetId, result]);
+        console.log(res);
+        return res.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting participant bet result:', error);
         throw error;

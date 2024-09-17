@@ -12,9 +12,8 @@ export const getLegResult = async (db, legId) => {
 // Function to insert a leg result
 export const insertLegResult = async (db, legId, result) => {
     try {
-        const result = await db.runAsync('INSERT INTO LegsResults (legId, result) VALUES (?, ?)', [legId, result]);
-        console.log(result);
-        return result.lastInsertRowId;
+        const res = await db.runAsync('INSERT INTO LegsResults (legId, result) VALUES (?, ?)', [legId, result]);
+        return res.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting leg result:', error);
         throw error;
