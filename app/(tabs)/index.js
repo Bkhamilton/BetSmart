@@ -16,6 +16,7 @@ import OpenBets from '@/components/Home/BetReview/OpenBets';
 import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
 import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
+import { DBContext } from '@/contexts/DBContext';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import { getBalanceByUser, updateBalance } from '@/db/user-specific/Balance';
 import { getAllBookies, getBookies } from '@/db/general/Bookies';
@@ -33,6 +34,7 @@ export default function HomeScreen() {
   const db = useSQLiteContext();
 
   const { user, setUserBalance } = useContext(UserContext);
+  const { bookies } = useContext(DBContext);
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
@@ -45,7 +47,6 @@ export default function HomeScreen() {
 
   const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
   
-  const [userBookies, setUserBookies] = useState([]);
   const [userTransactions, setUserTransactions] = useState([]);
 
   const [betSlips, setBetSlips] = useState([]);
@@ -105,7 +106,7 @@ export default function HomeScreen() {
   function updateTransactionInfo(title, balance, bookie) {
     setTransactionTitle(title);
     setTransactionBookie(bookie);
-    const curBookie = userBookies.find(item => item.name === bookie);
+    const curBookie = bookies.find(item => item.name === bookie);
     setTransactionBookieId(curBookie.id);
     setUserBalance(balance);
   }
@@ -123,12 +124,6 @@ export default function HomeScreen() {
   const handleBetHistory = () => {
     router.navigate('profile/betHistory');
   };
-
-  useEffect(() => {
-    getAllBookies(db).then((bookies) => {
-      setUserBookies(bookies);
-    });
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -239,7 +234,6 @@ export default function HomeScreen() {
           wagered={amountWagered} 
           won={amountWon} 
           openTransaction={openTransactionModal} 
-          bookies={userBookies}
           transactions={userTransactions}
         />
         { 

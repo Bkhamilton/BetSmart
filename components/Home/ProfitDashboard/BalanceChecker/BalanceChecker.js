@@ -6,7 +6,7 @@ import useTheme from '@/hooks/useTheme';
 import BankButtons from './BankButtons';
 import RecentTransactions from './RecentTransactions';
 
-export default function BalanceChecker({ openTransaction, bookies, transactions }) {
+export default function BalanceChecker({ openTransaction, transactions }) {
 
     const { userBalance } = useContext(UserContext);
 
