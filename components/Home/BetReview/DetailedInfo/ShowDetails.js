@@ -1,13 +1,20 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import BetComponent from './BetComponent';
 import { getDateFull } from '@/utils/dateFunctions';
+import draftkings from '@/assets/images/DraftKings.png';
+import fanduel from '@/assets/images/FanDuel.jpg';
 
 export default function ShowDetails({ betSlip, confirm }) {
 
     const { iconColor, grayBackground, grayBorder, mainGreen } = useTheme();
+
+    const bookieImages = {
+        'DraftKings': draftkings,
+        'FanDuel': fanduel,
+    };
 
     const confirmBetSlip = () => {
         confirm(betSlip);
@@ -28,6 +35,10 @@ export default function ShowDetails({ betSlip, confirm }) {
                     <Text style={styles.betText}>To Win</Text>
                     <Text style={styles.betText}>${betSlip.winnings.toFixed(2)}</Text>
                 </View>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+                <Image source={bookieImages[betSlip.bookieName]} style={{ width: 20, height: 20, borderRadius: 2 }} />
+                <Text style={styles.betText}>{betSlip.bookieName}</Text>
             </View>
             {betSlip.bets.map((betDetail, index) => (
                 <BetComponent key={index} bet={betDetail} />
