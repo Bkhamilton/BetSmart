@@ -262,7 +262,10 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                     <View style={styles.confirmContainer}>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 2 }}>
                             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{totalLegs} leg Bet</Text>
-                            <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlip.odds}</Text>
+                            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                                {/* ADD Bookie */}
+                                <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlip.odds}</Text>
+                            </View>  
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                             <View style={styles.wagerContainer}>
