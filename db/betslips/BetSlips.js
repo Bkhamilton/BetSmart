@@ -38,10 +38,24 @@ export const getTodaysBetSlips = async (db, day) => {
 export const getOpenBetSlips = async (db) => {
     try {
       const openBetSlips = await db.getAllAsync(`
-        SELECT bs.*
-        FROM BetSlips bs
-        LEFT JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
-        WHERE bsr.betSlipId IS NULL
+        SELECT 
+            bs.id AS id,
+            bs.formatId AS formatId,
+            bs.date AS date,
+            bs.odds AS odds,
+            bs.betAmount AS betAmount,
+            bs.winnings AS winnings,
+            bs.userId AS userId,
+            bs.bookieId AS bookieId,
+            b.name AS bookieName
+        FROM 
+            BetSlips bs
+        LEFT JOIN 
+            BetSlipsResults bsr ON bs.id = bsr.betSlipId
+        LEFT JOIN
+            Bookies b ON bs.bookieId = b.id
+        WHERE 
+            bsr.betSlipId IS NULL
       `);
       return openBetSlips;
     } catch (error) {
