@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions, RefreshControl } from 'react-native';
 import { Text, View, ScrollView } from '@/components/Themed';
 import { myBetList, playoffBets } from '@/data/exampleBetData';
 import useTheme from '@/hooks/useTheme';
@@ -51,6 +51,17 @@ export default function HomeScreen() {
   const [betSlips, setBetSlips] = useState([]);
 
   const [triggerFetch, setTriggerFetch] = useState(false);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    // Add your data reloading logic here
+    // For example, re-fetch the betSlips data
+    setTriggerFetch(prev => !prev);
+
+    setRefreshing(false);
+  };
   
   function openSignUpModal() {
     setSignUpModalVisible(true);
@@ -220,6 +231,9 @@ export default function HomeScreen() {
       <HomeHeader history={handleBetHistory} login={openLoginModal} signup={openSignUpModal} />
       <ScrollView
         showVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <ProfitDashboard 
           wagered={amountWagered} 
