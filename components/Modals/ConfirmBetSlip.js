@@ -9,7 +9,7 @@ import { getDateFull } from '@/utils/dateFunctions';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 
-export default function ConfirmBetSlip({ visible, close, betSlip }) {
+export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
 
     const { iconColor, grayBackground, grayBorder, mainGreen, redText, backgroundColor } = useTheme();
 
@@ -18,10 +18,9 @@ export default function ConfirmBetSlip({ visible, close, betSlip }) {
     const [resolvedLegs, setResolvedLegs] = useState(Array(totalLegs).fill(null));
 
     useEffect(() => {
-        if (resolvedLegs.filter(leg => leg !== null).length === totalLegs) {
-            console.log('All legs resolved');
-        }
-    }, [resolvedLegs]);
+        // Reset resolvedLegs state when betslip changes
+        setResolvedLegs(Array(totalLegs).fill(null));
+    }, [betSlip]);
 
     const handleLegResolved = (index, result) => {
         setResolvedLegs(prev => {
@@ -29,6 +28,20 @@ export default function ConfirmBetSlip({ visible, close, betSlip }) {
           newResolvedLegs[index] = result;
           return newResolvedLegs;
         });
+    };
+
+    // Function to handle Bet Resolved based on leg results
+    const handleBetResolved = (bet) => {
+        const resolvedLegs = bet.legs.map(leg => leg.result);
+        return resolvedLegs.every(leg => leg === true);
+    };
+
+    const handleConfirm = () => {
+        betSlip['result'] = resolvedLegs.every(leg => leg === true);
+        betSlip.bets.forEach(bet => {
+            bet['result'] = handleBetResolved(bet);
+        });
+        confirm(betSlip);
     };
 
     let legIndex = 0;
@@ -53,11 +66,12 @@ export default function ConfirmBetSlip({ visible, close, betSlip }) {
             return `${leg.value} ${leg.marketType}`;
             }
         } else {
-            return `${leg.betTarget} ${leg.marketType}`;
+            return `${leg.betTarget} ${leg.marketType} ${leg.value}`;
         }
         };
     
         const resolve = (result) => {
+            leg['result'] = result;
             setResults(result);
             resolveLeg(legIndex, result);
         };
@@ -73,14 +87,14 @@ export default function ConfirmBetSlip({ visible, close, betSlip }) {
                 </View>
                 <View style={[styles.resultsContainer, { backgroundColor: results === null ? 'transparent' : results ? redText : 'green' }]}>
                     <TouchableOpacity 
-                        style={[styles.iconButton, { backgroundColor: results === true ? backgroundColor : grayBackground }]}
-                        onPress={() => resolve(true)}
+                        style={[styles.iconButton, { backgroundColor: results === false ? grayBackground : backgroundColor }]}
+                        onPress={() => resolve(false)}
                     >
                         <Feather name="x" size={24} color={redText} />
                     </TouchableOpacity>
                     <TouchableOpacity 
-                        style={[styles.iconButton, { backgroundColor: results === false ? backgroundColor : grayBackground }]}
-                        onPress={() => resolve(false)}
+                        style={[styles.iconButton, { backgroundColor: results === true ? grayBackground : backgroundColor }]}
+                        onPress={() => resolve(true)}
                     >
                         <Feather name="check" size={24} color="green" />
                     </TouchableOpacity>
@@ -107,6 +121,33 @@ export default function ConfirmBetSlip({ visible, close, betSlip }) {
         </View>
         );
     }; 
+
+    const ResolveComponent = ({ close }) => {
+
+        const trueLegs = resolvedLegs.filter(leg => leg === true).length;
+        const falseLegs = resolvedLegs.filter(leg => leg === false).length;
+
+        return (
+            <>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingVertical: 8, borderWidth: 1, borderRadius: 8 }}>
+                    <Text>{trueLegs}/{totalLegs} Legs Won</Text>
+                    <View>
+                        {trueLegs === totalLegs ? (
+                            <Text>Bet Won!</Text>
+                        ) : (
+                            <Text>Bet Lost! :(</Text>
+                        )}
+                    </View>
+                </View>
+                <TouchableOpacity 
+                    style={{ width: '100%', borderRadius: 8, justifyContent: 'center', alignItems: 'center', paddingVertical: 6, backgroundColor: mainGreen }}
+                    onPress={handleConfirm}
+                >
+                    <Text>Confirm Bet</Text>
+                </TouchableOpacity>
+            </>
+        );
+    }
 
     return (
         <Modal
@@ -145,6 +186,9 @@ export default function ConfirmBetSlip({ visible, close, betSlip }) {
                     {resolvedLegs.filter(leg => leg !== null).length} / {totalLegs} Legs Resolved 
                     </Text>
                 </View>
+                {resolvedLegs.filter(leg => leg !== null).length === totalLegs && (
+                    <ResolveComponent close={close}/>
+                )}
             </View>
         </Modal>
     );
