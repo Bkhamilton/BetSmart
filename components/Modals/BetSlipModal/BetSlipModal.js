@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { bookieImages } from '@/constants/bookieConstants';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
@@ -20,10 +21,12 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
     const { user, userBalance } = useContext(UserContext);
     const { bookies } = useContext(DBContext);
 
-    const { iconColor, redText, mainGreen, grayBackground, grayBorder } = useTheme();
+    const { iconColor, redText, mainGreen, mainBlue, grayBackground, grayBorder } = useTheme();
 
     const [wager, setWager] = useState(0);
     const [winnings, setWinnings] = useState(0);
+
+    const [curBookie, setCurBookie] = useState(null);
 
     const [betSlipOdds, setBetSlipOdds] = useState("Boo!");
 
@@ -31,9 +34,10 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
 
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
 
-    const bookieImages = {
-        1: draftkings,
-        2: fanduel,
+    const bookieColors = {
+        'DraftKings': mainGreen,
+        'FanDuel': mainBlue,
+        'BetMGM': grayBackground,
     };
 
     // Function to convert American odds to decimal odds
@@ -45,6 +49,18 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
             // For negative odds
             return (100 / Math.abs(parseInt(americanOdds, 10))) + 1;
         }
+    };
+
+    // Function to get the balance of the current bookie
+    const getBalance = (bookieId) => {
+        const balance = userBalance.find(b => b.bookieId === bookieId);
+        return balance ? balance.balance.toFixed(2) : 0;
+    };
+
+    // Function to get the bookie name from the bookieId
+    const getBookieName = (bookieId) => {
+        const bookie = bookies.find(b => b.id === bookieId);
+        return bookie ? bookie.name : '';
     };
 
     // Modified getWinnings function
@@ -67,7 +83,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
         if (wager === 0) {
             return;
         }
-        confirm(wager, getWinnings(wager));
+        confirm(wager, getWinnings(wager), curBookie.id);
     }
 
     const onDismiss = () => {
@@ -75,11 +91,22 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
         Keyboard.dismiss();
     }
 
+    // function to cycle through bookies and set curBookie to next bookie
+    const onBookieSelect = () => {
+        const curIndex = userBalance.findIndex(b => b.bookieId === curBookie.id);
+        const nextIndex = curIndex === userBalance.length - 1 ? 0 : curIndex + 1;
+        setCurBookie(bookies[nextIndex]);
+    }
+
     // add useEffect function to sum up the odds of all the bets in the betSlip
     useEffect(() => {
         const oddsArray = betSlip.bets.map(bet => bet.odds);
         setBetSlipOdds(calculateCombinedOdds(oddsArray));
     }, [betSlip]);
+
+    useEffect(() => {
+        setCurBookie(bookies.find(b => b.id === betSlip.bookieId));
+    }, []);
 
     const Leg = ({ leg, currentBet }) => {
 
@@ -283,15 +310,20 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
                                 <Text style={{ fontWeight: '500', fontSize: 16 }}>{betSlip.odds}</Text>
                             </View>  
                         </View>
-                        <TouchableOpacity 
-                            style={[styles.bookieSelectContainer, { backgroundColor: mainGreen }]}
-                        >
-                            <View style={{ flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
-                                <Image source={bookieImages[betSlip.bookieId]} style={{ width: 32, height: 32, borderRadius: 4 }}/>
-                                <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', marginLeft: 4 }}>DraftKings</Text>
-                            </View>
-                            <Text style={{ color: 'white', fontSize: 16, fontWeight: '500' }}>$100.00</Text>
-                        </TouchableOpacity>
+                        {
+                            curBookie && ( 
+                                <TouchableOpacity 
+                                    style={[styles.bookieSelectContainer, { backgroundColor: bookieColors[curBookie.name] }]}
+                                    onPress={onBookieSelect}
+                                >
+                                    <View style={{ flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Image source={bookieImages[curBookie.name]} style={{ width: 32, height: 32, borderRadius: 4 }}/>
+                                        <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', marginLeft: 4 }}>{getBookieName(curBookie.id)}</Text>
+                                    </View>
+                                    <Text style={{ color: 'white', fontSize: 16, fontWeight: '500' }}>{getBalance(curBookie.id)}</Text>
+                                </TouchableOpacity>
+                            )
+                        }
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                             <View style={styles.wagerContainer}>
                                 <Text style={{ fontSize: 16 }}>Wager</Text>
