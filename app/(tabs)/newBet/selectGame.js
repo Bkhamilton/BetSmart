@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { retrieveGamesDate } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
-import { removeLeg, updateBetSlipAmounts } from '@/contexts/BetContext/betSlipHelpers';
+import { removeLeg, updateBetSlipAmounts, updateBetSlipBookie } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
@@ -94,8 +94,9 @@ export default function SelectGameScreen() {
     setTotalLegs(0);
   }
 
-  const confirmBet = (wager, winnings) => {
+  const confirmBet = (wager, winnings, bookieId) => {
     updateBetSlipAmounts(betSlip, wager, winnings);
+    updateBetSlipBookie(betSlip, bookieId);
 
     closeBetSlipModal();
     confirmBetSlip(db);
