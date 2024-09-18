@@ -227,3 +227,7 @@ export const fillBetSlips = async (db, betSlips) => {
     throw error;
   }
 };
+
+export function updateBetSlipBookie(betSlip, bookieId) {
+  betSlip.bookieId = bookieId;
+}
