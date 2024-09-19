@@ -3,13 +3,14 @@ import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
+import { bookieImages } from '@/constants/bookieConstants';
 import useTheme from '@/hooks/useTheme';
 import draftkings from '@/assets/images/DraftKings.png';
 import fanduel from '@/assets/images/FanDuel.jpg';
 
 export default function ChooseBookie({ visible, close, selectBookie }) {
 
-    const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor } = useTheme();
+    const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor, grayBackground } = useTheme();
 
     const { userBalance } = useContext(UserContext);
     const { bookies } = useContext(DBContext);
@@ -18,6 +19,30 @@ export default function ChooseBookie({ visible, close, selectBookie }) {
         const bookie = userBalance.find((b) => b.bookieName === bookieName);
         return bookie ? bookie.balance : 0;
     };
+
+    const bookieColors = {
+        'DraftKings': mainGreen,
+        'FanDuel': mainBlue,
+        'BetMGM': grayBackground,
+    };
+
+    const bookieBorderColors = {
+        'DraftKings': accentGreen,
+        'FanDuel': accentBlue,
+        'BetMGM': iconColor,
+    };
+
+    const BookieButton = ({ balance }) => {
+        return (
+            <TouchableOpacity 
+                style={[styles.bookieButton, {backgroundColor: bookieColors[balance.bookieName], borderColor: bookieBorderColors[balance.bookieName]}]}
+                onPress={() => selectBookie(balance)}            
+            >
+                <Text style={styles.balanceText}>${getBalance(balance.bookieName).toFixed(2)}</Text>
+                <Image source={bookieImages[balance.bookieName]} style={{ width: 40, height: 40, borderRadius: 8 }} />
+            </TouchableOpacity>
+        );
+    }
 
     return (
         <Modal
@@ -31,26 +56,11 @@ export default function ChooseBookie({ visible, close, selectBookie }) {
             >
                 <View style={styles.container}>
                     <View style={{ marginTop: 110, backgroundColor: 'transparent' }}>
-                        <TouchableOpacity 
-                            onPress={() => {
-                                const bookie = bookies.find((b) => b.name === 'DraftKings');
-                                selectBookie(bookie);
-                            }}
-                            style={[styles.bookieButton, {backgroundColor: mainGreen, borderColor: mainGreen}]}
-                        >
-                            <Text style={styles.balanceText}>${getBalance('DraftKings').toFixed(2)}</Text>
-                            <Image source={draftkings} style={{ width: 40, height: 40, borderRadius: 8 }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity 
-                            onPress={() => {
-                                const bookie = bookies.find((b) => b.name === 'FanDuel');
-                                selectBookie(bookie);
-                            }}
-                            style={[styles.bookieButton, {backgroundColor: mainBlue, borderColor: mainBlue}]}
-                        >
-                            <Text style={styles.balanceText}>${getBalance('FanDuel').toFixed(2)}</Text>
-                            <Image source={fanduel} style={{ width: 40, height: 40, borderRadius: 8 }} />
-                        </TouchableOpacity>
+                        { 
+                            userBalance.map((b) => {
+                                return <BookieButton key={b.bookieId} balance={b} />
+                            })
+                        }
                     </View>
                 </View>
             </TouchableWithoutFeedback>
