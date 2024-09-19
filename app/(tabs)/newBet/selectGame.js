@@ -63,8 +63,8 @@ export default function SelectGameScreen() {
 
   const selectBookie = (bookie) => {
     setChooseBookieModal(false);
-    setBookie(bookie.name);
-    setBookieId(bookie.id);
+    setBookie(bookie.bookieName);
+    setBookieId(bookie.bookieId);
   }
 
   const selectLeague = (newLeague) => {
