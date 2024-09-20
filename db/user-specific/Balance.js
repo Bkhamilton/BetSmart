@@ -43,6 +43,16 @@ export const updateBalance = async (db, bookieId, balance, userId) => {
   }
 };
 
+// Function to update a balance by user
+export const updateUserBalance  = async (db, bookieId, toAdd, userId) => {
+  try {
+    await db.runAsync('UPDATE Balance SET balance = balance + ? WHERE bookieId = ? AND userID = ?', [toAdd, bookieId, userId]);
+  } catch (error) {
+    console.error('Error updating balance:', error);
+    throw error;
+  }
+}
+
 // Function to delete a balance
 export const deleteBalance = async (db, bookieId, userId) => {
   try {

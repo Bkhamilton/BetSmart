@@ -163,6 +163,9 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
         }
       }
 
+      // Update balance for userBalance
+      // await updateUserBalance(db, betSlip.bookieId, user.id, (betSlip.betAmount * -1));
+
       setBetSlip(null);
       setTotalLegs(0);
     } catch (error) {
