@@ -25,6 +25,8 @@ interface UserContextValue {
     setUser: (user: User | null) => void;
     userBalance : Balance[] | null;
     setUserBalance : (userBalance : Balance[] | null) => void;
+    trigger: boolean;
+    setTrigger: (trigger: boolean) => void;
 }
 
 export const UserContext = createContext<UserContextValue>({
@@ -32,6 +34,8 @@ export const UserContext = createContext<UserContextValue>({
     setUser: () => {},
     userBalance : null,
     setUserBalance : () => {},
+    trigger: false,
+    setTrigger: () => {},
 });
 
 interface UserContextProviderProps {
@@ -41,6 +45,8 @@ interface UserContextProviderProps {
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [userBalance, setUserBalance] = useState<Balance[] | null>(null);
+
+    const [trigger, setTrigger] = useState<boolean>(false);
 
     const db = useSQLiteContext();
 
@@ -87,13 +93,15 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         }
 
         fetchUserBalance();
-    }, []);
+    }, [trigger]);
 
     const value = {
         user,
         setUser,
         userBalance,
         setUserBalance,
+        trigger,
+        setTrigger,
     };
 
     return (

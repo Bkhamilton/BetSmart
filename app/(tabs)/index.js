@@ -18,7 +18,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
-import { getBalanceByUser, updateBalance } from '@/db/user-specific/Balance';
+import { getBalanceByUser, updateBalance, updateUserBalance } from '@/db/user-specific/Balance';
 import { getAllBookies, getBookies } from '@/db/general/Bookies';
 import { getUser } from '@/db/user-specific/Users';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
@@ -32,7 +32,7 @@ export default function HomeScreen() {
 
   const db = useSQLiteContext();
 
-  const { user, setUserBalance } = useContext(UserContext);
+  const { user, setUserBalance, trigger, setTrigger } = useContext(UserContext);
   const { bookies } = useContext(DBContext);
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
@@ -59,6 +59,7 @@ export default function HomeScreen() {
     // Add your data reloading logic here
     // For example, re-fetch the betSlips data
     setTriggerFetch(prev => !prev);
+    setTrigger(prev => !prev);
 
     setRefreshing(false);
   };
@@ -179,11 +180,16 @@ export default function HomeScreen() {
     // Insert into BetSlipResults table with betslipId, result
     insertBetSlipResult(db, betSlip.id, betSlip.result);
 
+    // Update user balance in the database
+    if (betSlip.result) {
+      updateUserBalance(db, betSlip.bookieId, betSlip.winnings.toFixed(2), user.id);
+    }
+
+
     setConfirmModalVisible(false);
 
     setTriggerFetch(prev => !prev);
-
-    //TODO: Update user balance based on betslip result
+    setTrigger(prev => !prev);
   }
 
   // Dummy data for ProfitDashboard
@@ -227,7 +233,10 @@ export default function HomeScreen() {
       <ScrollView
         showVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl 
+            refreshing={refreshing} 
+            onRefresh={onRefresh} 
+          />
         }
       >
         <ProfitDashboard 
