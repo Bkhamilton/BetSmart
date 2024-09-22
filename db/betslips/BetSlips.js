@@ -41,6 +41,7 @@ export const getOpenBetSlips = async (db) => {
         SELECT 
             bs.id AS id,
             bs.formatId AS formatId,
+            bf.formatName AS formatName,
             bs.date AS date,
             bs.odds AS odds,
             bs.betAmount AS betAmount,
@@ -54,6 +55,8 @@ export const getOpenBetSlips = async (db) => {
             BetSlipsResults bsr ON bs.id = bsr.betSlipId
         LEFT JOIN
             Bookies b ON bs.bookieId = b.id
+        LEFT JOIN
+            BetFormats bf ON bs.formatId = bf.id
         WHERE 
             bsr.betSlipId IS NULL
       `);
