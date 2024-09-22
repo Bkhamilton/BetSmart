@@ -3,7 +3,8 @@ import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { retrieveGamesDate } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { DBContext } from '@/contexts/DBContext';
+import { DBContext } from '@/contexts/DBContext'; 
+import { UserContext } from '@/contexts/UserContext';
 import { removeLeg, updateBetSlipAmounts, updateBetSlipBookie } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View } from '@/components/Themed';
@@ -23,6 +24,7 @@ export default function SelectGameScreen() {
 
   const { setCurrentGame, league, setLeague, setBookie, setBookieId, betSlip, setBetSlip, confirmBetSlip } = useContext(BetContext);
   const { leagues } = useContext(DBContext);
+  const { setTrigger } = useContext(UserContext);
 
   const router = useRouter();
 
@@ -44,6 +46,16 @@ export default function SelectGameScreen() {
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);
   const [betSlipModal, setBetSlipModal] = useState(false);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+
+    setTrigger(prev => !prev);
+
+    setRefreshing(false);
+  }
 
   const openBookieModal = () => {
     setChooseBookieModal(true);
@@ -100,6 +112,7 @@ export default function SelectGameScreen() {
 
     closeBetSlipModal();
     confirmBetSlip(db);
+    onRefresh();
   }
 
   const updateDate = (direction) => {
