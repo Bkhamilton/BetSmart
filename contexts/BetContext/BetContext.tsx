@@ -9,6 +9,7 @@ import { insertLeg } from '@/db/betslips/Legs';
 import { getBetFormat } from '@/db/bet-general/BetFormats';
 import { getBetType } from '@/db/bet-general/BetTypes';
 import { getBetMarketByLeg } from '@/db/api/BetMarkets';
+import { updateUserBalance } from '@/db/user-specific/Balance';
 
 interface Game {
   id: number;
@@ -137,11 +138,18 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
   const confirmBetSlip = async (db: any) => {
     try {
       // Create BetSlip in DB
+      console.log(JSON.stringify(betSlip, null, 2));
+
       const betSlipFormat = await getBetFormat(db, betSlip.type);
       const betSlipDate = betSlip.date.toISOString();
       const betSlipOdds = betSlip.odds.toString();
   
       const betSlipId = await insertBetSlip(db, betSlipFormat.id, betSlipDate, betSlipOdds, betSlip.betAmount, betSlip.winnings, user.id, betSlip.bookieId);
+
+      if (!betSlipId) {
+        console.error('Error inserting bet slip');
+        return;
+      }
 
       for (const bet of betSlip.bets) {
         try {
@@ -164,7 +172,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
       }
 
       // Update balance for userBalance
-      // await updateUserBalance(db, betSlip.bookieId, user.id, (betSlip.betAmount * -1));
+      await updateUserBalance(db, betSlip.bookieId, (betSlip.betAmount * -1), user.id);
 
       setBetSlip(null);
       setTotalLegs(0);
