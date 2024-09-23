@@ -1,23 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable } from '@/components/Themed';
+import { useSQLiteContext } from 'expo-sqlite';
+import { UserContext } from '@/contexts/UserContext';
+import { getBetSlipResultsBetAmount, getBetSlipResultsWinnings } from '@/db/betslips/BetSlipsResults';
 import useTheme from '@/hooks/useTheme';
 import BalanceChecker from '@/components/Home/ProfitDashboard/BalanceChecker/BalanceChecker';
 
-export default function ProfitDashboard({ wagered, won, openTransaction, transactions }) {
-    const profit = won - wagered;
-    const arrowDirection = profit > 0 ? 'chevron-up' : 'chevron-down';
-    const arrowColor = profit > 0 ? 'green' : 'red';
+export default function ProfitDashboard({ openTransaction, transactions }) {
 
     const { greenText, grayBackground, grayBorder } = useTheme();
+    const { trigger, setTrigger } = useContext(UserContext);
+
+    const db = useSQLiteContext();
+
+    const [totalWinnings, setTotalWinnings] = useState(0);
+    const [totalBetAmount, setTotalBetAmount] = useState(0);
+    const [profit, setProfit] = useState(0);
+    const [arrowDirection, setArrowDirection] = useState('chevron-down');
+    const [arrowColor, setArrowColor] = useState('red');
+
+    useEffect(() => {
+        getBetSlipResultsWinnings(db).then((res) => {
+            setTotalWinnings(res[0].totalWinnings);
+        });
+        getBetSlipResultsBetAmount(db).then((res) => {
+            setTotalBetAmount(res[0].totalBetAmount);
+        });
+    }, [trigger]);
+
+    useEffect(() => {
+        const calculatedProfit = totalWinnings - totalBetAmount;
+        setProfit(calculatedProfit);
+        setArrowDirection(calculatedProfit > 0 ? 'chevron-up' : 'chevron-down');
+        setArrowColor(calculatedProfit > 0 ? 'green' : 'red');
+    }, [totalWinnings, totalBetAmount]);
+
 
     const BetResults = () => {
       return (
         <View style={styles.row}>
             <View style={[styles.leftBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
                 <Text style={{ paddingLeft: 16 }}>Total Won</Text>
-                <Text style={[styles.moneyText, { color: greenText }]}>${won.toFixed(2)}</Text>
+                <Text style={[styles.moneyText, { color: greenText }]}>${totalWinnings}</Text>
             </View>
             <View style={[styles.indicator, { backgroundColor: 'transparent' }]}>
                 <View style={styles.circle}>
@@ -26,7 +52,7 @@ export default function ProfitDashboard({ wagered, won, openTransaction, transac
             </View>
             <View style={[styles.rightBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
                 <Text>Total Bet</Text>
-                <Text style={[styles.moneyText, { color: '#ff5757' }]}>${wagered.toFixed(2)}</Text>
+                <Text style={[styles.moneyText, { color: '#ff5757' }]}>${totalBetAmount}</Text>
             </View>
         </View>
       );
