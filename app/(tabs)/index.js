@@ -192,10 +192,6 @@ export default function HomeScreen() {
     setTrigger(prev => !prev);
   }
 
-  // Dummy data for ProfitDashboard
-  const amountWon = 240.00;
-  const amountWagered = 120.00;
-
   return (
     <>
       <LoginPage 
@@ -240,8 +236,6 @@ export default function HomeScreen() {
         }
       >
         <ProfitDashboard 
-          wagered={amountWagered} 
-          won={amountWon} 
           openTransaction={openTransactionModal} 
           transactions={userTransactions}
         />
