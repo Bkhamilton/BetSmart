@@ -3,7 +3,60 @@ import * as SQLite from 'expo-sqlite';
 // Function to get a bet slip result
 export const getBetSlipResult = async (db, betSlipId) => {
     try {
-        const result = await db.getAsync('SELECT * FROM BetSlipsResults WHERE betSlipId = ?', [betSlipId]);
+        const result = await db.getAllAsync('SELECT * FROM BetSlipsResults WHERE betSlipId = ?', [betSlipId]);
+        return result;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
+// Function to return count of true and false betSlipResults
+export const getBetSlipResultsCount = async (db) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                COUNT(result) as count, result 
+            FROM 
+                BetSlipsResults 
+            GROUP BY 
+                result`);
+        return result;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
+// Function to get total winnings from bet slips that are true
+export const getBetSlipResultsWinnings = async (db) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                SUM(B.winnings) as totalWinnings
+            FROM 
+                BetSlips B
+            LEFT JOIN 
+                BetSlipsResults R ON B.id = R.betSlipId
+            WHERE 
+                R.result = 1`);
+        return result;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
+// Function to get total betAmount from betSlips
+export const getBetSlipResultsBetAmount = async (db) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                SUM(B.betAmount) as totalBetAmount
+            FROM 
+                BetSlips B
+            LEFT JOIN 
+                BetSlipsResults R ON B.id = R.betSlipId`);
         return result;
     } catch (error) {
         console.error('Error getting bet slip result:', error);
