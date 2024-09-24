@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { retrieveMarketsDB } from '@/api/prop-odds/markets';
+import { retrieveMarketsDB, retrieveBig3Markets } from '@/api/prop-odds/markets';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
 
@@ -20,7 +20,7 @@ export default function GameLines() {
     const db = useSQLiteContext();
 
     const fetchMarketProps = async () => {
-        retrieveMarketsDB(db, gameId, ['spread', 'moneyline', 'total_over_under']).then((data) => {
+        retrieveBig3Markets(db, gameId).then((data) => {
             setMarketProps(data);
         });
     };
