@@ -1,9 +1,5 @@
 import secrets from "@/secrets";
-import { getGamesByDate, insertGame } from "@/db/general/Games";
-import { getTeamIds, getTeamsByAbbreviation } from "@/db/general/Teams";
-import { getCurrentSeason } from "@/db/general/Seasons";
-import { getLeagueByName } from "@/db/general/Leagues";
-import { getTodaysGameswithNames } from "@/db/general/Games";
+import { getTeamsByAbbreviation } from "@/db/general/Teams";
 import { getBookieByName } from "@/db/general/Bookies";
 import { getBetTargetId, getBetTargetIdByGameId } from "@/db/bet-general/BetTargets";
 import { getBetMarketByGame, insertBetMarket } from "@/db/api/BetMarkets";
