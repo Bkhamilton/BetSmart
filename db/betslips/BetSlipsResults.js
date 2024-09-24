@@ -28,8 +28,8 @@ export const getBetSlipResultsCount = async (db) => {
     }
 };
 
-// Function to get total winnings from bet slips that are true
-export const getBetSlipResultsWinnings = async (db) => {
+// Function to get total winnings from bet slips that are true for a specific user
+export const getBetSlipResultsWinnings = async (db, userId) => {
     try {
         const result = await db.getAllAsync(`
             SELECT 
@@ -39,7 +39,7 @@ export const getBetSlipResultsWinnings = async (db) => {
             LEFT JOIN 
                 BetSlipsResults R ON B.id = R.betSlipId
             WHERE 
-                R.result = 1`);
+                R.result = 1 AND B.userId = ?`, [userId]);
         return result;
     } catch (error) {
         console.error('Error getting bet slip result:', error);
@@ -47,8 +47,8 @@ export const getBetSlipResultsWinnings = async (db) => {
     }
 };
 
-// Function to get total betAmount from betSlips
-export const getBetSlipResultsBetAmount = async (db) => {
+// Function to get total betAmount from betSlips for a specific user
+export const getBetSlipResultsBetAmount = async (db, userId) => {
     try {
         const result = await db.getAllAsync(`
             SELECT 
@@ -56,7 +56,9 @@ export const getBetSlipResultsBetAmount = async (db) => {
             FROM 
                 BetSlips B
             LEFT JOIN 
-                BetSlipsResults R ON B.id = R.betSlipId`);
+                BetSlipsResults R ON B.id = R.betSlipId
+            WHERE 
+                B.userId = ?`, [userId]);
         return result;
     } catch (error) {
         console.error('Error getting bet slip result:', error);
