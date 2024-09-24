@@ -23,7 +23,7 @@ export default function SettingsScreen() {
     const router = useRouter();
 
     const handleClose = () => {
-      router.navigate('profile/profilePage');
+      router.replace('profile/profilePage');
     };
 
     const [selectedType, setSelectedType] = useState('Today');

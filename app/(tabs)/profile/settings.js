@@ -16,7 +16,7 @@ export default function SettingsScreen() {
     const router = useRouter();
 
     const handleClose = () => {
-      router.navigate('profile/profilePage');
+      router.replace('profile/profilePage');
     };
 
     return (

@@ -72,12 +72,8 @@ export default function HomeScreen() {
     }
 
     // If the username and password match, create a new session
-    if (username === user.username && password === user.password) {
-      const today = new Date().toISOString();
-      await insertUserSession(db, user.id, today);
-    } else {
-      return false;
-    }
+    const today = new Date().toISOString();
+    await insertUserSession(db, user.id, today);
 
     closeLoginModal();
 
@@ -87,7 +83,7 @@ export default function HomeScreen() {
   const router = useRouter();
 
   const handleBetHistory = () => {
-    router.navigate('profile/betHistory');
+    router.replace('profile/betHistory');
   };
 
   useEffect(() => {

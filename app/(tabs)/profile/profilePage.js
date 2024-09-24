@@ -21,11 +21,11 @@ export default function ProfileScreen() {
   const router = useRouter();
 
   const handleSettings = () => {
-    router.navigate('profile/settings');
+    router.replace('profile/settings');
   };
 
   const handleBetHistory = () => {
-    router.navigate('profile/betHistory');
+    router.replace('profile/betHistory');
   };
 
   const { iconColor, backgroundColor, grayBorder } = useTheme();
