@@ -9,7 +9,9 @@ import { TouchableOpacity, Text, View } from '@/components/Themed';
 
 import Colors from '@/constants/Colors';
 
-export default function ProfileMainInfo({ user }) {
+export default function ProfileMainInfo() {
+
+    const { user } = useContext(UserContext);
 
     const { id, name, email, username, password } = user;
 
@@ -26,7 +28,7 @@ export default function ProfileMainInfo({ user }) {
         getBetSlipResultsWinnings(db, id)
             .then((winnings) => setTotalWinnings(winnings[0].totalWinnings))
             .catch((error) => console.error('Error getting total winnings:', error));
-    }, []);
+    }, [user]);
 
     return (
         <View style={styles.container}>

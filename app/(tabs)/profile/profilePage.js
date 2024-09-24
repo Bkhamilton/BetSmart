@@ -10,8 +10,6 @@ import ProfileMainInfo from '../../../components/Profile/ProfileMainInfo';
 import UserFavorites from '@/components/Profile/UserFavorites';
 import Achievements from '../../../components/Profile/Achievements';
 import { useSQLiteContext } from 'expo-sqlite';
-import { getUserById, getAllUsers } from '@/db/user-specific/Users';
-import { getBalance } from '@/db/user-specific/Balance';
 import useTheme from '@/hooks/useTheme';
 
 export default function ProfileScreen() {
@@ -81,7 +79,7 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       {user ? <ProfilePageHeader user={user} /> : <LoadingHeader /> }
       <ScrollView>
-        <ProfileMainInfo user={user} /> 
+        <ProfileMainInfo /> 
         <UserFavorites league={"NBA"} team={"BOS"} player={"Zion Williamson"} bet={"Spread"}/>
         <Achievements />
         <View style={styles.section}>
