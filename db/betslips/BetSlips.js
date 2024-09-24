@@ -78,6 +78,17 @@ export const getBetSlip = async (db, betSlipId) => {
     }
 };
 
+// Function to get total betSlips for a user
+export const getTotalBetSlips = async (db, userId) => {
+    try {
+        const totalBetSlips = await db.getAsync('SELECT COUNT(*) FROM BetSlips WHERE userId = ?', [userId]);
+        return totalBetSlips['COUNT(*)'];
+    } catch (error) {
+        console.error('Error fetching total bet slips:', error);
+        throw error;
+    }
+};
+
 // Function to insert a bet slip
 export const insertBetSlip = async (db, formatId, date, odds, betAmount, winnings, userId, bookieId) => {
     try {
