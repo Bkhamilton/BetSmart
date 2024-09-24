@@ -72,8 +72,12 @@ export default function HomeScreen() {
     }
 
     // If the username and password match, create a new session
-    const today = new Date().toISOString();
-    await insertUserSession(db, user.id, today);
+    if (username === user.username && password === user.password) {
+      const today = new Date().toISOString();
+      await insertUserSession(db, user.id, today);
+    } else {
+      return false;
+    }
 
     closeLoginModal();
 
