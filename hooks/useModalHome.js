@@ -1,9 +1,11 @@
 import { useState, useContext } from 'react';
 import { DBContext } from '@/contexts/DBContext';
+import { UserContext } from '@/contexts/UserContext';
 
 const useModalHome = () => {
 
   const { bookies } = useContext(DBContext);
+  const { userBalance, setUserBalance } = useContext(UserContext);
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
