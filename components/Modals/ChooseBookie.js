@@ -1,19 +1,15 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
-import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { bookieImages } from '@/constants/bookieConstants';
 import useTheme from '@/hooks/useTheme';
-import draftkings from '@/assets/images/DraftKings.png';
-import fanduel from '@/assets/images/FanDuel.jpg';
 
 export default function ChooseBookie({ visible, close, selectBookie }) {
 
     const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor, grayBackground } = useTheme();
 
     const { userBalance } = useContext(UserContext);
-    const { bookies } = useContext(DBContext);
 
     const getBalance = (bookieName) => {
         const bookie = userBalance.find((b) => b.bookieName === bookieName);
