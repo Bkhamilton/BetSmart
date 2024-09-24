@@ -208,3 +208,12 @@ export const retrieveMarketsDB = async (db, gameId, markets) => {
     console.error(error);
   }
 }
+
+export const retrieveBig3Markets = async (db, gameId) => {
+  try {
+    const markets = ['spread', 'moneyline', 'total_over_under'];
+    return await retrieveMarketsDB(db, gameId, markets);
+  } catch (error) {
+    console.error(error);
+  }
+}
