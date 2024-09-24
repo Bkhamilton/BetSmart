@@ -137,7 +137,7 @@ export default function HomeScreen() {
     };
   
     fetchData();
-  }, [triggerFetch]);
+  }, [triggerFetch, trigger]);
 
   useEffect(() => {
     if (user) {
