@@ -74,3 +74,59 @@ export const deleteBetMarket = async (db, betMarketId) => {
     throw error;
   }
 };
+
+export const getMoneyline = async (db, gameId) => {
+  try {
+    const moneyline = await db.getAllAsync(`
+      SELECT 
+        bm.id,
+        bm.gameId,
+        bm.marketType,
+        bm.timestamp,
+        bm.value,
+        bm.odds,
+        bm.overUnder,
+        bm.betTargetId,
+        bm.bookieId
+      FROM 
+        BetMarkets bm
+      INNER JOIN (
+        SELECT 
+          betTargetId, 
+          MIN(timestamp) as oldestTimestamp
+        FROM 
+          BetMarkets
+        WHERE 
+          gameId = ? AND marketType = "moneyline"
+        GROUP BY 
+          betTargetId
+      ) oldest ON bm.betTargetId = oldest.betTargetId AND bm.timestamp = oldest.oldestTimestamp
+      WHERE 
+        bm.gameId = ? AND bm.marketType = "moneyline"
+    `, [gameId, gameId]);
+    return moneyline;
+  } catch (error) {
+    console.error('Error getting moneyline:', error);
+    throw error;
+  }
+}
+
+export const getSpread = async (db, gameId) => {
+  try {
+    const spread = await db.getAllAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = "spread"', [gameId]);
+    return spread;
+  } catch (error) {
+    console.error('Error getting spread:', error);
+    throw error;
+  }
+}
+
+export const getTotalOverUnder = async (db, gameId) => {
+  try {
+    const totalOverUnder = await db.getAllAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = "total_over_under"', [gameId]);
+    return totalOverUnder;
+  } catch (error) {
+    console.error('Error getting total over under:', error);
+    throw error;
+  }
+}

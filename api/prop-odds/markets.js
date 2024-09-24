@@ -2,8 +2,8 @@ import secrets from "@/secrets";
 import { getTeamsByAbbreviation } from "@/db/general/Teams";
 import { getBookieByName } from "@/db/general/Bookies";
 import { getBetTargetId, getBetTargetIdByGameId } from "@/db/bet-general/BetTargets";
-import { getBetMarketByGame, insertBetMarket } from "@/db/api/BetMarkets";
-import { insertMarketFetchHistory, getLastMarketFetchedByGame, marketFetchedOnDate } from '@/db/api/MarketFetchHistory';
+import { getBetMarketByGame, insertBetMarket, getMoneyline, getSpread, getTotalOverUnder } from "@/db/api/BetMarkets";
+import { insertMarketFetchHistory, marketFetchedOnDate } from '@/db/api/MarketFetchHistory';
 
 export const getMarkets = async (gameId) => {
     try {
@@ -209,6 +209,24 @@ export const retrieveBig3Markets = async (db, gameId) => {
   try {
     const markets = ['spread', 'moneyline', 'total_over_under'];
     return await retrieveMarketsDB(db, gameId, markets);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export const retrieveBig3MarketsByGame = async (db, gameId) => {
+  try {
+    let data = [];
+
+    // retrieve Moneyline
+    data.push({ 'moneyline' : await getMoneyline(db, gameId)});
+  
+    // retrieve Spread
+    data.push({ 'spread' : await getSpread(db, gameId)});
+
+    // retrieve Total Over/Under
+    data.push({ 'total_over_under' : await getTotalOverUnder(db, gameId)});
+
   } catch (error) {
     console.error(error);
   }
