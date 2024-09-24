@@ -430,3 +430,52 @@ export const playoffBets = [
     ]
   }
 ];
+
+export const betSlipsRaw = [{
+  id: 1,
+  betAmount: 20,
+  betWon: 40,
+  betStatus: 'won'
+},
+{
+  id: 2,
+  betAmount: 30,
+  betWon: 0,
+  betStatus: 'lost'
+},
+{
+  id: 3,
+  betAmount: 10,
+  betWon: 20,
+  betStatus: 'won'
+},
+{
+  id: 4,
+  betAmount: 40,
+  betWon: 0,
+  betStatus: 'lost'
+},
+{
+  id: 5,
+  betAmount: 20,
+  betWon: 40,
+  betStatus: 'won'
+},
+{
+  id: 6,
+  betAmount: 30,
+  betWon: 0,
+  betStatus: 'lost'
+},
+{
+  id: 7,
+  betAmount: 10,
+  betWon: 20,
+  betStatus: 'won'
+},
+{
+  id: 8,
+  betAmount: 40,
+  betWon: 0,
+  betStatus: 'lost'
+}]
