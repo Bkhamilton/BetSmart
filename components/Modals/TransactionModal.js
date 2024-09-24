@@ -3,8 +3,7 @@ import { StyleSheet, Image, TouchableWithoutFeedback, Keyboard, Platform } from 
 import { TouchableOpacity, Text, View, Modal, TextInput } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import { UserContext } from '@/contexts/UserContext';
-import draftkings from '@/assets/images/DraftKings.png';
-import fanduel from '@/assets/images/FanDuel.jpg';
+import { bookieImages } from '@/constants/bookieConstants';
 import useTheme from '@/hooks/useTheme';
 
 export default function TransactionModal({ visible, close, title, bookie, bookieId, onConfirm  }) {
@@ -21,12 +20,8 @@ export default function TransactionModal({ visible, close, title, bookie, bookie
     const totalBalance = userBalance ? userBalance.reduce((sum, item) => sum + item.balance, 0) : 0;
     selectedBookie = { bookie: 'Total', balance: totalBalance };
   }
+  
   const initialAmount = selectedBookie.balance;
-
-  const bookieImages = {
-    'DraftKings': draftkings,
-    'FanDuel': fanduel,
-  };
 
   const handleClose = () => {
     setAmount('');
