@@ -16,7 +16,6 @@ import OpenBets from '@/components/Home/BetReview/OpenBets';
 import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
 import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
-import { DBContext } from '@/contexts/DBContext';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import { getBalanceByUser, updateBalance, updateUserBalance } from '@/db/user-specific/Balance';
 import { getAllBookies, getBookies } from '@/db/general/Bookies';
@@ -24,66 +23,46 @@ import { getUser } from '@/db/user-specific/Users';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
 import { insertUserSession } from '@/db/user-specific/UserSessions';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
-import { insertBetSlipResult } from '@/db/betslips/BetSlipsResults';
-import { insertLegResult } from '@/db/betslips/LegsResults';
-import { insertParticipantBetResult } from '@/db/betslips/ParticipantBetsResults';
+
+import { confirmBetResults } from '@/utils/dbHelpers';
+import useModalHome from '@/hooks/useModalHome';
 
 export default function HomeScreen() {
 
   const db = useSQLiteContext();
 
   const { user, setUserBalance, trigger, setTrigger } = useContext(UserContext);
-  const { bookies } = useContext(DBContext);
 
-  const [loginModalVisible, setLoginModalVisible] = useState(false);
-  const [signUpModalVisible, setSignUpModalVisible] = useState(false);
-  const [transactionModalVisible, setTransactionModalVisible] = useState(false);
-  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
-
-  const [transactionTitle, setTransactionTitle] = useState('Deposit');
-  const [transactionBookie, setTransactionBookie] = useState('DraftKings');
-  const [transactionBookieId, setTransactionBookieId] = useState(1);
-
-  const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
-  
-  const [userTransactions, setUserTransactions] = useState([]);
-
-  const [betSlips, setBetSlips] = useState([]);
+  const {
+    loginModalVisible,
+    signUpModalVisible,
+    transactionModalVisible,
+    confirmModalVisible,
+    transactionTitle,
+    transactionBookie,
+    transactionBookieId,
+    confirmedBetSlip,
+    userTransactions, setUserTransactions,
+    betSlips, setBetSlips,
+    openSignUpModal,
+    closeSignUpModal,
+    openLoginModal,
+    closeLoginModal,
+    openConfirmModal,
+    closeConfirmModal,
+    openTransactionModal,
+    closeTransactionModal,
+  } = useModalHome();
 
   const [triggerFetch, setTriggerFetch] = useState(false);
-
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = () => {
     setRefreshing(true);
     // Add your data reloading logic here
-    // For example, re-fetch the betSlips data
     setTriggerFetch(prev => !prev);
-    setTrigger(prev => !prev);
-
     setRefreshing(false);
   };
-  
-  function openSignUpModal() {
-    setSignUpModalVisible(true);
-  }
-  function closeSignUpModal() {
-    setSignUpModalVisible(false);
-  }
-
-  function openLoginModal() {
-    setLoginModalVisible(true);
-  }
-  function closeLoginModal() {
-    setLoginModalVisible(false);
-  }
-  function openConfirmModal(betSlip) {
-    setConfirmedBetSlip(betSlip);
-    setConfirmModalVisible(true);
-  }
-  function closeConfirmModal() {
-    setConfirmModalVisible(false);
-  }
 
   async function login(username, password) {
     
@@ -101,22 +80,6 @@ export default function HomeScreen() {
     closeLoginModal();
 
     return true;
-  }
-
-  function updateTransactionInfo(title, balance, bookie) {
-    setTransactionTitle(title);
-    setTransactionBookie(bookie);
-    const curBookie = bookies.find(item => item.name === bookie);
-    setTransactionBookieId(curBookie.id);
-    setUserBalance(balance);
-  }
-
-  function openTransactionModal(type, balance, bookie) {
-    updateTransactionInfo(type, balance, bookie);
-    setTransactionModalVisible(true);
-  }
-  function closeTransactionModal() {
-    setTransactionModalVisible(false);
   }
 
   const router = useRouter();
@@ -147,14 +110,13 @@ export default function HomeScreen() {
     }
   }, [user]);
 
-  const onConfirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
+  const confirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
     updateBalance(db, bookieId, updatedBalance, user.id).then(() => {
       setUserBalance(prevBalances => 
         prevBalances.map(item => 
           item.bookieId === bookieId ? { ...item, balance: Number(updatedBalance) } : item
         )
       );
-      closeTransactionModal();
     });
     const timestamp = new Date().toISOString();
     const description = `${title} for ${transactionAmount} with ${transactionBookie}`;
@@ -164,29 +126,15 @@ export default function HomeScreen() {
     });
   }
 
+  const onConfirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
+    confirmTransaction(bookieId, title, initialAmount, transactionAmount, updatedBalance);
+    closeTransactionModal();
+  }
+
   const onConfirmBetSlip = (betSlip) => {
-    // For each Leg in betslip.bets.legs, insert into LegResults table with betslipId, legId, result
-    betSlip.bets.forEach(bet => {
-      bet.legs.forEach(leg => {
-        insertLegResult(db, leg.legId, leg.result);
-      });
-    });
+    confirmBetResults(db, betSlip, user);
 
-    // For each Bet in betslip.bets, insert into BetResults table with betslipId, betId, result
-    betSlip.bets.forEach(bet => {
-      insertParticipantBetResult(db, bet.id, bet.result);
-    });
-
-    // Insert into BetSlipResults table with betslipId, result
-    insertBetSlipResult(db, betSlip.id, betSlip.result);
-
-    // Update user balance in the database
-    if (betSlip.result) {
-      updateUserBalance(db, betSlip.bookieId, betSlip.winnings.toFixed(2), user.id);
-    }
-
-
-    setConfirmModalVisible(false);
+    closeConfirmModal();
 
     setTriggerFetch(prev => !prev);
     setTrigger(prev => !prev);
@@ -252,9 +200,3 @@ export default function HomeScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
