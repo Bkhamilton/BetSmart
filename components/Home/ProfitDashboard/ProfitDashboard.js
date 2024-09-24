@@ -22,13 +22,14 @@ export default function ProfitDashboard({ openTransaction, transactions }) {
     const [arrowColor, setArrowColor] = useState('red');
 
     useEffect(() => {
+        if (!user) return;
         getBetSlipResultsWinnings(db, user.id).then((res) => {
             setTotalWinnings(res[0].totalWinnings);
         });
         getBetSlipResultsBetAmount(db, user.id).then((res) => {
             setTotalBetAmount(res[0].totalBetAmount);
         });
-    }, [trigger]);
+    }, [trigger, user]);
 
     useEffect(() => {
         const calculatedProfit = totalWinnings - totalBetAmount;
