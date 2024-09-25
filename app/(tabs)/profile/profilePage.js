@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet, ActivityIndicator } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import EditScreenInfo from '@/components/EditScreenInfo';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { UserContext } from '@/contexts/UserContext';
-import ProfileMainInfo from '../../../components/Profile/ProfileMainInfo';
+import ProfileMainInfo from '@/components/Profile/ProfileMainInfo';
 import UserFavorites from '@/components/Profile/UserFavorites';
-import Achievements from '../../../components/Profile/Achievements';
+import Achievements from '@/components/Profile/Achievements';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
 

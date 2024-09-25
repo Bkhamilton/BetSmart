@@ -16,7 +16,6 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import { getBalanceByUser, updateBalance, updateUserBalance } from '@/db/user-specific/Balance';
-import { getAllBookies, getBookies } from '@/db/general/Bookies';
 import { getUser } from '@/db/user-specific/Users';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
 import { insertUserSession } from '@/db/user-specific/UserSessions';
