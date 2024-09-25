@@ -90,6 +90,7 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
                     stat="moneyline"
                     value={awayTeamAbv} 
                     odds="N/A"
+                    bookieId={1}
                 />
                 <BettingLine
                     type="Main"
@@ -97,6 +98,7 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
                     stat="moneyline" 
                     value={homeTeamAbv} 
                     odds="N/A"
+                    bookieId={1}
                 />
             </View>
         );

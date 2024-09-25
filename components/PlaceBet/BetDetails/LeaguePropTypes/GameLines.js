@@ -29,7 +29,7 @@ export default function GameLines() {
         fetchMarketProps();
     }, []);
 
-    function BettingLine({ type, target, stat, value, overUnder, odds }) {
+    function BettingLine({ type, target, stat, value, overUnder, odds, bookieId }) {
 
         const getValue = (value) => {
             // If value is a number, return it as is
@@ -60,7 +60,7 @@ export default function GameLines() {
         return (
             <TouchableOpacity 
                 style={[styles.propContainer, { borderColor: grayBorder }]}
-                onPress={() => selectProp({ game: currentGame, type, target, stat, value, overUnder, odds })}
+                onPress={() => selectProp({ game: currentGame, type, target, stat, value, overUnder, odds, bookieId })}
             >
                 {/[0-9]/.test(value) ? (
                     <>
@@ -201,6 +201,7 @@ export default function GameLines() {
                 value={line.value.toString()}
                 overUnder={line.overUnder}
                 odds={line.odds}
+                bookieId={line.bookieId}
               />
             ))}
           </View>
