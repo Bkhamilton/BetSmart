@@ -3,8 +3,7 @@ import { StyleSheet, Image, Pressable } from 'react-native';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { UserContext } from '@/contexts/UserContext';
-import draftkings from '@/assets/images/DraftKings.png';
-import fanduel from '@/assets/images/FanDuel.jpg';
+import { bookieImages } from '@/constants/bookieConstants';
 import useTheme from '@/hooks/useTheme';
 
 export default function BalanceBox({ openModal }) {
@@ -21,19 +20,20 @@ export default function BalanceBox({ openModal }) {
         }
     }, [trigger]);
 
-    const bookieImages = {
-        'DraftKings': draftkings,
-        'FanDuel': fanduel,
-    };
-
     const { mainGreen, mainBlue } = useTheme();
 
-    // Function to switch between bookies
     const switchBookie = () => {
-        const newBookie = bookie === 'DraftKings' ? 'FanDuel' : 'DraftKings';
-        const newBookieId = bookieId === 1 ? 2 : 1;
-        setBookie(newBookie);
+        // use userBalance to determine which bookies are available
+        // cycle to next id in userBalance, if it doesn't exist, cycle to first
+        // curBookie is the bookie object with the current bookieId
+        const bookieIds = userBalance.map(obj => obj.bookieId);
+        let newBookieId = bookieId + 1;
+        if (!bookieIds.includes(newBookieId)) {
+            newBookieId = 1;
+        }
+        const newBookie = userBalance.find(obj => obj.bookieId === newBookieId).bookieName;
         setBookieId(newBookieId);
+        setBookie(newBookie);
     };
 
     const backgroundColor = bookie === 'DraftKings' ? mainGreen : mainBlue;
