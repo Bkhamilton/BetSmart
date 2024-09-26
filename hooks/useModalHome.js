@@ -18,7 +18,6 @@ const useModalHome = () => {
 
   const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
 
-  const [userTransactions, setUserTransactions] = useState([]);
   const [betSlips, setBetSlips] = useState([]);
 
   function openSignUpModal() {
@@ -67,7 +66,6 @@ const useModalHome = () => {
     transactionBookie, setTransactionBookie,
     transactionBookieId, setTransactionBookieId,
     confirmedBetSlip, setConfirmedBetSlip,
-    userTransactions, setUserTransactions,
     betSlips, setBetSlips,
     openSignUpModal,
     closeSignUpModal,

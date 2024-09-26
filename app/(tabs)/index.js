@@ -39,7 +39,6 @@ export default function HomeScreen() {
     transactionBookie,
     transactionBookieId,
     confirmedBetSlip,
-    userTransactions, setUserTransactions,
     betSlips, setBetSlips,
     openSignUpModal,
     closeSignUpModal,
@@ -98,14 +97,6 @@ export default function HomeScreen() {
   
     fetchData();
   }, [triggerFetch, trigger]);
-
-  useEffect(() => {
-    if (user) {
-      getTransactionsByUser(db, user.id).then((transactions) => {
-        setUserTransactions(transactions);
-      });
-    }
-  }, [user]);
 
   const confirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
     updateBalance(db, bookieId, updatedBalance, user.id).then(() => {
