@@ -2,18 +2,32 @@ import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet, Image, Pressable } from 'react-native';
 import { TouchableOpacity, Text, View, ScrollView } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
+import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
+import { getTransactionsByUser } from '@/db/user-specific/Transactions';
 import BankButtons from './BankButtons';
 import RecentTransactions from './RecentTransactions';
 
-export default function BalanceChecker({ openTransaction, transactions }) {
+export default function BalanceChecker({ openTransaction }) {
 
-    const { userBalance } = useContext(UserContext);
+    const { user, userBalance } = useContext(UserContext);
+
+    const db = useSQLiteContext();
 
     const { mainGreen, mainBlue, accentBlue } = useTheme();
 
     const [bookie, setBookie] = useState('DraftKings');
     const [bookieId, setBookieId] = useState(1);
+
+    const [transactions, setTransactions] = useState([]);
+
+    useEffect(() => {
+        if (user) {
+          getTransactionsByUser(db, user.id).then((transactions) => {
+            setTransactions(transactions);
+          });
+        }
+    }, [user]);
 
     const selectBookie = () => {
       setBookie((prevBookie) => {
@@ -87,7 +101,12 @@ export default function BalanceChecker({ openTransaction, transactions }) {
             ${balanceValue.toFixed(2)}
           </Text>
         </View>
-        { transactions.length > 0 ? <RecentTransactions transactions={transactions} bookieId={bookieId}/> :  <RecentTransactionsEmpty /> }
+        { 
+          transactions.length > 0 ? 
+            <RecentTransactions transactions={transactions} bookieId={bookieId}/> 
+              :  
+            <RecentTransactionsEmpty /> 
+        }
       </Pressable>
     );
   }

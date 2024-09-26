@@ -182,7 +182,6 @@ export default function HomeScreen() {
       >
         <ProfitDashboard 
           openTransaction={openTransactionModal} 
-          transactions={userTransactions}
         />
         { 
           betSlips && betSlips.length > 0 && (

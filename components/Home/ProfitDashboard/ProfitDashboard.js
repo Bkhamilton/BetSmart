@@ -6,9 +6,10 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
 import { getBetSlipResultsBetAmount, getBetSlipResultsWinnings } from '@/db/betslips/BetSlipsResults';
 import useTheme from '@/hooks/useTheme';
+import { getTransactionsByUser } from '@/db/user-specific/Transactions';
 import BalanceChecker from '@/components/Home/ProfitDashboard/BalanceChecker/BalanceChecker';
 
-export default function ProfitDashboard({ openTransaction, transactions }) {
+export default function ProfitDashboard({ openTransaction }) {
 
     const { greenText, grayBackground, grayBorder } = useTheme();
     const { user, trigger, setTrigger } = useContext(UserContext);
@@ -38,13 +39,12 @@ export default function ProfitDashboard({ openTransaction, transactions }) {
         setArrowColor(calculatedProfit > 0 ? 'green' : 'red');
     }, [totalWinnings, totalBetAmount]);
 
-
     const BetResults = () => {
       return (
         <View style={styles.row}>
             <View style={[styles.leftBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
                 <Text style={{ paddingLeft: 16 }}>Total Won</Text>
-                <Text style={[styles.moneyText, { color: greenText }]}>${totalWinnings}</Text>
+                <Text style={[styles.moneyText, { color: greenText }]}>${totalWinnings.toFixed(2)}</Text>
             </View>
             <View style={[styles.indicator, { backgroundColor: 'transparent' }]}>
                 <View style={styles.circle}>
@@ -53,7 +53,7 @@ export default function ProfitDashboard({ openTransaction, transactions }) {
             </View>
             <View style={[styles.rightBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
                 <Text>Total Bet</Text>
-                <Text style={[styles.moneyText, { color: '#ff5757' }]}>${totalBetAmount}</Text>
+                <Text style={[styles.moneyText, { color: '#ff5757' }]}>${totalBetAmount.toFixed(2)}</Text>
             </View>
         </View>
       );
@@ -63,7 +63,6 @@ export default function ProfitDashboard({ openTransaction, transactions }) {
     <>
         <BalanceChecker 
             openTransaction={openTransaction} 
-            transactions={transactions}
         />
         <BetResults />
     </>
