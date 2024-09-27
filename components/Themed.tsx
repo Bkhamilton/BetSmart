@@ -61,6 +61,11 @@ export function View(props: ViewProps) {
   return <DefaultView style={[{ backgroundColor, borderColor }, style]} {...otherProps} />;
 }
 
+export function ClearView(props: ViewProps) {
+  const { style, ...otherProps } = props;
+  return <DefaultView style={[{ backgroundColor: 'transparent' }, style]} {...otherProps} />;
+}
+
 export function TouchableOpacity(props: TouchableOpacityProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');

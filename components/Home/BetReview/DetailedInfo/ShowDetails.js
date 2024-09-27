@@ -1,42 +1,36 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import BetComponent from './BetComponent';
 import { getDateFull } from '@/utils/dateFunctions';
-import draftkings from '@/assets/images/DraftKings.png';
-import fanduel from '@/assets/images/FanDuel.jpg';
+import { bookieImages } from '@/constants/bookieConstants';
 
 export default function ShowDetails({ betSlip, confirm }) {
 
     const { iconColor, grayBackground, grayBorder, mainGreen } = useTheme();
-
-    const bookieImages = {
-        'DraftKings': draftkings,
-        'FanDuel': fanduel,
-    };
 
     const confirmBetSlip = () => {
         confirm(betSlip);
     };
 
     return (
-        <View style={{ backgroundColor: 'transparent' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+        <ClearView>
+            <View style={styles.spreadContainer}>
                 <Text style={styles.betText}>{getDateFull(betSlip.date)}</Text>
                 <Text style={styles.betText}>{betSlip.odds}</Text>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
-                <View style={{ backgroundColor: 'transparent' }}>
+            <View style={styles.spreadContainer}>
+                <ClearView>
                     <Text style={styles.betText}>Bet</Text>
                     <Text style={styles.betText}>${betSlip.betAmount.toFixed(2)}</Text>
-                </View>
-                <View style={{ backgroundColor: 'transparent' }}>
+                </ClearView>
+                <ClearView>
                     <Text style={styles.betText}>To Win</Text>
                     <Text style={styles.betText}>${betSlip.winnings.toFixed(2)}</Text>
-                </View>
+                </ClearView>
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: 'transparent' }}>
+            <View style={styles.spreadContainer}>
                 <Image source={bookieImages[betSlip.bookieName]} style={{ width: 20, height: 20, borderRadius: 2 }} />
                 <Text style={styles.betText}>{betSlip.bookieName}</Text>
             </View>
@@ -49,7 +43,7 @@ export default function ShowDetails({ betSlip, confirm }) {
             >
                 <Text style={{ color: iconColor }}>Confirm Bet</Text>
             </TouchableOpacity>
-        </View>
+        </ClearView>
     );
 }
 
@@ -71,5 +65,10 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'center', 
         marginTop: 10,
+    },
+    spreadContainer : {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: 'transparent',
     }
 });
