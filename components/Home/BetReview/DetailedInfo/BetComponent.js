@@ -10,6 +10,9 @@ export default function BetComponent({ bet }) {
                 <Text>{bet.league}</Text>
                 <Text>{bet.odds}</Text>
             </View>
+            <View style={{ backgroundColor: 'transparent' }}>
+                <Text>{bet.date}</Text>
+            </View>
             <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', backgroundColor: 'transparent' }}>
                 <Text style={{ fontSize: 18, fontWeight: '600' }}>{bet.homeTeamAbv} vs {bet.awayTeamAbv}</Text>
             </View>
