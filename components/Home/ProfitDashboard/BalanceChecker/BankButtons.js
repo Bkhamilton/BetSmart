@@ -3,17 +3,11 @@ import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome6, FontAwesome } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
-import draftkings from '@/assets/images/DraftKings.png';
-import fanduel from '@/assets/images/FanDuel.jpg';
+import { bookieImages } from '@/constants/bookieConstants';
 
 export default function BankButtons({ selectBookie, openTransaction, bookie }) {
 
     const { accentGreen, iconColor } = useTheme();
-
-    const bookieImages = {
-        'DraftKings': draftkings,
-        'FanDuel': fanduel,
-    };
 
     const selectTransaction = (type) => {
         openTransaction(type);
