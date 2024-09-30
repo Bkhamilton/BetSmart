@@ -9,7 +9,6 @@ import { getAllValidParticipantBets } from '@/db/betslips/ParticipantBets';
 import { getAllValidLegs } from '@/db/betslips/Legs';
 import useTheme from '@/hooks/useTheme';
 
-import Colors from '@/constants/Colors';
 import ChooseBetType from '@/components/Profile/BetHistory/ChooseBetType';
 import BetSlipDisplay from '@/components/Profile/BetHistory/BetSlipDisplay/BetSlipDisplay';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
