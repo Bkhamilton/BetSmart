@@ -4,7 +4,7 @@ import Colors from '@/constants/Colors';
 export default function useTheme() {
   const colorScheme = useColorScheme();
 
-  return {
+  const themeColors = {
     text: colorScheme === 'dark' ? Colors.dark.text : Colors.light.text,
     grayText: colorScheme === 'dark' ? '#dedede' : '#1f1f1f',
     borderColor: colorScheme === 'dark' ? Colors.dark.border : Colors.light.border,
@@ -19,5 +19,25 @@ export default function useTheme() {
     grayBorder: colorScheme === 'dark' ? Colors.dark.grayBorder : Colors.light.grayBorder,
     redText: colorScheme === 'dark' ? Colors.dark.redText : Colors.light.redText,
     // Add other color definitions here...
+  }
+
+  const bookieColors = {
+    'DraftKings': themeColors.mainGreen,
+    'FanDuel': themeColors.mainBlue,
+    'BetMGM': themeColors.grayBackground,
+    'Total': themeColors.mainGreen,
+  };
+
+  const bookieBorderColors = {
+    'DraftKings': themeColors.accentGreen,
+    'FanDuel': themeColors.accentBlue,
+    'BetMGM': themeColors.iconColor,
+    'Total': themeColors.mainGreen,
+  };
+
+  return {
+    ...themeColors,
+    bookieColors,
+    bookieBorderColors,
   };
 }
