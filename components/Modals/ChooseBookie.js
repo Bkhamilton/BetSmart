@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
-import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
+import { TouchableOpacity, Text, View, Modal, ClearView } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
 import { bookieImages } from '@/constants/bookieConstants';
 import useTheme from '@/hooks/useTheme';
 
-export default function ChooseBookie({ visible, close, selectBookie }) {
+export default function ChooseBookie({ visible, close, selectBookie, extra }) {
 
-    const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor, grayBackground } = useTheme();
+    const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor, grayBackground, grayBorder } = useTheme();
 
     const { userBalance } = useContext(UserContext);
 
@@ -40,6 +40,28 @@ export default function ChooseBookie({ visible, close, selectBookie }) {
         );
     }
 
+    // button to select 'Total' balance
+    const TotalButton = () => {
+        return (
+            <TouchableOpacity 
+                style={[styles.bookieButton, { backgroundColor: mainGreen, borderColor: mainGreen }]}           
+            >
+                <Text style={styles.balanceText}>${userBalance.reduce((acc, b) => acc + b.balance, 0).toFixed(2)}</Text>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Total</Text>
+            </TouchableOpacity>
+        );
+    }
+
+    const AddBookieButton = () => {
+        return (
+            <TouchableOpacity 
+                style={[styles.addBookieButton, { backgroundColor: grayBackground, borderColor: grayBorder }]}           
+            >
+                <Text style={styles.addBookieText}>Add Bookie</Text>
+            </TouchableOpacity>
+        );
+    }
+
     return (
         <Modal
             animationType="fade"
@@ -56,6 +78,14 @@ export default function ChooseBookie({ visible, close, selectBookie }) {
                             userBalance.map((b) => {
                                 return <BookieButton key={b.bookieId} balance={b} />
                             })
+                        }
+                        {
+                            extra && (
+                                <ClearView style={{ paddingVertical: 4 }}>
+                                    <TotalButton />
+                                    <AddBookieButton />
+                                </ClearView>
+                            )
                         }
                     </View>
                 </View>
@@ -96,5 +126,17 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         width: 80,
+    },
+    addBookieButton: {
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 2,
+    },
+    addBookieText: {
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
