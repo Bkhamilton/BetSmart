@@ -21,7 +21,7 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
     const { user, userBalance } = useContext(UserContext);
     const { bookies } = useContext(DBContext);
 
-    const { iconColor, redText, mainGreen, mainBlue, grayBackground, grayBorder } = useTheme();
+    const { iconColor, redText, mainGreen, mainBlue, grayBackground, grayBorder, bookieColors } = useTheme();
 
     const [wager, setWager] = useState(0);
     const [winnings, setWinnings] = useState(0);
@@ -33,12 +33,6 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
     const db = useSQLiteContext();
 
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
-
-    const bookieColors = {
-        'DraftKings': mainGreen,
-        'FanDuel': mainBlue,
-        'BetMGM': grayBackground,
-    };
 
     // Function to convert American odds to decimal odds
     const convertAmericanToDecimalOdds = (americanOdds) => {

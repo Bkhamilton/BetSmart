@@ -14,7 +14,7 @@ export default function BalanceChecker({ openTransaction, openChooseBookie }) {
 
     const db = useSQLiteContext();
 
-    const { mainGreen, mainBlue, accentBlue } = useTheme();
+    const { mainGreen, mainBlue, accentBlue, bookieColors, bookieBorderColors } = useTheme();
 
     const [bookie, setBookie] = useState('DraftKings');
     const [bookieId, setBookieId] = useState(1);
@@ -53,21 +53,6 @@ export default function BalanceChecker({ openTransaction, openChooseBookie }) {
     const selectTransaction = (type) => {
         openTransaction(type, userBalance, bookie);
     };
-
-    const bookieColors = {
-      DraftKings: {
-        backgroundColor: mainGreen,
-        borderColor: mainGreen,
-      },
-      FanDuel: {
-        backgroundColor: mainBlue,
-        borderColor: accentBlue,
-      },
-      Total: {
-        backgroundColor: mainGreen,
-        borderColor: mainGreen,
-      },
-    }
     
     const balanceValue = bookie === 'Total' 
       ? userBalance?.reduce((total, item) => total + item.balance, 0) 
@@ -85,8 +70,8 @@ export default function BalanceChecker({ openTransaction, openChooseBookie }) {
       <Pressable 
         style={({pressed}) => ({
           ...styles.centeredBox,
-          backgroundColor: bookieColors[bookie].backgroundColor,
-          borderColor: bookieColors[bookie].borderColor,
+          backgroundColor: bookieColors[bookie],
+          borderColor: bookieBorderColors[bookie],
           opacity: pressed ? 0.8 : 1,
         })}
         onPress={openChooseBookie}

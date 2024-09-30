@@ -20,7 +20,7 @@ export default function BalanceBox({ openModal }) {
         }
     }, [trigger]);
 
-    const { mainGreen, mainBlue } = useTheme();
+    const { mainGreen, mainBlue, bookieColors, bookieBorderColors } = useTheme();
 
     const switchBookie = () => {
         // use userBalance to determine which bookies are available
@@ -36,15 +36,12 @@ export default function BalanceBox({ openModal }) {
         setBookie(newBookie);
     };
 
-    const backgroundColor = bookie === 'DraftKings' ? mainGreen : mainBlue;
-    const borderColor = bookie === 'DraftKings' ? mainGreen : mainBlue;
-
     return (
         <Pressable 
             style={({pressed}) => ({
                 ...styles.bankButton,
-                backgroundColor: backgroundColor,
-                borderColor: borderColor,
+                backgroundColor: bookieColors[bookie],
+                borderColor: bookieColors[bookie],
                 opacity: pressed ? 0.6 : 1,
             })}
             onPress={() => openModal()}

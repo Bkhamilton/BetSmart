@@ -7,25 +7,13 @@ import useTheme from '@/hooks/useTheme';
 
 export default function ChooseBookie({ visible, close, selectBookie, extra }) {
 
-    const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor, grayBackground, grayBorder } = useTheme();
+    const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor, grayBackground, grayBorder, bookieColors, bookieBorderColors } = useTheme();
 
     const { userBalance } = useContext(UserContext);
 
     const getBalance = (bookieName) => {
         const bookie = userBalance.find((b) => b.bookieName === bookieName);
         return bookie ? bookie.balance : 0;
-    };
-
-    const bookieColors = {
-        'DraftKings': mainGreen,
-        'FanDuel': mainBlue,
-        'BetMGM': grayBackground,
-    };
-
-    const bookieBorderColors = {
-        'DraftKings': accentGreen,
-        'FanDuel': accentBlue,
-        'BetMGM': iconColor,
     };
 
     const BookieButton = ({ balance }) => {
