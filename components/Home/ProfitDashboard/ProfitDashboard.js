@@ -6,10 +6,9 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
 import { getBetSlipResultsBetAmount, getBetSlipResultsWinnings } from '@/db/betslips/BetSlipsResults';
 import useTheme from '@/hooks/useTheme';
-import { getTransactionsByUser } from '@/db/user-specific/Transactions';
 import BalanceChecker from '@/components/Home/ProfitDashboard/BalanceChecker/BalanceChecker';
 
-export default function ProfitDashboard({ openTransaction }) {
+export default function ProfitDashboard({ openTransaction, openChooseBookie }) {
 
     const { greenText, grayBackground, grayBorder } = useTheme();
     const { user, trigger, setTrigger } = useContext(UserContext);
@@ -63,6 +62,7 @@ export default function ProfitDashboard({ openTransaction }) {
     <>
         <BalanceChecker 
             openTransaction={openTransaction} 
+            openChooseBookie={openChooseBookie}
         />
         <BetResults />
     </>

@@ -8,7 +8,7 @@ import { getTransactionsByUser } from '@/db/user-specific/Transactions';
 import BankButtons from './BankButtons';
 import RecentTransactions from './RecentTransactions';
 
-export default function BalanceChecker({ openTransaction }) {
+export default function BalanceChecker({ openTransaction, openChooseBookie }) {
 
     const { user, userBalance } = useContext(UserContext);
 
@@ -89,6 +89,7 @@ export default function BalanceChecker({ openTransaction }) {
           borderColor: bookieColors[bookie].borderColor,
           opacity: pressed ? 0.8 : 1,
         })}
+        onPress={openChooseBookie}
       >
         <BankButtons
           selectBookie={selectBookie}

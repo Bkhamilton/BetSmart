@@ -9,6 +9,7 @@ import LoginPage from '@/components/Modals/LoginPage';
 import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets/YesterdaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
+import ChooseBookie from '@/components/Modals/ChooseBookie';
 import HomeHeader from '@/components/Home/HomeHeader';
 import OpenBets from '@/components/Home/BetReview/OpenBets';
 import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
@@ -35,11 +36,14 @@ export default function HomeScreen() {
     signUpModalVisible,
     transactionModalVisible,
     confirmModalVisible,
+    chooseBookieModalVisible,
     transactionTitle,
     transactionBookie,
     transactionBookieId,
     confirmedBetSlip,
     betSlips, setBetSlips,
+    openChooseBookieModal,
+    closeChooseBookieModal,
     openSignUpModal,
     closeSignUpModal,
     openLoginModal,
@@ -148,6 +152,16 @@ export default function HomeScreen() {
         onConfirm={onConfirmTransaction}
       />
       {
+        user && (
+          <ChooseBookie 
+            visible={chooseBookieModalVisible} 
+            close={closeChooseBookieModal} 
+            selectBookie={closeChooseBookieModal}
+            extra={true}
+          />
+        )
+      }
+      {
         confirmedBetSlip && confirmedBetSlip.bets && (
           <ConfirmBetSlip
             visible={confirmModalVisible}
@@ -173,6 +187,7 @@ export default function HomeScreen() {
       >
         <ProfitDashboard 
           openTransaction={openTransactionModal} 
+          openChooseBookie={openChooseBookieModal}
         />
         { 
           betSlips && betSlips.length > 0 && (
