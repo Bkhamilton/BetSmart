@@ -29,7 +29,7 @@ export default function HomeScreen() {
 
   const db = useSQLiteContext();
 
-  const { user, setUserBalance, trigger, setTrigger } = useContext(UserContext);
+  const { user, setUserBalance, trigger, setTrigger, userBalance } = useContext(UserContext);
 
   const {
     loginModalVisible,
@@ -152,7 +152,7 @@ export default function HomeScreen() {
         onConfirm={onConfirmTransaction}
       />
       {
-        user && (
+        user && userBalance && (
           <ChooseBookie 
             visible={chooseBookieModalVisible} 
             close={closeChooseBookieModal} 
