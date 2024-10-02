@@ -40,6 +40,7 @@ export default function HomeScreen() {
     transactionTitle,
     transactionBookie,
     transactionBookieId,
+    userTransactions, setUserTransactions,
     confirmedBetSlip,
     betSlips, setBetSlips,
     openChooseBookieModal,
@@ -102,6 +103,14 @@ export default function HomeScreen() {
     fetchData();
   }, [triggerFetch, trigger]);
 
+  useEffect(() => {
+    if (user) {
+      getTransactionsByUser(db, user.id).then((transactions) => {
+        setUserTransactions(transactions);
+      });
+    }
+  }, [user]);
+
   const confirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
     updateBalance(db, bookieId, updatedBalance, user.id).then(() => {
       setUserBalance(prevBalances => 
@@ -112,7 +121,7 @@ export default function HomeScreen() {
     });
     const timestamp = new Date().toISOString();
     const description = `${title} for ${transactionAmount} with ${transactionBookie}`;
-    insertTransaction(db, bookieId, user.id, title, initialAmount, transactionAmount, updatedBalance, timestamp, description)
+    insertTransaction(db, bookieId, user.id, title, initialAmount, transactionAmount, updatedBalance, timestamp, description);
     getTransactionsByUser(db, user.id).then((transactions) => {
       setUserTransactions(transactions);
     });
@@ -188,6 +197,7 @@ export default function HomeScreen() {
         <ProfitDashboard 
           openTransaction={openTransactionModal} 
           openChooseBookie={openChooseBookieModal}
+          transactions={userTransactions}
         />
         { 
           betSlips && betSlips.length > 0 && (
