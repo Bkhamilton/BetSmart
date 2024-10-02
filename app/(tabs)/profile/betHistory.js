@@ -4,9 +4,7 @@ import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useSQLiteContext } from 'expo-sqlite';
-import { getTodaysBetSlips, getOpenBetSlips } from '@/db/betslips/BetSlips';
-import { getAllValidParticipantBets } from '@/db/betslips/ParticipantBets';
-import { getAllValidLegs } from '@/db/betslips/Legs';
+import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 import useTheme from '@/hooks/useTheme';
 
 import ChooseBetType from '@/components/Profile/BetHistory/ChooseBetType';
@@ -42,7 +40,6 @@ export default function SettingsScreen() {
           const betSlips = await getOpenBetSlips(db);
           const betSlipsWithBets = await fillBetSlips(db, betSlips);
           setBetSlips(betSlipsWithBets);
-          console.log('Today\'s bet slips with bets and legs:', JSON.stringify(betSlipsWithBets, null, 2));
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -51,24 +48,32 @@ export default function SettingsScreen() {
       fetchData();
     }, []);
 
-    return (
-    <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <View style={{ flex: 0.2, }}>
-            <TouchableOpacity 
-              onPress={handleClose}
-            >
-              <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
-            </TouchableOpacity>  
-          </View>
-          <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={{ fontSize: 14, fontWeight: '600' }}>All Bets</Text>
-          </View>
-          <View style={{ flex: 0.2 }}>
+    const BetHistoryHeader = () => {
+      return (
+        <>
+          <View style={styles.headerContainer}>
+            <View style={{ flex: 0.2, }}>
+              <TouchableOpacity 
+                onPress={handleClose}
+              >
+                <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
+              </TouchableOpacity>  
+            </View>
+            <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{ fontSize: 14, fontWeight: '600' }}>All Bets</Text>
+            </View>
+            <View style={{ flex: 0.2 }}>
 
+            </View>
           </View>
-        </View>
-        <ChooseBetType selectType={changeType} type={selectedType}/>
+          <ChooseBetType selectType={changeType} type={selectedType}/>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <BetHistoryHeader/>
         <ScrollView>
           <BetSlipDisplay
             betSlips={betSlips}
@@ -76,7 +81,7 @@ export default function SettingsScreen() {
           >
           </BetSlipDisplay>
         </ScrollView>
-    </View>
+      </>
     );
 }
 
