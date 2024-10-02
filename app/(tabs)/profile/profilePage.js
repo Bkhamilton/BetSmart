@@ -10,6 +10,7 @@ import UserFavorites from '@/components/Profile/UserFavorites';
 import Achievements from '@/components/Profile/Achievements';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
+import ActiveBookies from '@/components/Profile/ActiveBookies';
 
 export default function ProfileScreen() {
 
@@ -75,20 +76,16 @@ export default function ProfileScreen() {
   }
   
   return (
-    <View style={styles.container}>
+    <>
       {user ? <ProfilePageHeader user={user} /> : <LoadingHeader /> }
       <ScrollView>
         <ProfileMainInfo /> 
         <UserFavorites league={"NBA"} team={"BOS"} player={"Zion Williamson"} bet={"Spread"}/>
+        <ActiveBookies />
         <Achievements />
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Personal Information</Text>
           {/* Add personal information components here */}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Betting History</Text>
-          {/* Add betting history components here */}
         </View>
 
         <View style={styles.section}>
@@ -116,14 +113,11 @@ export default function ProfileScreen() {
           {/* Add support/help components here */}
         </View>
       </ScrollView>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   profileHeader: {
     alignItems: 'center',
     marginVertical: 20,
