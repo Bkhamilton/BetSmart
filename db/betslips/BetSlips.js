@@ -89,6 +89,33 @@ export const getTotalBetSlips = async (db, userId) => {
     }
 };
 
+// Function to get total betSlips for a user per bookie
+export const getFavoriteBookie = async (db, userId) => {
+    try {
+        const favoriteBookie = await db.getAllAsync(`
+            SELECT 
+                COUNT(*) as count, 
+                bs.bookieId, 
+                b.name as name 
+            FROM 
+                BetSlips bs
+            LEFT JOIN 
+                Bookies b ON bs.bookieId = b.id
+            WHERE 
+                bs.userId = ?
+            GROUP BY 
+                bs.bookieId,
+                b.name
+            ORDER BY 
+                count DESC
+        `, [userId]);
+        return favoriteBookie[0];
+    } catch (error) {
+        console.error('Error fetching total bet slips per bookie:', error);
+        throw error;
+    }
+};
+
 // Function to insert a bet slip
 export const insertBetSlip = async (db, formatId, date, odds, betAmount, winnings, userId, bookieId) => {
     try {
