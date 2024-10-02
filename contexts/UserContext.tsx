@@ -18,6 +18,12 @@ interface Balance {
     userId: number;
     bookieId: number;
     balance: number;
+    bookieName: string;
+}
+
+interface Bookie {
+    id: number;
+    name: string;
 }
 
 interface UserContextValue {
@@ -25,6 +31,8 @@ interface UserContextValue {
     setUser: (user: User | null) => void;
     userBalance : Balance[] | null;
     setUserBalance : (userBalance : Balance[] | null) => void;
+    bookie: Bookie | null;
+    setBookie: (bookie: Bookie | null) => void;
     trigger: boolean;
     setTrigger: (trigger: boolean) => void;
 }
@@ -34,6 +42,8 @@ export const UserContext = createContext<UserContextValue>({
     setUser: () => {},
     userBalance : null,
     setUserBalance : () => {},
+    bookie: null,
+    setBookie: () => {},
     trigger: false,
     setTrigger: () => {},
 });
@@ -45,8 +55,10 @@ interface UserContextProviderProps {
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [userBalance, setUserBalance] = useState<Balance[] | null>(null);
+    const [bookie, setBookie] = useState<Bookie | null>(null);
 
     const [trigger, setTrigger] = useState<boolean>(false);
+    const [fetchBalance, setFetchBalance] = useState<boolean>(false);
 
     const db = useSQLiteContext();
 
@@ -93,13 +105,39 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         }
 
         fetchUserBalance();
+        setFetchBalance(true);
     }, [trigger]);
+
+    useEffect(() => {
+        if (fetchBalance) {
+            const fetchBookie = async () => {
+                const mostRecentActiveUserSession = await getMostRecentActiveUserSession(db);
+                if (mostRecentActiveUserSession) {
+                    getBalanceByUser(db, mostRecentActiveUserSession.userId).then((newUserBalance) => {
+                        setBookie({ id: newUserBalance[0].bookieId, name: newUserBalance[0].bookieName });
+                    });
+                } else {
+                    // No active user session, add default values here
+                    const defaultBookie = {
+                        id: 0,
+                        name: 'Default Bookie',
+                    };
+                    setBookie(defaultBookie);
+                }
+            }
+    
+            fetchBookie();
+        }
+
+    }, [fetchBalance]);
 
     const value = {
         user,
         setUser,
         userBalance,
         setUserBalance,
+        bookie,
+        setBookie,
         trigger,
         setTrigger,
     };
