@@ -8,55 +8,29 @@ import { getTransactionsByUser } from '@/db/user-specific/Transactions';
 import BankButtons from './BankButtons';
 import RecentTransactions from './RecentTransactions';
 
-export default function BalanceChecker({ openTransaction, openChooseBookie }) {
+export default function BalanceChecker({ openTransaction, openChooseBookie, transactions }) {
 
-    const { user, userBalance } = useContext(UserContext);
+    const { user, userBalance, bookie, setBookie } = useContext(UserContext);
 
-    const db = useSQLiteContext();
+    const { bookieColors, bookieBorderColors } = useTheme();
 
-    const { mainGreen, mainBlue, accentBlue, bookieColors, bookieBorderColors } = useTheme();
-
-    const [bookie, setBookie] = useState('DraftKings');
-    const [bookieId, setBookieId] = useState(1);
-
-    const [transactions, setTransactions] = useState([]);
-
-    useEffect(() => {
-        if (user) {
-          getTransactionsByUser(db, user.id).then((transactions) => {
-            setTransactions(transactions);
-          });
-        }
-    }, [user]);
-
-    const selectBookie = () => {
-      setBookie((prevBookie) => {
-        let newBookie;
-        let newBookieId;
-        if (prevBookie === 'DraftKings') {
-          newBookie = 'FanDuel';
-          newBookieId = 2;
-        } else if (prevBookie === 'FanDuel') {
-          newBookie = 'Total';
-          newBookieId = 0;
-        } else {
-          newBookie = 'DraftKings';
-          newBookieId = 1;
-        }
-
-        setBookieId(newBookieId);
-    
-        return newBookie;
-      });
+    // function to switch to next bookieId in userBalance. If at the end of userBalance, switch to Total. If at Total, switch back to userBalance[0]
+    const switchBookie = (bookieId) => {
+      const bookieIndex = userBalance.findIndex(item => item.bookieId === bookieId);
+      if (bookieIndex === userBalance.length - 1) {
+        setBookie({ id: 0, name: 'Total' });
+      } else {
+        setBookie({ id: userBalance[bookieIndex + 1].bookieId, name: userBalance[bookieIndex + 1].bookieName });
+      }
     };
 
     const selectTransaction = (type) => {
-        openTransaction(type, userBalance, bookie);
+        openTransaction(type, userBalance, bookie.name);
     };
     
-    const balanceValue = bookie === 'Total' 
+    const balanceValue = bookie.name === 'Total' 
       ? userBalance?.reduce((total, item) => total + item.balance, 0) 
-      : userBalance?.find(item => item.bookieId === bookieId)?.balance || 0;
+      : userBalance?.find(item => item.bookieId === bookie.id)?.balance || 0;
 
     const RecentTransactionsEmpty = () => {
       return (
@@ -70,26 +44,26 @@ export default function BalanceChecker({ openTransaction, openChooseBookie }) {
       <Pressable 
         style={({pressed}) => ({
           ...styles.centeredBox,
-          backgroundColor: bookieColors[bookie],
-          borderColor: bookieBorderColors[bookie],
+          backgroundColor: bookieColors[bookie.name],
+          borderColor: bookieBorderColors[bookie.name],
           opacity: pressed ? 0.8 : 1,
         })}
         onPress={openChooseBookie}
       >
         <BankButtons
-          selectBookie={selectBookie}
+          selectBookie={switchBookie}
           openTransaction={selectTransaction}
           bookie={bookie}
         />
         <View style={styles.centerBox}>
-          <Text>{bookie.toUpperCase()} BALANCE</Text>
+          <Text>{bookie.name.toUpperCase()} BALANCE</Text>
           <Text style={[styles.bigMoneyText, { marginTop: 8 }]}>
             ${balanceValue.toFixed(2)}
           </Text>
         </View>
         { 
           transactions.length > 0 ? 
-            <RecentTransactions transactions={transactions} bookieId={bookieId}/> 
+            <RecentTransactions transactions={transactions} bookieId={bookie.id}/> 
               :  
             <RecentTransactionsEmpty /> 
         }

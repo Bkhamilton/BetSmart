@@ -8,10 +8,10 @@ import { getBetSlipResultsBetAmount, getBetSlipResultsWinnings } from '@/db/bets
 import useTheme from '@/hooks/useTheme';
 import BalanceChecker from '@/components/Home/ProfitDashboard/BalanceChecker/BalanceChecker';
 
-export default function ProfitDashboard({ openTransaction, openChooseBookie }) {
+export default function ProfitDashboard({ openTransaction, openChooseBookie, transactions }) {
 
     const { greenText, grayBackground, grayBorder } = useTheme();
-    const { user, trigger, setTrigger } = useContext(UserContext);
+    const { user, trigger, setTrigger, bookie } = useContext(UserContext);
 
     const db = useSQLiteContext();
 
@@ -60,10 +60,15 @@ export default function ProfitDashboard({ openTransaction, openChooseBookie }) {
 
     return (
     <>
-        <BalanceChecker 
-            openTransaction={openTransaction} 
-            openChooseBookie={openChooseBookie}
-        />
+        {
+            bookie && (
+                <BalanceChecker 
+                    openTransaction={openTransaction} 
+                    openChooseBookie={openChooseBookie}
+                    transactions={transactions}
+                />
+            )
+        }
         <BetResults />
     </>
   );

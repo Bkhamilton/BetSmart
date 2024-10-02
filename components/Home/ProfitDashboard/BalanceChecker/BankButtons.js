@@ -34,13 +34,13 @@ export default function BankButtons({ selectBookie, openTransaction, bookie }) {
             <TransactionType type='Withdraw'/>
           </View>
           <TouchableOpacity 
-            onLongPress={selectBookie}
-            style={[styles.dollarContainer, { borderColor: accentGreen, borderWidth: bookie === 'Total' ? 10 : 2 }]}
+            onLongPress={() => selectBookie(bookie.id)}
+            style={[styles.dollarContainer, { borderColor: accentGreen, borderWidth: bookie.name === 'Total' ? 10 : 2 }]}
           >
-            {bookie === 'Total' ? (
+            {bookie.name === 'Total' ? (
               <FontAwesome name="dollar" size={60} color={accentGreen}/>
             ) : (
-              <Image source={bookieImages[bookie]} style={{ width: 100, height: 100, borderRadius: 50 }}/>
+              <Image source={bookieImages[bookie.name]} style={{ width: 100, height: 100, borderRadius: 50 }}/>
             )}
           </TouchableOpacity>
         </View>
