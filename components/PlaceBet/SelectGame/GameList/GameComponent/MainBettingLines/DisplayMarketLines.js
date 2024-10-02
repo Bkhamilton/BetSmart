@@ -176,7 +176,7 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
             const medianUnder = displayData.find(item => item.value === medianValue && item.overUnder === 'Under');
 
             // Set displayData to only include the median over and under values
-            displayData = [medianOver, medianUnder].filter(Boolean); // Filter out any undefined values
+            displayData = [medianUnder, medianOver].filter(Boolean); // Filter out any undefined values
         }
 
         return displayData;
