@@ -41,7 +41,7 @@ export default function ActiveBookies() {
                 >
                     <ClearView style={{ flexDirection: 'row' }}>
                         { userBalance.map((bookie) => (
-                            <BookieButton key={bookie.id} bookie={bookie} />
+                            <BookieButton key={bookie.bookieId} bookie={bookie} />
                         ))}
                     </ClearView>
                 </ScrollView>
