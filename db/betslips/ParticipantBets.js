@@ -53,6 +53,37 @@ export const getAllValidParticipantBets = async (db, betSlipIds) => {
   }
 };
 
+// Function to get count for participant bets by leagueName and return the highest count row
+export const getFavoriteLeague = async (db, userId) => {
+  try {
+    const favoriteLeague = await db.getAllAsync(`
+      SELECT 
+        COUNT(*) as count,
+        Leagues.leagueName
+      FROM 
+        ParticipantBets
+      JOIN 
+        Games ON ParticipantBets.gameId = Games.gameId
+      JOIN 
+        Seasons ON Games.seasonId = Seasons.id
+      JOIN 
+        Leagues ON Seasons.leagueId = Leagues.id
+      JOIN
+        BetSlips ON ParticipantBets.betSlipId = BetSlips.id
+      WHERE 
+        BetSlips.userId = ?
+      GROUP BY 
+        Leagues.leagueName
+      ORDER BY 
+        count DESC
+    `, [userId]);
+    return favoriteLeague[0];
+  } catch (error) {
+    console.error('Error getting participant bet count by league:', error);
+    throw error;
+  }
+};
+
 // Function to get a participant bet
 export const getParticipantBet = async (db, participantBetId) => {
   try {
