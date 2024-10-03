@@ -15,6 +15,7 @@ import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
 import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
+import SelectLeague from '@/components/Modals/SelectLeague';
 import useTheme from '@/hooks/useTheme';
 import DatePicker from '@/components/PlaceBet/SelectGame/DatePicker';
 
@@ -46,6 +47,7 @@ export default function SelectGameScreen() {
 
   const [chooseBookieModal, setChooseBookieModal] = useState(false);
   const [betSlipModal, setBetSlipModal] = useState(false);
+  const [selectLeagueModal, setSelectLeagueModal] = useState(false);
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -55,6 +57,14 @@ export default function SelectGameScreen() {
     setTrigger(prev => !prev);
 
     setRefreshing(false);
+  }
+
+  const openSelectLeagueModal = () => {
+    setSelectLeagueModal(true);
+  }
+
+  const closeSelectLeagueModal = () => {
+    setSelectLeagueModal(false);
   }
 
   const openBookieModal = () => {
@@ -183,6 +193,15 @@ export default function SelectGameScreen() {
           />
         )
       }
+      {
+        leagues.length > 1 && (
+          <SelectLeague
+            visible={selectLeagueModal}
+            close={closeSelectLeagueModal}
+            selectLeague={selectLeague}
+          />
+        )
+      }
       <View style={styles.mainContainer}>
         {
           leagues.length > 1 && (
@@ -212,6 +231,7 @@ export default function SelectGameScreen() {
               <View style={styles.buttonsContainer}>
                 <MainButtons
                   selectLeague={selectLeague}
+                  openModal={openSelectLeagueModal}
                 />
                 {
                   betSlip &&

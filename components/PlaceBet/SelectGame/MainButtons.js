@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import { DBContext } from '@/contexts/DBContext';
 
-export default function MainButtons({ selectLeague }) {
+export default function MainButtons({ selectLeague, openModal }) {
 
     const { leagues } = useContext(DBContext);
 
@@ -42,6 +42,7 @@ export default function MainButtons({ selectLeague }) {
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={[styles.mainButtonContainer, { backgroundColor: grayBorder, borderColor: grayBorder }]}
+                        onPress={openModal}
                     >
                         <FontAwesome name="plus" size={24} color={iconColor} />
                     </TouchableOpacity>
