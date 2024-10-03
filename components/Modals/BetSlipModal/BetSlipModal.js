@@ -12,8 +12,6 @@ import { getBetTargetName, getBetTarget } from '@/db/bet-general/BetTargets';
 import { getTeamAbbreviationByName } from '@/db/general/Teams';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
-import draftkings from '@/assets/images/DraftKings.png';
-import fanduel from '@/assets/images/FanDuel.jpg';
 
 export default function BetSlipModal({ visible, close, removeProp, removeBetSlip, confirm }) {
 
@@ -75,6 +73,10 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
     const onConfirm = () => {
         // if wager is 0, return
         if (wager === 0) {
+            return;
+        }
+        // if odds doesn't start with + or -, return
+        if (!betSlip.odds.startsWith('+') && !betSlip.odds.startsWith('-')) {
             return;
         }
         confirm(wager, getWinnings(wager), curBookie.id);
@@ -141,13 +143,17 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
 
         const getName = async (betTargetId) => {
             const target = await getBetTarget(db, betTargetId);
-            if (target.targetType === 'Team') {
-                const team = await getTeamAbbreviationByName(db, target.targetName);
-                return team.abbreviation;
-            } else if (target.targetType === 'Game') {
-                return 'Game';
+            if (target) {
+                if (target.targetType === 'Team') {
+                    const team = await getTeamAbbreviationByName(db, target.targetName);
+                    return team.abbreviation;
+                } else if (target.targetType === 'Game') {
+                    return 'Game';
+                } else {
+                    return target.targetName;
+                }
             } else {
-                return target.targetName;
+                return '';
             }
         }
 
