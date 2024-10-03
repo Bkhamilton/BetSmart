@@ -67,6 +67,35 @@ export const getLeg = async (db, legId) => {
   }
 };
 
+// Function to get Favorite Bet for a given userId
+export const getFavoriteBetType = async (db, userId) => {
+  try {
+    const favoriteBet = await db.getAllAsync(`
+      SELECT 
+        COUNT(*) as count,
+        BetMarkets.marketType as name
+      FROM 
+        BetSlips
+      JOIN 
+        ParticipantBets ON BetSlips.id = ParticipantBets.betSlipId
+      JOIN 
+        Legs ON ParticipantBets.id = Legs.participantBetId
+      JOIN 
+        BetMarkets ON Legs.betMarketId = BetMarkets.id
+      WHERE 
+        BetSlips.userId = ?
+      GROUP BY 
+        BetMarkets.marketType
+      ORDER BY 
+        count DESC
+    `, [userId]);
+    return favoriteBet[0];
+  } catch (error) {
+    console.error('Error getting favorite bet:', error);
+    throw error;
+  }
+};
+
 // Function to insert a leg
 export const insertLeg = async (db, participantBetId, betMarketId, betTypeId) => {
   try {
