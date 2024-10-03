@@ -5,30 +5,12 @@ import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
 import useTheme from '@/hooks/useTheme';
 
-import mlb from '@/assets/images/mlb.png';
-import nba from '@/assets/images/nba.png';
-import nhl from '@/assets/images/nhl.png';
-import nfl from '@/assets/images/nfl.png';
-import mls from '@/assets/images/mls.png';
-import ncaa from '@/assets/images/ncaa.png';
-import pga from '@/assets/images/pga.png';
-import ufc from '@/assets/images/ufc.png';
+import { leagueImages } from '@/constants/leagueConstants';
 
 export default function SportSlider({ selectLeague }) {
 
     const { league } = useContext(BetContext);
     const { leagues } = useContext(DBContext);
-
-    const nameToIcon = {
-        'NBA': nba,
-        'NHL': nhl,
-        'MLB': mlb,
-        'NFL': nfl,
-        'MLS': mls,
-        'NCAAB': ncaa,
-        'PGA': pga,
-        'UFC': ufc,
-    }
 
     const { text, backgroundColor, grayBackground, grayBorder } = useTheme();
 
@@ -49,7 +31,7 @@ export default function SportSlider({ selectLeague }) {
                         onPress={() => selectLeague(item)}
                     >
                         <Image
-                            source={nameToIcon[item.leagueName]}
+                            source={leagueImages[item.leagueName]}
                             style={styles.logo}
                         />
                         <Text style={[
