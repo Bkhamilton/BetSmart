@@ -53,7 +53,7 @@ export default function UserFavorites({ player }) {
         }
     }
 
-    const FavoriteComponent = ({ type }) => {
+    const FavoriteComponent = ({ type, displayType }) => {
 
         const [favorite, setFavorite] = useState(null);
 
@@ -75,7 +75,7 @@ export default function UserFavorites({ player }) {
                         favorite && getFavoriteImage(type, favorite)
                     }
                     <Text style={{ fontSize: 14, fontWeight: '600', marginTop: 8 }}>{favorite?.name}</Text>
-                    <Text style={{ fontSize: 12, fontWeight: '500', marginTop: 2 }}>{favorite?.count} Bets</Text>
+                    <Text style={{ fontSize: 12, fontWeight: '500', marginTop: 2 }}>{favorite?.count} {displayType}</Text>
                 </ClearView>
             </View>
         );
@@ -91,11 +91,11 @@ export default function UserFavorites({ player }) {
                 showsHorizontalScrollIndicator={false}
                 style={{ paddingVertical: 12, paddingLeft: 12 }}
             >
-                <FavoriteComponent type="Bookie" />
-                <FavoriteComponent type="League" />
-                <FavoriteComponent type="Team" />
-                <FavoriteComponent type="Bet" />
-                <FavoriteComponent type="Player" />
+                <FavoriteComponent type="Bookie" displayType="Bets"/>
+                <FavoriteComponent type="League" displayType="Bets"/>
+                <FavoriteComponent type="Team" displayType="Bets"/>
+                <FavoriteComponent type="Bet" displayType="Legs"/>
+                <FavoriteComponent type="Player" displayType="Bets"/>
             </ScrollView>
         </>
     );
