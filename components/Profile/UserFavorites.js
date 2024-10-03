@@ -1,11 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View, ScrollView } from '@/components/Themed';
+import { StyleSheet, Image } from 'react-native';
+import { TouchableOpacity, Text, View, ScrollView, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { UserContext } from '@/contexts/UserContext';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getFavoriteBookie } from '@/db/betslips/BetSlips';
-import { getFavoriteLeague } from '@/db/betslips/ParticipantBets';
+import { getFavoriteLeague, getFavoriteTeam } from '@/db/betslips/ParticipantBets';
+import { getFavoriteBetType } from '@/db/betslips/Legs';
+
+import { bookieImages } from '@/constants/bookieConstants'; 
+import { leagueImages } from '@/constants/leagueConstants';
 
 export default function UserFavorites({ league, team, player, sportsbook, bet }) {
 
@@ -20,15 +24,32 @@ export default function UserFavorites({ league, team, player, sportsbook, bet })
             case 'League':
                 return getFavoriteLeague(db, user.id);
             case 'Team':
-                return team;
+                return getFavoriteTeam(db, user.id);
             case 'Player':
                 return player;
             case 'Bookie':
                 return getFavoriteBookie(db, user.id);
             case 'Bet':
-                return bet;
+                return getFavoriteBetType(db, user.id);
             default:
                 return null;
+        }
+    }
+
+    const getFavoriteImage = (type, favorite) => {
+        switch (type) {
+            case 'League':
+                return <Image source={leagueImages[favorite.name]} style={{ width: 70, height: 70, borderRadius: 8 }}/>;
+            case 'Team':
+                return <Image source={{ uri: favorite.logoUrl }} style={{ width: 70, height: 70, borderRadius: 8 }}/>
+            case 'Player':
+                return <View style={{ width: 70, height: 70, borderRadius: 8, backgroundColor: grayBorder, padding: 8 }}/>;
+            case 'Bookie':
+                return <Image source={bookieImages[favorite.name]} style={{ width: 70, height: 70, borderRadius: 8 }}/>;
+            case 'Bet':
+                return <View style={{ width: 70, height: 70, borderRadius: 8, backgroundColor: grayBorder, padding: 8 }}/>;
+            default:
+                return <View style={{ width: 70, height: 70, borderRadius: 8, backgroundColor: grayBorder, padding: 8 }}/>;
         }
     }
 
@@ -44,8 +65,14 @@ export default function UserFavorites({ league, team, player, sportsbook, bet })
             <View style={[styles.favoriteContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
                 <View style={{ alignItems: 'center', backgroundColor: 'transparent', paddingTop: 4 }}>
                     <Text style={styles.favoriteText}>Top {type}</Text>
-                    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{JSON.stringify(favorite)}</Text>
                 </View>
+                <ClearView style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 8 }}>
+                    { 
+                        favorite && getFavoriteImage(type, favorite)
+                    }
+                    <Text style={{ fontSize: 14, fontWeight: '600', marginTop: 8 }}>{favorite?.name}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: '500', marginTop: 2 }}>{favorite?.count} Bets</Text>
+                </ClearView>
             </View>
         );
     };
