@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, RefreshControl } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { UserContext } from '@/contexts/UserContext';
-import ProfileMainInfo from '@/components/Profile/ProfileMainInfo';
-import UserFavorites from '@/components/Profile/UserFavorites';
-import Achievements from '@/components/Profile/Achievements';
+import ProfileMainInfo from '@/components/Profile/ProfilePage/ProfileMainInfo';
+import UserFavorites from '@/components/Profile/ProfilePage/UserFavorites';
+import Achievements from '@/components/Profile/ProfilePage/Achievements';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
-import ActiveBookies from '@/components/Profile/ActiveBookies';
+import ActiveBookies from '@/components/Profile/ProfilePage/ActiveBookies';
 
 export default function ProfileScreen() {
 
@@ -78,9 +78,16 @@ export default function ProfileScreen() {
   return (
     <>
       {user ? <ProfilePageHeader user={user} /> : <LoadingHeader /> }
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => console.log('refreshing')}
+          />
+        }
+      >
         <ProfileMainInfo /> 
-        <UserFavorites league={"NBA"} team={"BOS"} player={"Zion Williamson"} bet={"Spread"}/>
+        <UserFavorites player={"Zion Williamson"}/>
         <ActiveBookies />
         <Achievements />
         <View style={styles.section}>

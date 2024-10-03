@@ -11,7 +11,7 @@ import { getFavoriteBetType } from '@/db/betslips/Legs';
 import { bookieImages } from '@/constants/bookieConstants'; 
 import { leagueImages } from '@/constants/leagueConstants';
 
-export default function UserFavorites({ league, team, player, sportsbook, bet }) {
+export default function UserFavorites({ player }) {
 
     const { user } = useContext(UserContext);
 
@@ -61,6 +61,10 @@ export default function UserFavorites({ league, team, player, sportsbook, bet })
             getFavorite(type).then((res) => setFavorite(res));
         }, []);
 
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
         return (
             <View style={[styles.favoriteContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
                 <View style={{ alignItems: 'center', backgroundColor: 'transparent', paddingTop: 4 }}>
@@ -87,11 +91,11 @@ export default function UserFavorites({ league, team, player, sportsbook, bet })
                 showsHorizontalScrollIndicator={false}
                 style={{ paddingVertical: 12, paddingLeft: 12 }}
             >
+                <FavoriteComponent type="Bookie" />
                 <FavoriteComponent type="League" />
                 <FavoriteComponent type="Team" />
-                <FavoriteComponent type="Player" />
-                <FavoriteComponent type="Bookie" />
                 <FavoriteComponent type="Bet" />
+                <FavoriteComponent type="Player" />
             </ScrollView>
         </>
     );
