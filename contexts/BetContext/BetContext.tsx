@@ -6,9 +6,11 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { insertBetSlip } from '@/db/betslips/BetSlips';
 import { insertParticipantBet } from '@/db/betslips/ParticipantBets';
 import { insertLeg } from '@/db/betslips/Legs';
+import { insertBetMarket } from '@/db/api/BetMarkets';
 import { getBetFormat } from '@/db/bet-general/BetFormats';
 import { getBetType } from '@/db/bet-general/BetTypes';
 import { getBetMarketByLeg } from '@/db/api/BetMarkets';
+import { getBetTargetId } from '@/db/bet-general/BetTargets'
 import { updateUserBalance } from '@/db/user-specific/Balance';
 
 interface Game {
@@ -159,9 +161,19 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
           for (const leg of bet.legs) {
             try {
               // Create Leg in DB using ParticipantBetId
-              const betMarket = await getBetMarketByLeg(db, bet.gameId, leg);
               const betType = await getBetType(db, leg.type);
-              await insertLeg(db, participantBetId, betMarket.id, betType.id);
+              const betMarket = await getBetMarketByLeg(db, bet.gameId, leg);
+              let betMarketId;
+              
+              if (!betMarket) {
+                // Add new bet market row with betSlip.bookieId and leg info
+                const betTargetId = await getBetTargetId(db, leg.betTarget);
+                betMarketId = await insertBetMarket(db, bet.gameId, leg.stat, bet.timestamp, leg.value, leg.odds, leg.overUnder, betTargetId, betSlip.bookieId);
+              } else {
+                betMarketId = betMarket.id;
+              }
+              
+              await insertLeg(db, participantBetId, betMarketId, betType.id);
             } catch (legError) {
               console.error('Error inserting leg:', legError);
             }
