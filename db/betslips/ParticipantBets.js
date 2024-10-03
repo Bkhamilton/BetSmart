@@ -59,7 +59,7 @@ export const getFavoriteLeague = async (db, userId) => {
     const favoriteLeague = await db.getAllAsync(`
       SELECT 
         COUNT(*) as count,
-        Leagues.leagueName
+        Leagues.leagueName as name
       FROM 
         ParticipantBets
       JOIN 
@@ -80,6 +80,37 @@ export const getFavoriteLeague = async (db, userId) => {
     return favoriteLeague[0];
   } catch (error) {
     console.error('Error getting participant bet count by league:', error);
+    throw error;
+  }
+};
+
+// Function to get the favorite team to bet on for a given user
+export const getFavoriteTeam = async (db, userId) => {
+  try {
+    const favoriteTeam = await db.getAllAsync(`
+      SELECT 
+        COUNT(*) as count,
+        Teams.abbreviation as name,
+        Teams.logoUrl as logoUrl
+      FROM 
+        ParticipantBets
+      JOIN 
+        Games ON ParticipantBets.gameId = Games.gameId
+      JOIN 
+        Teams ON Games.homeTeamId = Teams.id OR Games.awayTeamId = Teams.id
+      JOIN
+        BetSlips ON ParticipantBets.betSlipId = BetSlips.id
+      WHERE 
+        BetSlips.userId = ?
+      GROUP BY 
+        Teams.abbreviation,
+        Teams.logoUrl
+      ORDER BY 
+        count DESC
+    `, [userId]);
+    return favoriteTeam[0];
+  } catch (error) {
+    console.error('Error getting favorite team to bet on:', error);
     throw error;
   }
 };
