@@ -32,9 +32,26 @@ export default function InsightIntro({ streak }) {
   }
 
   return (
-    <View style={{ marginVertical: 8 }}>
-      {streak === 'hot' ? <HotStreak /> : <ColdStreak />}
-      {/* Bets Placed, Bets Won, Money Won */}
+    <View style={{ marginTop: 8 }}>
+      {streak === 'hot' ? <HotStreak /> : streak === 'cold' ? <ColdStreak /> : null}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: 4,
+          paddingHorizontal: '20%',
+          opacity: 0.7,
+        }}
+      >
+        {/* Bets Placed, Bets Won, Money Won */}
+        <Text style={{ fontSize: 12 }}>5 Bets Placed</Text>
+        <Text style={{ fontSize: 12 }}>1 Bet Won</Text>
+        <Text style={{ fontSize: 12 }}>Profit: -$40</Text>
+      </View>
+      <View style={{ alignItems: 'center', justifyContent: 'center', opacity: 0.5, marginTop: 2 }}>
+        <Text style={{ fontSize: 10 }}>Last 7 Days</Text>
+      </View>
     </View>
   );
 }
@@ -53,5 +70,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  infoText: {
+    fontSize: 12,
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   }
 });
