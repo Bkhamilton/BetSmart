@@ -29,13 +29,13 @@ export default function BetAnalysis({ streak }) {
   return (
     <View style={styles.container}>
       <View>
-        <View style={{ paddingHorizontal: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: '500' }}>{analysisTitle}</Text>
+        <View style={{ paddingHorizontal: 20 }}>
+          <Text style={{ fontSize: 18, fontWeight: '500' }}>{analysisTitle}</Text>
         </View>
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          style={{ flexDirection: 'row' }}
+          style={{ flexDirection: 'row', paddingVertical: 12, paddingLeft: 12 }}
         >
           {titles.map((title, index) => (
             <InsightCard key={index} title={title} />
@@ -48,6 +48,6 @@ export default function BetAnalysis({ streak }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 8,
+    paddingTop: 8,
   },
 });
