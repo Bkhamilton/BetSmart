@@ -1,19 +1,21 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
-import Colors from '@/constants/Colors';
+import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
+import useTheme from '@/hooks/useTheme';
 
 export default function InsightCard({ title }) {
 
+  const { grayBackground, grayBorder } = useTheme();
+
   return (
-    <View style={styles.container}>
-      <View>
+    <View style={[styles.container, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
+      <ClearView>
         <Text style={{ fontSize: 16 }}>{title}</Text>
         <Text style={{ fontSize: 14, fontWeight: '500' }}>This is where a description of the title will go.</Text>
-      </View>
-      <View>
+      </ClearView>
+      <ClearView>
         {/* Example Bets Here */}
-      </View>
+      </ClearView>
     </View>
   );
 }
@@ -23,5 +25,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1,
     paddingHorizontal: 16,
+    height: 120,
+    borderRadius: 8,
   },
 });
