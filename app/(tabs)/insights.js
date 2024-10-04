@@ -6,10 +6,10 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { retrieveMarketsDB } from '@/api/prop-odds/markets';
 import { getLeagueByName } from '@/db/general/Leagues';
 import InsightIntro from '@/components/Insights/InsightIntro/InsightIntro';
-import LossAnalysis from '@/components/Insights/LossAnalysis/LossAnalysis';
+import BetAnalysis from '@/components/Insights/BetAnalysis/BetAnalysis';
+import TopBet from '@/components/Insights/TopBet';
 import { getTodaysGameswithNames } from '@/db/general/Games';
 import { getSeasonByDate } from '@/db/general/Seasons';
-import WinAnalysis from '@/components/Insights/WinAnalysis/WinAnalysis';
 import { FontAwesome } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
@@ -59,9 +59,12 @@ export default function InsightScreen() {
           <FontAwesome name="refresh" size={20} color={iconColor} />
         </TouchableOpacity>
       </Header>
-      <ScrollView style={styles.container}>
-        {streak && <InsightIntro streak={streak}/>}
-        {streak === 'hot' ? <WinAnalysis /> : <LossAnalysis />}
+      <ScrollView 
+        style={styles.container}
+      >
+        <InsightIntro streak={streak}/>
+        <BetAnalysis streak={streak}/>
+        <TopBet />
         {/* BankRoll Management */}
         {/* Top Props / Top Bets */}
       </ScrollView>
