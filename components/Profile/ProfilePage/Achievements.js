@@ -71,7 +71,7 @@ export default function Achievements() {
     ];
 
     const AchievementComponent = ({ achievement }) => (
-        <View style={[styles.achievementContainer, { borderWidth: achievement.achieved ? 2 : 1 }]}>
+        <View style={[styles.achievementContainer, { borderWidth: achievement.achieved ? 4 : 1 }]}>
           <Text>{achievement.id}</Text>
         </View>
     );
