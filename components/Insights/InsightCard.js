@@ -5,13 +5,15 @@ import useTheme from '@/hooks/useTheme';
 
 export default function InsightCard({ title }) {
 
+  const { name, description } = title;
+
   const { grayBackground, grayBorder } = useTheme();
 
   return (
     <View style={[styles.container, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
       <ClearView>
-        <Text style={{ fontSize: 16 }}>{title}</Text>
-        <Text style={{ fontSize: 14, fontWeight: '500' }}>This is where a description of the title will go.</Text>
+        <Text style={{ fontSize: 16 }}>{name}</Text>
+        <Text style={{ fontSize: 14, fontWeight: '500', width: 300 }}>{description}</Text>
       </ClearView>
       <ClearView>
         {/* Example Bets Here */}

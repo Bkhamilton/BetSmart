@@ -4,22 +4,22 @@ import { Text, View, ScrollView } from '@/components/Themed';
 import InsightCard from '@/components/Insights/InsightCard';
 
 const winTitles = [
-  "Value Victory",
-  "Research Rewards",
-  "Trend Spotting",
-  "Discipline Decision",
-  "Timing Triumphs",
-  "Parlay Perfection"
+  { name: "Value Victory", description: "Bets where the user correctly identified undervalued odds and capitalized on them." },
+  { name: "Research Rewards", description: "Wins that came from well-researched bets, showing the value of due diligence." },
+  { name: "Trend Spotting", description: "Successful bets that capitalized on emerging trends in teams or players' performances." },
+  { name: "Discipline Decision", description: "Wins that resulted from sticking to a predetermined strategy or bankroll management plan." },
+  { name: "Timing Triumphs", description: "Wins from bets placed at the optimal time, taking advantage of line movements." },
+  { name: "Parlay Perfection", description: "Successfully completed parlay bets, showcasing good multi-event analysis." }
 ];
 
 const lossTitles = [
-  "Bad Beats",
-  "Longshots",
-  "Chasing A Loss",
-  "Overconfidence",
-  "Parlay Pitfalls",
-  "Bankroll Management",
-  "Lack of Research"
+  { name: "Bad Beats", description: "Losing due to unexpected outcomes." },
+  { name: "Longshots", description: "Losses from betting on longshots." },
+  { name: "Chasing A Loss", description: "Losing by trying to recover previous losses." },
+  { name: "Overconfidence", description: "Losses due to overestimating chances." },
+  { name: "Parlay Pitfalls", description: "Failures with parlay bets." },
+  { name: "Bankroll Management", description: "Losses that occurred when betting amounts were disproportionate to the user's overall bankroll." },
+  { name: "Lack of Research", description: "Losing due to insufficient research." }
 ];
 
 export default function BetAnalysis({ streak }) {
