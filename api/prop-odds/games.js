@@ -2,7 +2,7 @@ import secrets from "@/secrets";
 import { insertGame, getTodaysGameswithNames } from "@/db/general/Games";
 import { getTeamIds } from "@/db/general/Teams";
 import { getCurrentSeason, getSeasonByDate } from "@/db/general/Seasons";
-import { getLeagueByName } from "@/db/general/Leagues";
+import { getLeagueByName, getActiveLeagues } from "@/db/general/Leagues";
 import { insertFetchHistory, getLastFetchedByLeague, leagueFetchedOnDate } from "@/db/api/FetchHistory";
 import { insertBetTarget } from "@/db/bet-general/BetTargets";
 
@@ -147,3 +147,12 @@ export const retrieveGamesDate = async (db, sports, date) => {
     console.error(error);
   }
 };
+
+export const retrieveAllGames = async (db, date) => {
+  try {
+    const leagues = await getActiveLeagues(db, date);
+    return await retrieveGamesDate(db, leagues, date);
+  } catch (error) {
+    console.error(error);
+  }
+}
