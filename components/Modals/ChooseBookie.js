@@ -44,7 +44,8 @@ export default function ChooseBookie({ visible, close, selectBookie, extra }) {
     const AddBookieButton = () => {
         return (
             <TouchableOpacity 
-                style={[styles.addBookieButton, { backgroundColor: grayBackground, borderColor: grayBorder }]}           
+                style={[styles.addBookieButton, { backgroundColor: grayBackground, borderColor: grayBorder }]}
+                onPress={() => selectBookie({ bookieId: -1, bookieName: 'Add' })}           
             >
                 <Text style={styles.addBookieText}>Add Bookie</Text>
             </TouchableOpacity>
