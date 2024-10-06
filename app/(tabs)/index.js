@@ -29,7 +29,7 @@ export default function HomeScreen() {
 
   const db = useSQLiteContext();
 
-  const { user, setUserBalance, trigger, setTrigger, userBalance } = useContext(UserContext);
+  const { user, setUserBalance, trigger, setTrigger, userBalance, setBookie } = useContext(UserContext);
 
   const {
     loginModalVisible,
@@ -111,6 +111,12 @@ export default function HomeScreen() {
     }
   }, [user]);
 
+  // function to setBookie using one object from userBalance
+  const selectBookie = (balance) => {
+    setBookie({ id: balance.bookieId, name: balance.bookieName });
+    closeChooseBookieModal();
+  };
+
   const confirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
     updateBalance(db, bookieId, updatedBalance, user.id).then(() => {
       setUserBalance(prevBalances => 
@@ -165,7 +171,7 @@ export default function HomeScreen() {
           <ChooseBookie 
             visible={chooseBookieModalVisible} 
             close={closeChooseBookieModal} 
-            selectBookie={closeChooseBookieModal}
+            selectBookie={selectBookie}
             extra={true}
           />
         )

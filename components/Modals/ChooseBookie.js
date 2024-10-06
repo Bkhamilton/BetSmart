@@ -32,7 +32,8 @@ export default function ChooseBookie({ visible, close, selectBookie, extra }) {
     const TotalButton = () => {
         return (
             <TouchableOpacity 
-                style={[styles.bookieButton, { backgroundColor: mainGreen, borderColor: mainGreen }]}           
+                style={[styles.bookieButton, { backgroundColor: mainGreen, borderColor: mainGreen }]}
+                onPress={() => selectBookie({ bookieId: 0, bookieName: 'Total' })}           
             >
                 <Text style={styles.balanceText}>${userBalance.reduce((acc, b) => acc + b.balance, 0).toFixed(2)}</Text>
                 <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Total</Text>
