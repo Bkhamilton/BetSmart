@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
-import { retrieveGamesDate } from '@/api/prop-odds/games.js';
+import { retrieveGamesDate, retrieveAllGames } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext'; 
 import { UserContext } from '@/contexts/UserContext';
@@ -144,8 +144,7 @@ export default function SelectGameScreen() {
 
   useEffect(() => {
     const fetchSportsData = async () => {
-      const leagues = ["MLB", "NFL"];
-      retrieveGamesDate(db, leagues, date).then((games) => {
+      retrieveAllGames(db, date).then((games) => {
         setAllSportsData(games);
       });
     };
