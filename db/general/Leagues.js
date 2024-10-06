@@ -11,6 +11,22 @@ export const getAllLeagues = async (db) => {
   }
 };
 
+// Function to get all active leagues - leagues with active seasons
+export const getActiveLeagues = async (db, date) => {
+  try {
+    const leagues = await db.getAllAsync(`
+      SELECT DISTINCT Leagues.leagueName 
+      FROM Leagues 
+      JOIN Seasons ON Leagues.id = Seasons.leagueId 
+      WHERE Seasons.startDate <= ? AND Seasons.endDate >= ?
+    `, [date, date]);
+    return leagues.map(league => league.leagueName);
+  } catch (error) {
+    console.error('Error getting active leagues:', error);
+    throw error;
+  }
+};
+
 // Function to get a league
 export const getLeague = async (db, leagueId) => {
   try {
