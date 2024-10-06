@@ -10,7 +10,8 @@ export default function BankButtons({ selectBookie, openTransaction, bookie }) {
     const { accentGreen, iconColor } = useTheme();
 
     const selectTransaction = (type) => {
-        openTransaction(type);
+      if (bookie.name === 'Total') return;
+      openTransaction(type);
     };
 
     const TransactionType = ({ type }) => {
