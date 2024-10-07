@@ -10,6 +10,7 @@ import SignUpPage from '@/components/Modals/SignUpPage';
 import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets/YesterdaysBets';
 import TransactionModal from '@/components/Modals/TransactionModal';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
+import AddBookie from '@/components/Modals/AddBookie';
 import HomeHeader from '@/components/Home/HomeHeader';
 import OpenBets from '@/components/Home/BetReview/OpenBets';
 import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
@@ -37,12 +38,15 @@ export default function HomeScreen() {
     transactionModalVisible,
     confirmModalVisible,
     chooseBookieModalVisible,
+    addBookieModalVisible,
     transactionTitle,
     transactionBookie,
     transactionBookieId,
     userTransactions, setUserTransactions,
     confirmedBetSlip,
     betSlips, setBetSlips,
+    openAddBookieModal,
+    closeAddBookieModal,
     openChooseBookieModal,
     closeChooseBookieModal,
     openSignUpModal,
@@ -113,8 +117,13 @@ export default function HomeScreen() {
 
   // function to setBookie using one object from userBalance
   const selectBookie = (balance) => {
-    setBookie({ id: balance.bookieId, name: balance.bookieName });
-    closeChooseBookieModal();
+    if (balance.bookieId === -1) {
+      closeChooseBookieModal();
+      openAddBookieModal();
+    } else {
+      setBookie({ id: balance.bookieId, name: balance.bookieName });
+      closeChooseBookieModal();
+    }
   };
 
   const confirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
@@ -165,6 +174,11 @@ export default function HomeScreen() {
         bookie={transactionBookie}
         bookieId={transactionBookieId}
         onConfirm={onConfirmTransaction}
+      />
+      <AddBookie
+        visible={addBookieModalVisible}
+        close={closeAddBookieModal}
+        selectBookie={closeAddBookieModal}
       />
       {
         user && userBalance && (
