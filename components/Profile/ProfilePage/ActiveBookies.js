@@ -6,7 +6,7 @@ import useTheme from '@/hooks/useTheme';
 import { Feather } from '@expo/vector-icons';
 import { bookieImages } from '@/constants/bookieConstants';
 
-export default function ActiveBookies() {
+export default function ActiveBookies({ addBookie }) {
     
     const { userBalance } = useContext(UserContext);
     
@@ -47,6 +47,7 @@ export default function ActiveBookies() {
                 </ScrollView>
                 <TouchableOpacity 
                     style={[styles.addBookieContainer, { backgroundColor: grayBorder }]}
+                    onPress={addBookie}
                 >
                     <Text style={{ fontSize: 16, fontWeight: '600' }}>Add Bookie</Text>
                 </TouchableOpacity>
