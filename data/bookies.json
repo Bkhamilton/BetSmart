@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "DraftKings"
+    },
+    {
+        "id": 2,
+        "name": "FanDuel"
+    },
+    {
+        "id": 3,
+        "name": "BetMGM"
+    },
+    {
+        "id": 4,
+        "name": "Caesars"
+    },
+    {
+        "id": 5,
+        "name": "PointsBet"
+    },
+    {
+        "id": 6,
+        "name": "Barstool"
+    }
+]
