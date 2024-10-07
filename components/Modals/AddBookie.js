@@ -17,6 +17,7 @@ export default function AddBookie({ visible, close, selectBookie }) {
     const [validBookies, setValidBookies] = useState([]);
 
     useEffect(() => {
+        if (!bookies || !userBalance) return;
         const validBookies = bookies.filter(bookie => !userBalance.find(b => b.bookieName === bookie.name));
         setValidBookies(validBookies);
     }, [bookies, userBalance]);
