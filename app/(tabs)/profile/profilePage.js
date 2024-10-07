@@ -8,6 +8,7 @@ import { UserContext } from '@/contexts/UserContext';
 import ProfileMainInfo from '@/components/Profile/ProfilePage/ProfileMainInfo';
 import UserFavorites from '@/components/Profile/ProfilePage/UserFavorites';
 import Achievements from '@/components/Profile/ProfilePage/Achievements';
+import AddBookie from '@/components/Modals/AddBookie';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
 import ActiveBookies from '@/components/Profile/ProfilePage/ActiveBookies';
@@ -17,6 +18,16 @@ export default function ProfileScreen() {
   const db = useSQLiteContext();
   
   const { user } = useContext(UserContext);
+
+  const [addBookieModalVisible, setAddBookieModalVisible] = useState(false);
+
+  const openAddBookieModal = () => {
+    setAddBookieModalVisible(true);
+  }
+
+  const closeAddBookieModal = () => {
+    setAddBookieModalVisible(false);
+  }
 
   const router = useRouter();
 
@@ -78,6 +89,11 @@ export default function ProfileScreen() {
   return (
     <>
       {user ? <ProfilePageHeader user={user} /> : <LoadingHeader /> }
+      <AddBookie 
+        visible={addBookieModalVisible} 
+        close={closeAddBookieModal} 
+        selectBookie={closeAddBookieModal}  
+      />
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -88,7 +104,7 @@ export default function ProfileScreen() {
       >
         <ProfileMainInfo /> 
         <UserFavorites player={"Zion Williamson"}/>
-        <ActiveBookies />
+        <ActiveBookies addBookie={openAddBookieModal}/>
         <Achievements />
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Personal Information</Text>
