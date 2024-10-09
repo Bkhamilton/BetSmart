@@ -167,8 +167,8 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
               
               if (!betMarket) {
                 // Add new bet market row with betSlip.bookieId and leg info
-                const betTargetId = await getBetTargetId(db, leg.betTarget);
-                betMarketId = await insertBetMarket(db, bet.gameId, leg.stat, bet.timestamp, leg.value, leg.odds, leg.overUnder, betTargetId, betSlip.bookieId);
+                const timestamp = new Date().toISOString();
+                betMarketId = await insertBetMarket(db, bet.gameId, leg.stat, timestamp, leg.line, leg.odds, leg.overUnder, leg.betTarget, betSlip.bookieId);
               } else {
                 betMarketId = betMarket.id;
               }
