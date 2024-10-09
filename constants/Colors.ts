@@ -18,6 +18,10 @@ export default {
     accentBlue: '#0B5D83',
     greenText: '#25A74A',
     redText: '#ff5757',
+    betMGM: '#d29f53',
+    pointsbet: '#ed1b42',
+    caesars: '#00322f',
+    barstool: '#ed1b42',
   },
   dark: {
     text: '#fff',
@@ -35,5 +39,9 @@ export default {
     accentBlue: '#1292CE',
     greenText: '#36d363',
     redText: '#ff5757',
+    betMGM: '#b1801e',
+    pointsbet: '#bd0f2e',
+    caesars: '#00322f',
+    barstool: '#bd0f2e',
   },
 };

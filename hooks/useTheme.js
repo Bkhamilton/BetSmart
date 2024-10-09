@@ -18,20 +18,30 @@ export default function useTheme() {
     grayBackground: colorScheme === 'dark' ? Colors.dark.grayBackground : Colors.light.grayBackground,
     grayBorder: colorScheme === 'dark' ? Colors.dark.grayBorder : Colors.light.grayBorder,
     redText: colorScheme === 'dark' ? Colors.dark.redText : Colors.light.redText,
+    betMGM: colorScheme === 'dark' ? Colors.dark.betMGM : Colors.light.betMGM,
+    caesars: colorScheme === 'dark' ? Colors.dark.caesars : Colors.light.caesars,
+    pointsBet: colorScheme === 'dark' ? Colors.dark.pointsBet : Colors.light.pointsBet,
+    barstool: colorScheme === 'dark' ? Colors.dark.barstool : Colors.light.barstool,
     // Add other color definitions here...
   }
 
   const bookieColors = {
     'DraftKings': themeColors.mainGreen,
     'FanDuel': themeColors.mainBlue,
-    'BetMGM': themeColors.grayBackground,
+    'BetMGM': themeColors.betMGM,
+    'Caesars': themeColors.caesars,
+    'PointsBet': themeColors.pointsBet,
+    'Barstool': themeColors.barstool,
     'Total': themeColors.mainGreen,
   };
 
   const bookieBorderColors = {
     'DraftKings': themeColors.accentGreen,
     'FanDuel': themeColors.accentBlue,
-    'BetMGM': themeColors.iconColor,
+    'BetMGM': themeColors.betMGM,
+    'Caesars': themeColors.caesars,
+    'PointsBet': themeColors.pointsBet,
+    'Barstool': themeColors.barstool,
     'Total': themeColors.mainGreen,
   };
 
