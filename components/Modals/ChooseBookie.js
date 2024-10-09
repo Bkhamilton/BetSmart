@@ -7,7 +7,7 @@ import useTheme from '@/hooks/useTheme';
 
 export default function ChooseBookie({ visible, close, selectBookie, extra }) {
 
-    const { mainGreen, accentGreen, mainBlue, accentBlue, iconColor, grayBackground, grayBorder, bookieColors, bookieBorderColors } = useTheme();
+    const { mainGreen, grayBackground, grayBorder, bookieColors, bookieBorderColors } = useTheme();
 
     const { userBalance } = useContext(UserContext);
 
