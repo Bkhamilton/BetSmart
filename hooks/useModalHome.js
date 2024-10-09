@@ -13,16 +13,27 @@ const useModalHome = () => {
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [chooseBookieModalVisible, setChooseBookieModalVisible] = useState(false);
   const [addBookieModalVisible, setAddBookieModalVisible] = useState(false);
+  const [confirmMessageModalVisible, setConfirmMessageModalVisible] = useState(false);
 
   const [transactionTitle, setTransactionTitle] = useState('Deposit');
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
   const [transactionBookieId, setTransactionBookieId] = useState(1);
+
+  const [confirmMessage, setConfirmMessage] = useState('');
 
   const [userTransactions, setUserTransactions] = useState([]);
 
   const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
 
   const [betSlips, setBetSlips] = useState([]);
+
+  function openConfirmMessageModal() {
+    setConfirmMessageModalVisible(true);
+  }
+
+  function closeConfirmMessageModal() {
+    setConfirmMessageModalVisible(false);
+  }
 
   function openAddBookieModal() {
     setAddBookieModalVisible(true);
@@ -84,12 +95,16 @@ const useModalHome = () => {
     confirmModalVisible, setConfirmModalVisible,
     chooseBookieModalVisible, setChooseBookieModalVisible,
     addBookieModalVisible, setAddBookieModalVisible,
+    confirmMessageModalVisible, setConfirmMessageModalVisible,
     transactionTitle, setTransactionTitle,
     transactionBookie, setTransactionBookie,
     transactionBookieId, setTransactionBookieId,
+    confirmMessage, setConfirmMessage,
     userTransactions, setUserTransactions,
     confirmedBetSlip, setConfirmedBetSlip,
     betSlips, setBetSlips,
+    openConfirmMessageModal,
+    closeConfirmMessageModal,
     openAddBookieModal,
     closeAddBookieModal,
     openChooseBookieModal,
