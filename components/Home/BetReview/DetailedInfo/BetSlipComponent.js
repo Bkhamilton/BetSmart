@@ -1,16 +1,30 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { Text, View, ClearView } from '@/components/Themed';
+import { Text, View, ClearView, TouchableOpacity } from '@/components/Themed';
 import BetComponent from './BetComponent';
 import { getDateFull } from '@/utils/dateFunctions';
 import { bookieImages } from '@/constants/bookieConstants';
+import { Feather } from '@expo/vector-icons';
+import useTheme from '@/hooks/useTheme';
 
-export default function NoDetails({ betSlip }) {
+export default function BetSlipComponent({ betSlip, details, confirm }) {
+
+    const { iconColor, mainGreen } = useTheme();
+
+    const confirmBetSlip = () => {
+        confirm(betSlip);
+    };
+
     return (
         <ClearView>
+            <View style={styles.dateContainer}>
+                <Text style={styles.dateText}>{betSlip.date}</Text>
+            </View>
             <View style={styles.spreadContainer}>
-                <Text style={styles.betText}>{getDateFull(betSlip.date)}</Text>
                 <Text style={styles.betText}>{betSlip.odds}</Text>
+                <TouchableOpacity style={{ backgroundColor: 'transparent' }}>
+                    <Feather name="more-vertical" size={20} color={iconColor} />
+                </TouchableOpacity>
             </View>
             <View style={styles.spreadContainer}>
                 <ClearView>
@@ -29,6 +43,16 @@ export default function NoDetails({ betSlip }) {
             {betSlip.bets.map((betDetail, index) => (
                 <BetComponent key={index} bet={betDetail} />
             ))}
+            {
+                details && (
+                    <TouchableOpacity 
+                        style={[styles.confirmButton, {backgroundColor: mainGreen}]}
+                        onPress={confirmBetSlip}
+                    >
+                        <Text>Confirm Bet</Text>
+                    </TouchableOpacity>
+                )
+            }
         </ClearView>      
     );
 }
@@ -45,6 +69,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
+    dateText: {
+        fontSize: 12,
+        fontWeight: '400',
+        opacity: 0.6,
+    },
+    confirmButton: {
+        padding: 8, 
+        borderRadius: 8, 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        marginTop: 10,
+    },
     spreadContainer : {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -54,5 +90,11 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         borderRadius: 2,
-    }
+    },
+    dateContainer: {
+        padding: 4,
+        backgroundColor: 'transparent',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 });

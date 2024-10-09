@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View, ScrollView, Pressable } from '@/components/Themed';
+import { ScrollView, Pressable } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
-import ShowDetails from './ShowDetails';
-import NoDetails from './NoDetails';
+import BetSlipComponent from './BetSlipComponent';
 
 export default function DetailedInfo({ betSlips, confirm }) {
 
-  const [showDetails, setShowDetails] = useState(false);
-
-  const { grayBackground, grayBorder } = useTheme();
+    const { grayBackground, grayBorder } = useTheme();
 
     const BetSlip = ({ betSlip }) => {
+
         const [showDetails, setShowDetails] = React.useState(false);
     
         return (
@@ -21,7 +19,7 @@ export default function DetailedInfo({ betSlips, confirm }) {
                 onPress={() => setShowDetails(!showDetails)}
                 onLongPress={() => confirm(betSlip)}
             >
-                {showDetails ? <ShowDetails betSlip={betSlip} confirm={confirm}/> : <NoDetails betSlip={betSlip} />}
+                <BetSlipComponent betSlip={betSlip} details={showDetails} confirm={confirm}/>
             </Pressable>
         );
     };
