@@ -6,7 +6,7 @@ import { UserContext } from '@/contexts/UserContext';
 import { bookieImages } from '@/constants/bookieConstants';
 import useTheme from '@/hooks/useTheme';
 
-export default function AddBookie({ visible, close, selectBookie }) {
+export default function AddBookie({ visible, close, addBookie }) {
 
     const { grayBackground, grayBorder } = useTheme();
 
@@ -26,7 +26,7 @@ export default function AddBookie({ visible, close, selectBookie }) {
         return (
             <TouchableOpacity
                 style={[styles.bookieButton, { backgroundColor: grayBackground, borderColor: grayBorder }]}
-                onPress={() => selectBookie(bookie)}
+                onPress={() => addBookie(bookie)}
             >
                 <Image source={bookieImages[bookie]} style={{ width: 40, height: 40, borderRadius: 8 }} />
                 <Text>{bookie}</Text>

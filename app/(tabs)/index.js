@@ -178,7 +178,7 @@ export default function HomeScreen() {
       <AddBookie
         visible={addBookieModalVisible}
         close={closeAddBookieModal}
-        selectBookie={closeAddBookieModal}
+        addBookie={closeAddBookieModal}
       />
       {
         user && userBalance && (
