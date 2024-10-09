@@ -189,6 +189,11 @@ export function updateBetOdds(betSlip, bet, newOdds) {
   // Update the bet odds
   betToUpdate.odds = newOdds;
 
+  // If there is only one leg, update that bet.legs[0].odds
+  if (betToUpdate.legs.length === 1) {
+    betToUpdate.legs[0].odds = newOdds;
+  }
+
   // Update the betSlip odds
   betSlip.odds = calculateCombinedOdds(betSlip.bets.map(bet => bet.odds));
 
