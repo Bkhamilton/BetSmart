@@ -28,8 +28,8 @@ export default function AddBookie({ visible, close, addBookie }) {
                 style={[styles.bookieButton, { backgroundColor: grayBackground, borderColor: grayBorder }]}
                 onPress={() => addBookie(bookie)}
             >
-                <Image source={bookieImages[bookie]} style={{ width: 40, height: 40, borderRadius: 8 }} />
-                <Text>{bookie}</Text>
+                <Image source={bookieImages[bookie.name]} style={{ width: 40, height: 40, borderRadius: 8 }} />
+                <Text>{bookie.name}</Text>
             </TouchableOpacity>
         );
     }
@@ -49,7 +49,7 @@ export default function AddBookie({ visible, close, addBookie }) {
                     >
                         <Text>Close</Text>
                     </TouchableOpacity>
-                    {validBookies.map(bookie => <BookieButton key={bookie.id} bookie={bookie.name} />)}
+                    {validBookies.map(bookie => <BookieButton key={bookie.id} bookie={bookie} />)}
                 </View>
             </View>
         </Modal>
