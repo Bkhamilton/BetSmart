@@ -17,7 +17,7 @@ import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
 import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
-import { getBalanceByUser, updateBalance, updateUserBalance } from '@/db/user-specific/Balance';
+import { insertBalance, updateBalance, updateUserBalance } from '@/db/user-specific/Balance';
 import { getUser } from '@/db/user-specific/Users';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
 import { insertUserSession } from '@/db/user-specific/UserSessions';
@@ -25,6 +25,7 @@ import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 
 import { confirmBetResults } from '@/utils/dbHelpers';
 import useModalHome from '@/hooks/useModalHome';
+import ConfirmMessage from '../../components/Modals/ConfirmMessage';
 
 export default function HomeScreen() {
 
@@ -39,12 +40,16 @@ export default function HomeScreen() {
     confirmModalVisible,
     chooseBookieModalVisible,
     addBookieModalVisible,
+    confirmMessageModalVisible,
     transactionTitle,
     transactionBookie,
     transactionBookieId,
+    confirmMessage, setConfirmMessage,
     userTransactions, setUserTransactions,
     confirmedBetSlip,
     betSlips, setBetSlips,
+    openConfirmMessageModal,
+    closeConfirmMessageModal,
     openAddBookieModal,
     closeAddBookieModal,
     openChooseBookieModal,
@@ -156,6 +161,25 @@ export default function HomeScreen() {
     setTrigger(prev => !prev);
   }
 
+  const addBookie = (bookie) => {
+    insertBalance(db, bookie.id, 0, user.id).then(() => {
+      setUserBalance(prevBalances => [...prevBalances, { bookieId: bookie.id, bookieName: bookie.name, balance: 0 }]);
+    });
+    closeAddBookieModal();
+  };
+
+  const onAddBookie = (bookie) => {
+    // confirm adding bookie
+    closeAddBookieModal();
+    setConfirmMessage(`add ${bookie.name} as a bookie?`);
+    openConfirmMessageModal();
+  }
+
+  const onConfirmAddBookie = (bookie) => {
+    addBookie(bookie);
+    closeConfirmMessageModal();
+  }
+
   return (
     <>
       <LoginPage 
@@ -178,7 +202,13 @@ export default function HomeScreen() {
       <AddBookie
         visible={addBookieModalVisible}
         close={closeAddBookieModal}
-        addBookie={closeAddBookieModal}
+        addBookie={onAddBookie}
+      />
+      <ConfirmMessage
+        visible={confirmMessageModalVisible}
+        close={closeConfirmMessageModal}
+        message={confirmMessage}
+        confirm={onConfirmAddBookie}
       />
       {
         user && userBalance && (
