@@ -40,6 +40,7 @@ export default function SettingsScreen() {
           const betSlips = await getOpenBetSlips(db);
           const betSlipsWithBets = await fillBetSlips(db, betSlips);
           setBetSlips(betSlipsWithBets);
+          console.log('betSlips:', JSON.stringify(betSlipsWithBets, null, 2));
         } catch (error) {
           console.error('Error fetching data:', error);
         }
