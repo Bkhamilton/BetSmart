@@ -5,7 +5,7 @@ import { UserContext } from '@/contexts/UserContext';
 const useModalHome = () => {
 
   const { bookies } = useContext(DBContext);
-  const { userBalance, setUserBalance } = useContext(UserContext);
+  const { userBalance, setUserBalance, setBookie } = useContext(UserContext);
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
@@ -18,8 +18,6 @@ const useModalHome = () => {
   const [transactionTitle, setTransactionTitle] = useState('Deposit');
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
   const [transactionBookieId, setTransactionBookieId] = useState(1);
-
-  const [confirmMessage, setConfirmMessage] = useState('');
 
   const [userTransactions, setUserTransactions] = useState([]);
 
@@ -88,6 +86,17 @@ const useModalHome = () => {
     setTransactionModalVisible(false);
   }
 
+  // function to setBookie using one object from userBalance
+  const selectBookie = (balance) => {
+    if (balance.bookieId === -1) {
+      closeChooseBookieModal();
+      openAddBookieModal();
+    } else {
+      setBookie({ id: balance.bookieId, name: balance.bookieName });
+      closeChooseBookieModal();
+    }
+  };
+
   return {
     loginModalVisible, setLoginModalVisible,
     signUpModalVisible, setSignUpModalVisible,
@@ -99,7 +108,6 @@ const useModalHome = () => {
     transactionTitle, setTransactionTitle,
     transactionBookie, setTransactionBookie,
     transactionBookieId, setTransactionBookieId,
-    confirmMessage, setConfirmMessage,
     userTransactions, setUserTransactions,
     confirmedBetSlip, setConfirmedBetSlip,
     betSlips, setBetSlips,
@@ -117,6 +125,7 @@ const useModalHome = () => {
     closeConfirmModal,
     openTransactionModal,
     closeTransactionModal,
+    selectBookie,
   };
 };
 
