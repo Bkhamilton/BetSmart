@@ -17,10 +17,10 @@ export default function ConfirmMessage({ visible, close, message, confirm }) {
                         Are you sure you want to {message}
                     </Text>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={close}>
+                        <TouchableOpacity style={styles.button} onPress={() => confirm(true)}>
                             <Text style={styles.buttonText}>YES</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={close}>
+                        <TouchableOpacity style={styles.button} onPress={() => confirm(false)}>
                             <Text style={styles.buttonText}>NO</Text>
                         </TouchableOpacity>
                     </View>
