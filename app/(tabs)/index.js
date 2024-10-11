@@ -25,7 +25,8 @@ import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 
 import { confirmBetResults } from '@/utils/dbHelpers';
 import useModalHome from '@/hooks/useModalHome';
-import ConfirmMessage from '../../components/Modals/ConfirmMessage';
+import useConfirmationState from '@/hooks/useConfirmationState';
+import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 
 export default function HomeScreen() {
 
@@ -44,7 +45,6 @@ export default function HomeScreen() {
     transactionTitle,
     transactionBookie,
     transactionBookieId,
-    confirmMessage, setConfirmMessage,
     userTransactions, setUserTransactions,
     confirmedBetSlip,
     betSlips, setBetSlips,
@@ -62,7 +62,10 @@ export default function HomeScreen() {
     closeConfirmModal,
     openTransactionModal,
     closeTransactionModal,
+    selectBookie,
   } = useModalHome();
+
+  const { confirmMessage, setMessage, confirmCallback, setCallback } = useConfirmationState();
 
   const [triggerFetch, setTriggerFetch] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -120,17 +123,6 @@ export default function HomeScreen() {
     }
   }, [user]);
 
-  // function to setBookie using one object from userBalance
-  const selectBookie = (balance) => {
-    if (balance.bookieId === -1) {
-      closeChooseBookieModal();
-      openAddBookieModal();
-    } else {
-      setBookie({ id: balance.bookieId, name: balance.bookieName });
-      closeChooseBookieModal();
-    }
-  };
-
   const confirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
     updateBalance(db, bookieId, updatedBalance, user.id).then(() => {
       setUserBalance(prevBalances => 
@@ -166,19 +158,28 @@ export default function HomeScreen() {
       setUserBalance(prevBalances => [...prevBalances, { bookieId: bookie.id, bookieName: bookie.name, balance: 0 }]);
     });
     closeAddBookieModal();
+  }; 
+
+  const handleConfirm = (response) => {
+    if (confirmCallback) {
+      confirmCallback(response);
+    }
+    closeConfirmMessageModal();
   };
 
-  const onAddBookie = (bookie) => {
-    // confirm adding bookie
+  const onAddBookie = async (bookie) => {
     closeAddBookieModal();
-    setConfirmMessage(`add ${bookie.name} as a bookie?`);
+    setMessage(`add ${bookie.name} as a bookie?`);
     openConfirmMessageModal();
-  }
 
-  const onConfirmAddBookie = (bookie) => {
-    addBookie(bookie);
-    closeConfirmMessageModal();
-  }
+    const response = await new Promise((resolve) => {
+      setCallback(() => resolve);
+    });
+
+    if (response) {
+      addBookie(bookie);
+    }
+  };
 
   return (
     <>
@@ -208,7 +209,7 @@ export default function HomeScreen() {
         visible={confirmMessageModalVisible}
         close={closeConfirmMessageModal}
         message={confirmMessage}
-        confirm={onConfirmAddBookie}
+        confirm={handleConfirm}
       />
       {
         user && userBalance && (
