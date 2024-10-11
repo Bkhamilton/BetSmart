@@ -21,7 +21,7 @@ export default {
     betMGM: '#d29f53',
     pointsbet: '#ed1b42',
     caesars: '#00322f',
-    barstool: '#ed1b42',
+    barstool: '#304977',
   },
   dark: {
     text: '#fff',
@@ -42,6 +42,6 @@ export default {
     betMGM: '#b1801e',
     pointsbet: '#bd0f2e',
     caesars: '#00322f',
-    barstool: '#bd0f2e',
+    barstool: '#111a2b',
   },
 };
