@@ -12,6 +12,9 @@ import AddBookie from '@/components/Modals/AddBookie';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
 import ActiveBookies from '@/components/Profile/ProfilePage/ActiveBookies';
+import useHookProfilePage from '@/hooks/useHookProfilePage';
+import useConfirmationState from '@/hooks/useConfirmationState';
+import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 
 export default function ProfileScreen() {
 
@@ -19,15 +22,16 @@ export default function ProfileScreen() {
   
   const { user } = useContext(UserContext);
 
-  const [addBookieModalVisible, setAddBookieModalVisible] = useState(false);
+  const { 
+    addBookieModalVisible,
+    confirmModalVisible,
+    openAddBookieModal,
+    closeAddBookieModal,
+    openConfirmMessageModal,
+    closeConfirmMessageModal,
+  } = useHookProfilePage();
 
-  const openAddBookieModal = () => {
-    setAddBookieModalVisible(true);
-  }
-
-  const closeAddBookieModal = () => {
-    setAddBookieModalVisible(false);
-  }
+  const { confirmMessage, setMessage, confirmCallback, setCallback } = useConfirmationState();
 
   const router = useRouter();
 
@@ -40,6 +44,34 @@ export default function ProfileScreen() {
   };
 
   const { iconColor, backgroundColor, grayBorder } = useTheme();
+
+  const addBookie = (bookie) => {
+    insertBalance(db, bookie.id, 0, user.id).then(() => {
+      setUserBalance(prevBalances => [...prevBalances, { bookieId: bookie.id, bookieName: bookie.name, balance: 0 }]);
+    });
+    closeAddBookieModal();
+  }; 
+
+  const handleConfirm = (response) => {
+    if (confirmCallback) {
+      confirmCallback(response);
+    }
+    closeConfirmMessageModal();
+  };
+
+  const onAddBookie = async (bookie) => {
+    closeAddBookieModal();
+    setMessage(`add ${bookie.name} as a bookie?`);
+    openConfirmMessageModal();
+
+    const response = await new Promise((resolve) => {
+      setCallback(() => resolve);
+    });
+
+    if (response) {
+      addBookie(bookie);
+    }
+  };
 
   const LoadingHeader = () => {
     return (
@@ -92,7 +124,13 @@ export default function ProfileScreen() {
       <AddBookie 
         visible={addBookieModalVisible} 
         close={closeAddBookieModal} 
-        selectBookie={closeAddBookieModal}  
+        addBookie={onAddBookie}  
+      />
+      <ConfirmMessage
+        visible={confirmModalVisible}
+        close={closeConfirmMessageModal}
+        message={confirmMessage}
+        confirm={handleConfirm}
       />
       <ScrollView
         refreshControl={
