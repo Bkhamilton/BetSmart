@@ -26,6 +26,7 @@ import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 import { confirmBetResults } from '@/utils/dbHelpers';
 import useModalHome from '@/hooks/useModalHome';
 import useConfirmationState from '@/hooks/useConfirmationState';
+import useUserBalDataState from '@/hooks/useUserBalDataState';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 
 export default function HomeScreen() {
@@ -45,7 +46,6 @@ export default function HomeScreen() {
     transactionTitle,
     transactionBookie,
     transactionBookieId,
-    userTransactions, setUserTransactions,
     confirmedBetSlip,
     betSlips, setBetSlips,
     openConfirmMessageModal,
@@ -65,7 +65,9 @@ export default function HomeScreen() {
     selectBookie,
   } = useModalHome();
 
-  const { confirmMessage, setMessage, confirmCallback, setCallback } = useConfirmationState();
+  const { confirmMessage, setMessage, setCallback, handleConfirm } = useConfirmationState();
+
+  const { addBookie, confirmTransaction, userTransactions, setUserTransactions } = useUserBalDataState();
 
   const [triggerFetch, setTriggerFetch] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -123,22 +125,6 @@ export default function HomeScreen() {
     }
   }, [user]);
 
-  const confirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
-    updateBalance(db, bookieId, updatedBalance, user.id).then(() => {
-      setUserBalance(prevBalances => 
-        prevBalances.map(item => 
-          item.bookieId === bookieId ? { ...item, balance: Number(updatedBalance) } : item
-        )
-      );
-    });
-    const timestamp = new Date().toISOString();
-    const description = `${title} for ${transactionAmount} with ${transactionBookie}`;
-    insertTransaction(db, bookieId, user.id, title, initialAmount, transactionAmount, updatedBalance, timestamp, description);
-    getTransactionsByUser(db, user.id).then((transactions) => {
-      setUserTransactions(transactions);
-    });
-  }
-
   const onConfirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
     confirmTransaction(bookieId, title, initialAmount, transactionAmount, updatedBalance);
     closeTransactionModal();
@@ -153,17 +139,8 @@ export default function HomeScreen() {
     setTrigger(prev => !prev);
   }
 
-  const addBookie = (bookie) => {
-    insertBalance(db, bookie.id, 0, user.id).then(() => {
-      setUserBalance(prevBalances => [...prevBalances, { bookieId: bookie.id, bookieName: bookie.name, balance: 0 }]);
-    });
-    closeAddBookieModal();
-  }; 
-
-  const handleConfirm = (response) => {
-    if (confirmCallback) {
-      confirmCallback(response);
-    }
+  const onHandleConfirm = (response) => {
+    handleConfirm(response);
     closeConfirmMessageModal();
   };
 
@@ -209,7 +186,7 @@ export default function HomeScreen() {
         visible={confirmMessageModalVisible}
         close={closeConfirmMessageModal}
         message={confirmMessage}
-        confirm={handleConfirm}
+        confirm={onHandleConfirm}
       />
       {
         user && userBalance && (
