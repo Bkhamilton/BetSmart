@@ -6,7 +6,7 @@ import useTheme from '@/hooks/useTheme';
 import { Feather } from '@expo/vector-icons';
 import { bookieImages } from '@/constants/bookieConstants';
 
-export default function ActiveBookies({ addBookie }) {
+export default function ActiveBookies({ addBookie, openOptions }) {
     
     const { userBalance } = useContext(UserContext);
     
@@ -20,7 +20,10 @@ export default function ActiveBookies({ addBookie }) {
                     <Text style={styles.bookieText}>{bookie.bookieName}</Text>
                     <Text style={styles.bookieText}>${bookie.balance.toFixed(2)}</Text>
                 </View>
-                <TouchableOpacity style={{ backgroundColor: 'transparent' }}>
+                <TouchableOpacity 
+                    style={{ backgroundColor: 'transparent' }}
+                    onPress={() => openOptions(bookie, ['Edit', 'Delete'])}
+                >
                     <Feather name="more-vertical" size={20} color={iconColor} />
                 </TouchableOpacity>
             </View>
