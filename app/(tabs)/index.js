@@ -65,7 +65,7 @@ export default function HomeScreen() {
     selectBookie,
   } = useModalHome();
 
-  const { confirmMessage, setMessage, setCallback, handleConfirm } = useConfirmationState();
+  const { confirmMessage, setMessage, handleConfirmCallback, handleConfirm } = useConfirmationState();
 
   const { addBookie, confirmTransaction, userTransactions, setUserTransactions } = useUserBalDataState();
 
@@ -150,7 +150,7 @@ export default function HomeScreen() {
     openConfirmMessageModal();
 
     const response = await new Promise((resolve) => {
-      setCallback(() => resolve);
+      handleConfirmCallback(() => resolve);
     });
 
     if (response) {
