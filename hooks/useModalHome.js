@@ -19,8 +19,6 @@ const useModalHome = () => {
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
   const [transactionBookieId, setTransactionBookieId] = useState(1);
 
-  const [userTransactions, setUserTransactions] = useState([]);
-
   const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
 
   const [betSlips, setBetSlips] = useState([]);
@@ -108,7 +106,6 @@ const useModalHome = () => {
     transactionTitle, setTransactionTitle,
     transactionBookie, setTransactionBookie,
     transactionBookieId, setTransactionBookieId,
-    userTransactions, setUserTransactions,
     confirmedBetSlip, setConfirmedBetSlip,
     betSlips, setBetSlips,
     openConfirmMessageModal,
