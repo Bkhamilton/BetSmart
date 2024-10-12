@@ -16,7 +16,9 @@ import ActiveBookies from '@/components/Profile/ProfilePage/ActiveBookies';
 import useHookProfilePage from '@/hooks/useHookProfilePage';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
+import useOptionsState from '@/hooks/useOptionsState';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
+import OptionMenu from '@/components/Modals/OptionMenu';
 
 export default function ProfileScreen() {
 
@@ -33,9 +35,11 @@ export default function ProfileScreen() {
     closeConfirmMessageModal,
   } = useHookProfilePage();
 
-  const { confirmMessage, setMessage, setCallback, handleConfirm } = useConfirmationState();
+  const { confirmMessage, setMessage, handleConfirmCallback, handleConfirm } = useConfirmationState();
 
   const { addBookie } = useUserBalDataState();
+
+  const { optionsModalVisible, openOptionsModal, closeOptionsModal, options, setOptionsList, optionCallback, handleOptionCallback } = useOptionsState();
 
   const router = useRouter();
 
@@ -60,11 +64,24 @@ export default function ProfileScreen() {
     openConfirmMessageModal();
 
     const response = await new Promise((resolve) => {
-      setCallback(() => resolve);
+      handleConfirmCallback(() => resolve);
     });
 
     if (response) {
       addBookie(bookie);
+    }
+  };
+
+  const onOpenOptions = (bookie, options) => {
+    setOptionsList(options);
+    openOptionsModal();
+
+    const response = new Promise((resolve) => {
+      handleOptionCallback(() => resolve);
+    });
+
+    if (response) {
+      console.log('Option selected');
     }
   };
 
@@ -127,6 +144,12 @@ export default function ProfileScreen() {
         message={confirmMessage}
         confirm={onHandleConfirm}
       />
+      <OptionMenu
+        visible={optionsModalVisible}
+        close={closeOptionsModal}
+        options={options}
+        selectOption={closeOptionsModal}
+      />
       <ScrollView
         refreshControl={
           <RefreshControl
@@ -137,7 +160,10 @@ export default function ProfileScreen() {
       >
         <ProfileMainInfo /> 
         <UserFavorites player={"Zion Williamson"}/>
-        <ActiveBookies addBookie={openAddBookieModal}/>
+        <ActiveBookies 
+          addBookie={openAddBookieModal}
+          openOptions={onOpenOptions}
+        />
         <Achievements />
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Personal Information</Text>
