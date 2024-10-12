@@ -12,9 +12,16 @@ const useConfirmationState = () => {
         setConfirmCallback(callback);
     }
 
+    const handleConfirm = (response) => {
+        if (confirmCallback) {
+          confirmCallback(response);
+        }
+    };
+
     return {
         confirmMessage, setMessage,
         confirmCallback, setCallback,
+        handleConfirm,
     };
 };
 
