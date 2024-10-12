@@ -1,12 +1,6 @@
-import { useState, useContext } from 'react';
-import { DBContext } from '@/contexts/DBContext';
-import { UserContext } from '@/contexts/UserContext';
+import { useState } from 'react';
 
 const useHookProfilePage = () => {
-
-    const { bookies } = useContext(DBContext);
-    const { user, userBalance, setUserBalance } = useContext(UserContext);
-
     const [addBookieModalVisible, setAddBookieModalVisible] = useState(false);
     const [confirmModalVisible, setConfirmModalVisible] = useState(false);
 
