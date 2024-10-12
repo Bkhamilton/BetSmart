@@ -10,10 +10,12 @@ import UserFavorites from '@/components/Profile/ProfilePage/UserFavorites';
 import Achievements from '@/components/Profile/ProfilePage/Achievements';
 import AddBookie from '@/components/Modals/AddBookie';
 import { useSQLiteContext } from 'expo-sqlite';
+import { insertBalance } from '@/db/user-specific/Balance';
 import useTheme from '@/hooks/useTheme';
 import ActiveBookies from '@/components/Profile/ProfilePage/ActiveBookies';
 import useHookProfilePage from '@/hooks/useHookProfilePage';
 import useConfirmationState from '@/hooks/useConfirmationState';
+import useUserBalDataState from '@/hooks/useUserBalDataState';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 
 export default function ProfileScreen() {
@@ -31,7 +33,9 @@ export default function ProfileScreen() {
     closeConfirmMessageModal,
   } = useHookProfilePage();
 
-  const { confirmMessage, setMessage, confirmCallback, setCallback } = useConfirmationState();
+  const { confirmMessage, setMessage, setCallback, handleConfirm } = useConfirmationState();
+
+  const { addBookie } = useUserBalDataState();
 
   const router = useRouter();
 
@@ -45,17 +49,8 @@ export default function ProfileScreen() {
 
   const { iconColor, backgroundColor, grayBorder } = useTheme();
 
-  const addBookie = (bookie) => {
-    insertBalance(db, bookie.id, 0, user.id).then(() => {
-      setUserBalance(prevBalances => [...prevBalances, { bookieId: bookie.id, bookieName: bookie.name, balance: 0 }]);
-    });
-    closeAddBookieModal();
-  }; 
-
-  const handleConfirm = (response) => {
-    if (confirmCallback) {
-      confirmCallback(response);
-    }
+  const onHandleConfirm = (response) => {
+    handleConfirm(response);
     closeConfirmMessageModal();
   };
 
@@ -130,7 +125,7 @@ export default function ProfileScreen() {
         visible={confirmModalVisible}
         close={closeConfirmMessageModal}
         message={confirmMessage}
-        confirm={handleConfirm}
+        confirm={onHandleConfirm}
       />
       <ScrollView
         refreshControl={
