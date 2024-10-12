@@ -8,7 +8,7 @@ const useConfirmationState = () => {
         setConfirmMessage(message);
     }
 
-    function setCallback(callback) {
+    function handleConfirmCallback(callback) {
         setConfirmCallback(callback);
     }
 
@@ -20,7 +20,7 @@ const useConfirmationState = () => {
 
     return {
         confirmMessage, setMessage,
-        confirmCallback, setCallback,
+        confirmCallback, handleConfirmCallback,
         handleConfirm,
     };
 };
