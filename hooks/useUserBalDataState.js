@@ -12,6 +12,10 @@ const useUserBalDataState = () => {
     const { user, setUserBalance } = useContext(UserContext);
 
     const [addBookieModalVisible, setAddBookieModalVisible] = useState(false);
+    const [transactionModalVisible, setTransactionModalVisible] = useState(false);
+
+    const [transactionTitle, setTransactionTitle] = useState('');
+    const [transactionBookie, setTransactionBookie] = useState({});
 
     const [userTransactions, setUserTransactions] = useState([]);
 
@@ -21,6 +25,20 @@ const useUserBalDataState = () => {
 
     const closeAddBookieModal = () => {
         setAddBookieModalVisible(false);
+    }
+
+    function updateTransactionInfo(title, bookie) {
+        setTransactionTitle(title);
+        setTransactionBookie(bookie);
+    }
+    
+    function openTransactionModal(type, bookie) {
+        updateTransactionInfo(type, bookie);
+        setTransactionModalVisible(true);
+    }
+      
+    function closeTransactionModal() {
+        setTransactionModalVisible(false);
     }
 
     const addBookie = (bookie) => {
@@ -50,15 +68,26 @@ const useUserBalDataState = () => {
         });
     }
 
+    const onConfirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
+        confirmTransaction(bookieId, title, initialAmount, transactionAmount, updatedBalance);
+        closeTransactionModal();
+    }
+
     return {
         addBookieModalVisible,
+        transactionModalVisible,
+        transactionTitle,
+        transactionBookie,
+        userTransactions,
+        setUserTransactions,
         openAddBookieModal,
         closeAddBookieModal,
+        openTransactionModal,
+        closeTransactionModal,
         addBookie,
         deleteBalBookie,
         confirmTransaction,
-        userTransactions,
-        setUserTransactions,
+        onConfirmTransaction,
     };
 };
 
