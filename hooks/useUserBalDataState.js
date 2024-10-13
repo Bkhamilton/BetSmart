@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
-import { insertBalance, updateBalance } from '@/db/user-specific/Balance';
+import { insertBalance, updateBalance, deleteBalance } from '@/db/user-specific/Balance';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
 import { useSQLiteContext } from 'expo-sqlite';
 
@@ -17,6 +17,11 @@ const useUserBalDataState = () => {
         insertBalance(db, bookie.id, 0, user.id).then(() => {
         setUserBalance(prevBalances => [...prevBalances, { bookieId: bookie.id, bookieName: bookie.name, balance: 0 }]);
         });
+    };
+
+    const deleteBalBookie = (bookieId, userId) => {
+        deleteBalance(db, bookieId, userId);
+        setUserBalance(prevBalances => prevBalances.filter(item => item.bookieId !== bookieId));
     };
 
     const confirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
@@ -37,6 +42,7 @@ const useUserBalDataState = () => {
 
     return {
         addBookie,
+        deleteBalBookie,
         confirmTransaction,
         userTransactions,
         setUserTransactions,
