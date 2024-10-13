@@ -1,8 +1,18 @@
 import { useState } from 'react';
 
 const useConfirmationState = () => {
+
+    const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
     const [confirmMessage, setConfirmMessage] = useState('');
     const [confirmCallback, setConfirmCallback] = useState(null);
+
+    function openConfirmationModal() {
+        setConfirmationModalVisible(true);
+    }
+
+    function closeConfirmationModal() {
+        setConfirmationModalVisible(false);
+    }
 
     function setMessage(message) {
         setConfirmMessage(message);
@@ -19,6 +29,9 @@ const useConfirmationState = () => {
     };
 
     return {
+        confirmationModalVisible,
+        openConfirmationModal,
+        closeConfirmationModal,
         confirmMessage, setMessage,
         confirmCallback, handleConfirmCallback,
         handleConfirm,
