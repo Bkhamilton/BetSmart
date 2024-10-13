@@ -39,7 +39,7 @@ export default function ProfileScreen() {
 
   const { addBookie } = useUserBalDataState();
 
-  const { optionsModalVisible, openOptionsModal, closeOptionsModal, options, setOptionsList, optionCallback, handleOptionCallback } = useOptionsState();
+  const { optionsModalVisible, openOptionsModal, closeOptionsModal, options, setOptionsList, optionCallback, handleOptionCallback, handleOption } = useOptionsState();
 
   const router = useRouter();
 
@@ -58,6 +58,11 @@ export default function ProfileScreen() {
     closeConfirmMessageModal();
   };
 
+  const onHandleOption = (response) => {
+    handleOption(response);
+    closeOptionsModal();
+  };
+
   const onAddBookie = async (bookie) => {
     closeAddBookieModal();
     setMessage(`add ${bookie.name} as a bookie?`);
@@ -72,16 +77,17 @@ export default function ProfileScreen() {
     }
   };
 
-  const onOpenOptions = (bookie, options) => {
+  const onOpenOptions = async (bookie, options) => {
     setOptionsList(options);
     openOptionsModal();
 
-    const response = new Promise((resolve) => {
+    // response is the option selected
+    const response = await new Promise((resolve) => {
       handleOptionCallback(() => resolve);
     });
 
     if (response) {
-      console.log('Option selected');
+      console.log(response + ' ' + bookie.bookieName);
     }
   };
 
@@ -148,7 +154,7 @@ export default function ProfileScreen() {
         visible={optionsModalVisible}
         close={closeOptionsModal}
         options={options}
-        selectOption={closeOptionsModal}
+        selectOption={onHandleOption}
       />
       <ScrollView
         refreshControl={

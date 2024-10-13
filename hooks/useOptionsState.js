@@ -22,6 +22,12 @@ const useOptionsState = () => {
         setOptionCallback(callback);
     }
 
+    const handleOption = (response) => {
+        if (optionCallback) {
+          optionCallback(response);
+        }
+    }
+
     return {
         optionsModalVisible,
         options,   
@@ -30,6 +36,7 @@ const useOptionsState = () => {
         closeOptionsModal,
         setOptionsList,
         handleOptionCallback,
+        handleOption,
     };
 };
 
