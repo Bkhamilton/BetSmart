@@ -27,19 +27,32 @@ export default function ProfileScreen() {
   const { user } = useContext(UserContext);
 
   const { 
+    confirmationModalVisible, 
+    openConfirmationModal, 
+    closeConfirmationModal, 
+    confirmMessage, 
+    setMessage, 
+    handleConfirmCallback, 
+    handleConfirm
+  } = useConfirmationState();
+
+  const { 
     addBookieModalVisible,
-    confirmModalVisible,
     openAddBookieModal,
     closeAddBookieModal,
-    openConfirmMessageModal,
-    closeConfirmMessageModal,
-  } = useHookProfilePage();
+    addBookie, 
+    deleteBalBookie 
+  } = useUserBalDataState();
 
-  const { confirmMessage, setMessage, handleConfirmCallback, handleConfirm } = useConfirmationState();
-
-  const { addBookie, deleteBalBookie } = useUserBalDataState();
-
-  const { optionsModalVisible, openOptionsModal, closeOptionsModal, options, setOptionsList, optionCallback, handleOptionCallback, handleOption } = useOptionsState();
+  const { 
+    optionsModalVisible, 
+    openOptionsModal, 
+    closeOptionsModal, 
+    options, 
+    setOptionsList,  
+    handleOptionCallback, 
+    handleOption
+  } = useOptionsState();
 
   const router = useRouter();
 
@@ -55,7 +68,7 @@ export default function ProfileScreen() {
 
   const onHandleConfirm = (response) => {
     handleConfirm(response);
-    closeConfirmMessageModal();
+    closeConfirmationModal();
   };
 
   const onHandleOption = (response) => {
@@ -66,7 +79,7 @@ export default function ProfileScreen() {
   const onAddBookie = async (bookie) => {
     closeAddBookieModal();
     setMessage(`add ${bookie.name} as a bookie?`);
-    openConfirmMessageModal();
+    openConfirmationModal();
 
     const response = await new Promise((resolve) => {
       handleConfirmCallback(() => resolve);
@@ -83,7 +96,7 @@ export default function ProfileScreen() {
         // if target is Balance object, delete balance
         if (target.balance >= 0) {
           setMessage(`delete ${target.bookieName} as a bookie?`);
-          openConfirmMessageModal();
+          openConfirmationModal();
 
           const confirmResponse = await new Promise((resolve) => {
             handleConfirmCallback(() => resolve);
@@ -168,8 +181,8 @@ export default function ProfileScreen() {
         addBookie={onAddBookie}  
       />
       <ConfirmMessage
-        visible={confirmModalVisible}
-        close={closeConfirmMessageModal}
+        visible={confirmationModalVisible}
+        close={closeConfirmationModal}
         message={confirmMessage}
         confirm={onHandleConfirm}
       />
