@@ -37,7 +37,7 @@ export default function ProfileScreen() {
 
   const { confirmMessage, setMessage, handleConfirmCallback, handleConfirm } = useConfirmationState();
 
-  const { addBookie } = useUserBalDataState();
+  const { addBookie, deleteBalBookie } = useUserBalDataState();
 
   const { optionsModalVisible, openOptionsModal, closeOptionsModal, options, setOptionsList, optionCallback, handleOptionCallback, handleOption } = useOptionsState();
 
@@ -77,7 +77,29 @@ export default function ProfileScreen() {
     }
   };
 
-  const onOpenOptions = async (bookie, options) => {
+  const handleResponse = async (response, target) => {
+      // if response is delete, confirm deletion
+      if (response === 'Delete') {
+        // if target is Balance object, delete balance
+        if (target.balance >= 0) {
+          setMessage(`delete ${target.bookieName} as a bookie?`);
+          openConfirmMessageModal();
+
+          const confirmResponse = await new Promise((resolve) => {
+            handleConfirmCallback(() => resolve);
+          });
+
+          if (confirmResponse) {
+            deleteBalBookie(target.bookieId, user.id);
+          }
+        } else {
+          console.log('delete bet');
+          console.log(JSON.stringify(target));
+        }
+      }
+  }
+
+  const onOpenOptions = async (target, options) => {
     setOptionsList(options);
     openOptionsModal();
 
@@ -86,8 +108,9 @@ export default function ProfileScreen() {
       handleOptionCallback(() => resolve);
     });
 
+    // handle the response
     if (response) {
-      console.log(response + ' ' + bookie.bookieName);
+      await handleResponse(response, target);
     }
   };
 
