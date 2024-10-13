@@ -11,7 +11,17 @@ const useUserBalDataState = () => {
 
     const { user, setUserBalance } = useContext(UserContext);
 
+    const [addBookieModalVisible, setAddBookieModalVisible] = useState(false);
+
     const [userTransactions, setUserTransactions] = useState([]);
+
+    const openAddBookieModal = () => {
+        setAddBookieModalVisible(true);
+    }
+
+    const closeAddBookieModal = () => {
+        setAddBookieModalVisible(false);
+    }
 
     const addBookie = (bookie) => {
         insertBalance(db, bookie.id, 0, user.id).then(() => {
@@ -41,6 +51,9 @@ const useUserBalDataState = () => {
     }
 
     return {
+        addBookieModalVisible,
+        openAddBookieModal,
+        closeAddBookieModal,
         addBookie,
         deleteBalBookie,
         confirmTransaction,
