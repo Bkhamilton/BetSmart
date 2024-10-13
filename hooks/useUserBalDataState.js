@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { insertBalance, updateBalance, deleteBalance } from '@/db/user-specific/Balance';
@@ -72,6 +72,17 @@ const useUserBalDataState = () => {
         confirmTransaction(bookieId, title, initialAmount, transactionAmount, updatedBalance);
         closeTransactionModal();
     }
+
+    useEffect(() => {
+        const fetchUserTransactions = async () => {
+            if (user) {
+                const transactions = await getTransactionsByUser(db, user.id);
+                setUserTransactions(transactions);
+            }
+        };
+
+        fetchUserTransactions();
+    }, [db, user]);
 
     return {
         addBookieModalVisible,

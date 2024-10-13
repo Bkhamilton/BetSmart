@@ -67,13 +67,11 @@ export default function HomeScreen() {
     transactionTitle,
     transactionBookie,
     userTransactions, 
-    setUserTransactions,
     openAddBookieModal,
     closeAddBookieModal, 
     openTransactionModal,
     closeTransactionModal,
     addBookie, 
-    confirmTransaction, 
     onConfirmTransaction, 
   } = useUserBalDataState();
 
@@ -124,14 +122,6 @@ export default function HomeScreen() {
   
     fetchData();
   }, [triggerFetch, trigger]);
-
-  useEffect(() => {
-    if (user) {
-      getTransactionsByUser(db, user.id).then((transactions) => {
-        setUserTransactions(transactions);
-      });
-    }
-  }, [user]);
 
   const onConfirmBetSlip = (betSlip) => {
     confirmBetResults(db, betSlip, user);
