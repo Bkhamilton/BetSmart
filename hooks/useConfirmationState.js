@@ -28,6 +28,11 @@ const useConfirmationState = () => {
         }
     };
 
+    const onHandleConfirm = (response) => {
+        handleConfirm(response);
+        closeConfirmationModal();
+    };
+
     return {
         confirmationModalVisible,
         openConfirmationModal,
@@ -35,6 +40,7 @@ const useConfirmationState = () => {
         confirmMessage, setMessage,
         confirmCallback, handleConfirmCallback,
         handleConfirm,
+        onHandleConfirm,
     };
 };
 
