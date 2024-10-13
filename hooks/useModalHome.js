@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
+import useUserBalDataState from './useUserBalDataState';
 
 const useModalHome = () => {
 
@@ -12,8 +13,6 @@ const useModalHome = () => {
   const [transactionModalVisible, setTransactionModalVisible] = useState(false);
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [chooseBookieModalVisible, setChooseBookieModalVisible] = useState(false);
-  const [addBookieModalVisible, setAddBookieModalVisible] = useState(false);
-  const [confirmMessageModalVisible, setConfirmMessageModalVisible] = useState(false);
 
   const [transactionTitle, setTransactionTitle] = useState('Deposit');
   const [transactionBookie, setTransactionBookie] = useState('DraftKings');
@@ -22,22 +21,6 @@ const useModalHome = () => {
   const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
 
   const [betSlips, setBetSlips] = useState([]);
-
-  function openConfirmMessageModal() {
-    setConfirmMessageModalVisible(true);
-  }
-
-  function closeConfirmMessageModal() {
-    setConfirmMessageModalVisible(false);
-  }
-
-  function openAddBookieModal() {
-    setAddBookieModalVisible(true);
-  }
-
-  function closeAddBookieModal() {
-    setAddBookieModalVisible(false);
-  }
 
   function openChooseBookieModal() {
     setChooseBookieModalVisible(true);
@@ -84,34 +67,17 @@ const useModalHome = () => {
     setTransactionModalVisible(false);
   }
 
-  // function to setBookie using one object from userBalance
-  const selectBookie = (balance) => {
-    if (balance.bookieId === -1) {
-      closeChooseBookieModal();
-      openAddBookieModal();
-    } else {
-      setBookie({ id: balance.bookieId, name: balance.bookieName });
-      closeChooseBookieModal();
-    }
-  };
-
   return {
     loginModalVisible, setLoginModalVisible,
     signUpModalVisible, setSignUpModalVisible,
     transactionModalVisible, setTransactionModalVisible,
     confirmModalVisible, setConfirmModalVisible,
     chooseBookieModalVisible, setChooseBookieModalVisible,
-    addBookieModalVisible, setAddBookieModalVisible,
-    confirmMessageModalVisible, setConfirmMessageModalVisible,
     transactionTitle, setTransactionTitle,
     transactionBookie, setTransactionBookie,
     transactionBookieId, setTransactionBookieId,
     confirmedBetSlip, setConfirmedBetSlip,
     betSlips, setBetSlips,
-    openConfirmMessageModal,
-    closeConfirmMessageModal,
-    openAddBookieModal,
-    closeAddBookieModal,
     openChooseBookieModal,
     closeChooseBookieModal,
     openSignUpModal,
@@ -122,7 +88,6 @@ const useModalHome = () => {
     closeConfirmModal,
     openTransactionModal,
     closeTransactionModal,
-    selectBookie,
   };
 };
 
