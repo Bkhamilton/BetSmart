@@ -6,7 +6,7 @@ import { UserContext } from '@/contexts/UserContext';
 import { bookieImages } from '@/constants/bookieConstants';
 import useTheme from '@/hooks/useTheme';
 
-export default function TransactionModal({ visible, close, title, bookie, bookieId, onConfirm  }) {
+export default function TransactionModal({ visible, close, title, bookie, onConfirm  }) {
 
   const { userBalance } = useContext(UserContext);
 
@@ -15,7 +15,7 @@ export default function TransactionModal({ visible, close, title, bookie, bookie
 
   const { grayBorder } = useTheme();
 
-  var selectedBookie = userBalance?.find(item => item.bookieId === bookieId);
+  var selectedBookie = userBalance?.find(item => item.bookieId === bookie.id);
   if (!selectedBookie) {
     const totalBalance = userBalance ? userBalance.reduce((sum, item) => sum + item.balance, 0) : 0;
     selectedBookie = { bookie: 'Total', balance: totalBalance };
@@ -51,7 +51,7 @@ export default function TransactionModal({ visible, close, title, bookie, bookie
 
     updatedBalance = Number(updatedBalance.toFixed(2));
   
-    onConfirm(bookieId, title, numericInitialAmount, numericAmount, updatedBalance);
+    onConfirm(bookie.id, title, numericInitialAmount, numericAmount, updatedBalance);
     setAmount('');
   };
 
@@ -88,9 +88,9 @@ export default function TransactionModal({ visible, close, title, bookie, bookie
             <View style={[styles.infoBox, { flexDirection: 'row', justifyContent: 'space-between' }]}>
               <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                 <View style={styles.inputBox}>
-                  <Image source={bookieImages[bookie]} style={{ width: 24, height: 24, borderRadius: 4 }} />
+                  <Image source={bookieImages[bookie.name]} style={{ width: 24, height: 24, borderRadius: 4 }} />
                 </View>
-                <Text style={[styles.BoxTitle, { marginLeft: 4 }]}>{bookie}</Text>
+                <Text style={[styles.BoxTitle, { marginLeft: 4 }]}>{bookie.name}</Text>
               </View>
               <View style={styles.inputBox}>
                 <Text>{initialAmount.toFixed(2)}</Text>
