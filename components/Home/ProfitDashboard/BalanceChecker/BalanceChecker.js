@@ -25,7 +25,7 @@ export default function BalanceChecker({ openTransaction, openChooseBookie, tran
     };
 
     const selectTransaction = (type) => {
-        openTransaction(type, userBalance, bookie.name);
+      openTransaction(type, bookie);
     };
     
     const balanceValue = bookie.name === 'Total' 
