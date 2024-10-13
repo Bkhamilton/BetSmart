@@ -10,7 +10,6 @@ import UserFavorites from '@/components/Profile/ProfilePage/UserFavorites';
 import Achievements from '@/components/Profile/ProfilePage/Achievements';
 import AddBookie from '@/components/Modals/AddBookie';
 import { useSQLiteContext } from 'expo-sqlite';
-import { insertBalance } from '@/db/user-specific/Balance';
 import useTheme from '@/hooks/useTheme';
 import ActiveBookies from '@/components/Profile/ProfilePage/ActiveBookies';
 import useHookProfilePage from '@/hooks/useHookProfilePage';
@@ -33,7 +32,7 @@ export default function ProfileScreen() {
     confirmMessage, 
     setMessage, 
     handleConfirmCallback, 
-    handleConfirm
+    onHandleConfirm,
   } = useConfirmationState();
 
   const { 
@@ -51,7 +50,7 @@ export default function ProfileScreen() {
     options, 
     setOptionsList,  
     handleOptionCallback, 
-    handleOption
+    onHandleOption,
   } = useOptionsState();
 
   const router = useRouter();
@@ -64,17 +63,7 @@ export default function ProfileScreen() {
     router.replace('profile/betHistory');
   };
 
-  const { iconColor, backgroundColor, grayBorder } = useTheme();
-
-  const onHandleConfirm = (response) => {
-    handleConfirm(response);
-    closeConfirmationModal();
-  };
-
-  const onHandleOption = (response) => {
-    handleOption(response);
-    closeOptionsModal();
-  };
+  const { iconColor, grayBorder } = useTheme();
 
   const onAddBookie = async (bookie) => {
     closeAddBookieModal();

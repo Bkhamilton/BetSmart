@@ -28,6 +28,11 @@ const useOptionsState = () => {
         }
     }
 
+    const onHandleOption = (response) => {
+        handleOption(response);
+        closeOptionsModal();
+    }
+
     return {
         optionsModalVisible,
         options,   
@@ -37,6 +42,7 @@ const useOptionsState = () => {
         setOptionsList,
         handleOptionCallback,
         handleOption,
+        onHandleOption,
     };
 };
 
