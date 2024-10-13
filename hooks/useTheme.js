@@ -20,7 +20,7 @@ export default function useTheme() {
     redText: colorScheme === 'dark' ? Colors.dark.redText : Colors.light.redText,
     betMGM: colorScheme === 'dark' ? Colors.dark.betMGM : Colors.light.betMGM,
     caesars: colorScheme === 'dark' ? Colors.dark.caesars : Colors.light.caesars,
-    pointsBet: colorScheme === 'dark' ? Colors.dark.pointsBet : Colors.light.pointsBet,
+    pointsbet: colorScheme === 'dark' ? Colors.dark.pointsbet : Colors.light.pointsbet,
     barstool: colorScheme === 'dark' ? Colors.dark.barstool : Colors.light.barstool,
     // Add other color definitions here...
   }
@@ -30,7 +30,7 @@ export default function useTheme() {
     'FanDuel': themeColors.mainBlue,
     'BetMGM': themeColors.betMGM,
     'Caesars': themeColors.caesars,
-    'PointsBet': themeColors.pointsBet,
+    'PointsBet': themeColors.pointsbet,
     'Barstool': themeColors.barstool,
     'Total': themeColors.mainGreen,
   };
@@ -40,7 +40,7 @@ export default function useTheme() {
     'FanDuel': themeColors.accentBlue,
     'BetMGM': themeColors.betMGM,
     'Caesars': themeColors.caesars,
-    'PointsBet': themeColors.pointsBet,
+    'PointsBet': themeColors.pointsbet,
     'Barstool': themeColors.barstool,
     'Total': themeColors.mainGreen,
   };
