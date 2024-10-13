@@ -17,7 +17,6 @@ import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
 import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
-import { insertBalance, updateBalance, updateUserBalance } from '@/db/user-specific/Balance';
 import { getUser } from '@/db/user-specific/Users';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
 import { insertUserSession } from '@/db/user-specific/UserSessions';
@@ -33,17 +32,13 @@ export default function HomeScreen() {
 
   const db = useSQLiteContext();
 
-  const { user, setUserBalance, trigger, setTrigger, userBalance, setBookie } = useContext(UserContext);
+  const { user, trigger, setTrigger, userBalance, setBookie } = useContext(UserContext);
 
   const {
     loginModalVisible,
     signUpModalVisible,
-    transactionModalVisible,
     confirmModalVisible,
     chooseBookieModalVisible,
-    transactionTitle,
-    transactionBookie,
-    transactionBookieId,
     confirmedBetSlip,
     betSlips, setBetSlips,
     openChooseBookieModal,
@@ -54,8 +49,6 @@ export default function HomeScreen() {
     closeLoginModal,
     openConfirmModal,
     closeConfirmModal,
-    openTransactionModal,
-    closeTransactionModal,
   } = useModalHome();
 
   const { 
@@ -65,17 +58,23 @@ export default function HomeScreen() {
     confirmMessage, 
     setMessage, 
     handleConfirmCallback, 
-    handleConfirm 
+    onHandleConfirm, 
   } = useConfirmationState();
 
   const {
     addBookieModalVisible,
+    transactionModalVisible,
+    transactionTitle,
+    transactionBookie,
+    userTransactions, 
+    setUserTransactions,
     openAddBookieModal,
     closeAddBookieModal, 
+    openTransactionModal,
+    closeTransactionModal,
     addBookie, 
     confirmTransaction, 
-    userTransactions, 
-    setUserTransactions 
+    onConfirmTransaction, 
   } = useUserBalDataState();
 
   const [triggerFetch, setTriggerFetch] = useState(false);
@@ -134,11 +133,6 @@ export default function HomeScreen() {
     }
   }, [user]);
 
-  const onConfirmTransaction = (bookieId, title, initialAmount, transactionAmount, updatedBalance) => {
-    confirmTransaction(bookieId, title, initialAmount, transactionAmount, updatedBalance);
-    closeTransactionModal();
-  }
-
   const onConfirmBetSlip = (betSlip) => {
     confirmBetResults(db, betSlip, user);
 
@@ -147,11 +141,6 @@ export default function HomeScreen() {
     setTriggerFetch(prev => !prev);
     setTrigger(prev => !prev);
   }
-
-  const onHandleConfirm = (response) => {
-    handleConfirm(response);
-    closeConfirmationModal();
-  };
 
   const onAddBookie = async (bookie) => {
     closeAddBookieModal();
@@ -193,7 +182,6 @@ export default function HomeScreen() {
         close={closeTransactionModal}
         title={transactionTitle}
         bookie={transactionBookie}
-        bookieId={transactionBookieId}
         onConfirm={onConfirmTransaction}
       />
       <AddBookie
