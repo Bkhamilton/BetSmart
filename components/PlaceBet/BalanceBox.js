@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Image, Pressable } from 'react-native';
-import { Text, View, TouchableOpacity } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { UserContext } from '@/contexts/UserContext';
 import { bookieImages } from '@/constants/bookieConstants';
@@ -47,10 +47,10 @@ export default function BalanceBox({ openModal }) {
             onPress={() => openModal()}
             onLongPress={() => switchBookie()}
         >
-          <View style={{ backgroundColor: 'transparent', width: 75, alignItems: 'flex-start', justifyContent: 'center' }}>
-            <Text style={{ fontSize: 18, fontWeight: '500' }}>${curBookie.balance.toFixed(2)}</Text>
+          <View style={styles.bankContainer}>
+            <Text style={styles.bankText}>${curBookie.balance.toFixed(2)}</Text>
           </View>
-            <Image source={bookieImages[bookie]} style={{ width: 32, height: 32, borderRadius: 8 }} />
+            <Image source={bookieImages[bookie]} style={styles.bankImage} />
         </Pressable>
     );
 }
@@ -69,5 +69,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: -8,
     paddingLeft: 8,
+  },
+  bankContainer: {
+    backgroundColor: 'transparent',
+    width: 75,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  bankText: {
+    fontSize: 18,
+    fontWeight: '500',
+  },
+  bankImage: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
   },
 });

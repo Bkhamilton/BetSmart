@@ -1,28 +1,26 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Pressed } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import useTheme from '@/hooks/useTheme';
-
-import Colors from '@/constants/Colors';
 
 export default function BetSlipBanner({ onPress }) {
 
     const { betSlip } = useContext(BetContext);
 
-    const { mainGreen, iconColor } = useTheme();
+    const { mainGreen } = useTheme();
 
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
 
     return (
         <TouchableOpacity 
-            style={styles.container}
-            onPress={onPress}
+          style={styles.container}
+          onPress={onPress}
         >
-            <View style={[styles.legsContainer, { backgroundColor: mainGreen }]}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{totalLegs}</Text>
-            </View>
-            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Odds: {betSlip.odds}</Text>
+          <View style={[styles.legsContainer, { backgroundColor: mainGreen }]}>
+              <Text style={styles.bannerText}>{totalLegs}</Text>
+          </View>
+          <Text style={styles.bannerText}>Odds: {betSlip.odds}</Text>
         </TouchableOpacity>
     );
 }
@@ -44,5 +42,9 @@ const styles = StyleSheet.create({
     width: 40, 
     justifyContent: 'center', 
     alignItems: 'center'
+  },
+  bannerText: {
+    fontSize: 16, 
+    fontWeight: 'bold'
   }
 });

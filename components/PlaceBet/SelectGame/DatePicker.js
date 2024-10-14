@@ -12,22 +12,22 @@ export default function DatePicker({ date, updateDate }) {
     const todaysDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
     return (
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 8, paddingTop: 2 }}>
+        <View style={styles.container}>
             <View>
                 <TouchableOpacity 
                     onPress={() => updateDate('prev')}
-                    style={{ padding: 4 }}
+                    style={styles.dateButton}
                 >
                     <FontAwesome5 name="chevron-left" size={16} color={iconColor} />
                 </TouchableOpacity> 
             </View>
             <View>
-                <Text style={{ fontSize: 12, fontWeight: '500' }}>{todaysDate === date ? 'Today, ' : ''}{date}</Text>
+                <Text style={styles.dateText}>{todaysDate === date ? 'Today, ' : ''}{date}</Text>
             </View>
             <View>
                 <TouchableOpacity
                     onPress={() => updateDate('next')}
-                    style={{ padding: 4 }}
+                    style={styles.dateButton}
                 >
                     <FontAwesome5 name="chevron-right" size={16} color={iconColor} />
                 </TouchableOpacity> 
@@ -38,8 +38,17 @@ export default function DatePicker({ date, updateDate }) {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    paddingVertical: 1,
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    paddingHorizontal: 8, 
+    paddingTop: 2,
+  },
+  dateText: {
+    fontSize: 12, 
+    fontWeight: '500'
+  },
+  dateButton: {
+    padding: 4,
   },
 });
