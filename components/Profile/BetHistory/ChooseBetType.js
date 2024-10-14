@@ -10,35 +10,25 @@ export default function ChooseBetType({ selectType, type }) {
   return (
     <View>
       <View style={[styles.container, { borderColor: grayBorder }]}>
-          <TouchableOpacity 
-            style={[
-              styles.typeContainer, 
-              type === 'Today' && styles.activeTypeContainer
-            ]}
-            onPress={() => selectType('Today')}
-          >
-              <Text style={[styles.typeText, type === 'Today' && styles.activeType]}>Today</Text>
-          </TouchableOpacity>
-          <View style={[styles.border, { borderColor: grayBorder }]} />
-          <TouchableOpacity
-              style={[
-                styles.typeContainer,
-                type === 'Settled' && styles.activeTypeContainer
-              ]}
-              onPress={() => selectType('Settled')}
-            >
-                <Text style={[styles.typeText, type === 'Settled' && styles.activeType]}>Settled</Text>
-            </TouchableOpacity>
-          <View style={[styles.border, { borderColor: grayBorder }]} />
-          <TouchableOpacity 
-            style={[
-              styles.typeContainer,
-              type === 'Future' && styles.activeTypeContainer
-            ]}
-            onPress={() => selectType('Future')}
-          >
-              <Text style={[styles.typeText, type === 'Future' && styles.activeType]}>Future</Text>
-          </TouchableOpacity>
+        <TouchableOpacity 
+          style={[
+            styles.typeContainer, 
+            type === 'Open' && styles.activeTypeContainer
+          ]}
+          onPress={() => selectType('Open')}
+        >
+            <Text style={[styles.typeText, type === 'Open' && styles.activeType]}>Open</Text>
+        </TouchableOpacity>
+        <View style={[styles.border, { borderColor: grayBorder }]} />
+        <TouchableOpacity
+          style={[
+            styles.typeContainer,
+            type === 'Settled' && styles.activeTypeContainer
+          ]}
+          onPress={() => selectType('Settled')}
+        >
+            <Text style={[styles.typeText, type === 'Settled' && styles.activeType]}>Settled</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
