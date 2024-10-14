@@ -6,7 +6,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 import useTheme from '@/hooks/useTheme';
-
+import useRouting from '@/hooks/useRouting';
 import ChooseBetType from '@/components/Profile/BetHistory/ChooseBetType';
 import BetSlipDisplay from '@/components/Profile/BetHistory/BetSlipDisplay/BetSlipDisplay';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
@@ -17,11 +17,7 @@ export default function SettingsScreen() {
 
     const db = useSQLiteContext();
 
-    const router = useRouter();
-
-    const handleClose = () => {
-      router.replace('profile/profilePage');
-    };
+    const { handleProfilePage } = useRouting();
 
     const [selectedType, setSelectedType] = useState('Today');
 
@@ -55,7 +51,7 @@ export default function SettingsScreen() {
           <View style={styles.headerContainer}>
             <View style={{ flex: 0.2, }}>
               <TouchableOpacity 
-                onPress={handleClose}
+                onPress={handleProfilePage}
               >
                 <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
               </TouchableOpacity>  
