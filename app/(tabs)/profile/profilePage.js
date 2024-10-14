@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { StyleSheet, RefreshControl } from 'react-native';
-import { useRouter } from 'expo-router';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
@@ -16,6 +15,7 @@ import useHookProfilePage from '@/hooks/useHookProfilePage';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
 import useOptionsState from '@/hooks/useOptionsState';
+import useRouting from '@/hooks/useRouting';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 import OptionMenu from '@/components/Modals/OptionMenu';
 
@@ -45,23 +45,16 @@ export default function ProfileScreen() {
 
   const { 
     optionsModalVisible, 
-    openOptionsModal, 
     closeOptionsModal, 
     options, 
-    setOptionsList,  
-    handleOptionCallback, 
     onHandleOption,
+    handleOpenOptions,
   } = useOptionsState();
 
-  const router = useRouter();
-
-  const handleSettings = () => {
-    router.replace('profile/settings');
-  };
-
-  const handleBetHistory = () => {
-    router.replace('profile/betHistory');
-  };
+  const {
+    handleBetHistory,
+    handleSettings,
+  } = useRouting();
 
   const { iconColor, grayBorder } = useTheme();
 
@@ -102,18 +95,7 @@ export default function ProfileScreen() {
   }
 
   const onOpenOptions = async (target, options) => {
-    setOptionsList(options);
-    openOptionsModal();
-
-    // response is the option selected
-    const response = await new Promise((resolve) => {
-      handleOptionCallback(() => resolve);
-    });
-
-    // handle the response
-    if (response) {
-      await handleResponse(response, target);
-    }
+    handleOpenOptions(target, options, handleResponse);
   };
 
   const LoadingHeader = () => {
