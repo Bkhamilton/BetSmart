@@ -5,11 +5,12 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { getLogoUrl } from '@/db/general/Teams';
 import { retrieveMarketsDB } from '@/api/prop-odds/markets';
 import useTheme from '@/hooks/useTheme';
+import useRouting from '@/hooks/useRouting';
 import MainBettingLines from './MainBettingLines/MainBettingLines';
 import HeadToHead from './HeadToHead';
 import DateTime from './DateTime';
 
-export default function GameComponent({ game, selectGame }) {
+export default function GameComponent({ game }) {
 
     const [homeLogo, setHomeLogo] = useState('');
     const [awayLogo, setAwayLogo] = useState('');
@@ -19,6 +20,8 @@ export default function GameComponent({ game, selectGame }) {
     const { gameId, homeTeamName, homeTeamAbv, awayTeamName, awayTeamAbv, timestamp } = game;
 
     const { grayBackground, grayBorder } = useTheme();
+
+    const { handleSelectGame } = useRouting();
 
     const db = useSQLiteContext();
 
@@ -41,7 +44,7 @@ export default function GameComponent({ game, selectGame }) {
     return (
         <TouchableOpacity 
             style={[styles.container, { backgroundColor: grayBackground, borderColor: grayBorder }]}
-            onPress={() => selectGame(game)}
+            onPress={() => handleSelectGame({ game })}
         >
             <View style={styles.mainBlock}>
                 { homeLogo != '' && awayLogo != '' ?                 

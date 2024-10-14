@@ -3,13 +3,12 @@ import { StyleSheet, FlatList } from 'react-native';
 import { View, Text } from '@/components/Themed'
 import GameComponent from '@/components/PlaceBet/SelectGame/GameList/GameComponent/GameComponent';
 
-export default function GameList({ games, selectGame }) {
+export default function GameList({ games }) {
     const renderItem = useCallback(({ item }) => (
         <GameComponent 
-        game={item} 
-        selectGame={selectGame}
+          game={item} 
         />
-    ), [selectGame]);
+    ), [games]);
 
     const keyExtractor = useCallback((item) => item.id.toString(), []);
 

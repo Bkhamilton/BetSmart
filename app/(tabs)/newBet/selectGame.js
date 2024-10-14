@@ -2,18 +2,16 @@ import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext'; 
-import { Text, View } from '@/components/Themed';
+import { View } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
 import GameList from '@/components/PlaceBet/SelectGame/GameList/GameList';
 import SportSlider from '@/components/PlaceBet/SelectGame/SportSlider';
-import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import DatePicker from '@/components/PlaceBet/SelectGame/DatePicker';
+import SelectGameHeader from '@/components/PlaceBet/SelectGame/SelectGameHeader';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
 import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
 import SelectLeague from '@/components/Modals/SelectLeague';
-import useTheme from '@/hooks/useTheme';
-import useRouting from '@/hooks/useRouting';
 import useHookNewBet from '@/hooks/useHookNewBet';
 import useHookSelectGame from '@/hooks/useHookSelectGame';
 
@@ -21,8 +19,6 @@ export default function SelectGameScreen() {
 
   const { league, betSlip } = useContext(BetContext);
   const { leagues } = useContext(DBContext);
-
-  const { handleSelectGame } = useRouting();
 
   const {
     betSlipModalVisible,
@@ -52,27 +48,12 @@ export default function SelectGameScreen() {
   const curLeagueData = allSportsData?.find(sportData => sportData.sport === league?.leagueName);
   const curLeagueGames = curLeagueData ? curLeagueData.data : [];
 
-  const { grayBorder } = useTheme();
-
-  const SelectGameHeader = () => {
-    return (
-      <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
-        <View style={{ flex: 0.3 }}>
-          
-        </View>
-        <View style={{ flex: 0.4, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{header}</Text>
-        </View>
-        <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <BalanceBox openModal={openChooseBookieModal}/>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <>
-      <SelectGameHeader />
+      <SelectGameHeader
+        header={header}
+        openChooseBookieModal={openChooseBookieModal}
+      />
       <ChooseBookie
         visible={chooseBookieModalVisible}
         close={closeChooseBookieModal}
@@ -114,7 +95,6 @@ export default function SelectGameScreen() {
                 </View>
                 <GameList
                   games={curLeagueGames.games}
-                  selectGame={game => handleSelectGame({ game })}
                 />
                 {
                   betSlip &&
@@ -153,15 +133,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 120,
-  },
-  headerContainer: {
-    height: 84, 
-    paddingHorizontal: 10, 
-    paddingTop: 48,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   mainContainer: {
     flex: 1, 
