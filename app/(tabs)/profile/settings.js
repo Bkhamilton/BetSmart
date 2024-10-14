@@ -1,29 +1,22 @@
-import { StyleSheet, useColorScheme } from 'react-native';
-import { useRouter } from 'expo-router';
+import { StyleSheet } from 'react-native';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
-import Header from '@/components/Header/Header';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AccountInfo from '@/components/Profile/Settings/AccountInfo';
 import SettingsOptions from '@/components/Profile/Settings/SettingsOptions';
-
-import Colors from '@/constants/Colors';
+import useRouting from '@/hooks/useRouting';
+import useTheme from '@/hooks/useTheme';
 
 export default function SettingsScreen() {
-    const colorScheme = useColorScheme();
 
-    const iconColor = colorScheme === 'dark' ? Colors.dark.text : Colors.light.text;
+    const { iconColor } = useTheme();
 
-    const router = useRouter();
-
-    const handleClose = () => {
-      router.replace('profile/profilePage');
-    };
+    const { handleProfilePage } = useRouting();
 
     return (
-    <View style={styles.container}>
+      <View style={styles.container}>
         <View style={styles.headerContainer}>
           <TouchableOpacity 
-            onPress={handleClose}
+            onPress={handleProfilePage}
           >
             <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
           </TouchableOpacity>        
@@ -40,7 +33,7 @@ export default function SettingsScreen() {
             <SettingsOptions onPress={handleClose}/>
           </View>
         </ScrollView>
-    </View>
+      </View>
     );
 }
 
