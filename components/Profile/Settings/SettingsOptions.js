@@ -1,14 +1,12 @@
 import React from 'react';
-import { StyleSheet, FlatList, useColorScheme } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
-
-import Colors from '@/constants/Colors';
+import useTheme from '@/hooks/useTheme';
 
 export default function SettingsOptions({ onPress }) {
-  const colorScheme = useColorScheme();
 
-  const iconColor = colorScheme === 'dark' ? Colors.dark.text : Colors.light.text;
+  const { iconColor } = useTheme();
 
   function SettingsOption({ icon, title, pressIcon, onPress }) {
     return (
