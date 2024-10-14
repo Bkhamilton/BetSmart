@@ -13,6 +13,7 @@ import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
 import { getLeaguePropInfo } from '@/db/bet-general/LeaguePropsInfo';
 import useTheme from '@/hooks/useTheme';
 import useHookNewBet from '@/hooks/useHookNewBet';
+import useHookBetDetails from '@/hooks/useHookBetDetails';
 import useRouting from '@/hooks/useRouting';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
@@ -36,34 +37,14 @@ export default function BetDetailsScreen() {
     confirmBet,
   } = useHookNewBet();
 
-  const db = useSQLiteContext();
-
-  const [leagueProps, setLeagueProps] = useState([]); // [ { id: 0, leagueId: 0, propName: '' }
-  const [leaguePropInfo, setLeaguePropInfo] = useState([]); // [ { id: 0, leagueId: 0, propName: '', propValue: '' }
-
-  const [curLeagueProp, setCurLeagueProp] = useState('Popular');
-
-  const selectLeagueProp = (prop) => {
-    setCurLeagueProp(prop);
-  };
+  const {
+    leagueProps,
+    leaguePropInfo,
+    curLeagueProp,
+    selectLeagueProp,
+  } = useHookBetDetails();
 
   const { iconColor, grayBorder } = useTheme();
-
-  useEffect(() => {
-    getLeaguePropsForLeague(db, league.id).then((props) => {
-      const sortedProps = props.sort((a, b) => a.id - b.id);
-      setLeagueProps(sortedProps);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (curLeagueProp) {
-      getLeaguePropInfo(db, league.id, curLeagueProp).then((info) => {
-        const sortedInfo = info.sort((a, b) => a.id - b.id);
-        setLeaguePropInfo(sortedInfo);
-      });
-    }
-  }, [curLeagueProp]);
   
   const GameHeader = () => {
     return (
