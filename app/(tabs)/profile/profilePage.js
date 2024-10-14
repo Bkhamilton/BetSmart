@@ -1,27 +1,21 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, RefreshControl } from 'react-native';
-import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
-import Header from '@/components/Header/Header';
-import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
+import { Text, View, ScrollView } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
 import ProfileMainInfo from '@/components/Profile/ProfilePage/ProfileMainInfo';
 import UserFavorites from '@/components/Profile/ProfilePage/UserFavorites';
 import Achievements from '@/components/Profile/ProfilePage/Achievements';
 import AddBookie from '@/components/Modals/AddBookie';
-import { useSQLiteContext } from 'expo-sqlite';
-import useTheme from '@/hooks/useTheme';
 import ActiveBookies from '@/components/Profile/ProfilePage/ActiveBookies';
 import useHookProfilePage from '@/hooks/useHookProfilePage';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
 import useOptionsState from '@/hooks/useOptionsState';
-import useRouting from '@/hooks/useRouting';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 import OptionMenu from '@/components/Modals/OptionMenu';
+import ProfilePageHeader from '@/components/Profile/ProfilePage/ProfilePageHeader';
 
 export default function ProfileScreen() {
-
-  const db = useSQLiteContext();
   
   const { user } = useContext(UserContext);
 
@@ -50,13 +44,6 @@ export default function ProfileScreen() {
     onHandleOption,
     handleOpenOptions,
   } = useOptionsState();
-
-  const {
-    handleBetHistory,
-    handleSettings,
-  } = useRouting();
-
-  const { iconColor, grayBorder } = useTheme();
 
   const onAddBookie = async (bookie) => {
     closeAddBookieModal();
@@ -98,54 +85,11 @@ export default function ProfileScreen() {
     handleOpenOptions(target, options, handleResponse);
   };
 
-  const LoadingHeader = () => {
-    return (
-      <Header title={'Username'}>
-        <TouchableOpacity 
-          onPress={handleBetHistory} 
-          accessibilityLabel="Open Bet History"
-          style={{ marginRight: 4 }}
-        >
-          <FontAwesome5 name='history' size={24} color={iconColor} />
-        </TouchableOpacity>
-        <TouchableOpacity 
-          onPress={handleSettings}
-          accessibilityLabel="Open Settings"
-        >
-          <FontAwesome name="cog" size={24} color={iconColor}/>
-        </TouchableOpacity>
-      </Header>
-    );
-  }
-
-  const ProfilePageHeader = ({ user }) => {
-    return (
-      <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
-        <View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{user.username}</Text>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <TouchableOpacity 
-            onPress={handleBetHistory} 
-            accessibilityLabel="Open Bet History"
-            style={{ marginRight: 4 }}
-          >
-            <FontAwesome5 name='history' size={24} color={iconColor} />
-          </TouchableOpacity>
-          <TouchableOpacity 
-            onPress={handleSettings}
-            accessibilityLabel="Open Settings"
-          >
-            <FontAwesome name="cog" size={24} color={iconColor}/>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
-  
   return (
     <>
-      {user ? <ProfilePageHeader user={user} /> : <LoadingHeader /> }
+      <ProfilePageHeader
+        user={user}
+      />
       <AddBookie 
         visible={addBookieModalVisible} 
         close={closeAddBookieModal} 
