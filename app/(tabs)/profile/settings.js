@@ -13,27 +13,27 @@ export default function SettingsScreen() {
     const { handleProfilePage } = useRouting();
 
     return (
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <TouchableOpacity 
-            onPress={handleProfilePage}
-          >
-            <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
-          </TouchableOpacity>        
-        </View>
-        <ScrollView>
-          <View style={styles.settingsHeader}>
-            <Text style={styles.settingsHeaderText}>Settings</Text>
-          </View>
-          <View style={{ backgroundColor: 'transparent' }}>
-            <View style={styles.accountHeader}>
-              <Text style={styles.accountHeaderText}>Account</Text>
+        <View style={styles.container}>
+            <View style={styles.headerContainer}>
+                <TouchableOpacity 
+                    onPress={handleProfilePage}
+                >
+                    <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
+                </TouchableOpacity>        
             </View>
-            <AccountInfo />
-            <SettingsOptions onPress={handleClose}/>
-          </View>
-        </ScrollView>
-      </View>
+            <ScrollView>
+                <View style={styles.settingsHeader}>
+                    <Text style={styles.settingsHeaderText}>Settings</Text>
+                </View>
+                <View style={{ backgroundColor: 'transparent' }}>
+                    <View style={styles.accountHeader}>
+                        <Text style={styles.accountHeaderText}>Account</Text>
+                    </View>
+                    <AccountInfo />
+                    <SettingsOptions onPress={handleProfilePage}/>
+                </View>
+            </ScrollView>
+        </View>
     );
 }
 
