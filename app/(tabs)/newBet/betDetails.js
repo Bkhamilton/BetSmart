@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { DBContext } from '@/contexts/DBContext';
-import { removeLeg } from '@/contexts/BetContext/betSlipHelpers';
 import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
@@ -14,18 +11,30 @@ import LeaguePropSlider from '@/components/PlaceBet/BetDetails/LeaguePropSlider'
 import LeaguePropInfo from '@/components/PlaceBet/BetDetails/LeaguePropInfo';
 import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
 import { getLeaguePropInfo } from '@/db/bet-general/LeaguePropsInfo';
-import { getLeagueByName } from '@/db/general/Leagues';
 import useTheme from '@/hooks/useTheme';
+import useHookNewBet from '@/hooks/useHookNewBet';
+import useRouting from '@/hooks/useRouting';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
 
 export default function BetDetailsScreen() {
    
-  const { league, currentGame, setBookie, setBookieId, betSlip, setBetSlip } = useContext(BetContext);
+  const { league, betSlip } = useContext(BetContext);
 
-  const { bookies } = useContext(DBContext);
+  const { handleCloseBetDetails } = useRouting();
 
-  const router = useRouter();
+  const { 
+    betSlipModalVisible,
+    chooseBookieModalVisible,
+    openBetSlipModal,
+    closeBetSlipModal,
+    openChooseBookieModal,
+    closeChooseBookieModal, 
+    selectBookie,
+    removeProp,
+    removeBetSlip,
+    confirmBet,
+  } = useHookNewBet();
 
   const db = useSQLiteContext();
 
@@ -34,42 +43,11 @@ export default function BetDetailsScreen() {
 
   const [curLeagueProp, setCurLeagueProp] = useState('Popular');
 
-  const [chooseBookieModal, setChooseBookieModal] = useState(false);
-  const [betSlipModal, setBetSlipModal] = useState(false);
-
-  const [totalLegs, setTotalLegs] = useState(0);
-
-  const openBookieModal = () => {
-    setChooseBookieModal(true);
-  }
-
-  const closeBookieModal = () => {
-    setChooseBookieModal(false);
-  }
-
-  const openBetSlipModal = () => {
-    setBetSlipModal(true);
-  }
-
-  const closeBetSlipModal = () => {
-    setBetSlipModal(false);
-  }
-
-  const selectBookie = (bookie) => {
-    setChooseBookieModal(false);
-    setBookie(bookie.name);
-    setBookieId(bookie.id);
-  }
-
-  const handleClose = () => {
-    router.navigate('newBet/selectGame');
-  };
-
   const selectLeagueProp = (prop) => {
     setCurLeagueProp(prop);
   };
 
-  const { mainGreen, iconColor, grayBorder } = useTheme();
+  const { iconColor, grayBorder } = useTheme();
 
   useEffect(() => {
     getLeaguePropsForLeague(db, league.id).then((props) => {
@@ -86,27 +64,12 @@ export default function BetDetailsScreen() {
       });
     }
   }, [curLeagueProp]);
-
-  const removeProp = (bet, leg) => {
-    const newBetSlip = removeLeg(betSlip, bet, leg);
-    if (!newBetSlip) {
-      closeBetSlipModal();
-      setBetSlip(null);
-    }
-    setTotalLegs(betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
-  }
-
-  const removeBetSlip = () => {
-    closeBetSlipModal();
-    setBetSlip(null);
-    setTotalLegs(0);
-  }
   
   const GameHeader = () => {
     return (
       <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
         <View style={{ flex: 0.3 }}>
-          <TouchableOpacity onPress={handleClose}>
+          <TouchableOpacity onPress={handleCloseBetDetails}>
             <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
           </TouchableOpacity>
         </View>
@@ -114,7 +77,7 @@ export default function BetDetailsScreen() {
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league.leagueName}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <BalanceBox openModal={openBookieModal}/>
+          <BalanceBox openModal={openChooseBookieModal}/>
         </View>
       </View>
     )
@@ -123,17 +86,18 @@ export default function BetDetailsScreen() {
   return (
     <>
       <ChooseBookie
-        visible={chooseBookieModal}
-        close={closeBookieModal}
+        visible={chooseBookieModalVisible}
+        close={closeChooseBookieModal}
         selectBookie={selectBookie}
       />
       {
         betSlip && (
           <BetSlipModal
-            visible={betSlipModal}
+            visible={betSlipModalVisible}
             close={closeBetSlipModal}
             removeProp={removeProp}
             removeBetSlip={removeBetSlip}
+            confirm={confirmBet}
           />
         )
       }
