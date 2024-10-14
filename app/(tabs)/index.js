@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
-import { useRouter } from 'expo-router';
+import React, { useState, useEffect, useContext } from 'react';
 import { RefreshControl } from 'react-native';
 import { ScrollView } from '@/components/Themed';
 import { myBetList } from '@/data/exampleBetData';
-import useTheme from '@/hooks/useTheme';
 import ProfitDashboard from '@/components/Home/ProfitDashboard/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
 import SignUpPage from '@/components/Modals/SignUpPage';
@@ -18,14 +16,13 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import { getUser } from '@/db/user-specific/Users';
-import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
 import { insertUserSession } from '@/db/user-specific/UserSessions';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
-
 import { confirmBetResults } from '@/utils/dbHelpers';
 import useModalHome from '@/hooks/useModalHome';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
+import useRouting from '@/hooks/useRouting';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 
 export default function HomeScreen() {
@@ -75,6 +72,10 @@ export default function HomeScreen() {
     onConfirmTransaction, 
   } = useUserBalDataState();
 
+  const {
+    handleBetHistory,
+  } = useRouting();
+
   const [triggerFetch, setTriggerFetch] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -102,12 +103,6 @@ export default function HomeScreen() {
 
     return true;
   }
-
-  const router = useRouter();
-
-  const handleBetHistory = () => {
-    router.replace('profile/betHistory');
-  };
 
   useEffect(() => {
     const fetchData = async () => {
