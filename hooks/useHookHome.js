@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const useModalHome = () => {
+const useHookHome = () => {
 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [signUpModalVisible, setSignUpModalVisible] = useState(false);
@@ -58,4 +58,4 @@ const useModalHome = () => {
   };
 };
 
-export default useModalHome;
+export default useHookHome;

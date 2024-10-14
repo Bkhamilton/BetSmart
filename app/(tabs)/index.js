@@ -19,7 +19,7 @@ import { getUser } from '@/db/user-specific/Users';
 import { insertUserSession } from '@/db/user-specific/UserSessions';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 import { confirmBetResults } from '@/utils/dbHelpers';
-import useModalHome from '@/hooks/useModalHome';
+import useHookHome from '@/hooks/useHookHome';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
 import useRouting from '@/hooks/useRouting';
@@ -46,7 +46,7 @@ export default function HomeScreen() {
     closeLoginModal,
     openConfirmModal,
     closeConfirmModal,
-  } = useModalHome();
+  } = useHookHome();
 
   const { 
     confirmationModalVisible,
