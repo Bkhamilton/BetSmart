@@ -33,14 +33,21 @@ const useConfirmationState = () => {
         closeConfirmationModal();
     };
 
+    const startConfirmation = async (message) => {
+        setMessage(message);
+        openConfirmationModal();
+    };
+
     return {
         confirmationModalVisible,
+        setConfirmationModalVisible,
         openConfirmationModal,
         closeConfirmationModal,
         confirmMessage, setMessage,
         confirmCallback, handleConfirmCallback,
         handleConfirm,
         onHandleConfirm,
+        startConfirmation,
     };
 };
 
