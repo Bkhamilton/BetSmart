@@ -8,7 +8,7 @@ import useTheme from '@/hooks/useTheme';
 
 export default function BalanceBox({ openModal }) {
 
-    const { userBalance, trigger } = useContext(UserContext);
+    const { userBalance } = useContext(UserContext);
     const { bookie, setBookie, bookieId, setBookieId } = useContext(BetContext);
 
     const [curBookie, setCurBookie] = useState({ balance: 0 });
@@ -18,9 +18,9 @@ export default function BalanceBox({ openModal }) {
             const newBookie = userBalance.find(obj => obj.bookieId === bookieId);
             setCurBookie(newBookie);
         }
-    }, [trigger]);
+    }, [userBalance]);
 
-    const { mainGreen, mainBlue, bookieColors, bookieBorderColors } = useTheme();
+    const { bookieColors, bookieBorderColors } = useTheme();
 
     const switchBookie = () => {
         // use userBalance to determine which bookies are available
