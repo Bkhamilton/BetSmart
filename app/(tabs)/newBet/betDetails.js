@@ -1,25 +1,19 @@
 import React, { useContext } from 'react';
-import { StyleSheet } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
+import { ScrollView } from '@/components/Themed';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
-import BalanceBox from '@/components/PlaceBet/BalanceBox';
-import ChooseBookie from '@/components/Modals/ChooseBookie';
 import LeaguePropSlider from '@/components/PlaceBet/BetDetails/LeaguePropSlider';
 import LeaguePropInfo from '@/components/PlaceBet/BetDetails/LeaguePropInfo';
-import useTheme from '@/hooks/useTheme';
+import ChooseBookie from '@/components/Modals/ChooseBookie';
 import useHookNewBet from '@/hooks/useHookNewBet';
 import useHookBetDetails from '@/hooks/useHookBetDetails';
-import useRouting from '@/hooks/useRouting';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
+import BetDetailsHeader from '@/components/PlaceBet/BetDetails/BetDetailsHeader';
 
 export default function BetDetailsScreen() {
    
   const { league, betSlip } = useContext(BetContext);
-
-  const { handleCloseBetDetails } = useRouting();
 
   const { 
     betSlipModalVisible,
@@ -41,26 +35,6 @@ export default function BetDetailsScreen() {
     selectLeagueProp,
   } = useHookBetDetails();
 
-  const { iconColor, grayBorder } = useTheme();
-  
-  const GameHeader = () => {
-    return (
-      <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
-        <View style={{ flex: 0.3 }}>
-          <TouchableOpacity onPress={handleCloseBetDetails}>
-            <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
-          </TouchableOpacity>
-        </View>
-        <View style={{ flex: 0.4, alignItems: 'center', justifyContent: 'flex-start', marginLeft: -10, }}>
-          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{league.leagueName}</Text>
-        </View>
-        <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <BalanceBox openModal={openChooseBookieModal}/>
-        </View>
-      </View>
-    )
-  };
-
   return (
     <>
       <ChooseBookie
@@ -79,7 +53,10 @@ export default function BetDetailsScreen() {
           />
         )
       }
-      <GameHeader />
+      <BetDetailsHeader
+        league={league}
+        openChooseBookieModal={openChooseBookieModal}
+      />
       <ScrollView>
         <IntroInfo/>
         {
@@ -106,18 +83,3 @@ export default function BetDetailsScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  headerContainer: {
-    height: 84, 
-    paddingLeft: 20,
-    paddingRight: 10, 
-    paddingTop: 48,
-    borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});
