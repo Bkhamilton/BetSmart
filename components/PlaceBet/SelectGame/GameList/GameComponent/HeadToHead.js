@@ -1,36 +1,36 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { Text, View, ClearView } from '@/components/Themed';
 
 export default function HeadToHead({ homeLogo, homeTeam, awayLogo, awayTeam }) {
-
     return (
-        <View style={{ flex: 1, backgroundColor: 'transparent', justifyContent: 'center' }}>
-            <View style={{ paddingVertical: 8, backgroundColor: 'transparent' }}>
-                <View style={styles.gameTeamContainer}>
-                    <Image style={styles.teamIcon} source={{uri: awayLogo}}/>
-                    <Text>{awayTeam}</Text>
-                </View>
-                <View style={styles.divider}/>
-                <View style={styles.gameTeamContainer}>
-                    <Image style={styles.teamIcon} source={{uri: homeLogo}}/>
-                    <Text>{homeTeam}</Text>
-                </View>
-            </View>
-        </View>
+        <ClearView style={styles.container}>
+            <ClearView style={styles.gameTeamContainer}>
+                <Image style={styles.teamIcon} source={{uri: awayLogo}}/>
+                <Text>{awayTeam}</Text>
+            </ClearView>
+            <ClearView style={styles.versusContainer}>
+                <View style={styles.leftBar} />
+                <Text style={styles.versusText}>vs</Text>
+                <View style={styles.rightBar} />
+            </ClearView>
+            <ClearView style={styles.gameTeamContainer}>
+                <Image style={styles.teamIcon} source={{uri: homeLogo}}/>
+                <Text>{homeTeam}</Text>
+            </ClearView>
+        </ClearView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        paddingVertical: 1,
+        flex: 1, 
+        justifyContent: 'center',
+        paddingVertical: 8,
     },
     gameTeamContainer: {
         flexDirection: 'row', 
         alignItems: 'center',
-        backgroundColor: 'transparent'
     },
     teamIcon: {
         width: 32, 
@@ -46,4 +46,26 @@ const styles = StyleSheet.create({
         opacity: 0.4,
         backgroundColor: 'transparent'
     },
+    versusContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        opacity: 0.5,
+    },
+    leftBar: {
+        flex: 0.25, 
+        height: 1, 
+        borderBottomWidth: 1,
+        marginHorizontal: 1,
+    },
+    versusText: {
+        fontSize: 10,
+        fontWeight: '600',
+    },
+    rightBar: {
+        flex: 0.40, 
+        height: 1, 
+        borderBottomWidth: 1,
+        marginHorizontal: 1,
+    }
 });
