@@ -8,6 +8,7 @@ import GameList from '@/components/PlaceBet/SelectGame/GameList/GameList';
 import SportSlider from '@/components/PlaceBet/SelectGame/SportSlider';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
+import DatePicker from '@/components/PlaceBet/SelectGame/DatePicker';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
 import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
 import SelectLeague from '@/components/Modals/SelectLeague';
@@ -15,7 +16,6 @@ import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
 import useHookNewBet from '@/hooks/useHookNewBet';
 import useHookSelectGame from '@/hooks/useHookSelectGame';
-import DatePicker from '@/components/PlaceBet/SelectGame/DatePicker';
 
 export default function SelectGameScreen() {
 

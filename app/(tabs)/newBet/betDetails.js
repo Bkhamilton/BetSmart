@@ -1,16 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { useSQLiteContext } from 'expo-sqlite';
 import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
 import LeaguePropSlider from '@/components/PlaceBet/BetDetails/LeaguePropSlider';
 import LeaguePropInfo from '@/components/PlaceBet/BetDetails/LeaguePropInfo';
-import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
-import { getLeaguePropInfo } from '@/db/bet-general/LeaguePropsInfo';
 import useTheme from '@/hooks/useTheme';
 import useHookNewBet from '@/hooks/useHookNewBet';
 import useHookBetDetails from '@/hooks/useHookBetDetails';
