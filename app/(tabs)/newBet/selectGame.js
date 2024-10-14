@@ -1,6 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { useRouter } from 'expo-router';
 import { retrieveGamesDate, retrieveAllGames } from '@/api/prop-odds/games.js';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext'; 
@@ -17,22 +16,32 @@ import ChooseBookie from '@/components/Modals/ChooseBookie';
 import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
 import SelectLeague from '@/components/Modals/SelectLeague';
 import useTheme from '@/hooks/useTheme';
+import useRouting from '@/hooks/useRouting';
+import useHookNewBet from '@/hooks/useHookNewBet';
 import DatePicker from '@/components/PlaceBet/SelectGame/DatePicker';
 
 export default function SelectGameScreen() {
 
   const db = useSQLiteContext();
 
-  const { setCurrentGame, league, setLeague, setBookie, setBookieId, betSlip, setBetSlip, confirmBetSlip } = useContext(BetContext);
+  const { league, setLeague, betSlip, confirmBetSlip } = useContext(BetContext);
   const { leagues } = useContext(DBContext);
   const { setTrigger } = useContext(UserContext);
 
-  const router = useRouter();
+  const { handleSelectGame } = useRouting();
 
-  const handleSelectGame = ({ game }) => {
-    setCurrentGame(game);
-    router.navigate('newBet/betDetails', { game });
-  };
+  const {
+    betSlipModalVisible,
+    chooseBookieModalVisible,
+    openBetSlipModal,
+    closeBetSlipModal,
+    openChooseBookieModal,
+    closeChooseBookieModal,
+    selectBookie,
+    removeProp,
+    removeBetSlip,
+    confirmBet,
+  } = useHookNewBet();
 
   const today = new Date();
   const formattedToday = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -45,8 +54,6 @@ export default function SelectGameScreen() {
 
   const [totalLegs, setTotalLegs] = useState(0);
 
-  const [chooseBookieModal, setChooseBookieModal] = useState(false);
-  const [betSlipModal, setBetSlipModal] = useState(false);
   const [selectLeagueModal, setSelectLeagueModal] = useState(false);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -67,28 +74,6 @@ export default function SelectGameScreen() {
     setSelectLeagueModal(false);
   }
 
-  const openBookieModal = () => {
-    setChooseBookieModal(true);
-  }
-
-  const closeBookieModal = () => {
-    setChooseBookieModal(false);
-  }
-
-  const openBetSlipModal = () => {
-    setBetSlipModal(true);
-  }
-
-  const closeBetSlipModal = () => {
-    setBetSlipModal(false);
-  }
-
-  const selectBookie = (bookie) => {
-    setChooseBookieModal(false);
-    setBookie(bookie.bookieName);
-    setBookieId(bookie.bookieId);
-  }
-
   const selectLeague = (newLeague) => {
     if (league?.leagueName === newLeague.leagueName) {
       setLeague({});
@@ -101,27 +86,8 @@ export default function SelectGameScreen() {
     }
   }
 
-  const removeProp = (bet, leg) => {
-    const newBetSlip = removeLeg(betSlip, bet, leg);
-    if (!newBetSlip) {
-      closeBetSlipModal();
-      setBetSlip(null);
-    }
-    setTotalLegs(betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
-  }
-
-  const removeBetSlip = () => {
-    closeBetSlipModal();
-    setBetSlip(null);
-    setTotalLegs(0);
-  }
-
-  const confirmBet = (wager, winnings, bookieId) => {
-    updateBetSlipAmounts(betSlip, wager, winnings);
-    updateBetSlipBookie(betSlip, bookieId);
-
-    closeBetSlipModal();
-    confirmBetSlip(db);
+  const onConfirmBet = (wager, winnings, bookieId) => {
+    confirmBet(wager, winnings, bookieId);
     onRefresh();
   }
 
@@ -167,7 +133,7 @@ export default function SelectGameScreen() {
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{header}</Text>
         </View>
         <View style={{ flex: 0.3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <BalanceBox openModal={openBookieModal}/>
+          <BalanceBox openModal={openChooseBookieModal}/>
         </View>
       </View>
     );
@@ -177,18 +143,18 @@ export default function SelectGameScreen() {
     <>
       <SelectGameHeader />
       <ChooseBookie
-        visible={chooseBookieModal}
-        close={closeBookieModal}
+        visible={chooseBookieModalVisible}
+        close={closeChooseBookieModal}
         selectBookie={selectBookie}
       />
       {
         betSlip && (
           <BetSlipModal
-            visible={betSlipModal}
+            visible={betSlipModalVisible}
             close={closeBetSlipModal}
             removeProp={removeProp}
             removeBetSlip={removeBetSlip}
-            confirm={confirmBet}
+            confirm={onConfirmBet}
           />
         )
       }
