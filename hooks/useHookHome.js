@@ -1,15 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { UserContext } from '@/contexts/UserContext';
+import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
+import { getOpenBetSlips } from '@/db/betslips/BetSlips';
+import { confirmBetResults } from '@/utils/dbHelpers';
+import { useSQLiteContext } from 'expo-sqlite';
 
 const useHookHome = () => {
 
-  const [loginModalVisible, setLoginModalVisible] = useState(false);
-  const [signUpModalVisible, setSignUpModalVisible] = useState(false);
+  const db = useSQLiteContext();
+
+  const { user, trigger, setTrigger } = useContext(UserContext);
+
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [chooseBookieModalVisible, setChooseBookieModalVisible] = useState(false);
 
   const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
 
   const [betSlips, setBetSlips] = useState([]);
+
+  const [triggerFetch, setTriggerFetch] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    // Add your data reloading logic here
+    setTriggerFetch(prev => !prev);
+    setRefreshing(false);
+  };
 
   function openChooseBookieModal() {
     setChooseBookieModalVisible(true);
@@ -19,19 +36,6 @@ const useHookHome = () => {
     setChooseBookieModalVisible(false);
   }
 
-  function openSignUpModal() {
-    setSignUpModalVisible(true);
-  }
-  function closeSignUpModal() {
-    setSignUpModalVisible(false);
-  }
-
-  function openLoginModal() {
-    setLoginModalVisible(true);
-  }
-  function closeLoginModal() {
-    setLoginModalVisible(false);
-  }
   function openConfirmModal(betSlip) {
     setConfirmedBetSlip(betSlip);
     setConfirmModalVisible(true);
@@ -40,21 +44,42 @@ const useHookHome = () => {
     setConfirmModalVisible(false);
   }
 
+  const onConfirmBetSlip = (betSlip) => {
+    confirmBetResults(db, betSlip, user);
+
+    closeConfirmModal();
+
+    setTriggerFetch(prev => !prev);
+    setTrigger(prev => !prev);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const betSlips = await getOpenBetSlips(db);
+        const betSlipsWithBets = await fillBetSlips(db, betSlips);
+        setBetSlips(betSlipsWithBets);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, [triggerFetch, trigger]);
+
   return {
-    loginModalVisible, setLoginModalVisible,
-    signUpModalVisible, setSignUpModalVisible,
     confirmModalVisible, setConfirmModalVisible,
     chooseBookieModalVisible, setChooseBookieModalVisible,
     confirmedBetSlip, setConfirmedBetSlip,
     betSlips, setBetSlips,
+    triggerFetch, setTriggerFetch,
+    refreshing, setRefreshing,
+    onRefresh,
     openChooseBookieModal,
     closeChooseBookieModal,
-    openSignUpModal,
-    closeSignUpModal,
-    openLoginModal,
-    closeLoginModal,
     openConfirmModal,
     closeConfirmModal,
+    onConfirmBetSlip,
   };
 };
 
