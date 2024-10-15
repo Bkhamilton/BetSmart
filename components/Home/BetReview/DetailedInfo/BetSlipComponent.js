@@ -2,12 +2,11 @@ import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Text, View, ClearView, TouchableOpacity } from '@/components/Themed';
 import BetComponent from './BetComponent';
-import { getDateFull } from '@/utils/dateFunctions';
 import { bookieImages } from '@/constants/bookieConstants';
 import { Feather } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
-export default function BetSlipComponent({ betSlip, details, confirm }) {
+export default function BetSlipComponent({ betSlip, details, confirm, openOptions }) {
 
     const { iconColor, mainGreen } = useTheme();
 
@@ -22,7 +21,10 @@ export default function BetSlipComponent({ betSlip, details, confirm }) {
             </View>
             <View style={styles.spreadContainer}>
                 <Text style={styles.betText}>{betSlip.odds}</Text>
-                <TouchableOpacity style={{ backgroundColor: 'transparent' }}>
+                <TouchableOpacity 
+                    style={{ backgroundColor: 'transparent' }}
+                    onPress={() => openOptions(betSlip, ['Edit', 'Delete'])}
+                >
                     <Feather name="more-vertical" size={20} color={iconColor} />
                 </TouchableOpacity>
             </View>

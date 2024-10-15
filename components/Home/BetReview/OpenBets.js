@@ -1,12 +1,9 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View, ScrollView, Pressable } from '../../Themed';
-import useTheme from '@/hooks/useTheme';
+import { Text, View } from '../../Themed';
 import DetailedInfo from '@/components/Home/BetReview/DetailedInfo/DetailedInfo';
 
-export default function OpenBets({ betSlips, confirm }) {
-
-  const { iconColor, grayBackground, grayBorder, mainGreen } = useTheme();
+export default function OpenBets({ betSlips, confirm, openOptions }) {
 
   const BigPictureInfo = ({ totalBets, betAmount, toWin }) => {
     return (
@@ -39,7 +36,7 @@ export default function OpenBets({ betSlips, confirm }) {
         <Text style={{ fontSize: 20, fontWeight: '600' }}>Open Bets</Text>
       </View>
       <BigPictureInfo totalBets={totalBets} betAmount={totalBetAmount} toWin={totalWinnings} />
-      <DetailedInfo betSlips={betSlips} confirm={confirm}/>
+      <DetailedInfo betSlips={betSlips} confirm={confirm} openOptions={openOptions}/>
     </View>
   );
 }

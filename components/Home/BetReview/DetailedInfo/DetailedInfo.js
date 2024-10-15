@@ -4,7 +4,7 @@ import { ScrollView, Pressable } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import BetSlipComponent from './BetSlipComponent';
 
-export default function DetailedInfo({ betSlips, confirm }) {
+export default function DetailedInfo({ betSlips, confirm, openOptions }) {
 
     const { grayBackground, grayBorder } = useTheme();
 
@@ -19,7 +19,7 @@ export default function DetailedInfo({ betSlips, confirm }) {
                 onPress={() => setShowDetails(!showDetails)}
                 onLongPress={() => confirm(betSlip)}
             >
-                <BetSlipComponent betSlip={betSlip} details={showDetails} confirm={confirm}/>
+                <BetSlipComponent betSlip={betSlip} details={showDetails} confirm={confirm} openOptions={openOptions}/>
             </Pressable>
         );
     };
