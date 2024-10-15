@@ -13,21 +13,17 @@ import OptionMenu from '@/components/Modals/OptionMenu';
 import HomeHeader from '@/components/Home/HomeHeader';
 import OpenBets from '@/components/Home/BetReview/OpenBets';
 import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
-import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
-import { getUser } from '@/db/user-specific/Users';
-import { insertUserSession } from '@/db/user-specific/UserSessions';
 import useHookHome from '@/hooks/useHookHome';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
 import useOptionsState from '@/hooks/useOptionsState';
 import useRouting from '@/hooks/useRouting';
 import useAuthState from '@/hooks/useAuthState';
+import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 
 export default function HomeScreen() {
-
-  const db = useSQLiteContext();
 
   const { user, userBalance, setBookie } = useContext(UserContext);
 
@@ -83,12 +79,15 @@ export default function HomeScreen() {
     loginModalVisible,
     signUpModalVisible,
     login,
-    authError,
     openLoginModal,
     closeLoginModal,
     openSignUpModal,
     closeSignUpModal,
   } = useAuthState();
+
+  const {
+    deleteUserBetSlip
+  } = useDatabaseFuncs();
 
   const onAddBookie = async (bookie) => {
     closeAddBookieModal();
@@ -124,8 +123,8 @@ export default function HomeScreen() {
             const response = await confirmAction(`delete bet slip?`);
 
             if (response) {
-              console.log('delete bet');
-              console.log(JSON.stringify(target));
+              deleteUserBetSlip(target, user.id);
+              onRefresh();
             }
           }
         }
