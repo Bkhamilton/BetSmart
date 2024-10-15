@@ -21,12 +21,10 @@ export default function ProfileScreen() {
 
   const { 
     confirmationModalVisible, 
-    openConfirmationModal, 
     closeConfirmationModal, 
     confirmMessage, 
-    setMessage, 
-    handleConfirmCallback, 
     onHandleConfirm,
+    confirmAction,
   } = useConfirmationState();
 
   const { 
@@ -47,12 +45,8 @@ export default function ProfileScreen() {
 
   const onAddBookie = async (bookie) => {
     closeAddBookieModal();
-    setMessage(`add ${bookie.name} as a bookie?`);
-    openConfirmationModal();
-
-    const response = await new Promise((resolve) => {
-      handleConfirmCallback(() => resolve);
-    });
+    const message = `add ${bookie.name} as a bookie?`;
+    const response = await confirmAction(message);
 
     if (response) {
       addBookie(bookie);
@@ -64,14 +58,10 @@ export default function ProfileScreen() {
       if (response === 'Delete') {
         // if target is Balance object, delete balance
         if (target.balance >= 0) {
-          setMessage(`delete ${target.bookieName} as a bookie?`);
-          openConfirmationModal();
+          const message = `delete ${target.bookieName} as a bookie?`;
+          const response = await confirmAction(message);
 
-          const confirmResponse = await new Promise((resolve) => {
-            handleConfirmCallback(() => resolve);
-          });
-
-          if (confirmResponse) {
+          if (response) {
             deleteBalBookie(target.bookieId, user.id);
           }
         } else {
