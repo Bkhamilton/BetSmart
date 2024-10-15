@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { RefreshControl } from 'react-native';
 import { ScrollView } from '@/components/Themed';
 import { myBetList } from '@/data/exampleBetData';
@@ -9,53 +9,48 @@ import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets/Yesterday
 import TransactionModal from '@/components/Modals/TransactionModal';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
 import AddBookie from '@/components/Modals/AddBookie';
+import OptionMenu from '@/components/Modals/OptionMenu';
 import HomeHeader from '@/components/Home/HomeHeader';
 import OpenBets from '@/components/Home/BetReview/OpenBets';
 import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
 import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
-import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import { getUser } from '@/db/user-specific/Users';
 import { insertUserSession } from '@/db/user-specific/UserSessions';
-import { getOpenBetSlips } from '@/db/betslips/BetSlips';
-import { confirmBetResults } from '@/utils/dbHelpers';
 import useHookHome from '@/hooks/useHookHome';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
+import useOptionsState from '@/hooks/useOptionsState';
 import useRouting from '@/hooks/useRouting';
+import useAuthState from '@/hooks/useAuthState';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 
 export default function HomeScreen() {
 
   const db = useSQLiteContext();
 
-  const { user, trigger, setTrigger, userBalance, setBookie } = useContext(UserContext);
+  const { user, userBalance, setBookie } = useContext(UserContext);
 
   const {
-    loginModalVisible,
-    signUpModalVisible,
     confirmModalVisible,
     chooseBookieModalVisible,
     confirmedBetSlip,
-    betSlips, setBetSlips,
+    betSlips,
+    refreshing,
+    onRefresh,
     openChooseBookieModal,
     closeChooseBookieModal,
-    openSignUpModal,
-    closeSignUpModal,
-    openLoginModal,
-    closeLoginModal,
     openConfirmModal,
     closeConfirmModal,
+    onConfirmBetSlip,
   } = useHookHome();
 
   const { 
     confirmationModalVisible,
-    openConfirmationModal,
     closeConfirmationModal,
     confirmMessage, 
-    setMessage, 
-    handleConfirmCallback, 
     onHandleConfirm, 
+    confirmAction,
   } = useConfirmationState();
 
   const {
@@ -72,69 +67,32 @@ export default function HomeScreen() {
     onConfirmTransaction, 
   } = useUserBalDataState();
 
+  const { 
+    optionsModalVisible, 
+    closeOptionsModal, 
+    options, 
+    onHandleOption,
+    handleOpenOptions,
+  } = useOptionsState();
+
   const {
     handleBetHistory,
   } = useRouting();
 
-  const [triggerFetch, setTriggerFetch] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    // Add your data reloading logic here
-    setTriggerFetch(prev => !prev);
-    setRefreshing(false);
-  };
-
-  async function login(username, password) {
-    
-    // Check if the username and password match
-    const user = await getUser(db, username, password);
-
-    if (!user) {
-      return false;
-    }
-
-    // If the username and password match, create a new session
-    const today = new Date().toISOString();
-    await insertUserSession(db, user.id, today);
-
-    closeLoginModal();
-
-    return true;
-  }
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const betSlips = await getOpenBetSlips(db);
-        const betSlipsWithBets = await fillBetSlips(db, betSlips);
-        setBetSlips(betSlipsWithBets);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-  
-    fetchData();
-  }, [triggerFetch, trigger]);
-
-  const onConfirmBetSlip = (betSlip) => {
-    confirmBetResults(db, betSlip, user);
-
-    closeConfirmModal();
-
-    setTriggerFetch(prev => !prev);
-    setTrigger(prev => !prev);
-  }
+  const {
+    loginModalVisible,
+    signUpModalVisible,
+    login,
+    authError,
+    openLoginModal,
+    closeLoginModal,
+    openSignUpModal,
+    closeSignUpModal,
+  } = useAuthState();
 
   const onAddBookie = async (bookie) => {
     closeAddBookieModal();
-    setMessage(`add ${bookie.name} as a bookie?`);
-    openConfirmationModal();
-
-    const response = await new Promise((resolve) => {
-      handleConfirmCallback(() => resolve);
-    });
+    const response = await confirmAction(`add ${bookie.name} as a bookie?`);
 
     if (response) {
       addBookie(bookie);
@@ -150,6 +108,33 @@ export default function HomeScreen() {
       closeChooseBookieModal();
     }
   }
+
+  const handleResponse = async (response, target) => {
+      // if response is delete, confirm deletion
+      if (response === 'Delete') {
+        // if target is Balance object, delete balance
+        if (target.balance >= 0) {
+          const response = await confirmAction(`delete ${target.bookieName} as a bookie?`);
+
+          if (response) {
+            deleteBalBookie(target.bookieId, user.id);
+          }
+        } else {
+          if (target.bets) {
+            const response = await confirmAction(`delete bet slip?`);
+
+            if (response) {
+              console.log('delete bet');
+              console.log(JSON.stringify(target));
+            }
+          }
+        }
+      }
+  }
+
+  const onOpenOptions = async (target, options) => {
+    handleOpenOptions(target, options, handleResponse);
+  };
 
   return (
     <>
@@ -179,6 +164,12 @@ export default function HomeScreen() {
         close={closeConfirmationModal}
         message={confirmMessage}
         confirm={onHandleConfirm}
+      />
+      <OptionMenu
+        visible={optionsModalVisible}
+        close={closeOptionsModal}
+        options={options}
+        selectOption={onHandleOption}
       />
       {
         user && userBalance && (
@@ -224,6 +215,7 @@ export default function HomeScreen() {
             <OpenBets 
               betSlips={betSlips} 
               confirm={openConfirmModal}
+              openOptions={onOpenOptions}
             />
           ) 
         }
