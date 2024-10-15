@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 const useConfirmationState = () => {
 
@@ -38,6 +38,19 @@ const useConfirmationState = () => {
         openConfirmationModal();
     };
 
+    const confirmAction = useCallback(async (message) => {
+        setMessage(message);
+        openConfirmationModal();
+    
+        const response = await new Promise((resolve) => {
+          handleConfirmCallback(() => resolve);
+        });
+    
+        closeConfirmationModal();
+        return response;
+    }, [openConfirmationModal, handleConfirmCallback, closeConfirmationModal]);
+
+
     return {
         confirmationModalVisible,
         setConfirmationModalVisible,
@@ -48,6 +61,7 @@ const useConfirmationState = () => {
         handleConfirm,
         onHandleConfirm,
         startConfirmation,
+        confirmAction,
     };
 };
 
