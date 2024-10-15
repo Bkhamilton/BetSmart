@@ -138,9 +138,9 @@ export const updateBetSlip = async (db, betSlipId, formatId, date, odds, betAmou
 };
 
 // Function to delete a bet slip
-export const deleteBetSlip = async (db, betSlipId) => {
+export const deleteBetSlip = async (db, betSlipId, userId) => {
     try {
-        await db.runAsync('DELETE FROM BetSlips WHERE id = ?', [betSlipId]);
+        await db.runAsync('DELETE FROM BetSlips WHERE id = ? AND userId = ?', [betSlipId, userId]);
     } catch (error) {
         console.error('Error deleting bet slip:', error);
         throw error;

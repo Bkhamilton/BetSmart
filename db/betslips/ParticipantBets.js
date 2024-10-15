@@ -156,3 +156,12 @@ export const deleteParticipantBet = async (db, participantBetId) => {
     throw error;
   }
 };
+
+export const deleteBetsByBetSlipId = async (db, betSlipId) => {
+  try {
+    await db.runAsync('DELETE FROM ParticipantBets WHERE betSlipId = ?', [betSlipId]);
+  } catch (error) {
+    console.error('Error deleting participant bets by betSlipId:', error);
+    throw error;
+  }
+}
