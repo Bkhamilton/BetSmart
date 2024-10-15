@@ -1,50 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { ScrollView } from '@/components/Themed';
-import { useSQLiteContext } from 'expo-sqlite';
-import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 import BetSlipDisplay from '@/components/Profile/BetHistory/BetSlipDisplay/BetSlipDisplay';
-import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import BetHistoryHeader from '@/components/Profile/BetHistory/BetHistoryHeader';
+import useHookBetHistory from '@/hooks/useHookBetHistory';
 
-export default function SettingsScreen() {
+export default function BetHistoryScreen() {
     
-    const db = useSQLiteContext();
-
-    const [selectedType, setSelectedType] = useState('Open');
-
-    const [betSlips, setBetSlips] = useState([]);
-
-    function changeType(type) {
-      setSelectedType(type);
-    }
-
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const betSlips = await getOpenBetSlips(db);
-          const betSlipsWithBets = await fillBetSlips(db, betSlips);
-          setBetSlips(betSlipsWithBets);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-    
-      fetchData();
-    }, []);
+    const { selectedType, betSlips, changeType } = useHookBetHistory();
 
     return (
-      <>
-        <BetHistoryHeader
-          changeType={changeType}
-          selectedType={selectedType}
-        />
-        <ScrollView>
-          <BetSlipDisplay
-            betSlips={betSlips}
-            selectedType={selectedType}
-          >
-          </BetSlipDisplay>
-        </ScrollView>
-      </>
+        <>
+            <BetHistoryHeader
+                changeType={changeType}
+                selectedType={selectedType}
+            />
+            <ScrollView>
+                <BetSlipDisplay
+                    betSlips={betSlips}
+                    selectedType={selectedType}
+                >
+                </BetSlipDisplay>
+            </ScrollView>
+        </>
     );
 }
