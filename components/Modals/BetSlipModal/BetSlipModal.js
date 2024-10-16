@@ -1,13 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { bookieImages } from '@/constants/bookieConstants';
+import { StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView } from '@/components/Themed';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
-import { StyleSheet, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
-import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView } from '@/components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import { calculateCombinedOdds } from '@/contexts/BetContext/betSlipHelpers';
-import { useSQLiteContext } from 'expo-sqlite';
 import BetSlip from './BetSlip';
 import Banner from './Banner';
 import Header from './Header';
@@ -66,6 +64,12 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
         if (!betSlip.odds.startsWith('+') && !betSlip.odds.startsWith('-')) {
             return;
         }
+
+        // if userBalance for the given bookie is less than the wager, return
+        if (userBalance.find(b => b.bookieId === curBookie.id).balance < wager) {
+            return;
+        }
+
         confirm(wager, getWinnings(wager), curBookie.id);
     }
 
