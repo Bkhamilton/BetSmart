@@ -10,6 +10,16 @@ export const getAllBookies = async (db) => {
     }
 };
 
+// Function to return string array of bookie names
+export const getBookieNames = async (db) => {
+    try {
+        const bookies = await db.getAllAsync('SELECT name FROM Bookies');
+        return bookies.map(bookie => bookie.name.toLowerCase());
+    } catch (error) {
+        console.error('Error getting bookie names:', error);
+    }
+};
+
 // Function to get a bookie
 export const getBookies = async (db, userId) => {
     try {
