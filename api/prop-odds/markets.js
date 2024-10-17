@@ -1,6 +1,6 @@
 import secrets from "@/secrets";
 import { getTeamsByAbbreviation } from "@/db/general/Teams";
-import { getBookieByName } from "@/db/general/Bookies";
+import { getBookieByName, getBookieNames } from "@/db/general/Bookies";
 import { getBetTargetId, getBetTargetIdByGameId } from "@/db/bet-general/BetTargets";
 import { getBetMarketByGame, insertBetMarket, getMoneyline, getSpread, getTotalOverUnder } from "@/db/api/BetMarkets";
 import { insertMarketFetchHistory, marketFetchedOnDate } from '@/db/api/MarketFetchHistory';
@@ -169,7 +169,8 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
 export const fetchMarketProps = async (db, gameId, market) => {
   try {
     const data = await getMarketProps(db, gameId, market);
-    const filteredData = data.sportsbooks.filter(book => ['draftkings', 'fanduel'].includes(book.bookie_key));
+    const validBookies = await getBookieNames(db);
+    const filteredData = data.sportsbooks.filter(book => validBookies.includes(book.bookie_key));
     for (let book of filteredData) {
       await addBetMarketToDB(db, gameId, market, book);
     }
