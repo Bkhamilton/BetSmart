@@ -18,9 +18,9 @@ export default function BalanceBox({ openModal }) {
             const newBookie = userBalance.find(obj => obj.bookieId === bookieId);
             setCurBookie(newBookie);
         }
-    }, [userBalance]);
+    }, [userBalance, bookieId]);
 
-    const { bookieColors, bookieBorderColors } = useTheme();
+    const { bookieColors } = useTheme();
 
     const switchBookie = () => {
         // use userBalance to determine which bookies are available
