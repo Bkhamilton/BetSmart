@@ -128,11 +128,6 @@ export default function ProfileScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Social</Text>
-          {/* Add social features components here */}
-        </View>
-
-        <View style={styles.section}>
           <Text style={styles.sectionTitle}>Privacy Settings</Text>
           {/* Add privacy settings components here */}
         </View>
