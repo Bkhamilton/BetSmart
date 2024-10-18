@@ -33,6 +33,7 @@ export default function useTheme() {
     'PointsBet': themeColors.pointsbet,
     'Barstool': themeColors.barstool,
     'Total': themeColors.mainGreen,
+    'Default' : themeColors.mainGreen,
   };
 
   const bookieBorderColors = {
@@ -43,6 +44,7 @@ export default function useTheme() {
     'PointsBet': themeColors.pointsbet,
     'Barstool': themeColors.barstool,
     'Total': themeColors.mainGreen,
+    'Default' : themeColors.accentGreen,
   };
 
   return {
