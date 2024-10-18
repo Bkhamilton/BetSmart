@@ -12,7 +12,7 @@ import AddBookie from '@/components/Modals/AddBookie';
 import OptionMenu from '@/components/Modals/OptionMenu';
 import HomeHeader from '@/components/Home/HomeHeader';
 import OpenBets from '@/components/Home/BetReview/OpenBets';
-import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip';
+import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip/ConfirmBetSlip';
 import { UserContext } from '@/contexts/UserContext';
 import useHookHome from '@/hooks/useHookHome';
 import useConfirmationState from '@/hooks/useConfirmationState';
