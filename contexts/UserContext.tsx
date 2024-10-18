@@ -55,7 +55,7 @@ interface UserContextProviderProps {
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [userBalance, setUserBalance] = useState<Balance[] | null>(null);
-    const [bookie, setBookie] = useState<Bookie | null>(null);
+    const [bookie, setBookie] = useState<Bookie | null>({ id: 0, name: 'Default' });
 
     const [trigger, setTrigger] = useState<boolean>(false);
     const [fetchBalance, setFetchBalance] = useState<boolean>(false);
@@ -63,11 +63,15 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const db = useSQLiteContext();
 
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchUserData = async () => {
             const mostRecentActiveUserSession = await getMostRecentSession(db);
             if (mostRecentActiveUserSession) {
                 getUserById(db, mostRecentActiveUserSession.userId).then((newUser) => {
-                    setUser(newUser);
+                    setUser(newUser)
+                    getBalanceByUser(db, newUser.id).then((newUserBalance) => {
+                        setUserBalance(newUserBalance);
+                        setFetchBalance(true);
+                    });
                 });
             } else {
                 // No active user session, add default values here
@@ -78,40 +82,25 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
                     username: 'defaultUser',
                     password: 'defaultPassword',
                 };
-                setUser(defaultUser);                
-            }
-        };
-
-        fetchUser();
-    }, []);
-
-    useEffect(() => {
-        const fetchUserBalance = async () => {
-            const mostRecentActiveUserSession = await getMostRecentActiveUserSession(db);
-            if (mostRecentActiveUserSession) {
-                getBalanceByUser(db, mostRecentActiveUserSession.userId).then((newUserBalance) => {
-                    setUserBalance(newUserBalance);
-                });
-            } else {
-                // No active user session, add default values here
-                const defaultUserBalance = [{
+                const defaultUserBalance = {
                     id: 0,
                     userId: 0,
                     bookieId: 0,
                     balance: 0,
-                }];
-                setUserBalance(defaultUserBalance);                
+                    bookieName: 'Default',
+                };
+                setUser(defaultUser);
+                setUserBalance([defaultUserBalance]);                
             }
-        }
+        };
 
-        fetchUserBalance();
-        setFetchBalance(true);
-    }, [trigger]);
+        fetchUserData();
+    }, []);
 
     useEffect(() => {
         if (fetchBalance) {
             const fetchBookie = async () => {
-                const mostRecentActiveUserSession = await getMostRecentActiveUserSession(db);
+                const mostRecentActiveUserSession = await getMostRecentSession(db);
                 if (mostRecentActiveUserSession) {
                     getBalanceByUser(db, mostRecentActiveUserSession.userId).then((newUserBalance) => {
                         setBookie({ id: newUserBalance[0].bookieId, name: newUserBalance[0].bookieName });
