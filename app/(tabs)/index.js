@@ -13,6 +13,7 @@ import OptionMenu from '@/components/Modals/OptionMenu';
 import HomeHeader from '@/components/Home/HomeHeader';
 import OpenBets from '@/components/Home/BetReview/OpenBets';
 import ConfirmBetSlip from '@/components/Modals/ConfirmBetSlip/ConfirmBetSlip';
+import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 import { UserContext } from '@/contexts/UserContext';
 import useHookHome from '@/hooks/useHookHome';
 import useConfirmationState from '@/hooks/useConfirmationState';
@@ -21,7 +22,7 @@ import useOptionsState from '@/hooks/useOptionsState';
 import useRouting from '@/hooks/useRouting';
 import useAuthState from '@/hooks/useAuthState';
 import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
-import ConfirmMessage from '@/components/Modals/ConfirmMessage';
+import ProfileOptions from '@/components/Modals/ProfileOptions';
 
 export default function HomeScreen() {
 
@@ -30,6 +31,7 @@ export default function HomeScreen() {
   const {
     confirmModalVisible,
     chooseBookieModalVisible,
+    profileOptionsModalVisible,
     confirmedBetSlip,
     betSlips,
     refreshing,
@@ -38,6 +40,8 @@ export default function HomeScreen() {
     closeChooseBookieModal,
     openConfirmModal,
     closeConfirmModal,
+    openProfileOptionsModal,
+    closeProfileOptionsModal,
     onConfirmBetSlip,
   } = useHookHome();
 
@@ -109,26 +113,26 @@ export default function HomeScreen() {
   }
 
   const handleResponse = async (response, target) => {
-      // if response is delete, confirm deletion
-      if (response === 'Delete') {
-        // if target is Balance object, delete balance
-        if (target.balance >= 0) {
-          const response = await confirmAction(`delete ${target.bookieName} as a bookie?`);
+    // if response is delete, confirm deletion
+    if (response === 'Delete') {
+      // if target is Balance object, delete balance
+      if (target.balance >= 0) {
+        const response = await confirmAction(`delete ${target.bookieName} as a bookie?`);
+
+        if (response) {
+          deleteBalBookie(target.bookieId, user.id);
+        }
+      } else {
+        if (target.bets) {
+          const response = await confirmAction(`delete bet slip?`);
 
           if (response) {
-            deleteBalBookie(target.bookieId, user.id);
-          }
-        } else {
-          if (target.bets) {
-            const response = await confirmAction(`delete bet slip?`);
-
-            if (response) {
-              deleteUserBetSlip(target, user.id);
-              onRefresh();
-            }
+            deleteUserBetSlip(target, user.id);
+            onRefresh();
           }
         }
       }
+    }
   }
 
   const onOpenOptions = async (target, options) => {
@@ -170,6 +174,12 @@ export default function HomeScreen() {
         options={options}
         selectOption={onHandleOption}
       />
+      <ProfileOptions
+        visible={profileOptionsModalVisible}
+        close={closeProfileOptionsModal}
+        selectOption={closeProfileOptionsModal}
+        onSignOut={closeProfileOptionsModal}
+      />
       {
         user && userBalance && (
           <ChooseBookie 
@@ -193,7 +203,8 @@ export default function HomeScreen() {
       <HomeHeader 
         history={handleBetHistory} 
         login={openLoginModal} 
-        signup={openSignUpModal} 
+        signup={openSignUpModal}
+        openProfileOptions={openProfileOptionsModal} 
       />
       <ScrollView
         showVerticalScrollIndicator={false}
