@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { ClearView } from '@/components/Themed';
 import AltLine from './LeaguePropTypes/AltLine';
 import MainLine from './LeaguePropTypes/MainLine';
 import GameLines from './LeaguePropTypes/GameLines';
@@ -38,9 +38,6 @@ import RushProps from './LeaguePropTypes/RushProps';
 import RecieveProps from './LeaguePropTypes/RecieveProps';
 import DefenseProps from './LeaguePropTypes/DefenseProps';
 import SpecTeamProps from './LeaguePropTypes/SpecTeamProps';
-
-import useTheme from '@/hooks/useTheme';
-
 
 export default function LeaguePropInfo({ leaguePropInfo }) {
 
@@ -89,9 +86,9 @@ export default function LeaguePropInfo({ leaguePropInfo }) {
             {leaguePropInfo.map((info, index) => {
                 const Component = componentMapping[info.propValue];
                 return (
-                    <View key={index} style={styles.container}>
+                    <ClearView key={index} style={styles.container}>
                         <Component info={info}/>
-                    </View>
+                    </ClearView>
                 );
             })}
         </>
@@ -99,8 +96,7 @@ export default function LeaguePropInfo({ leaguePropInfo }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    backgroundColor: 'transparent',
-  },
+    container: {
+        width: '100%',
+    },
 });

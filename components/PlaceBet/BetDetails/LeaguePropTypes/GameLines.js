@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { retrieveMarketsDB, retrieveBig3Markets } from '@/api/prop-odds/markets';
+import { retrieveBig3Markets } from '@/api/prop-odds/markets';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
 
