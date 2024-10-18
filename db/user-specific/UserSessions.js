@@ -22,6 +22,32 @@ export const getUserSession = async (db, userSessionId) => {
     }
 };
 
+// Function to get the most recent user session
+export const getRecentUserSession = async (db, userId) => {
+    try {
+        const userSessions = await db.getAllAsync(
+            'SELECT * FROM UserSessions WHERE userId = ? ORDER BY loginTimestamp DESC LIMIT 1',
+            [userId]
+        );
+
+        if (userSessions.length === 0) {
+            return null; // No sessions found
+        }
+
+        const userSession = userSessions[0];
+
+        // Check if the user is signed in
+        if (userSession.logoutTimestamp === null) {
+            return userSession; // User is signed in
+        } else {
+            return null; // User is signed out
+        }
+    } catch (error) {
+        console.error('Error getting most recent user session:', error);
+        throw error;
+    }
+};
+
 // Function to return the active user session
 export const getActiveUserSession = async (db, userId) => {
     try {
