@@ -1,8 +1,11 @@
 import { useState, useCallback } from 'react';
 import { getUser } from '@/db/user-specific/Users';
 import { insertUserSession, getMostRecentUserSession } from '@/db/user-specific/UserSessions';
+import { useSQLiteContext } from 'expo-sqlite';
 
-const useAuthState = (db, closeLoginModal) => {
+const useAuthState = (closeLoginModal) => {
+
+    const db = useSQLiteContext();
 
     const [authError, setAuthError] = useState(null);
 
@@ -49,7 +52,7 @@ const useAuthState = (db, closeLoginModal) => {
         }
     }, [db, closeLoginModal]);
 
-    const signOutUser = async (db, userId) => {
+    const signOutUser = async (userId) => {
         try {
             // Get the most recent user session
             const userSession = await getMostRecentUserSession(db, userId);
