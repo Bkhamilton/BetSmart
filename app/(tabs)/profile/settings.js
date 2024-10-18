@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Text, View, TouchableOpacity, ScrollView } from '@/components/Themed';
+import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import AccountInfo from '@/components/Profile/Settings/AccountInfo';
 import SettingsOptions from '@/components/Profile/Settings/SettingsOptions';
@@ -25,13 +25,13 @@ export default function SettingsScreen() {
                 <View style={styles.settingsHeader}>
                     <Text style={styles.settingsHeaderText}>Settings</Text>
                 </View>
-                <View style={{ backgroundColor: 'transparent' }}>
+                <ClearView>
                     <View style={styles.accountHeader}>
                         <Text style={styles.accountHeaderText}>Account</Text>
                     </View>
                     <AccountInfo />
                     <SettingsOptions onPress={handleProfilePage}/>
-                </View>
+                </ClearView>
             </ScrollView>
         </View>
     );

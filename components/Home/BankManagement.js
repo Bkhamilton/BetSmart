@@ -2,14 +2,12 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 
-import Colors from '@/constants/Colors';
-
 export default function BankManagement({ transactions }) {
     return (
       <View style={styles.container}>
-          <View>
-              <Text style={{ fontSize: 16 }}>Transactions</Text>
-          </View>
+        <View>
+          <Text style={{ fontSize: 16 }}>Transactions</Text>
+        </View>
       </View>
     );
   }
