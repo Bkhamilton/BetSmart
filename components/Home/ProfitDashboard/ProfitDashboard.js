@@ -60,15 +60,11 @@ export default function ProfitDashboard({ openTransaction, openChooseBookie, tra
 
     return (
     <>
-        {
-            bookie && (
-                <BalanceChecker 
-                    openTransaction={openTransaction} 
-                    openChooseBookie={openChooseBookie}
-                    transactions={transactions}
-                />
-            )
-        }
+        <BalanceChecker 
+            openTransaction={openTransaction} 
+            openChooseBookie={openChooseBookie}
+            transactions={transactions}
+        />
         <BetResults />
     </>
   );
