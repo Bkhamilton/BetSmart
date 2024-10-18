@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
 import useRouting from '@/hooks/useRouting';
 import { UserContext } from '@/contexts/UserContext';
 
-export default function ProfileOptions({ visible, close, selectOption }) {
+export default function ProfileOptions({ visible, close, onSignOut }) {
 
     const { user } = useContext(UserContext);
 
@@ -36,7 +36,7 @@ export default function ProfileOptions({ visible, close, selectOption }) {
                         <TouchableOpacity style={styles.option} onPress={goToSettings}>
                             <Text style={styles.optionText}>Settings</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.option} onPress={() => console.log('Sign Out')}>
+                        <TouchableOpacity style={styles.option} onPress={onSignOut}>
                             <Text style={styles.optionText}>Sign Out</Text>
                         </TouchableOpacity>                                                
                     </View>

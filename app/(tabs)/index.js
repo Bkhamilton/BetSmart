@@ -87,6 +87,7 @@ export default function HomeScreen() {
     closeLoginModal,
     openSignUpModal,
     closeSignUpModal,
+    signOutUser,
   } = useAuthState();
 
   const {
@@ -139,6 +140,15 @@ export default function HomeScreen() {
     handleOpenOptions(target, options, handleResponse);
   };
 
+  const onSignOut = async () => {
+    closeProfileOptionsModal();
+    const response = await confirmAction('sign out?');
+
+    if (response) {
+      signOutUser(user.id);
+    }
+  };
+
   return (
     <>
       <LoginPage 
@@ -177,8 +187,7 @@ export default function HomeScreen() {
       <ProfileOptions
         visible={profileOptionsModalVisible}
         close={closeProfileOptionsModal}
-        selectOption={closeProfileOptionsModal}
-        onSignOut={closeProfileOptionsModal}
+        onSignOut={onSignOut}
       />
       {
         user && userBalance && (
