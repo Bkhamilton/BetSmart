@@ -1,16 +1,14 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { StyleSheet, Image, Pressable } from 'react-native';
-import { TouchableOpacity, Text, View, ScrollView } from '@/components/Themed';
+import React, { useContext } from 'react';
+import { StyleSheet, Pressable } from 'react-native';
+import { Text, View } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
-import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
-import { getTransactionsByUser } from '@/db/user-specific/Transactions';
 import BankButtons from './BankButtons';
 import RecentTransactions from './RecentTransactions';
 
 export default function BalanceChecker({ openTransaction, openChooseBookie, transactions }) {
 
-    const { user, userBalance, bookie, setBookie } = useContext(UserContext);
+    const { userBalance, bookie, setBookie } = useContext(UserContext);
 
     const { bookieColors, bookieBorderColors } = useTheme();
 
