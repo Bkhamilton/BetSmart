@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { getUser } from '@/db/user-specific/Users';
-import { insertUserSession } from '@/db/user-specific/UserSessions';
+import { insertUserSession, getMostRecentUserSession } from '@/db/user-specific/UserSessions';
 
 const useAuthState = (db, closeLoginModal) => {
 
@@ -49,6 +49,27 @@ const useAuthState = (db, closeLoginModal) => {
         }
     }, [db, closeLoginModal]);
 
+    const signOutUser = async (db, userId) => {
+        try {
+            // Get the most recent user session
+            const userSession = await getMostRecentUserSession(db, userId);
+    
+            if (userSession) {
+                const loginTimestamp = userSession.loginTimestamp;
+                const logoutTimestamp = new Date().toISOString();
+    
+                // Insert a non-active user session
+                await insertNonActiveUserSession(db, userId, loginTimestamp, logoutTimestamp);
+    
+                console.log('User signed out successfully');
+            } else {
+                console.log('No active session found for the user');
+            }
+        } catch (error) {
+            console.error('Error signing out user:', error);
+        }
+    };    
+
     return {
         loginModalVisible,
         setLoginModalVisible,
@@ -60,6 +81,7 @@ const useAuthState = (db, closeLoginModal) => {
         closeLoginModal,
         openSignUpModal,
         closeSignUpModal,
+        signOutUser,
     };
 };
 
