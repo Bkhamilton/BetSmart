@@ -13,6 +13,7 @@ const useHookHome = () => {
 
   const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const [chooseBookieModalVisible, setChooseBookieModalVisible] = useState(false);
+  const [profileOptionsModalVisible, setProfileOptionsModalVisible] = useState(false);
 
   const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
 
@@ -44,6 +45,14 @@ const useHookHome = () => {
     setConfirmModalVisible(false);
   }
 
+  function openProfileOptionsModal() {
+    setProfileOptionsModalVisible(true);
+  }
+
+  function closeProfileOptionsModal() {
+    setProfileOptionsModalVisible(false);
+  }
+
   const onConfirmBetSlip = (betSlip) => {
     confirmBetResults(db, betSlip, user);
 
@@ -68,8 +77,9 @@ const useHookHome = () => {
   }, [triggerFetch, trigger]);
 
   return {
-    confirmModalVisible, setConfirmModalVisible,
-    chooseBookieModalVisible, setChooseBookieModalVisible,
+    confirmModalVisible,
+    chooseBookieModalVisible,
+    profileOptionsModalVisible,
     confirmedBetSlip, setConfirmedBetSlip,
     betSlips, setBetSlips,
     triggerFetch, setTriggerFetch,
@@ -79,6 +89,8 @@ const useHookHome = () => {
     closeChooseBookieModal,
     openConfirmModal,
     closeConfirmModal,
+    openProfileOptionsModal,
+    closeProfileOptionsModal,
     onConfirmBetSlip,
   };
 };
