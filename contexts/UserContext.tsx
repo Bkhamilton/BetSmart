@@ -1,6 +1,6 @@
 // app/contexts/UserContext.tsx
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { getMostRecentActiveUserSession } from '@/db/user-specific/UserSessions';
+import { getMostRecentActiveUserSession, getMostRecentSession } from '@/db/user-specific/UserSessions';
 import { getUser, getUserById } from '@/db/user-specific/Users';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalanceByUser } from '@/db/user-specific/Balance';
@@ -64,7 +64,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const mostRecentActiveUserSession = await getMostRecentActiveUserSession(db);
+            const mostRecentActiveUserSession = await getMostRecentSession(db);
             if (mostRecentActiveUserSession) {
                 getUserById(db, mostRecentActiveUserSession.userId).then((newUser) => {
                     setUser(newUser);
