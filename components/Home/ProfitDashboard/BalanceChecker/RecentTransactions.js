@@ -1,8 +1,11 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, Pressable } from '@/components/Themed';
+import useTheme from '@/hooks/useTheme';
 
 export default function RecentTransactions({ transactions, bookieId }) {
+
+    const { grayBackground } = useTheme();
 
     const bookieTransactions = bookieId === 0 ? transactions : transactions.filter(transaction => transaction.bookieId === bookieId);
 
@@ -10,20 +13,20 @@ export default function RecentTransactions({ transactions, bookieId }) {
         return `${transaction.transactionType === 'Deposit' ? '+' : '-'}$${transaction.amount}`;
     }
 
-    const [opacity, setOpacity] = React.useState(1);
+    const [opacity, setOpacity] = React.useState(0.8);
 
     const onPressIn = () => {
-        setOpacity(0.6);
+        setOpacity(0.4);
     }
 
     const onPressOut = () => {
-        setOpacity(1);
+        setOpacity(0.8);
     }
 
     return (
         <View style={styles.box}>
             <Pressable 
-                style={[styles.transactionContainer, { opacity}]}
+                style={[styles.transactionContainer, { opacity, backgroundColor: grayBackground }]}
                 onPressIn={onPressIn}
                 onPressOut={onPressOut}
             >
@@ -46,7 +49,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     transactionContainer: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         alignItems: 'flex-end', 
         justifyContent: 'flex-end',
         marginRight: 4,
