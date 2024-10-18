@@ -5,12 +5,12 @@ import Header from '@/components/Header/Header';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
-export default function HomeHeader({ history, login, signup }) {
+export default function HomeHeader({ history, login, signup, openProfileOptions }) {
 
     const { iconColor } = useTheme();
 
     const HistoryButton = ({ onPress }) => (
-        <TouchableOpacity onPress={onPress} accessibilityLabel="Open Bet History">
+        <TouchableOpacity style={{ marginRight: 8 }} onPress={onPress} accessibilityLabel="Open Bet History">
           <FontAwesome5 name='history' size={28} color={iconColor} />
         </TouchableOpacity>
       );
@@ -27,11 +27,16 @@ export default function HomeHeader({ history, login, signup }) {
         </TouchableOpacity>
       );
 
+      const ProfileButton = ({ onPress }) => (
+        <TouchableOpacity onPress={onPress} accessibilityLabel="Open Profile">
+          <View style={{ width: 30, height: 30, borderRadius: 15, borderWidth: 1 }}/>
+        </TouchableOpacity>
+      );
+
     return (
         <Header title={'BetSmart'}>
-            <HistoryButton onPress={history} />
-            <LoginButton onPress={login} />
-            <SignUpButton onPress={signup} />
+          <HistoryButton onPress={history} />
+          <ProfileButton onPress={openProfileOptions} />
         </Header>
     );
 }
