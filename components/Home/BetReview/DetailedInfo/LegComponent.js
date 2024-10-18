@@ -1,47 +1,90 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
-import Colors from '@/constants/Colors';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Image } from 'react-native';
+import { Text, View, ClearView } from '@/components/Themed';
+import { useSQLiteContext } from 'expo-sqlite';
+import { getLogoUrl } from '@/db/general/Teams';
+import { displayLeg } from '@/utils/betSlipFunctions';
+import { getTeamAbbreviationByName } from '@/db/general/Teams';
 
-export default function LegComponent({ leg }) {
+export default function LegComponent({ leg, children }) {
 
-    const displayLegInfo = (leg) => {
-        const isWholeNumber = 'line' in leg && (Number.isInteger(parseFloat(leg.value)) || parseFloat(leg.value) % 1 === 0);
+    const db = useSQLiteContext();
 
-        if ('overUnder' in leg && 'line' in leg) {
-            if (isWholeNumber) {
-                return `${leg.value}+ ${leg.marketType}`;
-            } else {
-                return `${leg.overUnder} ${leg.value} ${leg.marketType}`;
-            }
-        } else if ('line' in leg) {
-            if (isWholeNumber) {
-                return `${leg.value}+ ${leg.marketType}`;
-            } else {
-                return `${leg.value} ${leg.marketType}`;
-            }
+    const { marketType, value, odds, overUnder, betTargetId, betTarget, targetType, betType } = leg;
+
+    const [betTargetName, setBetTargetName] = useState('');
+
+    const [targetLogo, setTargetLogo] = useState('');
+
+    const getName = async () => {
+        if (targetType === 'Team') {
+            const team = await getTeamAbbreviationByName(db, betTarget);
+            return team.abbreviation;
+        } else if (targetType === 'Game') {
+            return 'Game';
         } else {
-            return `${leg.betTarget} ${leg.marketType}`;
+            return betTarget;
         }
-    };
+    }
+
+    const getTargetHeader = () => {
+        if (targetType === 'Team') {
+            return betTarget;
+        } else if (targetType === 'Game') {
+            return 'Total';
+        } else {
+            return 'Player';
+        }
+    }
+
+    useEffect(() => {
+        const fetchName = async () => {
+            const name = await getName(betTargetId);
+            setBetTargetName(name);
+        };
+
+        fetchName();
+    }, []);
+
+    useEffect(() => {
+        const fetchTargetLogo = async (db, betTarget) => {
+            if (targetType === 'Team') {
+                getLogoUrl(db, betTarget).then((url) => setTargetLogo(url.logoUrl + '/preview'));
+            };
+        };
+
+        fetchTargetLogo(db, betTarget);
+    }, [betTarget]);
 
     return (
-        <View style={{ backgroundColor: 'transparent' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'transparent' }}>
-                <View style={{ width: 24, height: 24, borderRadius: 12, borderWidth: 1 }} />
-                <View style={{ backgroundColor: 'transparent', paddingLeft: 4 }}>
-                    <Text style={{ fontWeight: '600' }}>{leg.betTarget}</Text>
-                    <Text>{displayLegInfo(leg)}</Text>
-                </View>
-            </View>
-        </View>
+        <ClearView>
+            <ClearView style={styles.container}>
+                {
+                    targetLogo == '' ? 
+                    <View style={[styles.targetIcon, { borderWidth: 1 }]} /> 
+                    : 
+                    <Image style={styles.targetIcon} source={{uri: targetLogo}}/>
+                }
+                <ClearView style={{ paddingLeft: 4 }}>
+                    <Text style={{ fontWeight: '600' }}>{getTargetHeader()}</Text>
+                    <Text>{displayLeg(leg, betTargetName)}</Text>
+                </ClearView>
+            </ClearView>
+            {children}
+        </ClearView>
+
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        paddingVertical: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    targetIcon: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        marginRight: 4,
     },
 });
