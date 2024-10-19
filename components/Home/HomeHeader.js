@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import Header from '@/components/Header/Header';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
+import { UserContext } from '@/contexts/UserContext';
 
 export default function HomeHeader({ history, login, signup, openProfileOptions }) {
 
     const { iconColor } = useTheme();
+
+    const { signedIn } = useContext(UserContext);
 
     const HistoryButton = ({ onPress }) => (
         <TouchableOpacity style={{ marginRight: 8 }} onPress={onPress} accessibilityLabel="Open Bet History">
@@ -35,8 +38,16 @@ export default function HomeHeader({ history, login, signup, openProfileOptions 
 
     return (
         <Header title={'BetSmart'}>
-          <HistoryButton onPress={history} />
-          <ProfileButton onPress={openProfileOptions} />
+          { signedIn ?
+            <>
+              <HistoryButton onPress={history} />
+              <ProfileButton onPress={openProfileOptions} />
+            </>  :
+            <>
+              <LoginButton onPress={login} />
+              <SignUpButton onPress={signup} />
+            </>
+          }
         </Header>
     );
 }
