@@ -14,7 +14,7 @@ export default function BalanceBox({ openModal }) {
     const [curBookie, setCurBookie] = useState({ balance: 0 });
 
     useEffect(() => {
-        if (signedIn) {
+        if (userBalance.length > 0 && signedIn) {
             const newBookie = userBalance.find(obj => obj.bookieId === bookieId);
             setCurBookie(newBookie);
         }
@@ -48,7 +48,7 @@ export default function BalanceBox({ openModal }) {
             onLongPress={() => switchBookie()}
         >
           <View style={styles.bankContainer}>
-            <Text style={styles.bankText}>${curBookie.balance.toFixed(2)}</Text>
+            <Text style={styles.bankText}>${userBalance.find(b => b.bookieId === bookieId)?.balance.toFixed(2) || '0.00'}</Text>
           </View>
             <Image source={bookieImages[bookie]} style={styles.bankImage} />
         </Pressable>
