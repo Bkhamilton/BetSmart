@@ -24,6 +24,11 @@ export default function ProfitDashboard({ openTransaction, openChooseBookie, tra
     useEffect(() => {
         if (!user) return;
         if (!signedIn) return;
+        if (user.id === 0) {
+            setTotalWinnings(0);
+            setTotalBetAmount(0);
+            return;
+        }
         getBetSlipResultsWinnings(db, user.id).then((res) => {
             setTotalWinnings(res[0].totalWinnings);
         });
