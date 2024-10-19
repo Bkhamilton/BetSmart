@@ -102,7 +102,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         };
 
         fetchUserData();
-    }, []);
+    }, [signedIn]);
 
     useEffect(() => {
         if (fetchBalance) {
