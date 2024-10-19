@@ -34,36 +34,36 @@ export const getTodaysBetSlips = async (db, day) => {
     }
 };
 
-// Function to get all open bet slips
-export const getOpenBetSlips = async (db) => {
+// Function to get all open bet slips for a user
+export const getOpenBetSlips = async (db, userId) => {
     try {
-      const openBetSlips = await db.getAllAsync(`
-        SELECT 
-            bs.id AS id,
-            bs.formatId AS formatId,
-            bf.formatName AS formatName,
-            bs.date AS date,
-            bs.odds AS odds,
-            bs.betAmount AS betAmount,
-            bs.winnings AS winnings,
-            bs.userId AS userId,
-            bs.bookieId AS bookieId,
-            b.name AS bookieName
-        FROM 
-            BetSlips bs
-        LEFT JOIN 
-            BetSlipsResults bsr ON bs.id = bsr.betSlipId
-        LEFT JOIN
-            Bookies b ON bs.bookieId = b.id
-        LEFT JOIN
-            BetFormats bf ON bs.formatId = bf.id
-        WHERE 
-            bsr.betSlipId IS NULL
-      `);
-      return openBetSlips;
+        const openBetSlips = await db.getAllAsync(`
+            SELECT 
+                bs.id AS id,
+                bs.formatId AS formatId,
+                bf.formatName AS formatName,
+                bs.date AS date,
+                bs.odds AS odds,
+                bs.betAmount AS betAmount,
+                bs.winnings AS winnings,
+                bs.userId AS userId,
+                bs.bookieId AS bookieId,
+                b.name AS bookieName
+            FROM 
+                BetSlips bs
+            LEFT JOIN 
+                BetSlipsResults bsr ON bs.id = bsr.betSlipId
+            LEFT JOIN
+                Bookies b ON bs.bookieId = b.id
+            LEFT JOIN
+                BetFormats bf ON bs.formatId = bf.id
+            WHERE 
+                bsr.betSlipId IS NULL AND bs.userId = ?
+        `, [userId]);
+        return openBetSlips;
     } catch (error) {
-      console.error('Error querying open BetSlips:', error);
-      throw error;
+        console.error('Error querying open BetSlips:', error);
+        throw error;
     }
 };
 

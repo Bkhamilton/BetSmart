@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useSQLiteContext } from 'expo-sqlite';
+import { UserContext } from '@/contexts/UserContext';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 
 const useHookBetHistory = () => {
 
     const db = useSQLiteContext();
+
+    const { user } = useContext(UserContext);
 
     const [selectedType, setSelectedType] = useState('Open');
 
@@ -18,7 +21,7 @@ const useHookBetHistory = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const betSlips = await getOpenBetSlips(db);
+          const betSlips = await getOpenBetSlips(db, user.id);
           const betSlipsWithBets = await fillBetSlips(db, betSlips);
           setBetSlips(betSlipsWithBets);
         } catch (error) {

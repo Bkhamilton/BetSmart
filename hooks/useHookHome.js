@@ -65,7 +65,8 @@ const useHookHome = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const betSlips = await getOpenBetSlips(db);
+        if (!user) return;
+        const betSlips = await getOpenBetSlips(db, user.id);
         const betSlipsWithBets = await fillBetSlips(db, betSlips);
         setBetSlips(betSlipsWithBets);
       } catch (error) {
@@ -74,7 +75,7 @@ const useHookHome = () => {
     };
   
     fetchData();
-  }, [triggerFetch, trigger]);
+  }, [triggerFetch, trigger, user]);
 
   return {
     confirmModalVisible,
