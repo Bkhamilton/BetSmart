@@ -11,7 +11,7 @@ import BalanceChecker from '@/components/Home/ProfitDashboard/BalanceChecker/Bal
 export default function ProfitDashboard({ openTransaction, openChooseBookie, transactions }) {
 
     const { greenText, grayBackground, grayBorder } = useTheme();
-    const { user, trigger, setTrigger, bookie } = useContext(UserContext);
+    const { user, trigger, setTrigger, bookie, signedIn } = useContext(UserContext);
 
     const db = useSQLiteContext();
 
@@ -23,13 +23,14 @@ export default function ProfitDashboard({ openTransaction, openChooseBookie, tra
 
     useEffect(() => {
         if (!user) return;
+        if (!signedIn) return;
         getBetSlipResultsWinnings(db, user.id).then((res) => {
             setTotalWinnings(res[0].totalWinnings);
         });
         getBetSlipResultsBetAmount(db, user.id).then((res) => {
             setTotalBetAmount(res[0].totalBetAmount);
         });
-    }, [trigger, user]);
+    }, [trigger, user, signedIn]);
 
     useEffect(() => {
         const calculatedProfit = totalWinnings - totalBetAmount;
