@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { getUser } from '@/db/user-specific/Users';
-import { insertUserSession, getMostRecentUserSession } from '@/db/user-specific/UserSessions';
+import { insertUserSession, getMostRecentUserSession, insertNonActiveUserSession } from '@/db/user-specific/UserSessions';
 import { useSQLiteContext } from 'expo-sqlite';
 
 const useAuthState = (closeLoginModal) => {
