@@ -26,7 +26,11 @@ export const getUserSession = async (db, userSessionId) => {
 export const getMostRecentSession = async (db) => {
     try {
         const userSessions = await db.getAllAsync(
-            'SELECT * FROM UserSessions ORDER BY loginTimestamp DESC LIMIT 1'
+            `SELECT * FROM UserSessions 
+             ORDER BY loginTimestamp DESC, 
+                      CASE WHEN logoutTimestamp IS NULL THEN 1 ELSE 0 END, 
+                      logoutTimestamp DESC 
+             LIMIT 1`
         );
 
         if (userSessions.length === 0) {
@@ -87,6 +91,17 @@ export const insertUserSession = async (db, userId, loginTimestamp) => {
         return result.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting user session:', error);
+        throw error;
+    }
+};
+
+// Function to insert a non-active user session
+export const insertNonActiveUserSession = async (db, userId, loginTimestamp, logoutTimestamp) => {
+    try {
+        const result = await db.runAsync('INSERT INTO UserSessions (userId, loginTimestamp, logoutTimestamp, isActive) VALUES (?, ?, ?, 0)', [userId, loginTimestamp, logoutTimestamp]);
+        return result.lastInsertRowId;
+    } catch (error) {
+        console.error('Error inserting non-active user session:', error);
         throw error;
     }
 };
