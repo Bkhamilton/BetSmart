@@ -35,6 +35,8 @@ interface UserContextValue {
     setBookie: (bookie: Bookie | null) => void;
     trigger: boolean;
     setTrigger: (trigger: boolean) => void;
+    signedIn: boolean;
+    setSignedIn: (signedIn: boolean) => void;
 }
 
 export const UserContext = createContext<UserContextValue>({
@@ -46,6 +48,8 @@ export const UserContext = createContext<UserContextValue>({
     setBookie: () => {},
     trigger: false,
     setTrigger: () => {},
+    signedIn: false,
+    setSignedIn: () => {},
 });
 
 interface UserContextProviderProps {
@@ -60,6 +64,8 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const [trigger, setTrigger] = useState<boolean>(false);
     const [fetchBalance, setFetchBalance] = useState<boolean>(false);
 
+    const [signedIn, setSignedIn] = useState<boolean>(false);
+
     const db = useSQLiteContext();
 
     useEffect(() => {
@@ -71,6 +77,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
                     getBalanceByUser(db, newUser.id).then((newUserBalance) => {
                         setUserBalance(newUserBalance);
                         setFetchBalance(true);
+                        setSignedIn(true);
                     });
                 });
             } else {
@@ -129,6 +136,8 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         setBookie,
         trigger,
         setTrigger,
+        signedIn,
+        setSignedIn,
     };
 
     return (
