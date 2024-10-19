@@ -1,11 +1,14 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
 import { getUser } from '@/db/user-specific/Users';
 import { insertUserSession, getMostRecentUserSession, insertNonActiveUserSession } from '@/db/user-specific/UserSessions';
 import { useSQLiteContext } from 'expo-sqlite';
+import { UserContext } from '@/contexts/UserContext';
 
 const useAuthState = (closeLoginModal) => {
 
     const db = useSQLiteContext();
+
+    const { signedIn, setSignedIn } = useContext(UserContext);
 
     const [authError, setAuthError] = useState(null);
 
@@ -42,6 +45,7 @@ const useAuthState = (closeLoginModal) => {
         // If the username and password match, create a new session
         const today = new Date().toISOString();
         await insertUserSession(db, user.id, today);
+        setSignedIn(true);
 
         closeLoginModal();
         setAuthError(null);
@@ -63,6 +67,7 @@ const useAuthState = (closeLoginModal) => {
     
                 // Insert a non-active user session
                 await insertNonActiveUserSession(db, userId, loginTimestamp, logoutTimestamp);
+                setSignedIn(false);
     
                 console.log('User signed out successfully');
             } else {
