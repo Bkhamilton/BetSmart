@@ -90,7 +90,7 @@ export const getTotalBetSlips = async (db, userId) => {
 };
 
 // Function to get total betSlips for a user and bookie over the last 7 days
-export const getBetSlipsLast7Days = async (db, userId, bookieId) => {
+export const getBetSlipsByBookieLast7Days = async (db, userId, bookieId) => {
     try {
         const betSlipsLast7Days = await db.getAllAsync(`
             SELECT 
@@ -100,6 +100,24 @@ export const getBetSlipsLast7Days = async (db, userId, bookieId) => {
             WHERE 
                 userId = ? AND bookieId = ? AND date >= datetime('now', '-7 days')
         `, [userId, bookieId]);
+        return betSlipsLast7Days[0].count;
+    } catch (error) {
+        console.error('Error fetching total bet slips over the last 7 days:', error);
+        throw error;
+    }
+};
+
+// Function to get total betSlips for a user over the last 7 days
+export const getBetSlipsLast7Days = async (db, userId) => {
+    try {
+        const betSlipsLast7Days = await db.getAllAsync(`
+            SELECT 
+                COUNT(*) as count 
+            FROM 
+                BetSlips 
+            WHERE 
+                userId = ? AND date >= datetime('now', '-7 days')
+        `, [userId]);
         return betSlipsLast7Days[0].count;
     } catch (error) {
         console.error('Error fetching total bet slips over the last 7 days:', error);
