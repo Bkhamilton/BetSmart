@@ -8,18 +8,20 @@ import { getBetSlipResultsBetAmount, getBetSlipResultsWinnings } from '@/db/bets
 import useTheme from '@/hooks/useTheme';
 import BalanceChecker from '@/components/Home/ProfitDashboard/BalanceChecker/BalanceChecker';
 
-import { getBetSlipsLast7Days } from '@/db/betslips/BetSlips';
-import { getWonBetSlipCountByBookieLast7Days } from '@/db/betslips/BetSlipsResults';
+import { getBetSlipsLast7Days, getBetSlipsByBookieLast7Days } from '@/db/betslips/BetSlips';
+import { getWonBetSlipCountByBookieLast7Days, getProfitByBookieLast7Days } from '@/db/betslips/BetSlipsResults';
+import { getWonBetSlipCountLast7Days, getProfitLast7Days } from '@/db/betslips/BetSlipsResults';
 
 export default function ProfitDashboard({ openTransaction, openChooseBookie, transactions }) {
 
-    const { greenText, grayBackground, grayBorder } = useTheme();
+    const { greenText, grayBackground, grayBorder, redText } = useTheme();
     const { user, trigger, setTrigger, bookie, signedIn } = useContext(UserContext);
 
     const db = useSQLiteContext();
 
     const [betsPlaced, setBetsPlaced] = useState(0);
     const [betsWon, setBetsWon] = useState(0);
+    const [profit, setProfit] = useState(0);
 
     useEffect(() => {
         if (!user) return;
@@ -27,14 +29,33 @@ export default function ProfitDashboard({ openTransaction, openChooseBookie, tra
         if (user.id === 0) {
             setBetsPlaced(0);
             setBetsWon(0);
+            setProfit(0);
             return;
         }
-        getBetSlipsLast7Days(db, user.id, bookie.id).then((res) => {
-            setBetsPlaced(res);
-        });
-        getWonBetSlipCountByBookieLast7Days(db, user.id, bookie.id).then((res) => {
-            setBetsWon(res);
-        });
+        if (bookie.id === 0) {
+            // get Total Bets Placed for all bookies
+            getBetSlipsLast7Days(db, user.id).then((res) => {
+                setBetsPlaced(res);
+            });
+            // get Total Bets Won for all bookies
+            getWonBetSlipCountLast7Days(db, user.id).then((res) => {
+                setBetsWon(res);
+            });
+            // get Total Profit for all bookies
+            getProfitLast7Days(db, user.id).then((res) => {
+                setProfit(res);
+            });
+        } else {
+            getBetSlipsByBookieLast7Days(db, user.id, bookie.id).then((res) => {
+                setBetsPlaced(res);
+            });
+            getWonBetSlipCountByBookieLast7Days(db, user.id, bookie.id).then((res) => {
+                setBetsWon(res);
+            });
+            getProfitByBookieLast7Days(db, user.id, bookie.id).then((res) => {
+                setProfit(res);
+            });
+        }
     }, [trigger, user, signedIn, bookie]);
 
     const BetSlipResults = () => {
@@ -50,7 +71,9 @@ export default function ProfitDashboard({ openTransaction, openChooseBookie, tra
                 </View>
                 <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
                     <Text>Profit</Text>
-                    <Text style={[styles.moneyText]}>-$20.00</Text>
+                    <Text style={[styles.moneyText, { color: profit > 0 ? greenText : redText }]}>
+                    {profit > 0 ? `+$${profit.toFixed(2)}` : `-$${Math.abs(profit).toFixed(2)}`}
+                    </Text>
                 </View>
             </View>
         );
