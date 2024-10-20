@@ -88,6 +88,9 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
                     <Text>{bet.league}</Text>
                     <Text>{bet.odds}</Text>
                 </ClearView>
+                <ClearView>
+                    <Text>{bet.date}</Text>
+                </ClearView>
                 <ClearView style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ fontSize: 18, fontWeight: '600' }}>{bet.homeTeamAbv} vs {bet.awayTeamAbv}</Text>
                 </ClearView>
