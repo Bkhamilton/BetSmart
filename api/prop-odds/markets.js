@@ -69,8 +69,22 @@ const getBetTargetName = (db, name, gameId) => {
       const teamName = trimmedName.replace(spreadPattern, '').trim();
       resolve(teamName);
     }
+
+    if (trimmedName.includes(' pk')) {
+      const nameWithoutPk = trimmedName.replace(' pk', '');
+      const [abbreviation, partialTeamName] = nameWithoutPk.split(' ', 2);
+      // If abbrev + partialTeamName is in betTargetCases, return the value
+      if (betTargetCases[abbreviation + ' ' + partialTeamName]) {
+        resolve(betTargetCases[abbreviation + ' ' + partialTeamName]);
+      }
+      getTeamsByAbbreviation(db, abbreviation).then((teams) => {
+        const matchedTeam = teams.find(team => team.teamName.includes(partialTeamName));
+        resolve(matchedTeam ? matchedTeam.teamName : abbreviation + ' ' + partialTeamName);
+      }).catch(reject);
+    }
     
-    if (trimmedName.includes(' - ')) {
+    // If the name includes ' - ', split it and check if the first part is an abbreviation
+    if (trimmedName.includes(' - ') || trimmedName.endsWith(' pk')) {
       const [firstPart] = trimmedName.split(' - ');
       // If firstPart is a single string, return it
       if (!firstPart.includes(' ')) {
