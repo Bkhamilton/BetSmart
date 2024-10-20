@@ -1,10 +1,73 @@
 import * as SQLite from 'expo-sqlite';
+import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 
 // Function to get a bet slip result
 export const getBetSlipResult = async (db, betSlipId) => {
     try {
         const result = await db.getAllAsync('SELECT * FROM BetSlipsResults WHERE betSlipId = ?', [betSlipId]);
         return result;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
+// Function to return the winningest betslip (highest winnings) for a specific user
+export const getWinningestBetSlip = async (db, userId) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                B.id, 
+                B.winnings, 
+                B.betAmount, 
+                B.date, 
+                B.formatId, 
+                B.bookieId, 
+                B.userId, 
+                R.result
+            FROM 
+                BetSlips B
+            LEFT JOIN 
+                BetSlipsResults R ON B.id = R.betSlipId
+            WHERE 
+                B.userId = ? AND R.result = 1
+            ORDER BY 
+                B.winnings DESC
+            LIMIT 1`, [userId]);
+        const winSlip = result[0];
+        const filledSlip = await fillBetSlips(db, [winSlip]);
+        return filledSlip[0];
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
+// Function to get the winningest betslip (highest winnings) for a specific user in the last 7 days
+export const getWinningestBetSlipLast7Days = async (db, userId) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                B.id, 
+                B.winnings, 
+                B.betAmount, 
+                B.date, 
+                B.formatId, 
+                B.bookieId, 
+                B.userId, 
+                R.result
+            FROM 
+                BetSlips B
+            LEFT JOIN 
+                BetSlipsResults R ON B.id = R.betSlipId
+            WHERE 
+                B.userId = ? AND R.result = 1 AND B.date >= date('now', '-7 days')
+            ORDER BY 
+                B.winnings DESC
+            LIMIT 1`, [userId]);
+        const winSlip = result[0];
+        const filledSlip = await fillBetSlips(db, [winSlip]);
+        return filledSlip[0];
     } catch (error) {
         console.error('Error getting bet slip result:', error);
         throw error;
