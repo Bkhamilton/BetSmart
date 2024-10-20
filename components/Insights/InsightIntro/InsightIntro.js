@@ -1,13 +1,38 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
-import Colors from '@/constants/Colors';
+import { UserContext } from '@/contexts/UserContext';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
+import { useSQLiteContext } from 'expo-sqlite';
+import { getBetSlipsLast7Days, getBetSlipsByBookieLast7Days } from '@/db/betslips/BetSlips';
+import { getWonBetSlipCountByBookieLast7Days, getProfitByBookieLast7Days } from '@/db/betslips/BetSlipsResults';
+import { getWonBetSlipCountLast7Days, getProfitLast7Days } from '@/db/betslips/BetSlipsResults';
 
 export default function InsightIntro({ streak }) {
 
-  const { redText, accentBlue } = useTheme();
+  const db = useSQLiteContext();
+
+  const { redText, accentBlue, greenText } = useTheme();
+
+  const { user, signedIn } = useContext(UserContext);
+
+  const [betsPlaced, setBetsPlaced] = useState(0);
+  const [betsWon, setBetsWon] = useState(0);
+  const [profit, setProfit] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+    getBetSlipsLast7Days(db, user.id).then((res) => {
+      setBetsPlaced(res);
+    });
+    getWonBetSlipCountLast7Days(db, user.id).then((res) => {
+      setBetsWon(res);
+    });
+    getProfitLast7Days(db, user.id).then((res) => {
+      setProfit(res);
+    });
+  }, [user, signedIn]);
 
   const HotStreak = () => {
     return (
@@ -40,14 +65,14 @@ export default function InsightIntro({ streak }) {
           justifyContent: 'space-between',
           alignItems: 'center',
           marginTop: 4,
-          paddingHorizontal: '20%',
+          paddingHorizontal: '15%',
           opacity: 0.7,
         }}
       >
         {/* Bets Placed, Bets Won, Money Won */}
-        <Text style={{ fontSize: 12 }}>5 Bets Placed</Text>
-        <Text style={{ fontSize: 12 }}>1 Bet Won</Text>
-        <Text style={{ fontSize: 12 }}>Profit: -$40</Text>
+        <Text style={{ fontSize: 12 }}>{betsPlaced} Bet{betsPlaced > 0 ? 's' : ''} Placed</Text>
+        <Text style={{ fontSize: 12 }}>{betsWon} Bet{betsWon > 0 ? 's' : ''} Won</Text>
+        <Text style={{ fontSize: 12 }}>Profit: {profit > 0 ? `+$${profit.toFixed(2)}` : `-$${Math.abs(profit).toFixed(2)}`}</Text>
       </View>
       <View style={{ alignItems: 'center', justifyContent: 'center', opacity: 0.5, marginTop: 2 }}>
         <Text style={{ fontSize: 10 }}>Last 7 Days</Text>
