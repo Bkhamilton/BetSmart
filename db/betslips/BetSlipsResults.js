@@ -91,6 +91,44 @@ export const getBetSlipResultsCount = async (db) => {
     }
 };
 
+// Function to return count of true betSlipResults for a specific user and bookie
+export const getBetSlipResultsCountByBookie = async (db, userId, bookieId) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                COUNT(R.result) as count 
+            FROM 
+                BetSlips B
+            LEFT JOIN 
+                BetSlipsResults R ON B.id = R.betSlipId
+            WHERE 
+                B.userId = ? AND B.bookieId = ? AND R.result = 1`, [userId, bookieId]);
+        return result[0].count;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
+// Function to return count of true betSlipResults for a specific user and bookie over the last 7 days
+export const getWonBetSlipCountByBookieLast7Days = async (db, userId, bookieId) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                COUNT(R.result) as count
+            FROM 
+                BetSlips B
+            LEFT JOIN 
+                BetSlipsResults R ON B.id = R.betSlipId
+            WHERE 
+                B.userId = ? AND B.bookieId = ? AND R.result = 1 AND B.date >= date('now', '-7 days')`, [userId, bookieId]);
+        return result[0].count;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
 // Function to get total winnings from bet slips that are true for a specific user
 export const getBetSlipResultsWinnings = async (db, userId) => {
     try {
