@@ -129,6 +129,25 @@ export const getWonBetSlipCountByBookieLast7Days = async (db, userId, bookieId) 
     }
 };
 
+// Function to return count of true betSlipResults for a specific user over the last 7 days
+export const getWonBetSlipCountLast7Days = async (db, userId) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                COUNT(R.result) as count
+            FROM 
+                BetSlips B
+            LEFT JOIN 
+                BetSlipsResults R ON B.id = R.betSlipId
+            WHERE 
+                B.userId = ? AND R.result = 1 AND B.date >= date('now', '-7 days')`, [userId]);
+        return result[0].count;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
 // Function to get total winnings from bet slips that are true for a specific user
 export const getBetSlipResultsWinnings = async (db, userId) => {
     try {
@@ -142,6 +161,56 @@ export const getBetSlipResultsWinnings = async (db, userId) => {
             WHERE 
                 R.result = 1 AND B.userId = ?`, [userId]);
         return result;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
+// Function to get total profit from bet slips for a specific user and bookie over the last 7 days
+export const getProfitByBookieLast7Days = async (db, userId, bookieId) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                COALESCE(
+                    (SELECT SUM(B.winnings) 
+                     FROM BetSlips B
+                     LEFT JOIN BetSlipsResults R ON B.id = R.betSlipId
+                     WHERE B.userId = ? AND B.bookieId = ? AND B.date >= date('now', '-7 days') AND R.result = 1), 0) 
+                - 
+                COALESCE(
+                    (SELECT SUM(B.betAmount) 
+                     FROM BetSlips B
+                     LEFT JOIN BetSlipsResults R ON B.id = R.betSlipId
+                     WHERE B.userId = ? AND B.bookieId = ? AND B.date >= date('now', '-7 days') AND R.result = 0), 0) 
+                AS totalProfit
+            `, [userId, bookieId, userId, bookieId]);
+        return result[0].totalProfit;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
+// Function to get total profit from bet slips for a specific user across all bookies over the last 7 days
+export const getProfitLast7Days = async (db, userId) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                COALESCE(
+                    (SELECT SUM(B.winnings) 
+                     FROM BetSlips B
+                     LEFT JOIN BetSlipsResults R ON B.id = R.betSlipId
+                     WHERE B.userId = ? AND B.date >= date('now', '-7 days') AND R.result = 1), 0) 
+                - 
+                COALESCE(
+                    (SELECT SUM(B.betAmount) 
+                     FROM BetSlips B
+                     LEFT JOIN BetSlipsResults R ON B.id = R.betSlipId
+                     WHERE B.userId = ? AND B.date >= date('now', '-7 days') AND R.result = 0), 0) 
+                AS totalProfit
+            `, [userId, userId]);
+        return result[0].totalProfit;
     } catch (error) {
         console.error('Error getting bet slip result:', error);
         throw error;
