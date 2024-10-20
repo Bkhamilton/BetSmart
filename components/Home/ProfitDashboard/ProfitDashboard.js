@@ -8,6 +8,9 @@ import { getBetSlipResultsBetAmount, getBetSlipResultsWinnings } from '@/db/bets
 import useTheme from '@/hooks/useTheme';
 import BalanceChecker from '@/components/Home/ProfitDashboard/BalanceChecker/BalanceChecker';
 
+import { getBetSlipsLast7Days } from '@/db/betslips/BetSlips';
+import { getWonBetSlipCountByBookieLast7Days } from '@/db/betslips/BetSlipsResults';
+
 export default function ProfitDashboard({ openTransaction, openChooseBookie, transactions }) {
 
     const { greenText, grayBackground, grayBorder } = useTheme();
@@ -15,53 +18,42 @@ export default function ProfitDashboard({ openTransaction, openChooseBookie, tra
 
     const db = useSQLiteContext();
 
-    const [totalWinnings, setTotalWinnings] = useState(0);
-    const [totalBetAmount, setTotalBetAmount] = useState(0);
-    const [profit, setProfit] = useState(0);
-    const [arrowDirection, setArrowDirection] = useState('chevron-down');
-    const [arrowColor, setArrowColor] = useState('red');
+    const [betsPlaced, setBetsPlaced] = useState(0);
+    const [betsWon, setBetsWon] = useState(0);
 
     useEffect(() => {
         if (!user) return;
         if (!signedIn) return;
         if (user.id === 0) {
-            setTotalWinnings(0);
-            setTotalBetAmount(0);
+            setBetsPlaced(0);
+            setBetsWon(0);
             return;
         }
-        getBetSlipResultsWinnings(db, user.id).then((res) => {
-            setTotalWinnings(res[0].totalWinnings);
+        getBetSlipsLast7Days(db, user.id, bookie.id).then((res) => {
+            setBetsPlaced(res);
         });
-        getBetSlipResultsBetAmount(db, user.id).then((res) => {
-            setTotalBetAmount(res[0].totalBetAmount);
+        getWonBetSlipCountByBookieLast7Days(db, user.id, bookie.id).then((res) => {
+            setBetsWon(res);
         });
-    }, [trigger, user, signedIn]);
+    }, [trigger, user, signedIn, bookie]);
 
-    useEffect(() => {
-        const calculatedProfit = totalWinnings - totalBetAmount;
-        setProfit(calculatedProfit);
-        setArrowDirection(calculatedProfit > 0 ? 'chevron-up' : 'chevron-down');
-        setArrowColor(calculatedProfit > 0 ? 'green' : 'red');
-    }, [totalWinnings, totalBetAmount]);
-
-    const BetResults = () => {
-      return (
-        <View style={styles.row}>
-            <View style={[styles.leftBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
-                <Text style={{ paddingLeft: 16 }}>Total Won</Text>
-                <Text style={[styles.moneyText, { color: greenText }]}>${totalWinnings.toFixed(2)}</Text>
-            </View>
-            <View style={[styles.indicator, { backgroundColor: 'transparent' }]}>
-                <View style={styles.circle}>
-                    <FontAwesome name={arrowDirection} size={20} color={arrowColor} style={{ marginTop: -4 }}/>
+    const BetSlipResults = () => {
+        return (
+            <View style={styles.resultContainer}>
+                <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
+                    <Text>Bets Won</Text>
+                    <Text style={styles.moneyText}>{betsWon}</Text>
+                </View>
+                <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
+                    <Text>Bets Placed</Text>
+                    <Text style={styles.moneyText}>{betsPlaced}</Text>
+                </View>
+                <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
+                    <Text>Profit</Text>
+                    <Text style={[styles.moneyText]}>-$20.00</Text>
                 </View>
             </View>
-            <View style={[styles.rightBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
-                <Text>Total Bet</Text>
-                <Text style={[styles.moneyText, { color: '#ff5757' }]}>${totalBetAmount.toFixed(2)}</Text>
-            </View>
-        </View>
-      );
+        );
     }
 
     return (
@@ -71,7 +63,7 @@ export default function ProfitDashboard({ openTransaction, openChooseBookie, tra
             openChooseBookie={openChooseBookie}
             transactions={transactions}
         />
-        <BetResults />
+        <BetSlipResults />
     </>
   );
 }
@@ -102,7 +94,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
     },
     moneyText: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
     },
     indicator: {
@@ -120,5 +112,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
+    },
+    resultContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 8,
+        marginHorizontal: 10,
+    },
+    resultBox: {
+        flex: 1,
+        alignItems: 'center',
+        paddingVertical: 12,
+        justifyContent: 'center',
+        paddingHorizontal: 8,
+        borderRadius: 8,
     },
 });
