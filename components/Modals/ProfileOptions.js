@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
 import useRouting from '@/hooks/useRouting';
 import { UserContext } from '@/contexts/UserContext';
