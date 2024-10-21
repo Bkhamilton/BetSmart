@@ -1,64 +1,52 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ScrollView, Pressable } from '@/components/Themed';
+import useTheme from '@/hooks/useTheme';
 
 export default function TimeSelector({ selectTime, curTime }) {
 
     const timeSlots = [
         {
-            title: 'Open',
+            title: 'All',
             id: 1,
         },
         {
-            title: '1D',
+            title: '7D',
             id: 2,
         },
         {
-            title: '1W',
+            title: '1M',
             id: 3,
         },
         {
-            title: '2W',
+            title: '3M',
             id: 4,
         },
         {
-            title: '1M',
+            title: '6M',
             id: 5,
         },
         {
-            title: '3M',
+            title: '1Y',
             id: 6,
         },
-        {
-            title: '6M',
-            id: 7,
-        },
-        {
-            title: '1Y',
-            id: 8,
-        },
-        {
-            title: 'All',
-            id: 9,
-        }
     ]
+
+    const { grayBackground, grayBorder } = useTheme();
 
     return (
         <View style={styles.container}>
-          <ScrollView 
-            horizontal
-            showsHorizontalScrollIndicator={false}  
-          >
-            {timeSlots.map((item) => (
-              <Pressable
-                key={item.id}
-                style={styles.categoryContainer}
-                onPress={() => selectTime(item.title)}
-              >
-                <Text style={{ color: 'white' }}>{item.title}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '100%', backgroundColor: grayBorder }}>
+                {timeSlots.map((item) => (
+                <Pressable
+                    key={item.id}
+                    style={[styles.categoryContainer, { backgroundColor: curTime === item.title ? grayBackground : grayBorder, borderColor: curTime === item.title ? grayBorder : grayBackground }]}
+                    onPress={() => selectTime(item.title)}
+                >
+                    <Text>{item.title}</Text>
+                </Pressable>
+                ))}
+            </View>
         </View>
       )
 }
@@ -71,8 +59,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     categoryContainer: {
-        backgroundColor: 'gray',
-        paddingHorizontal: 12,
+        paddingHorizontal: 16,
         paddingVertical: 8,
     },
 });
