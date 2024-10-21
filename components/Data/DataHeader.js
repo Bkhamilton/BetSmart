@@ -1,28 +1,28 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable } from '@/components/Themed';
-import Colors from '@/constants/Colors';
+import Header from '../../components/Header/Header';
 import { Ionicons } from '@expo/vector-icons';
+import useTheme from '@/hooks/useTheme';
+import TimeSelector from './TimeSelector';
 
-export default function DataHeader() {
-  return (
-    <View style={styles.container}>
-        <View>
-            <View>
-                <Text style={{ fontSize: 24, fontWeight: '600' }}>My Bet Data</Text>
-            </View>
-            <View>
-                <Text style={{ fontSize: 12, fontWeight: '500', opacity: 0.7 }}>View Detailed Bet Analytics Here</Text>
-            </View>
-        </View>
-        <View>
-            <Pressable style={styles.filterButton}>
-                <Ionicons name="filter" size={24} color="white" />
-                <Text style={{ color: 'white' }}>Filter</Text>
-            </Pressable>
-        </View>
-    </View>
-  );
+export default function DataHeader({ selectTime, selectedTime }) {
+
+    const { iconColor } = useTheme();
+
+    return (
+        <>
+          <Header title={"Analytics"}>
+            <TouchableOpacity
+              onPress={() => {}}
+              style={{ marginRight: 10 }}
+            >
+              <Ionicons name="filter" size={20} color={iconColor} />
+            </TouchableOpacity>
+          </Header>
+          <TimeSelector selectTime={selectTime} curTime={selectedTime}/>
+        </>
+      )
 }
 
 const styles = StyleSheet.create({
