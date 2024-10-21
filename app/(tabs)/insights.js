@@ -1,13 +1,10 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { TouchableOpacity, ScrollView } from '@/components/Themed';
-import Header from '@/components/Header/Header';
+import { ScrollView } from '@/components/Themed';
 import { useSQLiteContext } from 'expo-sqlite';
 import InsightIntro from '@/components/Insights/InsightIntro/InsightIntro';
 import BetAnalysis from '@/components/Insights/BetAnalysis/BetAnalysis';
 import TopBet from '@/components/Insights/TopBet';
-import { FontAwesome } from '@expo/vector-icons';
-import useTheme from '@/hooks/useTheme';
+import InsightHeader from '@/components/Insights/InsightHeader';
 
 import useHookInsightsPage from '@/hooks/useHookInsights';
 
@@ -19,23 +16,14 @@ export default function InsightScreen() {
 
   }
 
-  const { iconColor } = useTheme();
-
   const db = useSQLiteContext();
 
   return (
     <>
-      <Header title={"Insights"}>
-        <TouchableOpacity
-          onPress={cycleStreak}
-          style={{ marginRight: 10 }}
-        >
-          <FontAwesome name="refresh" size={20} color={iconColor} />
-        </TouchableOpacity>
-      </Header>
-      <ScrollView 
-        style={styles.container}
-      >
+      <InsightHeader
+        onPress={cycleStreak}
+      />
+      <ScrollView>
         <InsightIntro streak={streak}/>
         <BetAnalysis streak={streak}/>
         <TopBet />
@@ -45,9 +33,3 @@ export default function InsightScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
