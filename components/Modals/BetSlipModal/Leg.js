@@ -24,7 +24,7 @@ export default function Leg({ leg, currentBet, onRemove }) {
         };
 
         fetchName();
-    }, []);
+    }, [leg]);
 
     const displayLeg = () => {
         switch (type) {

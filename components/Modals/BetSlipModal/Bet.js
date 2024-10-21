@@ -32,6 +32,10 @@ export default function Bet({ bet, setBetSlipOdds, remove }) {
         setBetOdds(bet.odds.slice(1));
     }
 
+    useEffect(() => {
+        setBetOdds(bet.odds.slice(1));
+    }, [bet]);
+
     return (
         <Pressable style={[styles.betContainer, { backgroundColor: grayBackground }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', backgroundColor: 'transparent' }}>
