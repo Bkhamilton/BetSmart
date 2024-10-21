@@ -110,7 +110,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
                 const mostRecentActiveUserSession = await getMostRecentSession(db);
                 if (mostRecentActiveUserSession) {
                     getBalanceByUser(db, mostRecentActiveUserSession.userId).then((newUserBalance) => {
-                        setBookie({ id: newUserBalance[0].bookieId, name: newUserBalance[0].bookieName });
+                        setBookie({ id: 0, name: 'Total' });
                     });
                 } else {
                     // No active user session, add default values here
