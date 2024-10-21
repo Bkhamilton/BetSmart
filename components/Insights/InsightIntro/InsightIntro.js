@@ -1,38 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
-import { UserContext } from '@/contexts/UserContext';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import { useSQLiteContext } from 'expo-sqlite';
-import { getBetSlipsLast7Days, getBetSlipsByBookieLast7Days } from '@/db/betslips/BetSlips';
-import { getWonBetSlipCountByBookieLast7Days, getProfitByBookieLast7Days } from '@/db/betslips/BetSlipsResults';
-import { getWonBetSlipCountLast7Days, getProfitLast7Days } from '@/db/betslips/BetSlipsResults';
+
+import useHookInsightsPage from '@/hooks/useHookInsights';
 
 export default function InsightIntro({ streak }) {
 
   const db = useSQLiteContext();
 
+  const { betsPlaced, betsWon, profit } = useHookInsightsPage();
+
   const { redText, accentBlue, greenText } = useTheme();
-
-  const { user, signedIn } = useContext(UserContext);
-
-  const [betsPlaced, setBetsPlaced] = useState(0);
-  const [betsWon, setBetsWon] = useState(0);
-  const [profit, setProfit] = useState(0);
-
-  useEffect(() => {
-    if (!user) return;
-    getBetSlipsLast7Days(db, user.id).then((res) => {
-      setBetsPlaced(res);
-    });
-    getWonBetSlipCountLast7Days(db, user.id).then((res) => {
-      setBetsWon(res);
-    });
-    getProfitLast7Days(db, user.id).then((res) => {
-      setProfit(res);
-    });
-  }, [user, signedIn]);
 
   const HotStreak = () => {
     return (
