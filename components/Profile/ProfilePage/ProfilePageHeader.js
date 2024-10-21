@@ -22,15 +22,15 @@ export default function ProfilePageHeader({ user }) {
                 <TouchableOpacity 
                     onPress={handleBetHistory} 
                     accessibilityLabel="Open Bet History"
-                    style={{ marginRight: 4 }}
+                    style={{ marginRight: 14 }}
                 >
-                    <FontAwesome5 name='history' size={24} color={iconColor} />
+                    <FontAwesome5 name='history' size={28} color={iconColor} />
                 </TouchableOpacity>
                 <TouchableOpacity 
                     onPress={handleSettings}
                     accessibilityLabel="Open Settings"
                 >
-                    <FontAwesome name="cog" size={24} color={iconColor}/>
+                    <FontAwesome name="cog" size={28} color={iconColor}/>
                 </TouchableOpacity>
             </View>
         </View>
