@@ -38,7 +38,7 @@ export function createLeg(type, betTarget, stat, line, overUnder, odds, bookieId
   };
 }
 
-export function calculateCombinedOdds(oddsArray) {
+export function calculateCombinedOddsOld(oddsArray) {
   if (oddsArray.length === 1) {
     return oddsArray[0];
   }
@@ -63,6 +63,37 @@ export function calculateCombinedOdds(oddsArray) {
   const americanOdds = combinedOdds >= 0 ? `+${Math.round(combinedOdds)}` : `${Math.round(combinedOdds)}`;
 
   return americanOdds;
+}
+
+export function calculateCombinedOdds(oddsArray) {
+  if (oddsArray.length === 1) {
+    return oddsArray[0];
+  }
+
+  let combinedProbability = 1;
+
+  for (let i = 0; i < oddsArray.length; i++) {
+    const americanOdds = Number(oddsArray[i]);
+    let probability;
+
+    if (americanOdds > 0) {
+      probability = 100 / (americanOdds + 100);
+    } else {
+      probability = Math.abs(americanOdds) / (Math.abs(americanOdds) + 100);
+    }
+
+    combinedProbability *= probability;
+  }
+
+  let combinedOdds;
+  if (combinedProbability > 0.5) {
+    combinedOdds = -100 * (combinedProbability / (1 - combinedProbability));
+  } else {
+    combinedOdds = (100 / combinedProbability) - 100;
+  }
+
+  const roundedOdds = Math.round(combinedOdds);
+  return roundedOdds >= 0 ? `+${roundedOdds}` : `${roundedOdds}`;
 }
 
 export function updateBet(betSlip, bet, leg) {
