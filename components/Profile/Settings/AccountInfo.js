@@ -1,34 +1,38 @@
-import React from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Text, View, TouchableOpacity } from '@/components/Themed';
-
-import Colors from '@/constants/Colors';
+import { Text, View, TouchableOpacity, ClearView } from '@/components/Themed';
+import { UserContext } from '@/contexts/UserContext';
+import useTheme from '@/hooks/useTheme';
 
 export default function AccountInfo({ onPress }) {
-  const colorScheme = useColorScheme();
 
-  const iconColor = colorScheme === 'dark' ? Colors.dark.text : Colors.light.text;
-  const backgroundColor = colorScheme === 'dark' ? '#1F1F1F' : '#F5F5F5';
+  const { user } = useContext(UserContext);
+
+  const { iconColor, grayBackground } = useTheme();
+
+  useEffect(() => {
+    if (!user) return;
+  }, [user]);
   
   return (
-    <View style={[styles.accountContainer, { backgroundColor: backgroundColor }]}>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', backgroundColor: 'transparent' }}>
+    <View style={[styles.accountContainer, { backgroundColor: grayBackground }]}>
+        <ClearView style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
             <View style={styles.accountImageContainer}/>
-            <View style={styles.accountInfoContainer}>
-                <Text style={{ fontWeight: '500', fontSize: 18 }}>Username</Text>
+            <ClearView style={styles.accountInfoContainer}>
+                <Text style={{ fontWeight: '500', fontSize: 18 }}>{user.username}</Text>
                 <TouchableOpacity
                   style={{ backgroundColor: 'transparent' }}
                 >
                   <Text>Profile Settings</Text>
                 </TouchableOpacity>
-            </View>
-        </View>
-        <View style={styles.accountArrowContainer}>
+            </ClearView>
+        </ClearView>
+        <ClearView style={styles.accountArrowContainer}>
             <TouchableOpacity style={{ backgroundColor: 'transparent', paddingHorizontal: 6, paddingVertical: 10 }}>
                 <FontAwesome5 name="chevron-right" size={24} color={iconColor} />
             </TouchableOpacity>
-        </View>
+        </ClearView>
     </View>
   );
 }
@@ -49,11 +53,9 @@ const styles = StyleSheet.create({
     accountInfoContainer: {
       paddingHorizontal: 10,
       justifyContent: 'center',
-      backgroundColor: 'transparent'
     },
     accountArrowContainer: {
       justifyContent: 'center',
-      backgroundColor: 'transparent',
       paddingRight: 12,
     }
   });
