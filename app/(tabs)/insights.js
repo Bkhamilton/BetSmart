@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, ScrollView } from '@/components/Themed';
 import Header from '@/components/Header/Header';
@@ -9,23 +9,14 @@ import TopBet from '@/components/Insights/TopBet';
 import { FontAwesome } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
+import useHookInsightsPage from '@/hooks/useHookInsights';
+
 export default function InsightScreen() {
 
-  const [streak, setStreak] = useState('hot');
+  const { streak, cycleStreak } = useHookInsightsPage();
 
   const tempFunction = () => {
 
-  }
-
-  // function to cycle betwen hot, cold, and no streaks
-  const cycleStreak = () => {
-    if (streak === 'hot') {
-      setStreak('cold');
-    } else if (streak === 'cold') {
-      setStreak('');
-    } else {
-      setStreak('hot');
-    }
   }
 
   const { iconColor } = useTheme();
