@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { StyleSheet, Modal, StatusBar, TextInput } from 'react-native';
+import { StyleSheet, Modal, TextInput } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
-
-import Colors from '@/constants/Colors';
-import { FontStyle } from '@shopify/react-native-skia';
+import useTheme from '@/hooks/useTheme';
 
 export default function SignUpPage({ visible, close }) {
+
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [name, setName] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const { iconColor } = useTheme();
 
     return (
         <Modal
@@ -22,8 +28,6 @@ export default function SignUpPage({ visible, close }) {
                 >
                     <FontAwesome name='close' size={40} color={'red'}/>
                 </TouchableOpacity>
-
-                
                 {/* Main Modal Box */}
                 <View style={styles.mainPage}>
                     {/* Title */}
@@ -31,29 +35,59 @@ export default function SignUpPage({ visible, close }) {
                         <Text style={styles.title}>Sign Up</Text>
                         <View style={styles.underline}></View>
                     </View>
-                    
                     {/* Username input */}
                     <View style={styles.infoBox}>
                         <Text style={styles.BoxTitle}>Username</Text>
                         <View style={styles.inputBox}>
-                            <FontAwesome name='user' size={24} color={Colors.primary} />
+                            <FontAwesome name='user' size={24} color={iconColor} />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Username"
+                                onChangeText={setUsername}
+                                autoCorrect={false}
                                 // Add necessary props and event handlers for username input
                             />
                         </View>
                     </View>
-
+                    {/* Email input */}
+                    <View style={styles.infoBox}>
+                        <Text style={styles.BoxTitle}>Email</Text>
+                        <View style={styles.inputBox}>
+                            <FontAwesome name='envelope' size={24} color={iconColor} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Email"
+                                onChangeText={setEmail}
+                                autoCorrect={false}
+                                // Add necessary props and event handlers for email input
+                            />
+                        </View>
+                    </View>
+                    {/* Name input */}
+                    <View style={styles.infoBox}>
+                        <Text style={styles.BoxTitle}>Name</Text>
+                        <View style={styles.inputBox}>
+                            <FontAwesome name='user' size={24} color={iconColor} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Name"
+                                onChangeText={setName}
+                                autoCorrect={false}
+                                // Add necessary props and event handlers for name input
+                            />
+                        </View>
+                    </View>
                     {/* Password input */}
                     <View style={styles.infoBox}>
                         <Text style={styles.BoxTitle}>Password</Text>
                         <View style={styles.inputBox}>
-                            <FontAwesome name='lock' size={24} color={Colors.primary} />
+                            <FontAwesome name='lock' size={24} color={iconColor} />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Password"
                                 secureTextEntry={true}
+                                onChangeText={setPassword}
+                                autoCorrect={false}
                                 // Add necessary props and event handlers for password input
                             />
                         </View>
@@ -72,7 +106,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     mainPage: {
-        flex: .50,
+        flex: 1,
         paddingTop: 10,
         marginTop: 100,
     },
@@ -108,14 +142,6 @@ const styles = StyleSheet.create({
         margin: 12,
         borderBottomWidth: 1,
         padding: 10,
-    },
-    button: {
-        width: 300,
-        height: 40,
-        backgroundColor: Colors.primary,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 5,
     },
     buttonText: {
         color: 'white',
