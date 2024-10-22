@@ -47,42 +47,42 @@ export default function BalanceBox({ openModal }) {
             onPress={() => openModal()}
             onLongPress={() => switchBookie()}
         >
-          <View style={styles.bankContainer}>
-            <Text style={styles.bankText}>${userBalance.find(b => b.bookieId === bookieId)?.balance.toFixed(2) || '0.00'}</Text>
-          </View>
+            <View style={styles.bankContainer}>
+                <Text style={styles.bankText}>${userBalance.find(b => b.bookieId === bookieId)?.balance.toFixed(2) || '0.00'}</Text>
+            </View>
             <Image source={bookieImages[bookie]} style={styles.bankImage} />
         </Pressable>
     );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    paddingVertical: 1,
-  },
-  bankButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: -8,
-    paddingLeft: 8,
-  },
-  bankContainer: {
-    backgroundColor: 'transparent',
-    width: 75,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-  },
-  bankText: {
-    fontSize: 18,
-    fontWeight: '500',
-  },
-  bankImage: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-  },
+    container: {
+        paddingHorizontal: 10,
+        borderWidth: 1,
+        paddingVertical: 1,
+    },
+    bankButton: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderRadius: 8,
+        marginTop: -8,
+        paddingLeft: 8,
+    },
+    bankContainer: {
+        backgroundColor: 'transparent',
+        width: 75,
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+    },
+    bankText: {
+        fontSize: 18,
+        fontWeight: '500',
+    },
+    bankImage: {
+        width: 32,
+        height: 32,
+        borderRadius: 8,
+    },
 });

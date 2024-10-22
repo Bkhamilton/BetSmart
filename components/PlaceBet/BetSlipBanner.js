@@ -14,37 +14,37 @@ export default function BetSlipBanner({ onPress }) {
 
     return (
         <TouchableOpacity 
-          style={styles.container}
-          onPress={onPress}
+            style={styles.container}
+            onPress={onPress}
         >
-          <View style={[styles.legsContainer, { backgroundColor: mainGreen }]}>
-              <Text style={styles.bannerText}>{totalLegs}</Text>
-          </View>
-          <Text style={styles.bannerText}>Odds: {betSlip.odds}</Text>
+            <View style={[styles.legsContainer, { backgroundColor: mainGreen }]}>
+                <Text style={styles.bannerText}>{totalLegs}</Text>
+            </View>
+            <Text style={styles.bannerText}>Odds: {betSlip.odds}</Text>
         </TouchableOpacity>
     );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderTopWidth: 1, 
-    paddingVertical: 8, 
-    paddingHorizontal: 20, 
-    width: '100%', 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center',
-  },
-  legsContainer: {
-    borderWidth: 1, 
-    borderRadius: 20, 
-    height: 40, 
-    width: 40, 
-    justifyContent: 'center', 
-    alignItems: 'center'
-  },
-  bannerText: {
-    fontSize: 16, 
-    fontWeight: 'bold'
-  }
+    container: {
+        borderTopWidth: 1, 
+        paddingVertical: 8, 
+        paddingHorizontal: 20, 
+        width: '100%', 
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+    },
+    legsContainer: {
+        borderWidth: 1, 
+        borderRadius: 20, 
+        height: 40, 
+        width: 40, 
+        justifyContent: 'center', 
+        alignItems: 'center'
+    },
+    bannerText: {
+        fontSize: 16, 
+        fontWeight: 'bold'
+    }
 });
