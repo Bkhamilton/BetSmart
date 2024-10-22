@@ -1,24 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { useSQLiteContext } from 'expo-sqlite';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
 import { getTotalBetSlips } from '@/db/betslips/BetSlips';
 import { getBetSlipResultsWinnings } from '@/db/betslips/BetSlipsResults';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 
-import Colors from '@/constants/Colors';
-
 export default function ProfileMainInfo() {
 
     const { user } = useContext(UserContext);
+
+    const { db } = useContext(DBContext);
 
     const { id, name, email, username, password } = user;
 
     const [totalBets, setTotalBets] = useState(0);
     const [totalWinnings, setTotalWinnings] = useState(0);
-
-    const db = useSQLiteContext();
 
     useEffect(() => {
         getTotalBetSlips(db, id)
@@ -35,7 +32,7 @@ export default function ProfileMainInfo() {
             <View style={{ justifyContent: 'center' }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                     <Text>{totalBets} Bets</Text>
-                    <Text>${totalWinnings} All Time</Text>
+                    <Text>${totalWinnings.toFixed(2)} All Time</Text>
                 </View>
                 <View style={{ paddingVertical: 4 }}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{name}</Text>
