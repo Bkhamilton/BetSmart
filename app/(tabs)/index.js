@@ -189,16 +189,12 @@ export default function HomeScreen() {
         close={closeProfileOptionsModal}
         onSignOut={onSignOut}
       />
-      {
-        user && userBalance && (
-          <ChooseBookie 
-            visible={chooseBookieModalVisible} 
-            close={closeChooseBookieModal} 
-            selectBookie={onSelectBookie}
-            extra={true}
-          />
-        )
-      }
+      <ChooseBookie 
+        visible={chooseBookieModalVisible} 
+        close={closeChooseBookieModal} 
+        selectBookie={onSelectBookie}
+        extra={true}
+      />
       {
         confirmedBetSlip && confirmedBetSlip.bets && (
           <ConfirmBetSlip

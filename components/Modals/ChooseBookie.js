@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal, ClearView } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
@@ -63,9 +63,9 @@ export default function ChooseBookie({ visible, close, selectBookie, extra }) {
                 onPress={close}
             >
                 <View style={styles.container}>
-                    <View style={{ marginTop: 110, backgroundColor: 'transparent' }}>
+                    <ClearView style={{ marginTop: 110 }}>
                         { 
-                            userBalance.map((b) => {
+                            userBalance && userBalance.map((b) => {
                                 return <BookieButton key={b.bookieId} balance={b} />
                             })
                         }
@@ -77,7 +77,7 @@ export default function ChooseBookie({ visible, close, selectBookie, extra }) {
                                 </ClearView>
                             )
                         }
-                    </View>
+                    </ClearView>
                 </View>
             </TouchableWithoutFeedback>
         </Modal>
