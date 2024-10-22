@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
-import useTheme from '@/hooks/useTheme';
 
 export default function ConfirmMessage({ visible, close, message, confirm }) {
     return (

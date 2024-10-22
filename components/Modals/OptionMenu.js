@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, Image, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
-import useTheme from '@/hooks/useTheme';
 
 export default function OptionMenu({ visible, close, options, selectOption }) {
     return (

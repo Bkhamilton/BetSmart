@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Modal } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
 import useTheme from '@/hooks/useTheme';
 
@@ -34,7 +34,7 @@ export default function SelectLeague({ visible, close, selectLeague }) {
             onRequestClose={close}
         >
             <View style={styles.container}>
-                <View style={{ backgroundColor: 'transparent' }}>
+                <ClearView>
                     <TouchableOpacity 
                         onPress={close}
                         style={{ padding: 8 }}
@@ -42,7 +42,7 @@ export default function SelectLeague({ visible, close, selectLeague }) {
                         <Text>Close</Text>
                     </TouchableOpacity>
                     { leagues.map(league => <LeagueDisplay key={league.id} league={league} />) }
-                </View>
+                </ClearView>
             </View>
         </Modal>
     );

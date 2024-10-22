@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Modal, Image } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { bookieImages } from '@/constants/bookieConstants';
@@ -28,7 +28,7 @@ export default function AddBookie({ visible, close, addBookie }) {
                 style={[styles.bookieButton, { backgroundColor: grayBackground, borderColor: grayBorder }]}
                 onPress={() => addBookie(bookie)}
             >
-                <Image source={bookieImages[bookie.name]} style={{ width: 40, height: 40, borderRadius: 8 }} />
+                <Image source={bookieImages[bookie.name]} style={styles.bookieIcon} />
                 <Text>{bookie.name}</Text>
             </TouchableOpacity>
         );
@@ -42,7 +42,7 @@ export default function AddBookie({ visible, close, addBookie }) {
             onRequestClose={close}
         >
             <View style={styles.container}>
-                <View style={{ backgroundColor: 'transparent' }}>
+                <ClearView>
                     <TouchableOpacity 
                         onPress={close}
                         style={{ padding: 8 }}
@@ -50,7 +50,7 @@ export default function AddBookie({ visible, close, addBookie }) {
                         <Text>Close</Text>
                     </TouchableOpacity>
                     {validBookies.map(bookie => <BookieButton key={bookie.id} bookie={bookie} />)}
-                </View>
+                </ClearView>
             </View>
         </Modal>
     );
@@ -63,10 +63,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    leagueContainer: {
-        padding: 10,
-        borderWidth: 1,
-    },
     bookieButton: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -75,4 +71,9 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 10,
     },
+    bookieIcon: {
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+    }
 });
