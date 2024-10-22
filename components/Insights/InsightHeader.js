@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { TouchableOpacity } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import Header from '@/components/Header/Header';
 import { FontAwesome } from '@expo/vector-icons';
@@ -20,9 +19,3 @@ export default function InsightHeader({ onPress }) {
         </Header>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-});

@@ -14,8 +14,8 @@ export default function InsightIntro({ streak }) {
             {streak === 'hot' ? <HotStreak /> : streak === 'cold' ? <ColdStreak /> : null}
             <View style={styles.container}>
                 {/* Bets Placed, Bets Won, Money Won */}
-                <Text style={styles.infoText}>{betsPlaced} Bet{betsPlaced > 0 ? 's' : ''} Placed</Text>
-                <Text style={styles.infoText}>{betsWon} Bet{betsWon > 0 ? 's' : ''} Won</Text>
+                <Text style={styles.infoText}>{betsPlaced} Bet{betsPlaced > 1 ? 's' : ''} Placed</Text>
+                <Text style={styles.infoText}>{betsWon} Bet{betsWon > 1 ? 's' : ''} Won</Text>
                 <Text style={styles.infoText}>Profit: {profit > 0 ? `+$${profit.toFixed(2)}` : `-$${Math.abs(profit).toFixed(2)}`}</Text>
             </View>
             <View style={styles.subHeaderContainer}>
