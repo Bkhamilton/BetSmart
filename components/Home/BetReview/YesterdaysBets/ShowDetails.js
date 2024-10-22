@@ -10,7 +10,7 @@ export default function ShowDetails({ betSlips, betsWon, totalBets }) {
 
     return (
         <>
-            <ClearView style={{ opacity: 0.4, paddingHorizontal: 4, flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 2 }}>
+            <ClearView style={styles.headerContainer}>
                 <Text style={styles.smallText}>Main Info</Text>
                 <ClearView style={{ width: 58, alignItems: 'flex-start' }}>
                     <Text style={[styles.smallText, { color: greenText }]}>Show Less</Text>
@@ -59,6 +59,13 @@ export default function ShowDetails({ betSlips, betsWon, totalBets }) {
 }
 
 const styles = StyleSheet.create({
+    headerContainer: {
+        opacity: 0.4, 
+        paddingHorizontal: 4, 
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        paddingBottom: 2,
+    },
     container: {
         paddingVertical: 16,   
         backgroundColor: 'transparent',

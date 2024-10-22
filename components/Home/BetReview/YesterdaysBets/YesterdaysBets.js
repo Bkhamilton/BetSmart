@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
-import StatCounter from './StatCounter';
 import { betSlipsRaw } from '@/data/exampleBetData';
 import NoDetails from './NoDetails';
 import ShowDetails from './ShowDetails';
@@ -36,7 +35,7 @@ export default function YesterdaysBets({ bets }) {
     setShowDetails(!showDetails);
   };
 
-  const { text, borderColor, greenText, mainGreen, grayBackground, grayBorder } = useTheme();
+  const { mainGreen, grayBackground, grayBorder } = useTheme();
 
   return (
     <ClearView style={styles.container}>
