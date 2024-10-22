@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Text, View, Pressable } from '@/components/Themed';
+import { Text, View, Pressable, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
 export default function RecentTransactions({ transactions, bookieId }) {
@@ -24,26 +24,28 @@ export default function RecentTransactions({ transactions, bookieId }) {
     }
 
     return (
-        <View style={styles.box}>
+        <ClearView style={styles.box}>
             <Pressable 
                 style={[styles.transactionContainer, { opacity, backgroundColor: grayBackground }]}
                 onPressIn={onPressIn}
                 onPressOut={onPressOut}
             >
                 {[...bookieTransactions].reverse().slice(0, 6).map((transaction, index) => (
-                    <View key={index} style={{ backgroundColor: 'transparent' }}>
-                        <Text style={{ opacity: transaction.transactionType === 'Deposit' ? 1 : 0.5, 
-                            fontWeight: transaction.transactionType === 'Deposit' ? '500' : '600' }}>{formatTransaction(transaction)}</Text>
-                    </View>
+                    <ClearView key={index}>
+                        <Text 
+                            style={{ opacity: transaction.transactionType === 'Deposit' ? 1 : 0.5, fontWeight: transaction.transactionType === 'Deposit' ? '500' : '600' }}
+                        >
+                            {formatTransaction(transaction)}
+                        </Text>
+                    </ClearView>
                 ))}
             </Pressable>
-        </View>
+        </ClearView>
     );
 }
 
 const styles = StyleSheet.create({
     box: {
-        backgroundColor: 'transparent',
         flex: 0.26,
         alignItems: 'flex-end',
         justifyContent: 'flex-end',

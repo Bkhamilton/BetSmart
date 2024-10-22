@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Pressable } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { Text, View, ClearView } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
 import useTheme from '@/hooks/useTheme';
 import BankButtons from './BankButtons';
@@ -32,9 +32,9 @@ export default function BalanceChecker({ openTransaction, openChooseBookie, tran
 
     const RecentTransactionsEmpty = () => {
       return (
-        <View style={[styles.box, { flex: 0.26 }]}>
+        <ClearView style={{ flex: 0.26 }}>
 
-        </View>
+        </ClearView>
       );
     }
 
@@ -53,12 +53,12 @@ export default function BalanceChecker({ openTransaction, openChooseBookie, tran
           openTransaction={selectTransaction}
           bookie={bookie}
         />
-        <View style={styles.centerBox}>
+        <ClearView style={styles.centerBox}>
           <Text>{bookie.name.toUpperCase()} BALANCE</Text>
           <Text style={[styles.bigMoneyText, { marginTop: 8 }]}>
             ${balanceValue.toFixed(2)}
           </Text>
-        </View>
+        </ClearView>
         { 
           transactions.length > 0 ? 
             <RecentTransactions transactions={transactions} bookieId={bookie.id}/> 
@@ -71,42 +71,23 @@ export default function BalanceChecker({ openTransaction, openChooseBookie, tran
 
 const styles = StyleSheet.create({
   centeredBox: {
-      flexDirection: 'row',
-      alignItems: 'center', 
-      marginHorizontal: 10,
-      marginTop: 12,
-      borderWidth: 1, 
-      justifyContent: 'center',
-      borderRadius: 8,
-  },
-  box: {
-      backgroundColor: 'transparent'
+    flexDirection: 'row',
+    alignItems: 'center', 
+    marginHorizontal: 10,
+    marginTop: 12,
+    borderWidth: 1, 
+    justifyContent: 'center',
+    borderRadius: 8,
   },
   centerBox: {
-      flex: 0.46,
-      paddingTop: 28,
-      paddingBottom: 24, 
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'transparent',
+    flex: 0.46,
+    paddingTop: 28,
+    paddingBottom: 24, 
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   bigMoneyText: {
-      fontSize: 32,
-      fontWeight: 'bold',
-  },
-  moneyText: {
-      fontSize: 24,
-      fontWeight: 'bold',
-  },
-  dollarContainer: {
-      alignItems: 'center', 
-      justifyContent: 'center',
-      height: 100, 
-      width: 100, 
-      borderRadius: 55, 
-      transform: [{ translateY: 20 }],
-      opacity: 0.3,
-      backgroundColor: 'transparent',
-      zIndex: 1,
+    fontSize: 32,
+    fontWeight: 'bold',
   },
 });

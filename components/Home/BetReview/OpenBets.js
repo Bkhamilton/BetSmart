@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Text, View } from '../../Themed';
+import { Text, View, ClearView } from '../../Themed';
 import DetailedInfo from '@/components/Home/BetReview/DetailedInfo/DetailedInfo';
 
 export default function OpenBets({ betSlips, confirm, openOptions }) {
@@ -32,9 +32,9 @@ export default function OpenBets({ betSlips, confirm, openOptions }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ backgroundColor: 'transparent', paddingBottom: 8, paddingHorizontal: 10 }}>
+      <ClearView style={{ paddingBottom: 8, paddingHorizontal: 10 }}>
         <Text style={{ fontSize: 20, fontWeight: '600' }}>Open Bets</Text>
-      </View>
+      </ClearView>
       <BigPictureInfo totalBets={totalBets} betAmount={totalBetAmount} toWin={totalWinnings} />
       <DetailedInfo betSlips={betSlips} confirm={confirm} openOptions={openOptions}/>
     </View>
@@ -51,16 +51,5 @@ export default function OpenBets({ betSlips, confirm, openOptions }) {
         alignItems: 'center',
         borderRadius: 8,
         paddingHorizontal: 10
-    },
-    betContainer: {
-        paddingHorizontal: 10,
-        paddingVertical: 4,
-        borderRadius: 8,
-        marginRight: 10,
-        borderWidth: 1,
-    },
-    betText: {
-        fontSize: 16,
-        fontWeight: '600',
     },
   });
