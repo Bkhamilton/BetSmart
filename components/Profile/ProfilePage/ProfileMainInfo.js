@@ -4,11 +4,11 @@ import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
 import { getTotalBetSlips } from '@/db/betslips/BetSlips';
 import { getBetSlipResultsWinnings } from '@/db/betslips/BetSlipsResults';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 
 export default function ProfileMainInfo() {
 
-    const { user } = useContext(UserContext);
+    const { user, signedIn } = useContext(UserContext);
 
     const { db } = useContext(DBContext);
 
@@ -18,21 +18,23 @@ export default function ProfileMainInfo() {
     const [totalWinnings, setTotalWinnings] = useState(0);
 
     useEffect(() => {
+        if (!signedIn) return;
+        if (user.id === 0) return;
         getTotalBetSlips(db, id)
             .then((total) => setTotalBets(total))
             .catch((error) => console.error('Error getting total bet slips:', error));
 
         getBetSlipResultsWinnings(db, id)
-            .then((winnings) => setTotalWinnings(winnings[0].totalWinnings))
+            .then((winnings) => setTotalWinnings(winnings[0].totalWinnings.toFixed(2)))
             .catch((error) => console.error('Error getting total winnings:', error));
-    }, [user]);
+    }, [user, signedIn]);
 
     return (
         <View style={styles.container}>
             <View style={{ justifyContent: 'center' }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                     <Text>{totalBets} Bets</Text>
-                    <Text>${totalWinnings.toFixed(2)} All Time</Text>
+                    <Text>${totalWinnings} All Time</Text>
                 </View>
                 <View style={{ paddingVertical: 4 }}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{name}</Text>
