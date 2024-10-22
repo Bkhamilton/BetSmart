@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Text, View, ClearView } from '@/components/Themed';
-import { useSQLiteContext } from 'expo-sqlite';
+import { DBContext } from '@/contexts/DBContext';
 import { getLogoUrl } from '@/db/general/Teams';
 import { displayLeg } from '@/utils/betSlipFunctions';
 import { getTeamAbbreviationByName } from '@/db/general/Teams';
 
 export default function LegComponent({ leg, children }) {
 
-    const db = useSQLiteContext();
+    const { db } = useContext(DBContext);
 
     const { marketType, value, odds, overUnder, betTargetId, betTarget, targetType, betType } = leg;
 

@@ -3,13 +3,12 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
-import { useSQLiteContext } from 'expo-sqlite';
-
+import { DBContext } from '@/contexts/DBContext';
 import useHookInsightsPage from '@/hooks/useHookInsights';
 
 export default function InsightIntro({ streak }) {
 
-  const db = useSQLiteContext();
+  const { db } = useContext(DBContext);
 
   const { betsPlaced, betsWon, profit } = useHookInsightsPage();
 
