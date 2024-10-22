@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { UserContext } from '@/contexts/UserContext';
-import { useSQLiteContext } from 'expo-sqlite';
+import { DBContext } from '@/contexts/DBContext';
 import { deleteBetSlip } from '@/db/betslips/BetSlips';
 import { deleteBetsByBetSlipId } from '@/db/betslips/ParticipantBets';
 import { deleteLegsByParticipantBetId } from '@/db/betslips/Legs'; 
@@ -8,7 +8,7 @@ import { updateUserBalance } from '@/db/user-specific/Balance';
 
 const useDatabaseFuncs = () => {
 
-    const db = useSQLiteContext();
+    const { db } = useContext(DBContext);
 
     const { setUserBalance } = useContext(UserContext);
 

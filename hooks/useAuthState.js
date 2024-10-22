@@ -1,12 +1,12 @@
 import { useState, useCallback, useContext } from 'react';
 import { getUser } from '@/db/user-specific/Users';
 import { insertUserSession, getMostRecentUserSession, insertNonActiveUserSession } from '@/db/user-specific/UserSessions';
-import { useSQLiteContext } from 'expo-sqlite';
+import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 
 const useAuthState = (closeLoginModal) => {
 
-    const db = useSQLiteContext();
+    const { db } = useContext(DBContext);
 
     const { signedIn, setSignedIn } = useContext(UserContext);
 

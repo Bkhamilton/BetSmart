@@ -3,11 +3,10 @@ import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { insertBalance, updateBalance, deleteBalance } from '@/db/user-specific/Balance';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
-import { useSQLiteContext } from 'expo-sqlite';
 
 const useUserBalDataState = () => {
     
-    const db = useSQLiteContext();
+    const { db } = useContext(DBContext);
 
     const { user, setUserBalance } = useContext(UserContext);
 

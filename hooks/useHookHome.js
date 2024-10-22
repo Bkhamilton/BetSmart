@@ -3,11 +3,11 @@ import { UserContext } from '@/contexts/UserContext';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 import { confirmBetResults } from '@/utils/dbHelpers';
-import { useSQLiteContext } from 'expo-sqlite';
+import { DBContext } from '@/contexts/DBContext';
 
 const useHookHome = () => {
 
-  const db = useSQLiteContext();
+  const { db } = useContext(DBContext);
 
   const { user, trigger, setTrigger } = useContext(UserContext);
 

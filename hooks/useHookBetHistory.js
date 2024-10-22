@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from 'react';
-import { useSQLiteContext } from 'expo-sqlite';
+import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
 
 const useHookBetHistory = () => {
 
-    const db = useSQLiteContext();
+    const { db } = useContext(DBContext);
 
     const { user } = useContext(UserContext);
 

@@ -1,11 +1,11 @@
 import { useState, useContext } from 'react';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import { DBContext } from '@/contexts/DBContext';
 import { removeLeg, updateBetSlipAmounts, updateBetSlipBookie } from '@/contexts/BetContext/betSlipHelpers';
-import { useSQLiteContext } from 'expo-sqlite';
 
 const useHookNewBet = () => {
 
-    const db = useSQLiteContext();
+    const { db } = useContext(DBContext);
 
     const { setBookie, setBookieId, betSlip, setBetSlip, confirmBetSlip } = useContext(BetContext);
 
