@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
-import { useSQLiteContext } from 'expo-sqlite';
+import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
+import { DBContext } from '@/contexts/DBContext';
 import { getLogoUrl } from '@/db/general/Teams';
 import { retrieveMarketsDB } from '@/api/prop-odds/markets';
 import useTheme from '@/hooks/useTheme';
@@ -23,7 +23,7 @@ export default function GameComponent({ game }) {
 
     const { handleSelectGame } = useRouting();
 
-    const db = useSQLiteContext();
+    const { db } = useContext(DBContext);
 
     const fetchLogos = async () => {
         getLogoUrl(db, homeTeamName).then((url) => setHomeLogo(url.logoUrl + '/preview'));
@@ -46,35 +46,31 @@ export default function GameComponent({ game }) {
             style={[styles.container, { backgroundColor: grayBackground, borderColor: grayBorder }]}
             onPress={() => handleSelectGame({ game })}
         >
-            <View style={styles.mainBlock}>
-                { homeLogo != '' && awayLogo != '' ?                 
-                    <HeadToHead
-                        homeLogo={homeLogo}
-                        homeTeam={homeTeamAbv}
-                        awayLogo={awayLogo}
-                        awayTeam={awayTeamAbv}
-                    /> : 
-                    <Text>Loading...</Text>
-                }
-                <View style={{ backgroundColor: 'transparent' }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'transparent' }}>
-                        <View style={styles.bettingLineContainer}>
+            <ClearView style={styles.mainBlock}>
+                <HeadToHead
+                    homeLogo={homeLogo}
+                    homeTeam={homeTeamAbv}
+                    awayLogo={awayLogo}
+                    awayTeam={awayTeamAbv}
+                />
+                <ClearView>
+                    <ClearView style={styles.titleContainer}>
+                        <ClearView style={styles.bettingLineContainer}>
                             <Text style={styles.bettingLineTitle}>GAME</Text>
-                        </View>
-                        <View style={styles.bettingLineContainer}>
+                        </ClearView>
+                        <ClearView style={styles.bettingLineContainer}>
                             <Text style={styles.bettingLineTitle}>SPREAD</Text>
-                        </View>
-                        <View style={styles.bettingLineContainer}>
+                        </ClearView>
+                        <ClearView style={styles.bettingLineContainer}>
                             <Text style={styles.bettingLineTitle}>TOTAL</Text>
-                        </View>
-                    </View>
-                    
+                        </ClearView>
+                    </ClearView>
                     <MainBettingLines 
                         game={game} 
                         marketProps={marketProps}
                     />
-                </View>
-            </View>
+                </ClearView>
+            </ClearView>
             <DateTime timestamp={timestamp} />
         </TouchableOpacity>
     );
@@ -88,7 +84,6 @@ const styles = StyleSheet.create({
     },
     mainBlock: {
         flexDirection: 'row',
-        backgroundColor: 'transparent',
     },
     bettingLineTitle: {
         fontSize: 10,
@@ -97,7 +92,11 @@ const styles = StyleSheet.create({
     bettingLineContainer: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: 'transparent',
         paddingTop: 2
     },
+    titleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    }
 });
