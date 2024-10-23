@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { TouchableOpacity, Text, View, ScrollView, ClearView } from '@/components/Themed';
+import { Text, View, ScrollView, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { UserContext } from '@/contexts/UserContext';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -67,9 +67,9 @@ export default function UserFavorites({ player }) {
 
         return (
             <View style={[styles.favoriteContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
-                <View style={{ alignItems: 'center', backgroundColor: 'transparent', paddingTop: 4 }}>
+                <ClearView style={{ alignItems: 'center', paddingTop: 4 }}>
                     <Text style={styles.favoriteText}>Top {type}</Text>
-                </View>
+                </ClearView>
                 <ClearView style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 8 }}>
                     { 
                         favorite && getFavoriteImage(type, favorite)
