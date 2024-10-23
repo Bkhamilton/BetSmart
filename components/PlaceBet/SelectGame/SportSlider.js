@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet, FlatList, Image } from 'react-native';
-import { Text, View, TouchableOpacity } from '@/components/Themed';
+import { Text, View, TouchableOpacity, ClearView } from '@/components/Themed';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
 import useTheme from '@/hooks/useTheme';
@@ -15,7 +15,7 @@ export default function SportSlider({ selectLeague }) {
     const { text, backgroundColor, grayBackground, grayBorder } = useTheme();
 
     return (
-        <View style={{ height: 78, backgroundColor: 'transparent' }}>
+        <ClearView style={{ height: 78 }}>
             <FlatList
                 data={leagues}
                 horizontal
@@ -41,7 +41,7 @@ export default function SportSlider({ selectLeague }) {
                     </TouchableOpacity>
                 )}
             />
-        </View>
+        </ClearView>
   );
 }
 
