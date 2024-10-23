@@ -7,32 +7,32 @@ import useTheme from '@/hooks/useTheme';
 export default function LeaguePropSlider({ leagueProps, selectLeagueProp, curLeagueProp }) {
     const [pressedId, setPressedId] = useState(null);
 
-    const { grayBackground, iconColor, text, grayText } = useTheme();
+    const { grayBackground, text, grayText } = useTheme();
 
     return (
         <View style={styles.container}>
-          <ScrollView 
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ backgroundColor: grayBackground }}  
-          >
-            {leagueProps.map((item) => {
-              const color = curLeagueProp === item.propName ? text : grayText;
-              return (
-                <Pressable
-                  key={item.id}
-                  onPressIn={() => setPressedId(item.id)}
-                  onPressOut={() => setPressedId(null)}
-                  onPress={() => selectLeagueProp(item.propName)}
-                  style={({pressed}) => ({
-                    ...styles.categoryContainer,
-                  })}
-                >
-                  <Text style={{ color: pressedId === item.id ? text : color, fontWeight: curLeagueProp === item.propName ? '600' : '400' }}>{item.propName}</Text>
-                </Pressable>
-              );
-            })}
-          </ScrollView>
+            <ScrollView 
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ backgroundColor: grayBackground }}  
+            >
+                {leagueProps.map((item) => {
+                    const color = curLeagueProp === item.propName ? text : grayText;
+                    return (
+                        <Pressable
+                            key={item.id}
+                            onPressIn={() => setPressedId(item.id)}
+                            onPressOut={() => setPressedId(null)}
+                            onPress={() => selectLeagueProp(item.propName)}
+                            style={({pressed}) => ({
+                                ...styles.categoryContainer,
+                            })}
+                        >
+                            <Text style={{ color: pressedId === item.id ? text : color, fontWeight: curLeagueProp === item.propName ? '600' : '400' }}>{item.propName}</Text>
+                        </Pressable>
+                    );
+                })}
+            </ScrollView>
         </View>
       )
 }

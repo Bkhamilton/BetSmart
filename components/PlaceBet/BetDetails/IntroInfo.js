@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { Text, View } from '@/components/Themed';
 import { getDate, getTime, getAmPm } from '@/utils/dateFunctions';
 
 export default function IntroInfo() {
@@ -12,15 +12,15 @@ export default function IntroInfo() {
 
     return (
         <View>
-          <View style={styles.dateTimeContainer}>
-            <Text>{getDate(timestamp)}</Text>
-            <Text>{getTime(timestamp)} {getAmPm(timestamp)}</Text>
-          </View>
-          <View style={styles.matchupContainer}>
-            <Text style={styles.matchupTitle}>{awayTeamName}</Text>
-            <Text>vs</Text>
-            <Text style={styles.matchupTitle}>{homeTeamName}</Text>
-          </View>
+            <View style={styles.dateTimeContainer}>
+                <Text>{getDate(timestamp)}</Text>
+                <Text>{getTime(timestamp)} {getAmPm(timestamp)}</Text>
+            </View>
+            <View style={styles.matchupContainer}>
+                <Text style={styles.matchupTitle}>{awayTeamName}</Text>
+                <Text>vs</Text>
+                <Text style={styles.matchupTitle}>{homeTeamName}</Text>
+            </View>
         </View>
     )
 }

@@ -29,8 +29,8 @@ export default function TransactionModal({ visible, close, title, bookie, onConf
 
     const handleConfirm = () => {
         if (amount === '') {
-        alert('Please enter an amount');
-        return;
+            alert('Please enter an amount');
+            return;
         }
     
         // Convert amount to a number
@@ -39,13 +39,13 @@ export default function TransactionModal({ visible, close, title, bookie, onConf
     
         let updatedBalance;
         if (title === 'Withdraw') {
-        if (numericAmount > initialAmount) {
-            alert('You cannot withdraw more than your current balance');
-            return;
-        }
-        updatedBalance = numericInitialAmount - numericAmount;
+            if (numericAmount > initialAmount) {
+                alert('You cannot withdraw more than your current balance');
+                return;
+            }
+            updatedBalance = numericInitialAmount - numericAmount;
         } else if (title === 'Deposit') {
-        updatedBalance = numericInitialAmount + numericAmount;
+            updatedBalance = numericInitialAmount + numericAmount;
         }
 
         updatedBalance = Number(updatedBalance.toFixed(2));
