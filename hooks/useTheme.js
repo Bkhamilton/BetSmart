@@ -5,6 +5,7 @@ export default function useTheme() {
   const colorScheme = useColorScheme();
 
   const themeColors = {
+    tint: colorScheme === 'dark' ? Colors.dark.tint : Colors.light.tint,
     text: colorScheme === 'dark' ? Colors.dark.text : Colors.light.text,
     grayText: colorScheme === 'dark' ? '#dedede' : '#1f1f1f',
     borderColor: colorScheme === 'dark' ? Colors.dark.border : Colors.light.border,
