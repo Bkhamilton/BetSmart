@@ -183,8 +183,11 @@ const addBetMarketToDB = async (db, gameId, market, book) => {
 export const fetchMarketProps = async (db, gameId, market) => {
   try {
     const data = await getMarketProps(db, gameId, market);
+    if (!data) {
+      return;
+    }
     const validBookies = await getBookieNames(db);
-    const filteredData = data.sportsbooks.filter(book => validBookies.includes(book.bookie_key));
+    const filteredData = data.sportsbooks?.filter(book => validBookies.includes(book.bookie_key));
     for (let book of filteredData) {
       await addBetMarketToDB(db, gameId, market, book);
     }
