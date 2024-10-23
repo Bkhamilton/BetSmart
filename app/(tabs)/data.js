@@ -6,17 +6,17 @@ import useHookData from '@/hooks/useHookData';
 
 export default function DataScreen() {
 
-  const { selectTime, selectedTime } = useHookData();
+    const { selectTime, selectedTime } = useHookData();
 
-  return (
-    <>
-      <DataHeader
-        selectTime={selectTime}
-        selectedTime={selectedTime}
-      />
-      <ScrollView>
-        <AnalyticsDisplay data={selectedTime}/>
-      </ScrollView>
-    </>
-  );
+    return (
+        <>
+            <DataHeader
+                selectTime={selectTime}
+                selectedTime={selectedTime}
+            />
+            <ScrollView>
+                <AnalyticsDisplay data={selectedTime}/>
+            </ScrollView>
+        </>
+    );
 }

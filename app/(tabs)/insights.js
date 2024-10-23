@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSQLiteContext } from 'expo-sqlite';
+import React, { useContext } from 'react';
+import { DBContext } from '@/contexts/DBContext';
 import { ScrollView } from '@/components/Themed';
 import InsightHeader from '@/components/Insights/InsightHeader';
 import InsightIntro from '@/components/Insights/InsightIntro/InsightIntro';
@@ -15,7 +15,7 @@ export default function InsightScreen() {
 
   }
 
-  const db = useSQLiteContext();
+  const { db } = useContext(DBContext);
 
   return (
     <>
