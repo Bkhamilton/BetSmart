@@ -35,6 +35,9 @@ import RushProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/RushPro
 import RecieveProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/RecieveProps';
 import DefenseProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/DefenseProps';
 import SpecTeamProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/SpecTeamProps';
+import Moneyline from '../components/PlaceBet/BetDetails/LeaguePropTypes/Moneyline';
+import Spread from '../components/PlaceBet/BetDetails/LeaguePropTypes/Spread';
+import TotalOverUnder from '../components/PlaceBet/BetDetails/LeaguePropTypes/TotalOverUnder';
 
 
 const componentMapping = {
@@ -75,6 +78,9 @@ const componentMapping = {
     'recieve-props': RecieveProps,
     'defense-props': DefenseProps,
     'spec-team-props': SpecTeamProps,
+    'moneyline': Moneyline,
+    'spread': Spread,
+    'total-over-under': TotalOverUnder,
 };
 
 export default componentMapping;
