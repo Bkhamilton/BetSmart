@@ -4,9 +4,9 @@ import { Text, View, ClearView } from '@/components/Themed';
 import { MainPlayerComponent } from './ComponentTypes';
 import useTheme from '@/hooks/useTheme';
 
-export default function MainPlayer({ awayLogo, homeLogo }) {
+export default function MainPlayer({ awayTeam, homeTeam }) {
 
-    const { grayBackground, grayBorder } = useTheme();
+    const { grayBackground } = useTheme();
 
     return (
         <View style={{ width: '100%', paddingBottom: 4 }}>
@@ -19,8 +19,8 @@ export default function MainPlayer({ awayLogo, homeLogo }) {
                 </ClearView>
             </View>
             <View style={{ paddingHorizontal: 8 }}>
-                <MainPlayerComponent player={'Player A'} logo={awayLogo} value={4.5} odds1={'-113'} odds2={'-113'} />
-                <MainPlayerComponent player={'Player B'} logo={homeLogo} value={3.5} odds1={'+108'} odds2={'-136'} />
+                <MainPlayerComponent player={'Player A'} logo={awayTeam.logo} value={4.5} odds1={'-113'} odds2={'-113'} />
+                <MainPlayerComponent player={'Player B'} logo={homeTeam.logo} value={3.5} odds1={'+108'} odds2={'-136'} />
             </View>
         </View>
     )
