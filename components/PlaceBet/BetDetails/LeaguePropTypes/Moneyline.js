@@ -1,22 +1,36 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
-import { FontAwesome5 } from '@expo/vector-icons';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import useTheme from '@/hooks/useTheme';
+import { DBContext } from '@/contexts/DBContext';
 import PropBanner from './PropBanner/PropBanner';
 
-export default function Moneyline({ info }) {
+import { getBetMarketByGame } from "@/db/api/BetMarkets";
+import { groupByTimestampAndBookie, sortBetMarkets } from '@/utils/betMarketHelpers';
 
-    const { league, currentGame } = useContext(BetContext);
+export default function Moneyline() {
 
-    const { iconColor } = useTheme();
+    const { currentGame } = useContext(BetContext);
+
+    const { db } = useContext(DBContext);
+
+    const [moneylineData, setMoneylineData] = useState([]);
 
     const title = 'Moneyline';
 
+    // use useEffect to grab all ML values for the currentGame
+    useEffect(() => {
+        const fetchMoneyline = async () => {
+            const moneyline = await getBetMarketByGame(db, currentGame.gameId, 'moneyline');
+            const groupedMoneyline = groupByTimestampAndBookie(moneyline, currentGame);
+            const sortedMoneyline = sortBetMarkets(groupedMoneyline);
+            setMoneylineData(sortedMoneyline);
+        }
+        fetchMoneyline();
+    }, [currentGame]);
+
     return (
         <>
-            <PropBanner title={title} type={"Main"} stat={"moneyline"}/>
+            <PropBanner title={title} type={"Main"} stat={"moneyline"} data={moneylineData}/>
         </>
     );
 }
