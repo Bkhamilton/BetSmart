@@ -10,20 +10,19 @@ import useTheme from '@/hooks/useTheme';
 
 import propBannerMapping from '@/utils/propBannerMapping';
 
-export default function PropBanner({ title, type, player, stat }) {
+export default function PropBanner({ title, type, player, stat, data }) {
 
     const { league, currentGame } = useContext(BetContext);
 
     const { homeTeamName, awayTeamName, homeTeamAbv, awayTeamAbv } = currentGame;
 
-    const { grayBorder } = useTheme();
+    const { grayBorder, iconColor } = useTheme();
 
     const { db } = useContext(DBContext);
 
     const [homeLogo, setHomeLogo] = useState('');
     const [awayLogo, setAwayLogo] = useState('');
 
-    const { iconColor } = useTheme();
     const [detailsOpen, setDetailsOpen] = useState(false);
 
     const handlePress = () => {
@@ -78,6 +77,7 @@ export default function PropBanner({ title, type, player, stat }) {
                 stat={stat} 
                 homeTeam={homeTeam} 
                 awayTeam={awayTeam}
+                data={data}
             />
         );
     };
