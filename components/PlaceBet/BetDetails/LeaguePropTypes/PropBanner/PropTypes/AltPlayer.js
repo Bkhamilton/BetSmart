@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { View } from '@/components/Themed';
 import { AltPlayerComponent } from './ComponentTypes';
 
 export default function AltPlayer({ player, logo, stat }) {
