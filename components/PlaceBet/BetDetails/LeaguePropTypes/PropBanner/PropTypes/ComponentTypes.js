@@ -130,13 +130,13 @@ export const MainLineDisplay = ({ stat, bookie, odds1, odds2, homeTeam, awayTeam
                 {/* Away Team Logo */}
                 <Image style={styles.logoIcon} source={{ uri: awayTeam.logo }} />
                 {/* Away Team Odds */}
-                <TouchableOpacity style={styles.oddsContainer}>
+                <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds1}</Text>
                 </TouchableOpacity>         
                 {/* Bookie Logo */}
                 <Image style={styles.bookieIcon} source={bookieImages[bookie]} />
                 {/* Home Team Odds */}
-                <TouchableOpacity style={styles.oddsContainer}>
+                <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds2}</Text>
                 </TouchableOpacity>       
                 {/* Home Team Logo */}
@@ -144,8 +144,7 @@ export const MainLineDisplay = ({ stat, bookie, odds1, odds2, homeTeam, awayTeam
             </View>
         </View>
     );
-}
-                
+}     
 
 const styles = StyleSheet.create({
     genericContainer: {
