@@ -33,6 +33,17 @@ export const getBookieNamesWithBalance = async (db, userId) => {
   }
 };
 
+// Function to get all bookie names and ids with balance
+export const getValidBookies = async (db, userId) => {
+  try {
+    const allRows = await db.getAllAsync('SELECT Balance.bookieId, Bookies.name FROM Balance JOIN Bookies ON Balance.bookieId = Bookies.id WHERE Balance.userID = ?', [userId]);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting bookie names with balance:', error);
+    throw error;
+  }
+}
+
 // Function to insert a balance
 export const insertBalance = async (db, bookieId, balance, userId) => {
   try {
