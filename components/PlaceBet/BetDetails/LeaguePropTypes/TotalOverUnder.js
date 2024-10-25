@@ -14,7 +14,7 @@ export default function TotalOverUnder({ info }) {
 
     return (
         <>
-            <PropBanner title={title} type={"Player"}/>
+            <PropBanner title={title} type={"Main"} stat={"total_over_under"}/>
         </>
     );
 }

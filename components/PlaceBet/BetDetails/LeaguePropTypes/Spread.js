@@ -14,7 +14,7 @@ export default function Spread({ info }) {
 
     return (
         <>
-            <PropBanner title={title} type={"Player"}/>
+            <PropBanner title={title} type={"Main"} stat={"spread"}/>
         </>
     );
 }

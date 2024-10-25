@@ -16,7 +16,7 @@ export default function Moneyline({ info }) {
 
     return (
         <>
-            <PropBanner title={title} type={"Player"}/>
+            <PropBanner title={title} type={"Main"} stat={"moneyline"}/>
         </>
     );
 }
