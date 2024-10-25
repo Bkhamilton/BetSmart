@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
+import { bookieImages } from '@/constants/bookieConstants';
 
 export const AltPlayerComponent = ({ player, logo, number, stat, odds }) => {
 
@@ -119,6 +120,33 @@ export const GenericComponent = ({ title, odds }) => {
     );
 }
 
+export const MainLineDisplay = ({ stat, bookie, odds1, odds2, homeTeam, awayTeam }) => {
+
+    const { grayBackground, grayBorder } = useTheme();
+
+    return (
+        <View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                {/* Away Team Logo */}
+                <Image style={styles.logoIcon} source={{ uri: awayTeam.logo }} />
+                {/* Away Team Odds */}
+                <TouchableOpacity style={styles.oddsContainer}>
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds1}</Text>
+                </TouchableOpacity>         
+                {/* Bookie Logo */}
+                <Image style={styles.bookieIcon} source={bookieImages[bookie]} />
+                {/* Home Team Odds */}
+                <TouchableOpacity style={styles.oddsContainer}>
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds2}</Text>
+                </TouchableOpacity>       
+                {/* Home Team Logo */}
+                <Image style={styles.logoIcon} source={{ uri: homeTeam.logo }} />           
+            </View>
+        </View>
+    );
+}
+                
+
 const styles = StyleSheet.create({
     genericContainer: {
         flexDirection: 'row', 
@@ -168,5 +196,15 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 16,
         borderRadius: 8,        
+    },
+    bookieIcon: {
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+    },
+    logoIcon: {
+        width: 40,
+        height: 40,
+        borderRadius: 8,
     }
 });
