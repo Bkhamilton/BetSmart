@@ -3,29 +3,29 @@ import { View, Text } from '@/components/Themed';
 import { MainLineDisplay } from './ComponentTypes';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
-import { getBookieNamesWithBalance } from '@/db/user-specific/Balance';
+import { getValidBookies } from '@/db/user-specific/Balance';
 
-export default function MainDisplay({ stat, homeTeam, awayTeam }) {
+export default function MainDisplay({ stat, homeTeam, awayTeam, data }) {
 
     const { user, signedIn } = useContext(UserContext);
 
     const { db } = useContext(DBContext);
 
-    const [bookieNames, setBookieNames] = useState([]);
+    const [validBookies, setValidBookies] = useState([]);
 
     useEffect(() => {
         if (!user) return;
         if (signedIn) {
-            getBookieNamesWithBalance(db, user.id).then((names) => setBookieNames(names));
+            getValidBookies(db, user.id).then((bookies) => setValidBookies(bookies));
         } else {
-            setBookieNames([]);
+            setValidBookies([]);
         }
     }, [user, signedIn]);
 
     // function to generate 3 digit number with a plus or minus sign in front
     const generateOdds = () => {
         const sign = Math.random() > 0.5 ? '+' : '-';
-        const num = Math.floor(Math.random() * 1000);
+        const num = Math.floor(Math.random() * 400);
         return `${sign}${num}`;
     }
 
@@ -34,17 +34,21 @@ export default function MainDisplay({ stat, homeTeam, awayTeam }) {
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={{ fontSize: 16, alignItems: 'center' }}>{stat.toUpperCase()}</Text>
             </View>
-            {bookieNames.map((bookie) => (
-                <MainLineDisplay 
-                    key={bookie}
-                    stat={stat}
-                    bookie={bookie}
-                    odds1={generateOdds()}
-                    odds2={generateOdds()}
-                    homeTeam={homeTeam} 
-                    awayTeam={awayTeam} 
-                />
-            ))}
+            {validBookies.map((bookie) => {
+                const bookieData = data ? data.filter(item => item.bookieId === bookie.bookieId) : Array.from({ length: 1 }, () => ({ homeOdds: generateOdds(), awayOdds: generateOdds() }));
+
+                return bookieData.map((item, index) => (
+                    <MainLineDisplay 
+                        key={`${bookie.name}-${index}`}
+                        stat={stat}
+                        bookie={bookie.name}
+                        odds1={item.homeOdds}
+                        odds2={item.awayOdds}
+                        homeTeam={homeTeam} 
+                        awayTeam={awayTeam} 
+                    />
+                ));
+            })}
         </View>
     )
 }
