@@ -36,7 +36,17 @@ export const getBetMarketByLeg = async (db, gameId, leg) => {
 // Function to get all bet markets for a game and market type
 export const getBetMarketByGame = async (db, gameId, marketType) => {
   try {
-    const allRows = await db.getAllAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = ?', [gameId, marketType]);
+    const allRows = await db.getAllAsync(`
+      SELECT 
+        bm.*, 
+        bt.targetName as targetName
+      FROM 
+        BetMarkets bm
+      JOIN 
+        BetTargets bt ON bm.betTargetId = bt.id
+      WHERE 
+        bm.gameId = ? AND bm.marketType = ?
+    `, [gameId, marketType]);
     return allRows;
   } catch (error) {
     console.error('Error getting bet markets by game and market type:', error);
