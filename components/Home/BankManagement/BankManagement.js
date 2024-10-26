@@ -2,12 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Text, View, Pressable, ClearView, TouchableOpacity } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
-import { UserContext } from '@/contexts/UserContext';
+import useRouting from '@/hooks/useRouting';
 import { bookieImages } from '@/constants/bookieConstants';
 
 export default function BankManagement({ transactions, addBookie }) {
 
     const { grayBackground, grayBorder, iconColor } = useTheme();
+
+    const { handleTransactions } = useRouting();
 
     return (
         <ClearView style={styles.container}>
@@ -35,7 +37,10 @@ export default function BankManagement({ transactions, addBookie }) {
                     </ClearView>
                 </ClearView>
                 <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <TouchableOpacity style={[styles.bottomButton, { backgroundColor: grayBorder, borderColor: grayBorder }]}>
+                    <TouchableOpacity 
+                        style={[styles.bottomButton, { backgroundColor: grayBorder, borderColor: grayBorder }]}
+                        onPress={handleTransactions}
+                    >
                         <Text style={styles.buttonText}>View Transactions</Text>
                     </TouchableOpacity>
                     <TouchableOpacity 
