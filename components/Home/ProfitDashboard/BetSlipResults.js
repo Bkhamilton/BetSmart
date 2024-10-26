@@ -55,22 +55,28 @@ export default function BetSlipResults() {
     }, [trigger, user, signedIn, bookie]);
 
     return (
-        <View style={styles.resultContainer}>
-            <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
-                <Text>Bets Won</Text>
-                <Text style={styles.moneyText}>{betsWon}</Text>
+        <>
+            <View style={styles.resultContainer}>
+                <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
+                    <Text>Bets Won</Text>
+                    <Text style={styles.moneyText}>{betsWon}</Text>
+                </View>
+                <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
+                    <Text>Bets Placed</Text>
+                    <Text style={styles.moneyText}>{betsPlaced}</Text>
+                </View>
+                <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
+                    <Text>Profit</Text>
+                    <Text style={[styles.moneyText, { color: profit > 0 ? greenText : redText }]}>
+                    {profit > 0 ? `+$${profit.toFixed(2)}` : `-$${Math.abs(profit).toFixed(2)}`}
+                    </Text>
+                </View>
             </View>
-            <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
-                <Text>Bets Placed</Text>
-                <Text style={styles.moneyText}>{betsPlaced}</Text>
-            </View>
-            <View style={[styles.resultBox, { backgroundColor: grayBackground, borderWidth: 1, borderColor: grayBorder }]}>
-                <Text>Profit</Text>
-                <Text style={[styles.moneyText, { color: profit > 0 ? greenText : redText }]}>
-                {profit > 0 ? `+$${profit.toFixed(2)}` : `-$${Math.abs(profit).toFixed(2)}`}
-                </Text>
-            </View>
-        </View>
+            <View style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 4 }}>
+                <Text style={{ fontSize: 10, opacity: 0.6, fontWeight: '400', textAlign: 'center' }}>Last 7 Days</Text>
+            </View>        
+        </>
+
     );
 }
 
