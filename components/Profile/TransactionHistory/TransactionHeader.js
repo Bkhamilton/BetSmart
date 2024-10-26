@@ -24,7 +24,7 @@ export default function TransactionHeader() {
                 <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ fontSize: 14, fontWeight: '600' }}>All Transactions</Text>
                 </View>
-                <View style={{ flex: 0.2 }}>
+                <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}>
                     <Ionicons name="filter" size={20} color={iconColor} />
                 </View>
             </View>
@@ -40,5 +40,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        borderBottomWidth: 1,
     },
 });
