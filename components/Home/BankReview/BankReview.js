@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { Text, View, Pressable, ClearView, TouchableOpacity } from '@/components/Themed';
+import { Text, View, ClearView, TouchableOpacity } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
 import { bookieImages } from '@/constants/bookieConstants';
 
-export default function BankManagement({ transactions, addBookie }) {
+export default function BankReview({ transactions, addBookie }) {
 
     const { grayBackground, grayBorder, iconColor } = useTheme();
 
@@ -35,6 +35,9 @@ export default function BankManagement({ transactions, addBookie }) {
                         <Text style={styles.headerText}>Withdrawals</Text>
                         <Text style={{ fontSize: 20, fontWeight: '600' }}>$50</Text>
                     </ClearView>
+                </ClearView>
+                <ClearView style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 4, paddingBottom: 2 }}>
+                    <Text style={{ fontSize: 10, opacity: 0.6, fontWeight: '400' }}>Last 7 Days</Text>
                 </ClearView>
                 <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <TouchableOpacity 
