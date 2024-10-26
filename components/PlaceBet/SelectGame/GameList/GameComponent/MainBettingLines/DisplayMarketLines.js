@@ -5,6 +5,8 @@ import useTheme from '@/hooks/useTheme';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { getBetTargetId } from '@/db/bet-general/BetTargets';
 
+import { getBestOdds } from '@/utils/betMarketHelpers';
+
 export default function DisplayMarketLines({ game, marketProps, marketType }) {
 
     const { gameId, homeTeamAbv, awayTeamAbv, homeTeamName, awayTeamName } = game;
@@ -102,22 +104,6 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
                 />
             </View>
         );
-    }
-
-    // Function that takes an array of market data and returns the object with the "Best Odds" meaning the odds closest to -100 or +100
-    const getBestOdds = (marketData) => {
-        let bestOdds = marketData[0];
-        let bestOddsDiff = Math.min(Math.abs(100 - marketData[0].odds), Math.abs(-100 - marketData[0].odds));
-        
-        marketData.forEach((line) => {
-            const diff = Math.min(Math.abs(100 - line.odds), Math.abs(-100 - line.odds));
-            if (diff < bestOddsDiff) {
-                bestOdds = line;
-                bestOddsDiff = diff;
-            }
-        });
-        
-        return bestOdds;
     }
 
     // Function to fill display data
