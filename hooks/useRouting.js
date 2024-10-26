@@ -19,6 +19,10 @@ const useRouting = () => {
     const handleSettings = () => {
         router.replace('profile/settings');
     };
+
+    const handleTransactions = () => {
+        router.replace('profile/transactionHistory');
+    }
     
     const handleSelectGame = ({ game }) => {
         setCurrentGame(game);
@@ -33,6 +37,7 @@ const useRouting = () => {
         handleProfilePage,
         handleBetHistory,
         handleSettings,
+        handleTransactions,
         handleSelectGame,
         handleCloseBetDetails,
     };
