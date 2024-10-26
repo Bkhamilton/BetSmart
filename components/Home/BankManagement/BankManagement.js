@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { Text, View, Pressable, ClearView, TouchableOpacity } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
+import { UserContext } from '@/contexts/UserContext';
+import { bookieImages } from '@/constants/bookieConstants';
 
-export default function BankManagement({ transactions }) {
+export default function BankManagement({ transactions, addBookie }) {
 
     const { grayBackground, grayBorder, iconColor } = useTheme();
 
@@ -18,23 +20,29 @@ export default function BankManagement({ transactions }) {
                 <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <ClearView style={{ flex: 0.3, justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={styles.headerText}>Top Bookie</Text>
-                        <Text style={{ fontSize: 16, fontWeight: '600' }}>$150</Text>
+                        <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Image source={bookieImages['DraftKings']} style={{ width: 40, height: 40, borderRadius: 4 }} />
+                            <Text style={{ fontSize: 12, fontWeight: '600' }}>+$50</Text>
+                        </ClearView>
                     </ClearView>
                     <ClearView style={styles.transactionContainer}>
                         <Text style={styles.headerText}>Deposits</Text>
-                        <Text style={{ fontSize: 16, fontWeight: '600' }}>$100</Text>
+                        <Text style={{ fontSize: 20, fontWeight: '600' }}>$100</Text>
                     </ClearView>
                     <ClearView style={styles.transactionContainer}>
                         <Text style={styles.headerText}>Withdrawals</Text>
-                        <Text style={{ fontSize: 16, fontWeight: '600' }}>$50</Text>
+                        <Text style={{ fontSize: 20, fontWeight: '600' }}>$50</Text>
                     </ClearView>
                 </ClearView>
                 <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <TouchableOpacity style={[styles.bottomButton, { backgroundColor: grayBorder, borderColor: grayBorder }]}>
-                        <Text style={{ fontSize: 14, fontWeight: '600' }}>View Transactions</Text>
+                        <Text style={styles.buttonText}>View Transactions</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.bottomButton, { backgroundColor: grayBorder, borderColor: grayBorder }]}>
-                        <Text style={{ fontSize: 14, fontWeight: '600' }}>Add Bookie</Text>
+                    <TouchableOpacity 
+                        style={[styles.bottomButton, { backgroundColor: grayBorder, borderColor: grayBorder }]}
+                        onPress={addBookie}
+                    >
+                        <Text style={styles.buttonText}>Add Bookie</Text>
                     </TouchableOpacity>
                 </ClearView>
             </View>
@@ -73,5 +81,9 @@ export default function BankManagement({ transactions }) {
         alignItems: 'center',
         borderRadius: 8,
         paddingVertical: 4,
+    },
+    buttonText: {
+        fontSize: 14,
+        fontWeight: '600',
     }
   });
