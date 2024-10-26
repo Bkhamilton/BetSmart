@@ -23,6 +23,7 @@ import useRouting from '@/hooks/useRouting';
 import useAuthState from '@/hooks/useAuthState';
 import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
 import ProfileOptions from '@/components/Modals/ProfileOptions';
+import BankManagement from '@/components/Home/BankManagement/BankManagement';
 
 export default function HomeScreen() {
 
@@ -235,6 +236,7 @@ export default function HomeScreen() {
           ) 
         }
         <YesterdaysBets bets={myBetList}/>
+        <BankManagement transactions={userTransactions} />
       </ScrollView>
     </>
   );
