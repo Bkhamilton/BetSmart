@@ -25,6 +25,7 @@ export default function ProfileScreen() {
         confirmMessage, 
         onHandleConfirm,
         confirmAction,
+        handleConfirmation,
     } = useConfirmationState();
 
     const { 
@@ -44,13 +45,7 @@ export default function ProfileScreen() {
     } = useOptionsState();
 
     const onAddBookie = async (bookie) => {
-        closeAddBookieModal();
-        const message = `add ${bookie.name} as a bookie?`;
-        const response = await confirmAction(message);
-
-        if (response) {
-        addBookie(bookie);
-        }
+        handleConfirmation(`add ${bookie.name} as a bookie?`, closeAddBookieModal, addBookie, bookie);
     };
 
     const handleResponse = async (response, target) => {
@@ -58,15 +53,10 @@ export default function ProfileScreen() {
         if (response === 'Delete') {
             // if target is Balance object, delete balance
             if (target.balance >= 0) {
-            const message = `delete ${target.bookieName} as a bookie?`;
-            const response = await confirmAction(message);
-
-            if (response) {
-                deleteBalBookie(target.bookieId, user.id);
-            }
+                handleConfirmation(`delete ${target.bookieName} as a bookie?`, closeConfirmationModal, deleteBalBookie, [target.bookieId, user.id]);
             } else {
-            console.log('delete bet');
-            console.log(JSON.stringify(target));
+                console.log('delete bet');
+                console.log(JSON.stringify(target));
             }
         }
     }

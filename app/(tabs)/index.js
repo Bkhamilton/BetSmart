@@ -52,6 +52,7 @@ export default function HomeScreen() {
         confirmMessage, 
         onHandleConfirm, 
         confirmAction,
+        handleConfirmation,
     } = useConfirmationState();
 
     const {
@@ -96,12 +97,7 @@ export default function HomeScreen() {
     } = useDatabaseFuncs();
 
     const onAddBookie = async (bookie) => {
-        closeAddBookieModal();
-        const response = await confirmAction(`add ${bookie.name} as a bookie?`);
-
-        if (response) {
-            addBookie(bookie);
-        }
+        handleConfirmation(`add ${bookie.name} as a bookie?`, closeAddBookieModal, addBookie, bookie);
     };
 
     const onSelectBookie = (balance) => {
@@ -119,19 +115,21 @@ export default function HomeScreen() {
         if (response === 'Delete') {
             // if target is Balance object, delete balance
             if (target.balance >= 0) {
-                const response = await confirmAction(`delete ${target.bookieName} as a bookie?`);
-
-                if (response) {
-                    deleteBalBookie(target.bookieId, user.id);
-                }
+                handleConfirmation(`delete ${target.bookieName} as a bookie?`, closeProfileOptionsModal, deleteBalBookie, [target.bookieId, user.id]);
             } else {
                 if (target.bets) {
-                    const response = await confirmAction(`delete bet slip?`);
-
-                    if (response) {
-                        deleteUserBetSlip(target, user.id);
-                        onRefresh();
-                    }
+                    handleConfirmation(`delete bet slip?`, closeProfileOptionsModal, deleteUserBetSlip, [target, user.id], onRefresh);
+                }
+            }
+        } else if (response === 'Edit') {
+            // if target is Balance object, edit balance
+            if (target.balance >= 0) {
+                // open transaction modal
+                console.log('edit balance');
+            } else {
+                // open bet slip modal
+                if (target.bets) {
+                    console.log('edit bet slip');
                 }
             }
         }
@@ -142,12 +140,7 @@ export default function HomeScreen() {
     };
 
     const onSignOut = async () => {
-        closeProfileOptionsModal();
-        const response = await confirmAction('sign out?');
-
-        if (response) {
-            signOutUser(user.id);
-        }
+        handleConfirmation('sign out?', closeProfileOptionsModal, signOutUser, user.id);
     };
 
     return (
