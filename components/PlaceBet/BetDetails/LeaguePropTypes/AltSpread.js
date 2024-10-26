@@ -14,9 +14,26 @@ export default function AltSpread() {
 
     const title = 'Alternate Spread';
 
+    const [altSpreadData, setAltSpreadData] = useState([]);
+
+    /*
+
+    // use useEffect to grab all Alt Spread values for the currentGame
+    useEffect(() => {
+        const fetchAltSpread = async () => {
+            const altSpread = await getSpread(db, currentGame.gameId);
+            const groupedAltSpread = groupByTimestampAndBookie(altSpread, currentGame);
+            const sortedAltSpread = sortBetMarkets(groupedAltSpread);
+            setSpreadData(sortedAltSpread);
+        }
+        fetchAltSpread();
+    }, [currentGame]);
+
+    */
+
     return (
         <View style={styles.container}>
-            <PropBanner title={title} />
+            <PropBanner title={title} type={"Alt"} stat={"Spread"}/>
         </View>
     );
 }

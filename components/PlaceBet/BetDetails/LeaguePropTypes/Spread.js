@@ -1,16 +1,33 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import useTheme from '@/hooks/useTheme';
 import PropBanner from './PropBanner/PropBanner';
 
-export default function Spread({ info }) {
+import { getSpread } from "@/db/api/BetMarkets";
+import { groupByTimestampAndBookie, sortBetMarkets } from '@/utils/betMarketHelpers';
 
-    const { league, currentGame } = useContext(BetContext);
+export default function Spread() {
 
-    const { iconColor } = useTheme();
+    const { currentGame } = useContext(BetContext);
 
     const title = 'Spread';
+
+    const [spreadData, setSpreadData] = useState([]);
+
+    /*
+
+    // use useEffect to grab all Spread values for the currentGame
+    useEffect(() => {
+        const fetchSpread = async () => {
+            const spread = await getSpread(db, currentGame.gameId);
+            const groupedSpread = groupByTimestampAndBookie(spread, currentGame);
+            const sortedSpread = sortBetMarkets(groupedSpread);
+            setSpreadData(sortedSpread);
+        }
+        fetchSpread();
+    }, [currentGame]);
+
+    */
 
     return (
         <>
