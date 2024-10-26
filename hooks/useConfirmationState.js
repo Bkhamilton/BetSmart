@@ -50,6 +50,21 @@ const useConfirmationState = () => {
         return response;
     }, [openConfirmationModal, handleConfirmCallback, closeConfirmationModal]);
 
+    const handleConfirmation = async (message, closeModal, handleResponse, target, refresh) => {
+        closeModal();
+        const response = await confirmAction(message);
+
+        if (response) {
+            if (Array.isArray(target)) {
+                handleResponse(...target);
+            } else {
+                handleResponse(target);
+            }
+            if (refresh) {
+                refresh();
+            }
+        }
+    };
 
     return {
         confirmationModalVisible,
@@ -62,6 +77,7 @@ const useConfirmationState = () => {
         onHandleConfirm,
         startConfirmation,
         confirmAction,
+        handleConfirmation
     };
 };
 
