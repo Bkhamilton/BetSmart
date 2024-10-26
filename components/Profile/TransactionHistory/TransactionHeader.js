@@ -24,8 +24,13 @@ export default function TransactionHeader() {
                 <View style={{ flex: 0.6, alignItems: 'center', justifyContent: 'center' }}>
                     <Text style={{ fontSize: 14, fontWeight: '600' }}>All Transactions</Text>
                 </View>
-                <View style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}>
-                    <Ionicons name="filter" size={20} color={iconColor} />
+                <View style={{ flex: 0.2, alignItems: 'flex-end', justifyContent: 'center' }}>
+                    <TouchableOpacity
+                        onPress={() => {}}
+                        style={{ marginRight: 10 }}
+                    >
+                        <Ionicons name="filter" size={20} color={iconColor} />
+                    </TouchableOpacity>
                 </View>
             </View>
         </>
@@ -36,10 +41,11 @@ const styles = StyleSheet.create({
     headerContainer: {
         height: 84, 
         paddingHorizontal: 20, 
-        paddingTop: 48,
+        paddingTop: 44,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottomWidth: 1,
+        paddingBottom: 4,
     },
 });
