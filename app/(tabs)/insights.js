@@ -9,26 +9,26 @@ import useHookInsightsPage from '@/hooks/useHookInsights';
 
 export default function InsightScreen() {
 
-  const { streak, cycleStreak } = useHookInsightsPage();
+    const { streak, cycleStreak } = useHookInsightsPage();
 
-  const tempFunction = () => {
+    const tempFunction = () => {
 
-  }
+    }
 
-  const { db } = useContext(DBContext);
+    const { db } = useContext(DBContext);
 
-  return (
-    <>
-      <InsightHeader
-        onPress={cycleStreak}
-      />
-      <ScrollView>
-        <InsightIntro streak={streak}/>
-        <BetAnalysis streak={streak}/>
-        <TopBet />
-        {/* BankRoll Management */}
-        {/* Top Props / Top Bets */}
-      </ScrollView>
-    </>
-  );
+    return (
+        <>
+            <InsightHeader
+                onPress={cycleStreak}
+            />
+            <ScrollView>
+                <InsightIntro streak={streak}/>
+                <BetAnalysis streak={streak}/>
+                <TopBet />
+                {/* BankRoll Management */}
+                {/* Top Props / Top Bets */}
+            </ScrollView>
+        </>
+    );
 }

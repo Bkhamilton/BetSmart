@@ -23,221 +23,226 @@ import useRouting from '@/hooks/useRouting';
 import useAuthState from '@/hooks/useAuthState';
 import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
 import ProfileOptions from '@/components/Modals/ProfileOptions';
-import BankManagement from '@/components/Home/BankManagement/BankManagement';
+import BankReview from '@/components/Home/BankReview/BankReview';
 
 export default function HomeScreen() {
 
-  const { user, userBalance, setBookie } = useContext(UserContext);
+    const { user, userBalance, setBookie } = useContext(UserContext);
 
-  const {
-    confirmModalVisible,
-    chooseBookieModalVisible,
-    profileOptionsModalVisible,
-    confirmedBetSlip,
-    betSlips,
-    refreshing,
-    onRefresh,
-    openChooseBookieModal,
-    closeChooseBookieModal,
-    openConfirmModal,
-    closeConfirmModal,
-    openProfileOptionsModal,
-    closeProfileOptionsModal,
-    onConfirmBetSlip,
-  } = useHookHome();
+    const {
+        confirmModalVisible,
+        chooseBookieModalVisible,
+        profileOptionsModalVisible,
+        confirmedBetSlip,
+        betSlips,
+        refreshing,
+        onRefresh,
+        openChooseBookieModal,
+        closeChooseBookieModal,
+        openConfirmModal,
+        closeConfirmModal,
+        openProfileOptionsModal,
+        closeProfileOptionsModal,
+        onConfirmBetSlip,
+    } = useHookHome();
 
-  const { 
-    confirmationModalVisible,
-    closeConfirmationModal,
-    confirmMessage, 
-    onHandleConfirm, 
-    confirmAction,
-  } = useConfirmationState();
+    const { 
+        confirmationModalVisible,
+        closeConfirmationModal,
+        confirmMessage, 
+        onHandleConfirm, 
+        confirmAction,
+    } = useConfirmationState();
 
-  const {
-    addBookieModalVisible,
-    transactionModalVisible,
-    transactionTitle,
-    transactionBookie,
-    userTransactions, 
-    openAddBookieModal,
-    closeAddBookieModal, 
-    openTransactionModal,
-    closeTransactionModal,
-    addBookie, 
-    onConfirmTransaction, 
-  } = useUserBalDataState();
+    const {
+        addBookieModalVisible,
+        transactionModalVisible,
+        transactionTitle,
+        transactionBookie,
+        userTransactions, 
+        openAddBookieModal,
+        closeAddBookieModal, 
+        openTransactionModal,
+        closeTransactionModal,
+        addBookie, 
+        onConfirmTransaction, 
+    } = useUserBalDataState();
 
-  const { 
-    optionsModalVisible, 
-    closeOptionsModal, 
-    options, 
-    onHandleOption,
-    handleOpenOptions,
-  } = useOptionsState();
+    const { 
+        optionsModalVisible, 
+        closeOptionsModal, 
+        options, 
+        onHandleOption,
+        handleOpenOptions,
+    } = useOptionsState();
 
-  const {
-    handleBetHistory,
-  } = useRouting();
+    const {
+        handleBetHistory,
+    } = useRouting();
 
-  const {
-    loginModalVisible,
-    signUpModalVisible,
-    login,
-    openLoginModal,
-    closeLoginModal,
-    openSignUpModal,
-    closeSignUpModal,
-    signOutUser,
-  } = useAuthState();
+    const {
+        loginModalVisible,
+        signUpModalVisible,
+        login,
+        openLoginModal,
+        closeLoginModal,
+        openSignUpModal,
+        closeSignUpModal,
+        signOutUser,
+    } = useAuthState();
 
-  const {
-    deleteUserBetSlip
-  } = useDatabaseFuncs();
+    const {
+        deleteUserBetSlip
+    } = useDatabaseFuncs();
 
-  const onAddBookie = async (bookie) => {
-    closeAddBookieModal();
-    const response = await confirmAction(`add ${bookie.name} as a bookie?`);
-
-    if (response) {
-      addBookie(bookie);
-    }
-  };
-
-  const onSelectBookie = (balance) => {
-    if (balance.bookieId === -1) {
-      closeChooseBookieModal();
-      openAddBookieModal();
-    } else {
-      setBookie({ id: balance.bookieId, name: balance.bookieName });
-      closeChooseBookieModal();
-    }
-  }
-
-  const handleResponse = async (response, target) => {
-    // if response is delete, confirm deletion
-    if (response === 'Delete') {
-      // if target is Balance object, delete balance
-      if (target.balance >= 0) {
-        const response = await confirmAction(`delete ${target.bookieName} as a bookie?`);
+    const onAddBookie = async (bookie) => {
+        closeAddBookieModal();
+        const response = await confirmAction(`add ${bookie.name} as a bookie?`);
 
         if (response) {
-          deleteBalBookie(target.bookieId, user.id);
+            addBookie(bookie);
         }
-      } else {
-        if (target.bets) {
-          const response = await confirmAction(`delete bet slip?`);
+    };
 
-          if (response) {
-            deleteUserBetSlip(target, user.id);
-            onRefresh();
-          }
+    const onSelectBookie = (balance) => {
+        if (balance.bookieId === -1) {
+            closeChooseBookieModal();
+            openAddBookieModal();
+        } else {
+            setBookie({ id: balance.bookieId, name: balance.bookieName });
+            closeChooseBookieModal();
         }
-      }
     }
-  }
 
-  const onOpenOptions = async (target, options) => {
-    handleOpenOptions(target, options, handleResponse);
-  };
+    const handleResponse = async (response, target) => {
+        // if response is delete, confirm deletion
+        if (response === 'Delete') {
+            // if target is Balance object, delete balance
+            if (target.balance >= 0) {
+                const response = await confirmAction(`delete ${target.bookieName} as a bookie?`);
 
-  const onSignOut = async () => {
-    closeProfileOptionsModal();
-    const response = await confirmAction('sign out?');
+                if (response) {
+                    deleteBalBookie(target.bookieId, user.id);
+                }
+            } else {
+                if (target.bets) {
+                    const response = await confirmAction(`delete bet slip?`);
 
-    if (response) {
-      signOutUser(user.id);
-    }
-  };
-
-  return (
-    <>
-      <LoginPage 
-        visible={loginModalVisible} 
-        close={closeLoginModal} 
-        login={login}
-      />
-      <SignUpPage 
-        visible={signUpModalVisible} 
-        close={closeSignUpModal}
-      />
-      <TransactionModal 
-        visible={transactionModalVisible} 
-        close={closeTransactionModal}
-        title={transactionTitle}
-        bookie={transactionBookie}
-        onConfirm={onConfirmTransaction}
-      />
-      <AddBookie
-        visible={addBookieModalVisible}
-        close={closeAddBookieModal}
-        addBookie={onAddBookie}
-      />
-      <ConfirmMessage
-        visible={confirmationModalVisible}
-        close={closeConfirmationModal}
-        message={confirmMessage}
-        confirm={onHandleConfirm}
-      />
-      <OptionMenu
-        visible={optionsModalVisible}
-        close={closeOptionsModal}
-        options={options}
-        selectOption={onHandleOption}
-      />
-      <ProfileOptions
-        visible={profileOptionsModalVisible}
-        close={closeProfileOptionsModal}
-        onSignOut={onSignOut}
-      />
-      <ChooseBookie 
-        visible={chooseBookieModalVisible} 
-        close={closeChooseBookieModal} 
-        selectBookie={onSelectBookie}
-        extra={true}
-      />
-      {
-        confirmedBetSlip && confirmedBetSlip.bets && (
-          <ConfirmBetSlip
-            visible={confirmModalVisible}
-            close={closeConfirmModal}
-            betSlip={confirmedBetSlip}
-            confirm={onConfirmBetSlip}
-          />
-        )
-      }
-      <HomeHeader 
-        history={handleBetHistory} 
-        login={openLoginModal} 
-        signup={openSignUpModal}
-        openProfileOptions={openProfileOptionsModal} 
-      />
-      <ScrollView
-        showVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl 
-            refreshing={refreshing} 
-            onRefresh={onRefresh} 
-          />
+                    if (response) {
+                        deleteUserBetSlip(target, user.id);
+                        onRefresh();
+                    }
+                }
+            }
         }
-      >
-        <ProfitDashboard 
-          openTransaction={openTransactionModal} 
-          openChooseBookie={openChooseBookieModal}
-          transactions={userTransactions}
-        />
-        { 
-          betSlips && betSlips.length > 0 && (
-            <OpenBets 
-              betSlips={betSlips} 
-              confirm={openConfirmModal}
-              openOptions={onOpenOptions}
+    }
+
+    const onOpenOptions = async (target, options) => {
+        handleOpenOptions(target, options, handleResponse);
+    };
+
+    const onSignOut = async () => {
+        closeProfileOptionsModal();
+        const response = await confirmAction('sign out?');
+
+        if (response) {
+            signOutUser(user.id);
+        }
+    };
+
+    return (
+        <>
+            <>
+                <LoginPage 
+                    visible={loginModalVisible} 
+                    close={closeLoginModal} 
+                    login={login}
+                />
+                <SignUpPage 
+                    visible={signUpModalVisible} 
+                    close={closeSignUpModal}
+                />
+                <TransactionModal 
+                    visible={transactionModalVisible} 
+                    close={closeTransactionModal}
+                    title={transactionTitle}
+                    bookie={transactionBookie}
+                    onConfirm={onConfirmTransaction}
+                />
+                <AddBookie
+                    visible={addBookieModalVisible}
+                    close={closeAddBookieModal}
+                    addBookie={onAddBookie}
+                />
+                <ConfirmMessage
+                    visible={confirmationModalVisible}
+                    close={closeConfirmationModal}
+                    message={confirmMessage}
+                    confirm={onHandleConfirm}
+                />
+                <OptionMenu
+                    visible={optionsModalVisible}
+                    close={closeOptionsModal}
+                    options={options}
+                    selectOption={onHandleOption}
+                />
+                <ProfileOptions
+                    visible={profileOptionsModalVisible}
+                    close={closeProfileOptionsModal}
+                    onSignOut={onSignOut}
+                />
+                <ChooseBookie 
+                    visible={chooseBookieModalVisible} 
+                    close={closeChooseBookieModal} 
+                    selectBookie={onSelectBookie}
+                    extra={true}
+                />
+                {
+                    confirmedBetSlip && confirmedBetSlip.bets && (
+                    <ConfirmBetSlip
+                        visible={confirmModalVisible}
+                        close={closeConfirmModal}
+                        betSlip={confirmedBetSlip}
+                        confirm={onConfirmBetSlip}
+                    />
+                    )
+                }
+            </>
+            <HomeHeader 
+                history={handleBetHistory} 
+                login={openLoginModal} 
+                signup={openSignUpModal}
+                openProfileOptions={openProfileOptionsModal} 
             />
-          ) 
-        }
-        <YesterdaysBets bets={myBetList}/>
-        <BankManagement transactions={userTransactions} />
-      </ScrollView>
-    </>
-  );
+            <ScrollView
+                showVerticalScrollIndicator={false}
+                refreshControl={
+                <RefreshControl 
+                    refreshing={refreshing} 
+                    onRefresh={onRefresh} 
+                />
+                }
+            >
+                <ProfitDashboard 
+                    openTransaction={openTransactionModal} 
+                    openChooseBookie={openChooseBookieModal}
+                    transactions={userTransactions}
+                />
+                { 
+                    betSlips && betSlips.length > 0 && (
+                        <OpenBets 
+                        betSlips={betSlips} 
+                        confirm={openConfirmModal}
+                        openOptions={onOpenOptions}
+                        />
+                    ) 
+                }
+                <YesterdaysBets bets={myBetList}/>
+                <BankReview 
+                    transactions={userTransactions} 
+                    addBookie={openAddBookieModal}  
+                />
+            </ScrollView>
+        </>
+    );
 }

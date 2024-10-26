@@ -39,9 +39,9 @@ export default function YesterdaysBets({ bets }) {
 
   return (
     <ClearView style={styles.container}>
-        <ClearView style={{ paddingBottom: 8 }}>
+        <View style={{ paddingBottom: 8 }}>
             <Text style={{ fontSize: 20, fontWeight: '600' }}>Yesterday's Bets</Text>
-        </ClearView>
+        </View>
         <Pressable 
               onPressIn={handlePressIn}
               onPressOut={handlePressOut}
