@@ -106,7 +106,7 @@ interface BetContextProviderProps {
 
 export const BetContextProvider = ({ children }: BetContextProviderProps) => {
 
-  const { user, setUserBalance } = useContext(UserContext);
+  const { user, setUserBalance, setTrigger } = useContext(UserContext);
 
   const [betSlip, setBetSlip] = useState<BetSlip | null>(null);
   const [currentGame, setCurrentGame] = useState<Game | null>(null);
@@ -184,13 +184,8 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
       }
 
       // Update balance for userBalance
-      updateUserBalance(db, betSlip.bookieId, (betSlip.betAmount * -1), user.id).then(() => {
-        setUserBalance(prevBalances => 
-          prevBalances.map(item => 
-            item.bookieId === betSlip.bookieId ? { ...item, balance: Number(item.balance) - Number(betSlip.betAmount) } : item
-          )
-        );
-      });
+      await updateUserBalance(db, betSlip.bookieId, (betSlip.betAmount * -1), user.id);
+      setTrigger(true);
 
       setBetSlip(null);
       setTotalLegs(0);
