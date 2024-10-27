@@ -127,6 +127,16 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
     }, [fetchBalance]);
 
+    // useEffect to fetch user balance data on trigger change
+    useEffect(() => {
+        if (trigger && signedIn) {
+            getBalanceByUser(db, user.id).then((newUserBalance) => {
+                setUserBalance(newUserBalance);
+                setTrigger(prev => !prev);
+            });
+        }
+    }, [trigger, signedIn]);
+
     const value = {
         user,
         setUser,
