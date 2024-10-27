@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, Pressable } from 'react-native';
 import { Text, View, ClearView } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
@@ -11,6 +11,18 @@ export default function BalanceChecker({ openTransaction, openChooseBookie, tran
     const { userBalance, bookie, setBookie } = useContext(UserContext);
 
     const { bookieColors, bookieBorderColors } = useTheme();
+
+    const [balanceValue, setBalanceValue] = useState(0);
+
+    useEffect(() => {
+      if (!userBalance) return;
+      if (userBalance.length === 0) return;
+      if (bookie.name === 'Total') {
+        setBalanceValue(userBalance.reduce((total, item) => total + item.balance, 0));
+      } else {
+        setBalanceValue(userBalance.find(item => item.bookieId === bookie.id)?.balance || 0);
+      }
+    }, [bookie, userBalance]);
 
     // function to switch to next bookieId in userBalance. If at the end of userBalance, switch to Total. If at Total, switch back to userBalance[0]
     const switchBookie = (bookieId) => {
@@ -25,10 +37,6 @@ export default function BalanceChecker({ openTransaction, openChooseBookie, tran
     const selectTransaction = (type) => {
       openTransaction(type, bookie);
     };
-    
-    const balanceValue = bookie.name === 'Total' 
-      ? userBalance?.reduce((total, item) => total + item.balance, 0) 
-      : userBalance?.find(item => item.bookieId === bookie.id)?.balance || 0;
 
     const RecentTransactionsEmpty = () => {
       return (
