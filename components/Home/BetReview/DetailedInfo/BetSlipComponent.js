@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Text, View, ClearView, TouchableOpacity } from '@/components/Themed';
 import BetComponent from './BetComponent';
+import { UserContext } from '@/contexts/UserContext';
 import { bookieImages } from '@/constants/bookieConstants';
 import { Feather } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 
 export default function BetSlipComponent({ betSlip, details, confirm, openOptions }) {
 
-    const { iconColor, mainGreen } = useTheme();
+    const { iconColor, mainGreen, grayBorder } = useTheme();
+
+    const { bookie } = useContext(UserContext);
 
     const confirmBetSlip = () => {
         confirm(betSlip);
@@ -19,7 +22,7 @@ export default function BetSlipComponent({ betSlip, details, confirm, openOption
             <View style={styles.dateContainer}>
                 <Text style={styles.dateText}>{betSlip.date}</Text>
             </View>
-            <View style={styles.spreadContainer}>
+            <ClearView style={styles.spreadContainer}>
                 <Text style={styles.betText}>{betSlip.odds}</Text>
                 <TouchableOpacity 
                     style={{ backgroundColor: 'transparent' }}
@@ -27,8 +30,8 @@ export default function BetSlipComponent({ betSlip, details, confirm, openOption
                 >
                     <Feather name="more-vertical" size={20} color={iconColor} />
                 </TouchableOpacity>
-            </View>
-            <View style={styles.spreadContainer}>
+            </ClearView>
+            <ClearView style={styles.spreadContainer}>
                 <ClearView>
                     <Text style={styles.betText}>Bet</Text>
                     <Text style={styles.betText}>${betSlip.betAmount.toFixed(2)}</Text>
@@ -37,11 +40,11 @@ export default function BetSlipComponent({ betSlip, details, confirm, openOption
                     <Text style={styles.betText}>To Win</Text>
                     <Text style={styles.betText}>${betSlip.winnings.toFixed(2)}</Text>
                 </ClearView>
-            </View>
-            <View style={styles.spreadContainer}>
+            </ClearView>
+            <ClearView style={[styles.spreadContainer, { backgroundColor: betSlip.bookieName === bookie.name ? grayBorder : 'transparent' }]}>
                 <Image source={bookieImages[betSlip.bookieName]} style={styles.bookieImage} />
                 <Text style={styles.betText}>{betSlip.bookieName}</Text>
-            </View>
+            </ClearView>
             {betSlip.bets.map((betDetail, index) => (
                 <BetComponent key={index} bet={betDetail} />
             ))}
@@ -86,7 +89,7 @@ const styles = StyleSheet.create({
     spreadContainer : {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: 'transparent',
+        borderRadius: 4,
     },
     bookieImage: {
         width: 20,
