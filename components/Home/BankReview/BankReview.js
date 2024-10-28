@@ -4,12 +4,15 @@ import { Text, View, ClearView, TouchableOpacity } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
 import { bookieImages } from '@/constants/bookieConstants';
+import useUserBalDataState from '@/hooks/useUserBalDataState';
 
 export default function BankReview({ transactions, addBookie }) {
 
     const { grayBackground, grayBorder, iconColor } = useTheme();
 
     const { handleTransactions } = useRouting();
+
+    const { monthlyDeposits, monthlyWithdrawals } = useUserBalDataState();
 
     return (
         <ClearView style={styles.container}>
@@ -29,15 +32,15 @@ export default function BankReview({ transactions, addBookie }) {
                     </ClearView>
                     <ClearView style={styles.transactionContainer}>
                         <Text style={styles.headerText}>Deposits</Text>
-                        <Text style={{ fontSize: 20, fontWeight: '600' }}>$100</Text>
+                        <Text style={{ fontSize: 20, fontWeight: '600' }}>${monthlyDeposits}</Text>
                     </ClearView>
                     <ClearView style={styles.transactionContainer}>
                         <Text style={styles.headerText}>Withdrawals</Text>
-                        <Text style={{ fontSize: 20, fontWeight: '600' }}>$50</Text>
+                        <Text style={{ fontSize: 20, fontWeight: '600' }}>${monthlyWithdrawals}</Text>
                     </ClearView>
                 </ClearView>
                 <ClearView style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 4, paddingBottom: 2 }}>
-                    <Text style={{ fontSize: 10, opacity: 0.6, fontWeight: '400' }}>Last 7 Days</Text>
+                    <Text style={{ fontSize: 10, opacity: 0.6, fontWeight: '400' }}>Last 30 Days</Text>
                 </ClearView>
                 <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                     <TouchableOpacity 
