@@ -1,52 +1,59 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
-import Colors from '@/constants/Colors';
+import useTheme from '@/hooks/useTheme';
 
 export default function AnalyticsDisplay({ data }) {
-  return (
-    <View style={styles.container}>
-      <View>
-        <View>
-            <Text style={styles.dataTitleText}>PROFIT</Text>
+
+    const { grayBackground, grayBorder, iconColor } = useTheme();
+
+    return (
+        <View style={styles.container}>
+            <View>
+                <View style={styles.outerContainer}>
+                    <Text style={styles.dataTitleText}>Profit</Text>
+                </View>
+                <View style={[styles.dataContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
+            </View>
+            <View>
+                <View style={styles.outerContainer}>
+                    <Text style={styles.dataTitleText}>Bets</Text>
+                </View>
+                <View style={[styles.dataContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
+            </View>
+            <View>
+                <View style={styles.outerContainer}>
+                    <Text style={styles.dataTitleText}>Success</Text>
+                </View>
+                <View style={[styles.dataContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
+            </View>
+            <View>
+                <View style={styles.outerContainer}>
+                    <Text style={styles.dataTitleText}>ROI</Text>
+                </View>
+                <View style={[styles.dataContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
+            </View>        
         </View>
-        <View style={styles.dataContainer}/>
-      </View>
-      <View>
-        <View>
-            <Text style={styles.dataTitleText}>BETS</Text>
-        </View>
-        <View style={styles.dataContainer}/>
-      </View>
-      <View>
-        <View>
-            <Text style={styles.dataTitleText}>SUCCESS</Text>
-        </View>
-        <View style={styles.dataContainer}/>
-      </View>
-      <View>
-        <View>
-            <Text style={styles.dataTitleText}>ROI</Text>
-        </View>
-        <View style={styles.dataContainer}/>
-      </View>        
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  dataContainer: {
-    borderWidth: 1,
-    borderRadius: 8,
-    width: '100%',
-    height: 100,
-  },
-  dataTitleText: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
+    container: {
+        paddingHorizontal: 10,
+        paddingVertical: 16,
+    },
+    dataContainer: {
+        borderWidth: 1,
+        borderRadius: 8,
+        width: '100%',
+        height: 100,
+    },
+    dataTitleText: {
+        fontSize: 20,
+        fontWeight: '600',
+    },
+    outerContainer: {
+        paddingVertical: 8,
+        paddingLeft: 2,
+    }
 });
