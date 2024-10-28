@@ -3,12 +3,13 @@ import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { insertBalance, updateBalance, deleteBalance } from '@/db/user-specific/Balance';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
+import { getMonthlyWithdrawals, getMonthlyDeposits } from '@/db/user-specific/Transactions';
 
 const useUserBalDataState = () => {
     
     const { db } = useContext(DBContext);
 
-    const { user, setUserBalance } = useContext(UserContext);
+    const { user, setUserBalance, signedIn } = useContext(UserContext);
 
     const [addBookieModalVisible, setAddBookieModalVisible] = useState(false);
     const [transactionModalVisible, setTransactionModalVisible] = useState(false);
@@ -17,6 +18,9 @@ const useUserBalDataState = () => {
     const [transactionBookie, setTransactionBookie] = useState({});
 
     const [userTransactions, setUserTransactions] = useState([]);
+
+    const [monthlyDeposits, setMonthlyDeposits] = useState(0);
+    const [monthlyWithdrawals, setMonthlyWithdrawals] = useState(0);
 
     const openAddBookieModal = () => {
         setAddBookieModalVisible(true);
@@ -74,14 +78,29 @@ const useUserBalDataState = () => {
 
     useEffect(() => {
         const fetchUserTransactions = async () => {
-            if (user) {
+            if (user && signedIn) {
                 const transactions = await getTransactionsByUser(db, user.id);
                 setUserTransactions(transactions);
+            } else {
+                setUserTransactions([]);
+            }
+        };
+
+        const fetchMonthlyBalanceChanges = async () => {
+            if (user && signedIn) {
+                const deposits = await getMonthlyDeposits(db, user.id);
+                const withdrawals = await getMonthlyWithdrawals(db, user.id);
+                setMonthlyDeposits(deposits);
+                setMonthlyWithdrawals(withdrawals);
+            } else {
+                setMonthlyDeposits(0);
+                setMonthlyWithdrawals(0);
             }
         };
 
         fetchUserTransactions();
-    }, [db, user]);
+        fetchMonthlyBalanceChanges();
+    }, [db, user, signedIn]);
 
     return {
         addBookieModalVisible,
@@ -89,6 +108,8 @@ const useUserBalDataState = () => {
         transactionTitle,
         transactionBookie,
         userTransactions,
+        monthlyDeposits,
+        monthlyWithdrawals,
         setUserTransactions,
         openAddBookieModal,
         closeAddBookieModal,
