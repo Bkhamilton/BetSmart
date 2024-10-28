@@ -29,15 +29,21 @@ const useHookInsightsPage = () => {
 
     useEffect(() => {
         if (!user) return;
-        getBetSlipsLast7Days(db, user.id).then((res) => {
-          setBetsPlaced(res);
-        });
-        getWonBetSlipCountLast7Days(db, user.id).then((res) => {
-          setBetsWon(res);
-        });
-        getProfitLast7Days(db, user.id).then((res) => {
-          setProfit(res);
-        });
+        if (signedIn) {
+            getBetSlipsLast7Days(db, user.id).then((res) => {
+                setBetsPlaced(res);
+            });
+            getWonBetSlipCountLast7Days(db, user.id).then((res) => {
+                setBetsWon(res);
+            });
+            getProfitLast7Days(db, user.id).then((res) => {
+                setProfit(res);
+            });
+        } else {
+            setBetsPlaced(0);
+            setBetsWon(0);
+            setProfit(0);
+        }
     }, [user, signedIn]);
     
     return {
