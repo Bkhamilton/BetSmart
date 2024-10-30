@@ -1,26 +1,30 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ClearView } from '@/components/Themed';
-import { MainPlayerComponent } from './ComponentTypes';
+import { MainPlayerComponent, ToRecordValueComponent } from './ComponentTypes';
 import useTheme from '@/hooks/useTheme';
 
 export default function MainPlayer({ awayTeam, homeTeam }) {
 
     const { grayBackground } = useTheme();
 
+    const onSelectProp = (player, value, odds) => {
+        console.log('Selected Prop:', player, value, odds);
+    }
+
     return (
         <View style={{ width: '100%', paddingBottom: 4 }}>
             <View style={[styles.container, { backgroundColor: grayBackground }]}>
                 <ClearView style={{ paddingHorizontal: 8 }}>
-                    <Text style={{ fontSize: 16 }}>OVER</Text>
+                    <Text style={{ fontSize: 16 }}>VALUE</Text>
                 </ClearView>
-                <ClearView style={{ paddingHorizontal: 16 }}>
-                    <Text style={{ fontSize: 16 }}>UNDER</Text>
+                <ClearView style={{ paddingHorizontal: 4, marginRight: 44 }}>
+                    <Text style={{ fontSize: 16 }}>ODDS</Text>
                 </ClearView>
             </View>
             <View style={{ paddingHorizontal: 8 }}>
-                <MainPlayerComponent player={'Player A'} logo={awayTeam.logo} value={4.5} odds1={'-113'} odds2={'-113'} />
-                <MainPlayerComponent player={'Player B'} logo={homeTeam.logo} value={3.5} odds1={'+108'} odds2={'-136'} />
+                <ToRecordValueComponent value={4.5} team={awayTeam} odds={'-113'} select={onSelectProp}/>
+                <ToRecordValueComponent value={3.5} team={homeTeam} odds={'+108'} select={onSelectProp}/>
             </View>
         </View>
     )
@@ -32,6 +36,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end', 
         alignItems: 'center', 
         width: '100%', 
-        paddingVertical: 4
+        paddingVertical: 4,
     },
 });
