@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Image } from 'react-native';
-import { TouchableOpacity, Text, View } from '@/components/Themed';
+import { TouchableOpacity, Text, View, TextInput } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { bookieImages } from '@/constants/bookieConstants';
 
@@ -89,12 +89,65 @@ export const ToRecordComponent = ({ player, logo, odds, team }) => {
                 <View style={styles.playerContainer}>
                     <Text style={{ fontWeight: '400', fontSize: 13, }}>{team}</Text>
                 </View>
-                <TouchableOpacity style={styles.oddsContainer}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds}</Text>
-                </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TouchableOpacity style={styles.oddsContainer}>
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds}</Text>
+                </TouchableOpacity>                
                 <TouchableOpacity style={[styles.valueContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
+                    <Text style={{ fontSize: 24, fontWeight: '500' }}>+</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+}
+
+export const ToRecordValueComponent = ({ value, odds, team, select }) => {
+
+    const { grayBackground, grayBorder } = useTheme();
+
+    const [oddsVal, setOddsVal] = useState(odds);
+    const [val, setVal] = useState(value.toString());
+
+    return (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
+                    <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
+                    <Image style={styles.teamIcon} source={{ uri: team.logo }} />
+                </View>
+                <View style={styles.playerContainer}>
+                    <Text style={{ fontWeight: '400', fontSize: 13, }}>{team.name}</Text>
+                </View>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TextInput
+                    placeholder={val}
+                    keyboardType="default"
+                    style={styles.oddsContainer}
+                    value={val}
+                    onChangeText={(text) => {
+                        if (/^[0-9.]*$/.test(text)) {
+                            setVal(text);
+                        }
+                    }}
+                />
+                <TextInput
+                    placeholder={odds}
+                    keyboardType="default"
+                    style={styles.oddsContainer}
+                    value={oddsVal}
+                    onChangeText={(text) => {
+                        if (/^[0-9+-]*$/.test(text)) {
+                            setOddsVal(text);
+                        }
+                    }}
+                    // Add necessary props and event handlers for amount input
+                />  
+                <TouchableOpacity 
+                    style={[styles.valueContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}
+                    onPress={() => select(team.name, val, oddsVal)}
+                >
                     <Text style={{ fontSize: 24, fontWeight: '500' }}>+</Text>
                 </TouchableOpacity>
             </View>
@@ -146,6 +199,34 @@ export const MainLineDisplay = ({ stat, bookie, odds1, odds2, homeTeam, awayTeam
     );
 }     
 
+export const MainLineValueDisplay = ({ stat, value, bookie, odds1, odds2, homeTeam, awayTeam }) => {
+
+    const { grayBackground, grayBorder } = useTheme();
+
+    return (
+        <View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                {/* Away Team Logo */}
+                <Image style={styles.logoIcon} source={{ uri: awayTeam.logo }} />
+                {/* Away Team Odds */}
+                <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds2}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8}}>{value}</Text>
+                </TouchableOpacity>         
+                {/* Bookie Logo */}
+                <Image style={styles.bookieIcon} source={bookieImages[bookie]} />
+                {/* Home Team Odds */}
+                <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds1}</Text>
+                    <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8}}>{value}</Text>
+                </TouchableOpacity>       
+                {/* Home Team Logo */}
+                <Image style={styles.logoIcon} source={{ uri: homeTeam.logo }} />           
+            </View>
+        </View>
+    );
+}   
+
 const styles = StyleSheet.create({
     genericContainer: {
         flexDirection: 'row', 
@@ -167,7 +248,6 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         borderColor: 'blue',
         marginHorizontal: 4,
-        width: 64,
         height: 48,
         justifyContent: 'center',
         alignItems: 'center',
@@ -186,14 +266,13 @@ const styles = StyleSheet.create({
         paddingVertical: 14,
         paddingHorizontal: 16,
         borderRadius: 8,
-        width: 180,
     },
     oddsContainer: {
         justifyContent: 'center', 
         alignItems: 'center', 
         borderWidth: 1,
         paddingVertical: 12,
-        paddingHorizontal: 16,
+        paddingHorizontal: 10,
         borderRadius: 8,        
     },
     bookieIcon: {
