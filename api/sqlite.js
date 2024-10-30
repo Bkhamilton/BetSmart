@@ -54,6 +54,16 @@ export const createTables = async (db) => {
       FOREIGN KEY(awayTeamId) REFERENCES Teams(id),
       UNIQUE (gameId, seasonId, date, homeTeamId, awayTeamId)
     );
+    CREATE TABLE IF NOT EXISTS Players (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      position TEXT NOT NULL,
+      number TEXT NOT NULL,
+      image TEXT,
+      teamId INTEGER NOT NULL,
+      FOREIGN KEY(teamId) REFERENCES Teams(id),
+      UNIQUE (name, position, number, teamId)
+    );
     CREATE TABLE IF NOT EXISTS Users (
       id INTEGER PRIMARY KEY AUTOINCREMENT, 
       name TEXT,
@@ -277,36 +287,19 @@ export const resetBetMarkets = async (db) => {
   console.log('BetMarkets table reset');
 };
 
-// Function to drop and recreate BetSlips table
-export const resetBetSlipResults = async (db) => {
+// Function to create the Players table
+export const createPlayersTable = async (db) => {
   await db.execAsync(`
-    DROP TABLE IF EXISTS BetSlipsResults;
-    DROP TABLE IF EXISTS ParticipantBetsResults;
-    DROP TABLE IF EXISTS LegsResults;
-    CREATE TABLE IF NOT EXISTS BetSlipsResults (
+    CREATE TABLE IF NOT EXISTS Players (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      betSlipId INTEGER NOT NULL,
-      result BOOLEAN NOT NULL,
-      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (betSlipId) REFERENCES BetSlips(id),
-      UNIQUE (betSlipId)
+      name TEXT NOT NULL,
+      position TEXT NOT NULL,
+      number TEXT NOT NULL,
+      image TEXT,
+      teamId INTEGER NOT NULL,
+      FOREIGN KEY(teamId) REFERENCES Teams(id),
+      UNIQUE (name, position, number, teamId)
     );
-    CREATE TABLE IF NOT EXISTS ParticipantBetsResults (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      participantBetId INTEGER NOT NULL,
-      result BOOLEAN NOT NULL,
-      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (participantBetId) REFERENCES ParticipantBets(id),
-      UNIQUE (participantBetId)
-    );
-    CREATE TABLE IF NOT EXISTS LegsResults (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      legId INTEGER NOT NULL,
-      result BOOLEAN NOT NULL,
-      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (legId) REFERENCES Legs(id),
-      UNIQUE (legId)
-    );  
   `);
-  console.log('BetSlips table reset');
-};
+  console.log('Players table created');
+}
