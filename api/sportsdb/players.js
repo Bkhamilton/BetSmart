@@ -1,3 +1,4 @@
+import secrets from '@/secrets';
 import { getTeamsByLeagueName } from '@/db/general/Teams.js';
 import { insertPlayer } from '@/db/general/Players';
 import { insertBetTarget } from '@/db/bet-general/BetTargets';
@@ -13,7 +14,7 @@ const teamNameMapping = {
 export const getPlayerInfo = async (team) => {
     const formattedTeam = teamNameMapping[team] || team.replace(/\s/g, '_');
     try {
-        const response = await fetch(`https://www.thesportsdb.com/api/v1/json/691634/searchplayers.php?t=${formattedTeam}`);
+        const response = await fetch(`https://www.thesportsdb.com/api/v1/json/${secrets.SPORTSDB_API_KEY}/searchplayers.php?t=${formattedTeam}`);
         const data = await response.json();
         return data;
     }
