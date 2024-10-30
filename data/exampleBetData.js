@@ -479,3 +479,52 @@ export const betSlipsRaw = [{
   betWon: 0,
   betStatus: 'lost'
 }]
+
+export const betSlipResults = [{
+  id: 1,
+  betAmount: 20,
+  winnings: 40,
+  result: 1
+},
+{
+  id: 2,
+  betAmount: 30,
+  winnings: 0,
+  result: 0
+},
+{
+  id: 3,
+  betAmount: 10,
+  winnings: 20,
+  result: 1
+},
+{
+  id: 4,
+  betAmount: 40,
+  winnings: 0,
+  result: 0
+},
+{
+  id: 5,
+  betAmount: 20,
+  winnings: 40,
+  result: 1
+},
+{
+  id: 6,
+  betAmount: 30,
+  winnings: 0,
+  result: 0
+},
+{
+  id: 7,
+  betAmount: 10,
+  winnings: 20,
+  result: 1
+},
+{
+  id: 8,
+  betAmount: 40,
+  winnings: 0,
+  result: 0
+}]
