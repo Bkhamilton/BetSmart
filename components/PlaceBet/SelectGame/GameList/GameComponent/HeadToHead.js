@@ -6,17 +6,17 @@ export default function HeadToHead({ homeLogo, homeTeam, awayLogo, awayTeam }) {
     return (
         <ClearView style={styles.container}>
             <ClearView style={styles.gameTeamContainer}>
-                { awayLogo ? <Image style={styles.teamIcon} source={{uri: awayLogo}}/> : null }
-                <Text>{awayTeam}</Text>
+                { homeLogo ? <Image style={styles.teamIcon} source={{uri: homeLogo}}/> : null }
+                <Text>{homeTeam}</Text>
             </ClearView>
             <ClearView style={styles.versusContainer}>
                 <View style={styles.leftBar} />
-                <Text style={styles.versusText}>vs</Text>
+                <Text style={styles.versusText}>@</Text>
                 <View style={styles.rightBar} />
             </ClearView>
             <ClearView style={styles.gameTeamContainer}>
-                { homeLogo ? <Image style={styles.teamIcon} source={{uri: homeLogo}}/> : null }
-                <Text>{homeTeam}</Text>
+                { awayLogo ? <Image style={styles.teamIcon} source={{uri: awayLogo}}/> : null }
+                <Text>{awayTeam}</Text>
             </ClearView>
         </ClearView>
     );
