@@ -52,6 +52,7 @@ const betTargetCases = {
   'CHI White' : 'Chicago White Sox',
   'CHI Cubs' : 'Chicago Cubs',
   'CHI White ' : 'Chicago White Sox',
+  'Los Angeles Clippers': 'LA Clippers',
 }
 
 const getBetTargetName = (db, name, gameId) => {
