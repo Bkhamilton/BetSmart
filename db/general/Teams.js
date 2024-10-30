@@ -22,6 +22,17 @@ export const getTeamsByLeague = async (db, leagueId) => {
   }
 };
 
+// Function to get all teams for each league by league name (joining with Leagues table)
+export const getTeamsByLeagueName = async (db, leagueName) => {
+  try {
+    const allRows = await db.getAllAsync('SELECT Teams.* FROM Teams JOIN Leagues ON Teams.leagueId = Leagues.id WHERE Leagues.leagueName = ?', [leagueName]);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting all teams:', error);
+    throw error;
+  }
+};
+
 // Function to get team IDs by team names
 export const getTeamIds = async (db, teamNames) => {
   try {
