@@ -1,9 +1,11 @@
 import { getTeamsByLeagueName } from '@/db/general/Teams.js';
 import { insertPlayer } from '@/db/general/Players';
+import { insertBetTarget } from '@/db/bet-general/BetTargets';
 
 const teamNameMapping = {
     "LA Clippers": "Los_Angeles_Clippers",
     "Washington Football Team": "Washington_Commanders",
+    "Arizona Coyotes": "Utah_Hockey_Club",
     // Add more mappings here if needed
 };
 
@@ -32,15 +34,22 @@ export async function displayTeamInfo() {
 
 // Functin to fetch the players from the API and store it in the SQLite DB
 export const fetchAndUpdateRoster = async (db) => {
-    const teams = await getTeamsByLeagueName(db, "NBA");
+    const teams = await getTeamsByLeagueName(db, "MLB");
     for (const team of teams) {
         // Get the players on the team
         const playerInfo = await getPlayerInfo(team.teamName);
-        playerInfo.players.forEach(player => {
+        if (!playerInfo.player) {
+            console.log(`No players found for ${team.teamName}`);
+            //break and end for testing purposes
+            continue;
+        }
+        playerInfo.player.forEach(player => {
             // Update the player info in the SQLite DB
+            if (player.strPosition === 'Manager') return;
             insertPlayer(db, player.strPlayer, player.strPosition, player.strNumber, player.strCutout, team.id);
         });
+        console.log(`Players for ${team.teamName} updated`);
         // Loop through the players and store their info in the SQLite DB
     }
-    console.log('NBA Rosters updated');
+    console.log('MLB Bet Targets updated');
 };
