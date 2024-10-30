@@ -30,13 +30,19 @@ export default function BankReview({ transactions, addBookie }) {
                             <Text style={{ fontSize: 12, fontWeight: '600' }}>+$50</Text>
                         </ClearView>
                     </ClearView>
-                    <ClearView style={styles.transactionContainer}>
-                        <Text style={styles.headerText}>Deposits</Text>
-                        <Text style={{ fontSize: 20, fontWeight: '600' }}>${monthlyDeposits}</Text>
-                    </ClearView>
-                    <ClearView style={styles.transactionContainer}>
-                        <Text style={styles.headerText}>Withdrawals</Text>
-                        <Text style={{ fontSize: 20, fontWeight: '600' }}>${monthlyWithdrawals}</Text>
+                    <ClearView style={{ flex: 0.7, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <ClearView style={styles.transactionContainer}>
+                            <Text style={styles.headerText}>Deposits</Text>
+                            <Text style={{ fontSize: 20, fontWeight: '600', paddingVertical: 4 }}>${monthlyDeposits}</Text>
+                        </ClearView>
+                        <ClearView style={styles.transactionContainer}>
+                            <Text style={styles.headerText}>Withdrawals</Text>
+                            <Text style={{ fontSize: 20, fontWeight: '600', paddingVertical: 4 }}>${monthlyWithdrawals}</Text>
+                        </ClearView>
+                        <ClearView style={{ flex: 0.2, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={styles.headerText}>Diff.</Text>
+                            <Text style={{ fontSize: 18, fontWeight: '600', paddingVertical: 4 }}>${monthlyDeposits - monthlyWithdrawals}</Text>
+                        </ClearView>
                     </ClearView>
                 </ClearView>
                 <ClearView style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 4, paddingBottom: 2 }}>
@@ -81,7 +87,7 @@ export default function BankReview({ transactions, addBookie }) {
         fontWeight: '500',
     },
     transactionContainer: {
-        flex: 0.35,
+        flex: 0.4,
         justifyContent: 'center',
         alignItems: 'center',
     },
