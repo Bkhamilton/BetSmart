@@ -7,6 +7,17 @@ export default function BankManagement({ streak }) {
 
     const { grayBackground, grayBorder, iconColor } = useTheme();
 
+    // component purpose is to display Insights based on Bank Management
+
+    // streak prop determines whether user is 'Hot' or 'Cold'
+
+    // if user is 'Hot', then encourage them to withdraw some of their winnings if they have a tendency to bet it all
+
+    // if user is 'Cold', then warn them that they should limit the amount that they deposit, and remind them of their monthly deposits
+
+    // if user is 'Neutral', then display total amount deposited and withdrawn in the last 7 days, and remind them to manage spending
+    // 'manage spending' means understanding a user's limits and encouraging them to stay within those limits
+
     return (
         <ClearView style={styles.container}>
             <View style={{ paddingBottom: 8, paddingLeft: 20 }}>
