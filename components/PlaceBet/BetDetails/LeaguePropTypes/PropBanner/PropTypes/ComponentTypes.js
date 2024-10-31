@@ -114,7 +114,7 @@ export const ToRecordValueComponent = ({ value, odds, team, select }) => {
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
                     <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
-                    <Image style={styles.teamIcon} source={{ uri: team.logo }} />
+                    { team.logo !== '' ? <Image style={styles.teamIcon} source={{ uri: team.logo }} /> : null }
                 </View>
                 <View style={styles.playerContainer}>
                     <Text style={{ fontWeight: '400', fontSize: 13, }}>{team.name}</Text>
@@ -181,7 +181,7 @@ export const MainLineDisplay = ({ stat, bookie, odds1, odds2, homeTeam, awayTeam
         <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Away Team Logo */}
-                <Image style={styles.logoIcon} source={{ uri: awayTeam.logo }} />
+                { awayTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: awayTeam.logo }} /> : null }
                 {/* Away Team Odds */}
                 <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds2}</Text>
@@ -193,7 +193,7 @@ export const MainLineDisplay = ({ stat, bookie, odds1, odds2, homeTeam, awayTeam
                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds1}</Text>
                 </TouchableOpacity>       
                 {/* Home Team Logo */}
-                <Image style={styles.logoIcon} source={{ uri: homeTeam.logo }} />           
+                { homeTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: homeTeam.logo }} /> : null }       
             </View>
         </View>
     );
@@ -207,7 +207,7 @@ export const MainLineValueDisplay = ({ stat, value, bookie, odds1, odds2, homeTe
         <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Away Team Logo */}
-                <Image style={styles.logoIcon} source={{ uri: awayTeam.logo }} />
+                { awayTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: awayTeam.logo }} /> : null }
                 {/* Away Team Odds */}
                 <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds2}</Text>
@@ -221,7 +221,7 @@ export const MainLineValueDisplay = ({ stat, value, bookie, odds1, odds2, homeTe
                     <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8}}>{value}</Text>
                 </TouchableOpacity>       
                 {/* Home Team Logo */}
-                <Image style={styles.logoIcon} source={{ uri: homeTeam.logo }} />           
+                { homeTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: homeTeam.logo }} /> : null }
             </View>
         </View>
     );
