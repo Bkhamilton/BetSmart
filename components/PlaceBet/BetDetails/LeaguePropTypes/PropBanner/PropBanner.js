@@ -10,7 +10,7 @@ import useTheme from '@/hooks/useTheme';
 
 import propBannerMapping from '@/utils/propBannerMapping';
 
-export default function PropBanner({ title, type, player, stat, data }) {
+export default function PropBanner({ title, type, player, stat, data, isOpen }) {
 
     const { league, currentGame } = useContext(BetContext);
 
@@ -23,7 +23,7 @@ export default function PropBanner({ title, type, player, stat, data }) {
     const [homeLogo, setHomeLogo] = useState('');
     const [awayLogo, setAwayLogo] = useState('');
 
-    const [detailsOpen, setDetailsOpen] = useState(false);
+    const [detailsOpen, setDetailsOpen] = useState(isOpen || false);
 
     const handlePress = () => {
         setDetailsOpen(!detailsOpen);
