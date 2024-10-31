@@ -1,10 +1,18 @@
 // app/contexts/BetContext/BetContext.tsx
-import React, { createContext, ReactNode, useEffect } from 'react';
+import React, { createContext, ReactNode, useEffect, useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { collection, getDocs } from "firebase/firestore"; 
 
 interface FirebaseContextValue {
     cloudDB?: any;
+}
+
+interface League {
+    id: number;
+    leagueName: string;
+    sport: string;
+    description: string;
 }
 
 export const FirebaseContext = createContext<FirebaseContextValue>({
@@ -29,9 +37,23 @@ export const FirebaseContextProvider = ({ children }: FirebaseContextValueProvid
       
     const app = initializeApp(firebaseConfig);
     const cloudDB = getFirestore(app);
-    
+
+    const [leagues, setLeagues] = useState<League[]>([]);
+
+    useEffect(() => {
+        const leaguesQuery = getDocs(collection(cloudDB, "Leagues"));
+        leaguesQuery.then((querySnapshot) => {
+            const leaguesData: League[] = [];
+            querySnapshot.forEach((doc) => {
+                leaguesData.push(doc.data() as League);
+            });
+            setLeagues(leaguesData.sort((a, b) => a.id - b.id));
+        });
+    }, [cloudDB]);
+
     const value = {
         cloudDB,
+        leagues,
     };
 
     return (
