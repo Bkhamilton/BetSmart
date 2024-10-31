@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, FlatList, Image } from 'react-native';
 import { Text, View, TouchableOpacity, ClearView } from '@/components/Themed';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { DBContext } from '@/contexts/DBContext';
+import { FirebaseContext } from '@/contexts/FirebaseContext';
 import useTheme from '@/hooks/useTheme';
 
 import { leagueImages } from '@/constants/leagueConstants';
@@ -10,7 +10,7 @@ import { leagueImages } from '@/constants/leagueConstants';
 export default function SportSlider({ selectLeague }) {
 
     const { league } = useContext(BetContext);
-    const { leagues } = useContext(DBContext);
+    const { leagues } = useContext(FirebaseContext);
 
     const { text, backgroundColor, grayBackground, grayBorder } = useTheme();
 

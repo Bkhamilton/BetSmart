@@ -3,11 +3,11 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
-import { DBContext } from '@/contexts/DBContext';
+import { FirebaseContext } from '@/contexts/FirebaseContext';
 
 export default function MainButtons({ selectLeague, openModal }) {
 
-    const { leagues } = useContext(DBContext);
+    const { leagues } = useContext(FirebaseContext);
 
     const { iconColor, grayBackground, grayBorder } = useTheme();
 
