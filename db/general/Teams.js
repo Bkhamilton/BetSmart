@@ -46,6 +46,17 @@ export const getTeamIds = async (db, teamNames) => {
   }
 };
 
+// Function to get team ID by team name
+export const getTeamId = async (db, teamName) => {
+  try {
+    const team = await db.getAllAsync('SELECT id FROM Teams WHERE teamName = ?', [teamName]);
+    return team[0];
+  } catch (error) {
+    console.error('Error getting team ID:', error);
+    throw error;
+  }
+};
+
 // Function to get a team
 export const getTeam = async (db, teamId) => {
   try {

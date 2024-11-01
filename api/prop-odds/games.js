@@ -1,6 +1,6 @@
 import secrets from "@/secrets";
 import { insertGame, getTodaysGameswithNames } from "@/db/general/Games";
-import { getTeamIds } from "@/db/general/Teams";
+import { getTeamIds, getTeamId } from "@/db/general/Teams";
 import { getCurrentSeason, getSeasonByDate } from "@/db/general/Seasons";
 import { getLeagueByName, getActiveLeagues } from "@/db/general/Leagues";
 import { insertFetchHistory, getLastFetchedByLeague, leagueFetchedOnDate } from "@/db/api/FetchHistory";
@@ -41,9 +41,15 @@ export const addGameToDB = async (db, game, sport) => {
 
   try {
     const { game_id, start_timestamp, home_team, away_team } = game;
+    /*
     const teamIds = await getTeamIds(db, [home_team, away_team]);
     const homeTeamId = teamIds[0].id;
     const awayTeamId = teamIds[1].id;
+    */
+    const homeTeam = await getTeamId(db, home_team);
+    const homeTeamId = homeTeam.id;
+    const awayTeam = await getTeamId(db, away_team);
+    const awayTeamId = awayTeam.id;
     const league = await getLeagueByName(db, sport);
     const date = getDate(start_timestamp);
     const curSeason = await getSeasonByDate(db, league.id, date);
