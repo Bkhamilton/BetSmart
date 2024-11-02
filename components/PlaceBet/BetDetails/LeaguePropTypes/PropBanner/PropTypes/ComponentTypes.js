@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View, TextInput } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
@@ -53,28 +53,6 @@ export const MainPlayerComponent = ({ player, logo, value, odds1, odds2 }) => {
     );
 }
 
-export const ToAchieveComponent = ({ player, logo, odds }) => {
-
-    const { grayBackground, grayBorder } = useTheme();
-
-    return (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
-                    <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
-                    <Image style={styles.teamIcon} source={{ uri: logo }} />
-                </View>
-                <Text style={{ fontWeight: '400', fontSize: 16, }}>{player}</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity style={styles.valueContainer}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds}</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-    );
-}
-
 export const ToRecordComponent = ({ player, logo, odds, team }) => {
 
     const { grayBackground, grayBorder } = useTheme();
@@ -102,12 +80,16 @@ export const ToRecordComponent = ({ player, logo, odds, team }) => {
     );
 }
 
-export const ToRecordValueComponent = ({ value, odds, team, select }) => {
+export const ToRecordValueComponent = ({ odds, values, team, select }) => {
 
     const { grayBackground, grayBorder } = useTheme();
 
     const [oddsVal, setOddsVal] = useState(odds);
-    const [val, setVal] = useState(value.toString());
+    const [val, setVal] = useState(values[0]);
+
+    useEffect(() => {
+        setVal(values[0]);
+    }, [values]);
 
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 }}>
