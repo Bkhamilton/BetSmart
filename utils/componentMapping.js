@@ -32,7 +32,7 @@ import PeriodLines from '../components/PlaceBet/BetDetails/LeaguePropTypes/Perio
 import TDScorer from '../components/PlaceBet/BetDetails/LeaguePropTypes/TDScorer';
 import PassProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/PassProps';
 import RushProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/RushProps';
-import RecieveProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/RecieveProps';
+import ReceiveProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/ReceiveProps';
 import DefenseProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/DefenseProps';
 import SpecTeamProps from '../components/PlaceBet/BetDetails/LeaguePropTypes/SpecTeamProps';
 import Moneyline from '../components/PlaceBet/BetDetails/LeaguePropTypes/Moneyline';
@@ -75,7 +75,7 @@ const componentMapping = {
     'td-scorer': TDScorer,
     'pass-props': PassProps,
     'rush-props': RushProps,
-    'recieve-props': RecieveProps,
+    'receiving-props': ReceiveProps,
     'defense-props': DefenseProps,
     'spec-team-props': SpecTeamProps,
     'moneyline': Moneyline,

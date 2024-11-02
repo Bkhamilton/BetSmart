@@ -6,19 +6,19 @@ import { BetContext } from '@/contexts/BetContext/BetContext';
 import PropBanner from './PropBanner/PropBanner';
 import useTheme from '@/hooks/useTheme';
 
-export default function RecieveProps() {
+export default function ReceiveProps() {
 
     const { league, currentGame } = useContext(BetContext);
 
     const { iconColor } = useTheme();
 
-    const title = 'Run Props';
+    const title = 'Receive Props';
 
     return (
         <>
-            <PropBanner title={"To Record 50 Rec yds"} type={"To Achieve"}/>
-            <PropBanner title={"To Record 100 Rec yds"} type={"To Achieve"}/>
-            <PropBanner title={"To Record 150 Rec yds"} type={"To Achieve"}/>
+            <PropBanner title={"To Record 50 Rec yds"}/>
+            <PropBanner title={"To Record 100 Rec yds"}/>
+            <PropBanner title={"To Record 150 Rec yds"}/>
         </>
     );
 }
