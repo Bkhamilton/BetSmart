@@ -22,6 +22,12 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
 
     const stealsValues = ['1', '2', '3', '4']
 
+    const passYardsValues = ['150', '180', '200', '220', '250']
+
+    const rushYardsValues = ['50', '75', '100', '125', '150']
+
+    const recYardsValues = ['50', '75', '100', '125', '150']
+
     const getValues = (stat) => {
         switch (stat) {
             case 'Player Points':
@@ -34,6 +40,12 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
                 return threesValues;
             case 'Player Defense':
                 return stealsValues;
+            case 'Player Pass Yards':
+                return passYardsValues;
+            case 'Player Rush Yards':
+                return rushYardsValues;
+            case 'Player Rec Yards':
+                return recYardsValues;
             default:
                 return pointValues;
         }
