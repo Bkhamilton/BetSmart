@@ -48,12 +48,6 @@ export default function PropBanner({ title, type, player, stat, data, isOpen }) 
         }
     };
 
-    const getData = () => {
-        if ( stat ) {
-            // Get market Data based on stat and targets involved
-        }
-    }
-
     const homeTeam = {
         name: homeTeamName,
         abv: homeTeamAbv,
