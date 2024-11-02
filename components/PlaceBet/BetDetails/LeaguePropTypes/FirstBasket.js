@@ -16,7 +16,7 @@ export default function FirstBasket() {
 
     return (
         <View style={styles.container}>
-            <PropBanner title={title} type={"To Achieve"}/>
+            <PropBanner title={title} type={"To Record"}/>
         </View>
     );
 }

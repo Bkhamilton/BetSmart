@@ -16,7 +16,7 @@ export default function TDScorer() {
 
     return (
         <View style={styles.container}>
-            <PropBanner title={title} type={"To Achieve"}/>
+            <PropBanner title={title} type={"To Record"}/>
         </View>
     );
 }

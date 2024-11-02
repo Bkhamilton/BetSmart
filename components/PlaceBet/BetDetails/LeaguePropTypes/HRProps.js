@@ -14,8 +14,8 @@ export default function HRProps() {
 
     return (
         <>
-            <PropBanner title={"To Hit A Home Run"} type={"To Achieve"}/>
-            <PropBanner title={"To Hit 2+ Home Runs"} type={"To Achieve"}/>
+            <PropBanner title={"To Hit A Home Run"} type={"To Record"}/>
+            <PropBanner title={"To Hit 2+ Home Runs"} type={"To Record"}/>
         </>
     );
 }

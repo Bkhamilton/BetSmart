@@ -16,8 +16,8 @@ export default function RushProps() {
 
     return (
         <>
-            <PropBanner title={"To Rush for 150yds"} type={"To Achieve"}/>
-            <PropBanner title={"To Rush for 200yds"} type={"To Achieve"}/>
+            <PropBanner title={"To Rush for 150yds"} type={"To Record"}/>
+            <PropBanner title={"To Rush for 200yds"} type={"To Record"}/>
         </>
     );
 }
