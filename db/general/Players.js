@@ -33,6 +33,17 @@ export const getPlayersByTeam = async (db, teamId) => {
     }
 };
 
+// Function to get all players for a team by team name
+export const getPlayersByTeamName = async (db, teamName) => {
+    try {
+        const players = await db.getAllAsync('SELECT * FROM Players WHERE teamId = (SELECT id FROM Teams WHERE teamName = ?)', [teamName]);
+        return players;
+    } catch (error) {
+        console.error('Error in getPlayersByTeamName:', error);
+        throw error;
+    }
+}
+
 // Function to insert a player
 export const insertPlayer = async (db, name, position, number, image, teamId) => {
     try {
