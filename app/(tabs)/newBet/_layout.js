@@ -1,10 +1,11 @@
 import { Stack } from 'expo-router';
 import { BetContextProvider } from '@/contexts/BetContext/BetContext';
-import { DBContextProvider } from '@/contexts/DBContext';
+import { ModalContextProvider } from '@/contexts/BetContext/ModalContext';
 
 export default function NewBetLayout() {
   return (
     <BetContextProvider>
+      <ModalContextProvider>
         <Stack>
           <Stack.Screen
             name="selectGame"
@@ -20,6 +21,7 @@ export default function NewBetLayout() {
             }}
           />
         </Stack>
+      </ModalContextProvider>
     </BetContextProvider>
   );
 }
