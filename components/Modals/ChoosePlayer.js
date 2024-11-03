@@ -16,7 +16,7 @@ export default function ChoosePlayer() {
                 style={[styles.bookieButton, { backgroundColor: grayBackground, borderColor: grayBorder }]}
                 onPress={() => selectPlayer(player)}
             >
-                <Image source={{ uri: player.image }} style={styles.bookieIcon} />
+                <Image source={{ uri: player.image }} style={[styles.bookieIcon, { backgroundColor: grayBorder, borderColor: grayBorder }]} />
                 <Text>{player.name}</Text>
             </TouchableOpacity>
         );
@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     bookieIcon: {
         width: 40,
         height: 40,
-        borderRadius: 8,
+        borderRadius: 20,
+        borderWidth: 1,
     }
 });
