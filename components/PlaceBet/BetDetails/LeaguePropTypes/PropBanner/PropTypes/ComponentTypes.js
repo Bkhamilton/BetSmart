@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View, TextInput } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { bookieImages } from '@/constants/bookieConstants';
+import { ModalContext } from '@/contexts/BetContext/ModalContext';
 
 export const AltPlayerComponent = ({ player, logo, number, stat, odds }) => {
 
@@ -82,14 +83,25 @@ export const ToRecordComponent = ({ player, logo, odds, team }) => {
 
 export const ToRecordValueComponent = ({ odds, values, team, select }) => {
 
+    const { openPlayerModal, selectedPlayer, selectedValue } = useContext(ModalContext);
+
     const { grayBackground, grayBorder } = useTheme();
 
     const [oddsVal, setOddsVal] = useState(odds);
-    const [val, setVal] = useState(values[0]);
+    const [val, setVal] = useState(selectedValue ? selectedValue : values[0]);
+
+    const [target, setTarget] = useState(selectedPlayer ? selectedPlayer.name : team.name);
 
     useEffect(() => {
         setVal(values[0]);
+        setTarget(selectedPlayer ? selectedPlayer.name : team.name);
     }, [values]);
+
+    useEffect(() => {
+        if (selectedPlayer) {
+            setTarget(selectedPlayer.name);
+        }
+    }, [selectedPlayer]);
 
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 }}>
@@ -98,9 +110,12 @@ export const ToRecordValueComponent = ({ odds, values, team, select }) => {
                     <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
                     { team.logo !== '' ? <Image style={styles.teamIcon} source={{ uri: team.logo }} /> : null }
                 </View>
-                <View style={styles.playerContainer}>
-                    <Text style={{ fontWeight: '400', fontSize: 13, }}>{team.name}</Text>
-                </View>
+                <TouchableOpacity 
+                    style={styles.playerContainer}
+                    onPress={() => openPlayerModal(team.name)}
+                >
+                    <Text style={{ fontWeight: '400', fontSize: 13, }}>{target}</Text>
+                </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TextInput
