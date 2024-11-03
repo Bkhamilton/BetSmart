@@ -140,7 +140,6 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
   const confirmBetSlip = async (db: any) => {
     try {
       // Create BetSlip in DB
-      console.log(JSON.stringify(betSlip, null, 2));
 
       const betSlipFormat = await getBetFormat(db, betSlip.type);
       const betSlipDate = betSlip.date.toISOString();
