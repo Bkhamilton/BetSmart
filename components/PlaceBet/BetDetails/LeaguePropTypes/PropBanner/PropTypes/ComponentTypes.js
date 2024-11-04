@@ -83,25 +83,16 @@ export const ToRecordComponent = ({ player, logo, odds, team }) => {
 
 export const ToRecordValueComponent = ({ odds, values, team, select }) => {
 
-    const { openPlayerModal, selectedPlayer, selectedValue } = useContext(ModalContext);
+    const { openPlayerModal, selectedValue } = useContext(ModalContext);
 
     const { grayBackground, grayBorder } = useTheme();
 
     const [oddsVal, setOddsVal] = useState(odds);
     const [val, setVal] = useState(selectedValue ? selectedValue : values[0]);
 
-    const [target, setTarget] = useState(selectedPlayer ? selectedPlayer.name : team.name);
-
     useEffect(() => {
         setVal(values[0]);
-        setTarget(selectedPlayer ? selectedPlayer.name : team.name);
     }, [values]);
-
-    useEffect(() => {
-        if (selectedPlayer) {
-            setTarget(selectedPlayer.name);
-        }
-    }, [selectedPlayer]);
 
     return (
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 }}>
@@ -114,7 +105,7 @@ export const ToRecordValueComponent = ({ odds, values, team, select }) => {
                     style={styles.playerContainer}
                     onPress={() => openPlayerModal(team.name)}
                 >
-                    <Text style={{ fontWeight: '400', fontSize: 13, }}>{target}</Text>
+                    <Text style={{ fontWeight: '400', fontSize: 13, }}>{team.name}</Text>
                 </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>

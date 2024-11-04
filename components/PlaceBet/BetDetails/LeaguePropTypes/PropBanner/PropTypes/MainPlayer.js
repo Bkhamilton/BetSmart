@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ClearView } from '@/components/Themed';
 import { ToRecordValueComponent } from './ComponentTypes';
@@ -51,6 +51,9 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
         }
     }
 
+    const [homeTarget, setHomeTarget] = useState(null);
+    const [awayTarget, setAwayTarget] = useState(null);
+
     return (
         <View style={{ width: '100%', paddingBottom: 4 }}>
             <View style={[styles.container, { backgroundColor: grayBackground }]}>
@@ -62,8 +65,8 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
                 </ClearView>
             </View>
             <View style={{ paddingHorizontal: 8 }}>
-                <ToRecordValueComponent team={awayTeam} odds={'-113'} values={getValues(stat)} select={onSelectProp}/>
-                <ToRecordValueComponent team={homeTeam} odds={'+108'} values={getValues(stat)} select={onSelectProp}/>
+                <ToRecordValueComponent team={awayTeam} odds={'-113'} values={getValues(stat)} select={onSelectProp} target={awayTarget}/>
+                <ToRecordValueComponent team={homeTeam} odds={'+108'} values={getValues(stat)} select={onSelectProp} target={homeTarget}/>
             </View>
         </View>
     )
