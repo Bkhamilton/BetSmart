@@ -1,4 +1,11 @@
-import secrets from "../../secrets";
+import secrets from "@/secrets";
+import { getLeagueByName } from "@/db/general/Leagues";
+import { getSeasonByDate } from "@/db/general/Seasons";
+import { getTeamId } from "@/db/general/Teams";
+import { insertGame, getTodaysGameswithNames } from "@/db/general/Games";
+import { insertBetTarget, getBetTargetId } from "@/db/bet-general/BetTargets";
+import { insertBetMarket } from "@/db/api/BetMarkets";
+import { getBookieId } from "@/db/general/Bookies";
 // Handling array of objects
 /*
 Main object fields: 
@@ -50,6 +57,18 @@ ADD LATER
     EPL: 'soccer_epl'
 */
 
+/*
+DB Important Info:
+    Insert BetMarket => (db, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
+*/
+
+const bookieMapping = {
+    'DraftKings': 'draftkings',
+    'FanDuel': 'fanduel',
+    'BetMGM': 'betmgm',
+    'Caesars': 'williamhill_us',
+}
+
 const leagueMapping = {
     'NBA': 'basketball_nba',
     'NFL': 'americanfootball_nfl',
@@ -88,25 +107,50 @@ export const getBig3Markets = async (league) => {
     }
 }
 
-const addMarketToDB = async (db, market, bookId, gameId) => {
+export const getMarketType = (market) => {
+    switch (market) {
+        case 'h2h':
+            return 'moneyline';
+        case 'spreads':
+            return 'spread';
+        case 'totals':
+            return 'totals';
+        default:
+            return '';
+    }
+}
+
+const addOutcomeToDB = async (db, outcome, last_update, market, bookId, gameId, betTarget) => {
+    try {
+        const { name, price, point = null } = outcome;
+        // Insert BetMarket => (db, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
+        const marketType = getMarketType(market);
+        const overUnder = name === 'Over' || name === 'Under' ? name : '';
+        const value = name === 'Over' || name === 'Under' ? point : name;
+        const betTargetId = name === 'Over' || name === 'Under' ? betTarget : await getBetTargetId(db, name);
+        await insertBetMarket(db, gameId, marketType, last_update, value, price, overUnder, betTargetId, bookId);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+const handleMarket = async (db, market, bookId, gameId, betTarget) => {
     try {
         const { key, last_update, outcomes } = market;
-        await insertMarket(db, key, last_update, bookId, gameId);
         for (let outcome of outcomes) {
-            await insertOutcome(db, outcome.name, outcome.price, outcome.point, key, bookId, gameId);
+            await addOutcomeToDB(db, outcome, last_update, key, bookId, gameId, betTarget);
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-const addBookToDB = async (db, book, gameId) => {
+const handleBookie = async (db, book, gameId, betTarget) => {
     try {
         const { key, title, last_update, markets } = book;
-        // if key is not in valid list of bookies, return
-        await insertBook(db, key, title, last_update, gameId);
+        const bookieId = getBookieId(db, title);
         for (let market of markets) {
-            await addMarketToDB(db, market, key, gameId);
+            await handleMarket(db, market, bookieId, gameId, betTarget);
         }
     } catch (error) {
         console.error(error);
@@ -123,9 +167,12 @@ const addGameToDB = async (db, game, league) => {
         const awayTeam = await getTeamId(db, away_team);
         const awayTeamId = awayTeam.id;
         await insertGame(db, id, curSeason.id, date, commence_time, homeTeamId, awayTeamId);
-        await insertBetTarget(db, 'Game', `${away_team} vs ${home_team}`, null, game.id);
+        console.log('Inserted ' + away_team + ' vs ' + home_team + ' into Games');
+        const betTarget = await insertBetTarget(db, 'Game', `${away_team} vs ${home_team}`, null, id);
         for (let book of bookmakers) {
-            await addBookToDB(db, book, game.id);
+            // if bookie is not in valid list of bookies, return
+            if (!bookieMapping[book.title]) return;
+            await handleBookie(db, book, game.id, betTarget.id);
         }
     } catch (error) {
         console.error(error);
@@ -144,3 +191,50 @@ export const fetchMarketData = async (db, league) => {
         console.error(error);
     }
 }
+
+// Function to get sport data
+const getLeagueData = async (db, league, curLeague, date, curSeason) => {
+    const games = await getTodaysGameswithNames(db, date, curSeason.id);
+    return {
+        league,
+        data: {
+            league: curLeague.leagueName,
+            season: curSeason.description,
+            seasonType: curSeason.seasonType,
+            date: date,
+            games: games
+        }
+    };
+};
+
+export const retrieveMarketData = async (db, leagues) => {
+    try {
+        let data = [];
+        for (let league of leagues) {
+            const today = new Date();
+            const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+            const curLeague = await getLeagueByName(db, league);
+            const curSeason = await getSeasonByDate(db, curLeague.id, date);
+            const value = await getTodaysGameswithNames(db, date, curSeason.id);
+            if (value.length > 0) {
+                data.push({ 
+                    league, 
+                    data: { 
+                        league: curLeague.leagueName, 
+                        season: curSeason.description, 
+                        seasonType: curSeason.seasonType, 
+                        date: date, 
+                        games: value 
+                    } 
+                });
+            } else {
+                await fetchMarketData(db, curLeague);
+                data.push(await getLeagueData(db, league, curLeague, date, curSeason));
+            }
+        }
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+  };
+  
