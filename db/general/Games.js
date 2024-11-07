@@ -58,10 +58,20 @@ export const getTodaysGameswithNames = async (db, date, seasonId) => {
 // Function to get a game
 export const getGame = async (db, gameId) => {
     try {
-        const game = await db.getAsync('SELECT * FROM Games WHERE id = ?', [gameId]);
+        const game = await db.getAllAsync('SELECT * FROM Games WHERE id = ?', [gameId]);
         return game;
     } catch (error) {
         console.error('Error in getGame:', error);
+        throw error;
+    }
+};
+
+export const getGameByGameId = async (db, gameId) => {
+    try {
+        const game = await db.getAllAsync('SELECT * FROM Games WHERE gameId = ?', [gameId]);
+        return game[0];
+    } catch (error) {
+        console.error('Error in getGameByGameId:', error);
         throw error;
     }
 };
