@@ -40,6 +40,15 @@ export const getBookieByName = async (db, name) => {
     }
 };
 
+export const getBookieId = async (db, name) => {
+    try {
+        const bookie = await db.getAllAsync('SELECT id FROM Bookies WHERE name = ?', [name]);
+        return bookie[0];
+    } catch (error) {
+        console.error('Error getting a bookie by name:', error);
+    }
+};
+
 // Function to insert a bookie
 export const insertBookie = async (db, name, description) => {
     try {
