@@ -43,7 +43,7 @@ export const getBookieByName = async (db, name) => {
 export const getBookieId = async (db, name) => {
     try {
         const bookie = await db.getAllAsync('SELECT id FROM Bookies WHERE name = ?', [name]);
-        return bookie[0];
+        return bookie[0].id;
     } catch (error) {
         console.error('Error getting a bookie by name:', error);
     }
