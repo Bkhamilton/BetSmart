@@ -49,6 +49,28 @@ export const getLeagueByName = async (db, leagueName) => {
   }
 };
 
+// Function to get the league from a gameId (Joined with Seasons Table and Leagues Table)
+export const getLeagueByGameId = async (db, gameId) => {
+  try {
+    const league = await db.getAllAsync(`
+      SELECT 
+        Leagues.leagueName 
+      FROM 
+        Leagues 
+      JOIN 
+        Seasons ON Leagues.id = Seasons.leagueId 
+      JOIN 
+        Games ON Seasons.id = Games.seasonId 
+      WHERE 
+        Games.gameId = ?
+    `, [gameId]);
+    return league[0];
+  } catch (error) {
+    console.error('Error getting league by gameId:', error);
+    throw error;
+  }
+};
+
 // Function to insert a league
 export const insertLeague = async (db, leagueName, sport, description) => {
   try {
