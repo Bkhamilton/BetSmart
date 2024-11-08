@@ -46,7 +46,7 @@ export default function SelectGameScreen() {
     selectLeague,
   } = useHookSelectGame();
 
-  const curLeagueData = allSportsData?.find(sportData => sportData.sport === league?.leagueName);
+  const curLeagueData = allSportsData?.find(sportData => sportData.league === league?.leagueName);
   const curLeagueGames = curLeagueData ? curLeagueData.data : [];
 
   return (
