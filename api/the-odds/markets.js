@@ -100,7 +100,7 @@ export const getBig3Markets = async (db, league) => {
     }
 }
 
-export const getMarketType = (market) => {
+const getMarketType = (market) => {
     switch (market) {
         case 'h2h':
             return 'moneyline';
@@ -113,6 +113,14 @@ export const getMarketType = (market) => {
     }
 }
 
+const getOdds = (odds) => {
+    if (odds > 0) {
+      return '+' + odds;
+    } else {
+      return odds.toString();
+    }
+}
+
 const addOutcomeToDB = async (db, outcome, last_update, market, bookId, gameId, betTarget) => {
     try {
         const { name, price, point = null } = outcome;
@@ -121,11 +129,12 @@ const addOutcomeToDB = async (db, outcome, last_update, market, bookId, gameId, 
         const overUnder = name === 'Over' || name === 'Under' ? name : '';
         const value = market === 'h2h' ? name : point;
         const betTargetId = name === 'Over' || name === 'Under' ? betTarget : await getBetTargetIdByName(db, name);
+        const odds = getOdds(price);
         if (!betTargetId) {
             console.log('No betTargetId found for ' + name);
             return;
         }
-        await insertBetMarket(db, gameId, marketType, last_update, value, price, overUnder, betTargetId, bookId);
+        await insertBetMarket(db, gameId, marketType, last_update, value, odds, overUnder, betTargetId, bookId);
     } catch (error) {
         console.error(error);
     }
