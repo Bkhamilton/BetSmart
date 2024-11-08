@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
-import { retrieveAllGames } from '@/api/prop-odds/games.js';
+import { retrieveAllGames } from '@/api/the-odds/markets';
 
 const useHookSelectGame = () => {
 
