@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { retrieveBig3Markets } from '@/api/prop-odds/markets';
+import { retrieveBig3Markets } from '@/api/the-odds/markets';
 import { useSQLiteContext } from 'expo-sqlite';
 import useTheme from '@/hooks/useTheme';
 
@@ -160,7 +160,7 @@ export default function GameLines() {
             }     
     
             // Handle total_over_under marketType
-            if (marketType === 'total_over_under') {
+            if (marketType === 'totals') {
                 // Sort the data by value
                 displayData.sort((a, b) => a.value - b.value);
     
@@ -190,20 +190,20 @@ export default function GameLines() {
     
       
         return (
-          <View>
-            {displayData.reverse().map((line) => (
-              <BettingLine
-                key={line.id}
-                type={'Main'}
-                target={line.betTargetId} // Assuming you want to use betTargetId as target
-                stat={line.marketType}
-                value={line.value.toString()}
-                overUnder={line.overUnder}
-                odds={line.odds}
-                bookieId={line.bookieId}
-              />
-            ))}
-          </View>
+            <View>
+                {displayData.reverse().map((line) => (
+                    <BettingLine
+                        key={line.id}
+                        type={'Main'}
+                        target={line.betTargetId} // Assuming you want to use betTargetId as target
+                        stat={line.marketType}
+                        value={line.value.toString()}
+                        overUnder={line.overUnder}
+                        odds={line.odds}
+                        bookieId={line.bookieId}
+                    />
+                ))}
+            </View>
         );
     }
 
@@ -211,7 +211,7 @@ export default function GameLines() {
         <View style={styles.container}>
             <DisplayMarketLines marketProps={marketProps} marketType="moneyline" />
             <DisplayMarketLines marketProps={marketProps} marketType="spread" />
-            <DisplayMarketLines marketProps={marketProps} marketType="total_over_under" />
+            <DisplayMarketLines marketProps={marketProps} marketType="totals" />
         </View>
     );
 }
