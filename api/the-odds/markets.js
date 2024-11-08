@@ -1,11 +1,13 @@
 import secrets from "@/secrets";
-import { getLeagueByName, getLeagueByGameId } from "@/db/general/Leagues";
+import { getLeagueByName, getLeagueByGameId, getActiveLeagues, getActiveLeagueNames } from "@/db/general/Leagues";
 import { getSeasonByDate } from "@/db/general/Seasons";
 import { getTeamId } from "@/db/general/Teams";
 import { insertGame, getTodaysGameswithNames, getGameByGameId } from "@/db/general/Games";
 import { insertBetTarget, getBetTargetId, getBetTargetsByGameId, getBetTargetIdByName } from "@/db/bet-general/BetTargets";
 import { insertBetMarket, getBetMarketByGame } from "@/db/api/BetMarkets";
 import { getBookieId } from "@/db/general/Bookies";
+import { insertFetchHistory, getLastFetchedByLeague, leagueFetchedOnDate } from "@/db/api/FetchHistory";
+import { insertMarketFetchHistory, marketFetchedOnDate } from '@/db/api/MarketFetchHistory';
 // Handling array of objects
 /*
 Main object fields: 
@@ -86,7 +88,7 @@ const getDate = (dateString) => {
 };
   
 
-export const getMarkets = async (league, markets) => {
+export const getMarkets = async (db, league, markets) => {
     try {
         const marketString = markets.join(',');
         const response = await fetch(`https://api.the-odds-api.com/v4/sports/${league}/odds/?apiKey=${secrets.THE_ODDS_API_KEY}&regions=us&markets=${marketString}&oddsFormat=american`);
@@ -97,10 +99,10 @@ export const getMarkets = async (league, markets) => {
     }
 }
 
-export const getBig3Markets = async (league) => {
+export const getBig3Markets = async (db, league) => {
     try {
         const markets = ['h2h', 'spreads', 'totals'];
-        const data = await getMarkets(league, markets);
+        const data = await getMarkets(db, league, markets);
         return data;
     } catch (error) {
         console.error(error)
@@ -126,10 +128,12 @@ const addOutcomeToDB = async (db, outcome, last_update, market, bookId, gameId, 
         // Insert BetMarket => (db, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
         const marketType = getMarketType(market);
         const overUnder = name === 'Over' || name === 'Under' ? name : '';
-        const value = name === 'Over' || name === 'Under' ? point : name;
+        const value = market === 'h2h' ? name : point;
         const betTargetId = name === 'Over' || name === 'Under' ? betTarget : await getBetTargetIdByName(db, name);
-        console.log('Inserting ' + gameId + ' ' + marketType + ' ' + last_update + ' ' + value + ' ' + price + ' ' + overUnder + ' ' + betTargetId + ' ' + bookId);
-        console.log(JSON.stringify(betTargetId, null, 2));
+        if (!betTargetId) {
+            console.log('No betTargetId found for ' + name);
+            return;
+        }
         await insertBetMarket(db, gameId, marketType, last_update, value, price, overUnder, betTargetId, bookId);
     } catch (error) {
         console.error(error);
@@ -142,6 +146,7 @@ const handleMarket = async (db, market, bookId, gameId, betTarget) => {
         for (let outcome of outcomes) {
             await addOutcomeToDB(db, outcome, last_update, key, bookId, gameId, betTarget);
         }
+        insertMarketFetchHistory(db, gameId, getMarketType(key), last_update);
     } catch (error) {
         console.error(error);
     }
@@ -169,8 +174,16 @@ const addGameToDB = async (db, game, league) => {
             const date = getDate(commence_time);
             const curSeason = await getSeasonByDate(db, league.id, date);
             const homeTeam = await getTeamId(db, home_team);
+            if (!homeTeam) {
+                console.log('No homeTeamId found for ' + home_team);
+                return;
+            }
             const homeTeamId = homeTeam.id;
             const awayTeam = await getTeamId(db, away_team);
+            if (!awayTeam) {
+                console.log('No awayTeamId found for ' + away_team);
+                return;
+            }
             const awayTeamId = awayTeam.id;
             await insertGame(db, id, curSeason.id, date, commence_time, homeTeamId, awayTeamId);
             console.log('Inserted ' + away_team + ' vs ' + home_team + ' into Games');
@@ -198,7 +211,7 @@ const addGameToDB = async (db, game, league) => {
 export const fetchMarketData = async (db, league) => {
     try {
         const leagueName = leagueMapping[league.leagueName];
-        const data = await getBig3Markets(leagueName);
+        const data = await getBig3Markets(db, leagueName);
         for (let game of data) {
             await addGameToDB(db, game, league);
         }
@@ -244,13 +257,48 @@ export const retrieveGameData = async (db, leagues) => {
                     } 
                 });
             } else {
-                await fetchMarketData(db, curLeague);
-                data.push(await getLeagueData(db, league, curLeague, date, curSeason));
+                const fetched = await leagueFetchedOnDate(db, curLeague.leagueName, date);
+                if (!fetched) {
+                    await fetchMarketData(db, curLeague);
+                    data.push(await getLeagueData(db, league, curLeague, date, curSeason));
+                }
             }
         }
         return data;
     } catch (error) {
         console.error(error);
+    }
+};
+
+export const retrieveGamesDate = async (db, leagues, date) => {
+    try {
+        let data = [];
+        for (let league of leagues) {
+            const curSeason = await getSeasonByDate(db, league.id, date);
+            const value = await getTodaysGameswithNames(db, date, curSeason.id);
+            if (value.length > 0) {
+                data.push(await getLeagueData(db, league.leagueName, league, date, curSeason));
+            } else {
+                const fetched = await leagueFetchedOnDate(db, league.leagueName, date);
+                if (!fetched ) {
+                    await fetchMarketData(db, league);
+                    data.push(await getLeagueData(db, league.leagueName, league, date, curSeason));
+                    insertFetchHistory(db, league.leagueName, date);
+                }
+            }
+        }
+        return data;
+    } catch (error) {
+      console.error(error);
+    }
+};
+
+export const retrieveAllGames = async (db, date) => {
+    try {
+      const leagues = await getActiveLeagues(db, date);
+      return await retrieveGamesDate(db, leagues, date);
+    } catch (error) {
+      console.error(error);
     }
 };
 
@@ -263,14 +311,16 @@ export const retrieveMarketData = async (db, gameId, markets) => {
                 // We have data!!
                 data.push({ market, data: value });
             } else {
-                // If the data is not in the DB, make sure it hasn't been fetched today
-                /*
-                await fetchMarketProps(db, gameId, market);
-                const fetchedData = await getBetMarketByGame(db, gameId, market);
-                data.push({ market, data: fetchedData });
-                */
-                const league = await getLeagueByGameId(db, gameId);
-                await fetchMarketData(db, league);
+                const today = new Date();
+                const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+                const fetched = await marketFetchedOnDate(db, market, gameId, date);
+                if (!fetched) {
+                    // If it hasn't been fetched today, fetch it
+                    const league = await getLeagueByGameId(db, gameId);
+                    await fetchMarketData(db, league);
+                    const fetchedData = await getBetMarketByGame(db, gameId, market);
+                    data.push({ market, data: fetchedData });
+                }
             }
         }
         return data;
