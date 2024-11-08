@@ -143,6 +143,16 @@ export const updateTeamName = async (db, teamId, teamName) => {
   }
 };
 
+// Function to update a team abbreviation
+export const updateTeamAbbreviation = async (db, teamId, abbreviation) => {
+  try {
+    await db.runAsync('UPDATE Teams SET abbreviation = ? WHERE id = ?', [abbreviation, teamId]);
+  } catch (error) {
+    console.error('Error updating team abbreviation:', error);
+    throw error;
+  }
+};
+
 // Function to delete a team
 export const deleteTeam = async (db, teamId) => {
   try {
