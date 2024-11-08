@@ -24,7 +24,7 @@ const useOptionsState = () => {
 
     const handleOption = (response) => {
         if (optionCallback) {
-          optionCallback(response);
+            optionCallback(response);
         }
     }
 
@@ -34,18 +34,18 @@ const useOptionsState = () => {
     }
   
     const handleOpenOptions = async (target, options, handleResponse) => {
-      setOptionsList(options);
-      openOptionsModal();
-  
-      // response is the option selected
-      const response = await new Promise((resolve) => {
-        handleOptionCallback(() => resolve);
-      });
-  
-      // handle the response
-      if (response) {
-        await handleResponse(response, target);
-      }
+        setOptionsList(options);
+        openOptionsModal();
+    
+        // response is the option selected
+        const response = await new Promise((resolve) => {
+            handleOptionCallback(() => resolve);
+        });
+    
+        // handle the response
+        if (response) {
+            await handleResponse(response, target);
+        }
     };
 
     return {

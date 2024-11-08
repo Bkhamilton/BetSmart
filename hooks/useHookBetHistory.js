@@ -15,21 +15,21 @@ const useHookBetHistory = () => {
     const [betSlips, setBetSlips] = useState([]);
 
     function changeType(type) {
-      setSelectedType(type);
+        setSelectedType(type);
     }
 
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const betSlips = await getOpenBetSlips(db, user.id);
-          const betSlipsWithBets = await fillBetSlips(db, betSlips);
-          setBetSlips(betSlipsWithBets);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-    
-      fetchData();
+        const fetchData = async () => {
+            try {
+                const betSlips = await getOpenBetSlips(db, user.id);
+                const betSlipsWithBets = await fillBetSlips(db, betSlips);
+                setBetSlips(betSlipsWithBets);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        
+        fetchData();
     }, []);
 
     return {

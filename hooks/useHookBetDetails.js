@@ -16,23 +16,23 @@ const useHookBetDetails = () => {
     const [curLeagueProp, setCurLeagueProp] = useState('Popular');
   
     const selectLeagueProp = (prop) => {
-      setCurLeagueProp(prop);
+        setCurLeagueProp(prop);
     };
   
     useEffect(() => {
-      getLeaguePropsForLeague(db, league.id).then((props) => {
-        const sortedProps = props.sort((a, b) => a.id - b.id);
-        setLeagueProps(sortedProps);
-      });
+        getLeaguePropsForLeague(db, league.id).then((props) => {
+            const sortedProps = props.sort((a, b) => a.id - b.id);
+            setLeagueProps(sortedProps);
+        });
     }, []);
   
     useEffect(() => {
-      if (curLeagueProp) {
-        getLeaguePropInfo(db, league.id, curLeagueProp).then((info) => {
-          const sortedInfo = info.sort((a, b) => a.id - b.id);
-          setLeaguePropInfo(sortedInfo);
-        });
-      }
+        if (curLeagueProp) {
+            getLeaguePropInfo(db, league.id, curLeagueProp).then((info) => {
+                const sortedInfo = info.sort((a, b) => a.id - b.id);
+                setLeaguePropInfo(sortedInfo);
+            });
+        }
     }, [curLeagueProp]);
 
     return {

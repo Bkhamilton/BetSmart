@@ -33,12 +33,12 @@ const useHookSelectGame = () => {
     
         // Check the direction parameter
         if (direction === 'prev') {
-          currentDate.setDate(currentDate.getDate()); // Set the date to the previous day
+            currentDate.setDate(currentDate.getDate()); // Set the date to the previous day
         } else if (direction === 'next') {
-          currentDate.setDate(currentDate.getDate() + 2); // Set the date to the next day
+            currentDate.setDate(currentDate.getDate() + 2); // Set the date to the next day
         } else {
-          console.log('Invalid direction parameter. Please use "prev" or "next".');
-          return; // Exit the function if the direction parameter is invalid
+            console.log('Invalid direction parameter. Please use "prev" or "next".');
+            return; // Exit the function if the direction parameter is invalid
         }
     
         // Update the date state with the new date
@@ -47,21 +47,21 @@ const useHookSelectGame = () => {
 
     const selectLeague = (newLeague) => {
         if (league?.leagueName === newLeague.leagueName) {
-          setLeague({});
-          setHeader('Place Bet');
-          setLeagueSelected(false);
+            setLeague({});
+            setHeader('Place Bet');
+            setLeagueSelected(false);
         } else {
-          setLeague(newLeague);
-          setHeader(newLeague.leagueName);
-          setLeagueSelected(true);
+            setLeague(newLeague);
+            setHeader(newLeague.leagueName);
+            setLeagueSelected(true);
         }
     }
 
     useEffect(() => {
         const fetchSportsData = async () => {
-          retrieveAllGames(db, date).then((games) => {
-            setAllSportsData(games);
-          });
+            retrieveAllGames(db, date).then((games) => {
+                setAllSportsData(games);
+            });
         };
       
         fetchSportsData();
