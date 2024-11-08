@@ -11,7 +11,7 @@ export default function MainBettingLines({ game, marketProps }) {
             <View style={styles.container}>
                 <DisplayMarketLines game={game} marketProps={marketProps} marketType="moneyline" />
                 <DisplayMarketLines game={game} marketProps={marketProps} marketType="spread" />
-                <DisplayMarketLines game={game} marketProps={marketProps} marketType="total_over_under" />
+                <DisplayMarketLines game={game} marketProps={marketProps} marketType="totals" />
             </View>
         </>
     );

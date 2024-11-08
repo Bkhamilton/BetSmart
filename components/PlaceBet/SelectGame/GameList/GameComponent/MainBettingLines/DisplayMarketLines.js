@@ -149,7 +149,7 @@ export default function DisplayMarketLines({ game, marketProps, marketType }) {
         }     
 
         // Handle total_over_under marketType
-        if (marketType === 'total_over_under') {
+        if (marketType === 'totals') {
             // Sort the data by value
             displayData.sort((a, b) => a.value - b.value);
 
