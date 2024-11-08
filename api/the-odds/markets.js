@@ -1,13 +1,14 @@
 import secrets from "@/secrets";
-import { getLeagueByName, getLeagueByGameId, getActiveLeagues, getActiveLeagueNames } from "@/db/general/Leagues";
+import { getLeagueByName, getLeagueByGameId, getActiveLeagues } from "@/db/general/Leagues";
 import { getSeasonByDate } from "@/db/general/Seasons";
 import { getTeamId } from "@/db/general/Teams";
 import { insertGame, getTodaysGameswithNames, getGameByGameId } from "@/db/general/Games";
-import { insertBetTarget, getBetTargetId, getBetTargetsByGameId, getBetTargetIdByName } from "@/db/bet-general/BetTargets";
+import { insertBetTarget, getBetTargetsByGameId, getBetTargetIdByName } from "@/db/bet-general/BetTargets";
 import { insertBetMarket, getBetMarketByGame } from "@/db/api/BetMarkets";
 import { getBookieId } from "@/db/general/Bookies";
-import { insertFetchHistory, getLastFetchedByLeague, leagueFetchedOnDate } from "@/db/api/FetchHistory";
+import { insertFetchHistory, leagueFetchedOnDate } from "@/db/api/FetchHistory";
 import { insertMarketFetchHistory, marketFetchedOnDate } from '@/db/api/MarketFetchHistory';
+import { getDateFull } from "@/utils/dateFunctions";
 // Handling array of objects
 /*
 Main object fields: 
@@ -78,16 +79,6 @@ const leagueMapping = {
     'NHL': 'icehockey_nhl'
 }
 
-const getDate = (dateString) => {
-    const date = new Date(dateString);
-    const estDate = new Date(date.getTime());
-    const year = estDate.getFullYear();
-    const month = estDate.getMonth() + 1; // getMonth returns month index starting from 0
-    const day = estDate.getDate();
-    return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`; // Returns the date in YYYY-MM-DD format
-};
-  
-
 export const getMarkets = async (db, league, markets) => {
     try {
         const marketString = markets.join(',');
@@ -146,7 +137,6 @@ const handleMarket = async (db, market, bookId, gameId, betTarget) => {
         for (let outcome of outcomes) {
             await addOutcomeToDB(db, outcome, last_update, key, bookId, gameId, betTarget);
         }
-        insertMarketFetchHistory(db, gameId, getMarketType(key), last_update);
     } catch (error) {
         console.error(error);
     }
@@ -171,7 +161,7 @@ const addGameToDB = async (db, game, league) => {
         // If it is, don't add it again
         const curGame = await getGameByGameId(db, id);
         if (!curGame) {
-            const date = getDate(commence_time);
+            const date = getDateFull(commence_time);
             const curSeason = await getSeasonByDate(db, league.id, date);
             const homeTeam = await getTeamId(db, home_team);
             if (!homeTeam) {
@@ -203,6 +193,9 @@ const addGameToDB = async (db, game, league) => {
             if (!bookieMapping[book.title]) return;
             await handleBookie(db, book, game.id, betTargetId);
         }
+        await insertMarketFetchHistory(db, id, 'moneyline', commence_time);
+        await insertMarketFetchHistory(db, id, 'spread', commence_time);
+        await insertMarketFetchHistory(db, id, 'totals', commence_time);
     } catch (error) {
         console.error(error);
     }
@@ -283,7 +276,7 @@ export const retrieveGamesDate = async (db, leagues, date) => {
                 if (!fetched ) {
                     await fetchMarketData(db, league);
                     data.push(await getLeagueData(db, league.leagueName, league, date, curSeason));
-                    insertFetchHistory(db, league.leagueName, date);
+                    await insertFetchHistory(db, league.leagueName, date);
                 }
             }
         }
@@ -326,6 +319,15 @@ export const retrieveMarketData = async (db, gameId, markets) => {
         return data;
     } catch (error) {
       console.error(error);
+    }
+}
+
+export const retrieveBig3Markets = async (db, gameId) => {
+    try {
+        const markets = ['spread', 'moneyline', 'totals'];
+        return await retrieveMarketData(db, gameId, markets);
+    } catch (error) {
+        console.error(error);
     }
 }
   
