@@ -96,6 +96,16 @@ export const deleteBetMarket = async (db, betMarketId) => {
   }
 };
 
+// Function to delete all bet markets for a game
+export const clearGameBetMarkets = async (db, gameId) => {
+  try {
+    await db.runAsync('DELETE FROM BetMarkets WHERE gameId = ?', [gameId]);
+  } catch (error) {
+    console.error('Error deleting bet markets by game:', error);
+    throw error;
+  }
+};
+
 export const getMoneyline = async (db, gameId) => {
   try {
     const moneyline = await db.getAllAsync(`
@@ -144,10 +154,46 @@ export const getSpread = async (db, gameId) => {
 
 export const getTotalOverUnder = async (db, gameId) => {
   try {
-    const totalOverUnder = await db.getAllAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = "total_over_under"', [gameId]);
+    const totalOverUnder = await db.getAllAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = "totals"', [gameId]);
     return totalOverUnder;
   } catch (error) {
     console.error('Error getting total over under:', error);
+    throw error;
+  }
+}
+
+// Function to check if marketTypes 'moneyline', 'spread' and 'totals' all exist for a given gameId
+export const checkBetMarketsExist = async (db, gameId) => {
+  try {
+    const moneyline = await getMoneyline(db, gameId);
+    const spread = await getSpread(db, gameId);
+    const totalOverUnder = await getTotalOverUnder(db, gameId);
+
+    if (moneyline.length > 0 && spread.length > 0 && totalOverUnder.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Error checking if bet markets exist:', error);
+    throw error;
+  }
+}
+
+// Function to check if any one of marketTypes 'moneyline', 'spread' and 'totals' exist for a given gameId
+export const checkIfAnyBetMarketsExist = async (db, gameId) => {
+  try {
+    const moneyline = await getMoneyline(db, gameId);
+    const spread = await getSpread(db, gameId);
+    const totalOverUnder = await getTotalOverUnder(db, gameId);
+
+    if (moneyline.length > 0 || spread.length > 0 || totalOverUnder.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Error checking if any bet markets exist:', error);
     throw error;
   }
 }
