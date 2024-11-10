@@ -108,6 +108,16 @@ export const updateBetTarget = async (db, betTargetId, targetType, targetName, t
   }
 };
 
+// Function to update a bet target targetName by id
+export const updateBetTargetName = async (db, betTargetId, targetName) => {
+  try {
+    await db.runAsync('UPDATE BetTargets SET targetName = ? WHERE id = ?', [targetName, betTargetId]);
+  } catch (error) {
+    console.error('Error updating bet target name:', error);
+    throw error;
+  }
+};
+
 // Function to delete a bet target
 export const deleteBetTarget = async (db, betTargetId) => {
   try {
