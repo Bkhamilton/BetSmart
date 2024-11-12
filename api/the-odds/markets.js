@@ -140,93 +140,70 @@ const addOutcomeToDB = async (db, outcome, last_update, market, bookId, gameId, 
     }
 }
 
-const handleMarket = async (db, market, bookId, gameId, betTarget) => {
+export const handleMarketData = async (db, market, bookieId, gameId, betTargetId) => {
     try {
         const { key, last_update, outcomes } = market;
         for (let outcome of outcomes) {
-            await addOutcomeToDB(db, outcome, last_update, key, bookId, gameId, betTarget);
+            await addOutcomeToDB(db, outcome, last_update, key, bookieId, gameId, betTargetId);
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-const handleBookie = async (db, book, gameId, betTarget) => {
+export const handleBookieData = async (db, book, gameId, betTargetId) => {
     try {
         const { key, title, last_update, markets } = book;
         const bookieId = await getBookieId(db, title);
         for (let market of markets) {
-            await handleMarket(db, market, bookieId, gameId, betTarget);
+            await handleMarketData(db, market, bookieId, gameId, betTargetId);
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-const addGameToDB = async (db, game, league) => {
+export const handleGameData = async (db, game, league) => {
     try {
-        const { id, sport_key, commence_time, home_team, away_team, bookmakers } = game;
         // Check if game is already in DB
         // If it is, don't add it again
-        const curGame = await getGameByGameId(db, id);
+        const curGame = await getGameByGameId(db, game.id);
         if (!curGame) {
-            const date = getDateFull(commence_time);
+            const date = getDateFull(game.commence_time);
             const curSeason = await getSeasonByDate(db, league.id, date);
-            const homeTeam = await getTeamId(db, home_team);
+            const homeTeam = await getTeamId(db, game.home_team);
             if (!homeTeam) {
-                console.log('No homeTeamId found for ' + home_team);
+                console.log('No homeTeamId found for ' + game.home_team);
                 return;
             }
             const homeTeamId = homeTeam.id;
-            const awayTeam = await getTeamId(db, away_team);
+            const awayTeam = await getTeamId(db, game.away_team);
             if (!awayTeam) {
-                console.log('No awayTeamId found for ' + away_team);
+                console.log('No awayTeamId found for ' + game.away_team);
                 return;
             }
             const awayTeamId = awayTeam.id;
-            await insertGame(db, id, curSeason.id, date, commence_time, homeTeamId, awayTeamId);
-            console.log('Inserted ' + away_team + ' vs ' + home_team + ' into Games');
+            await insertGame(db, game.id, curSeason.id, date, game.commence_time, homeTeamId, awayTeamId);
         }
-        // const betTarget = await getBetTargetsByGameId(db, id);
-        // If betTarget is not in DB, add it
-
-        const betTarget = await getBetTargetsByGameId(db, id);
+        const betTarget = await getBetTargetsByGameId(db, game.id);
         if (betTarget.length === 0) {
-            clearGameBetMarkets(db, id);
+            await clearGameBetMarkets(db, game.id);
         }
-        const betTargetId = await insertBetTarget(db, 'Game', `${away_team} vs ${home_team}`, null, id);
-        for (let book of bookmakers) {
-            // if bookie is not in valid list of bookies, return
-            if (!bookieMapping[book.title]) return;
-            await handleBookie(db, book, game.id, betTargetId);
+        const betTargetId = await insertBetTarget(db, 'Game', `${game.away_team} vs ${game.home_team}`, null, game.id);
+        for (let book of game.bookmakers) {
+            if (!bookieMapping[book.title]) continue;
+            await handleBookieData(db, book, game.id, betTargetId);
         }
-        const date = new Date();
-        await insertMarketFetchHistory(db, id, 'moneyline', date);
-        await insertMarketFetchHistory(db, id, 'spread', date);
-        await insertMarketFetchHistory(db, id, 'totals', date);
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-export const fetchMarketData = async (db, league) => {
-    try {
-        const leagueName = leagueMapping[league.leagueName];
-        const data = await getBig3Markets(db, leagueName);
-        for (let game of data) {
-            await addGameToDB(db, game, league);
-        }
-        return data;
     } catch (error) {
         console.error(error);
     }
 }
 
 // Function to get sport data
-const getLeagueData = async (db, league, curLeague, date, curSeason) => {
+const getLeagueData = async (db, curLeague, date, curSeason) => {
     const games = await getTodaysGameswithNames(db, date, curSeason.id);
     return {
-        league,
+        league: curLeague.leagueName,
         data: {
             league: curLeague.leagueName,
             season: curSeason.description,
@@ -237,56 +214,12 @@ const getLeagueData = async (db, league, curLeague, date, curSeason) => {
     };
 };
 
-export const retrieveGameData = async (db, leagues) => {
-    try {
-        let data = [];
-        for (let league of leagues) {
-            const today = new Date();
-            const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-            const curLeague = await getLeagueByName(db, league);
-            const curSeason = await getSeasonByDate(db, curLeague.id, date);
-            const value = await getTodaysGameswithNames(db, date, curSeason.id);
-            if (value.length > 0) {
-                data.push({ 
-                    league, 
-                    data: { 
-                        league: curLeague.leagueName, 
-                        season: curSeason.description, 
-                        seasonType: curSeason.seasonType, 
-                        date: date, 
-                        games: value 
-                    } 
-                });
-            } else {
-                const fetched = await leagueFetchedOnDate(db, curLeague.leagueName, date);
-                if (!fetched) {
-                    await fetchMarketData(db, curLeague);
-                    data.push(await getLeagueData(db, league, curLeague, date, curSeason));
-                }
-            }
-        }
-        return data;
-    } catch (error) {
-        console.error(error);
-    }
-};
-
 export const retrieveGamesDate = async (db, leagues, date) => {
     try {
         let data = [];
         for (let league of leagues) {
             const curSeason = await getSeasonByDate(db, league.id, date);
-            const value = await getTodaysGameswithNames(db, date, curSeason.id);
-            if (value.length > 0) {
-                data.push(await getLeagueData(db, league.leagueName, league, date, curSeason));
-            } else {
-                const fetched = await leagueFetchedOnDate(db, league.leagueName, date);
-                if (!fetched ) {
-                    await fetchMarketData(db, league);
-                    data.push(await getLeagueData(db, league.leagueName, league, date, curSeason));
-                    await insertFetchHistory(db, league.leagueName, date);
-                }
-            }
+            data.push(await getLeagueData(db, league, date, curSeason));
         }
         return data;
     } catch (error) {
@@ -325,4 +258,29 @@ export const retrieveBig3Markets = async (db, gameId) => {
     }
 }
 
-// export const refreshBettingMarkets = async (db, leagues) => {
+
+
+export const refreshBettingMarkets = async (db, league) => {
+    try {
+        const leagueName = leagueMapping[league.leagueName];
+        const data = await getBig3Markets(db, leagueName);
+        for (let game of data) {
+            await handleGameData(db, game, league);
+        }
+        console.log('Refreshed betting markets for ' + league.leagueName);
+        return data;
+    } catch (error) {
+        console.error(error);
+    }    
+}
+
+export const refreshAllBettingMarkets = async (db) => {
+    try {
+        const leagues = await getActiveLeagues(db);
+        for (let league of leagues) {
+            await refreshBettingMarkets(db, league);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
