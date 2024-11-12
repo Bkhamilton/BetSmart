@@ -55,6 +55,39 @@ export const getTodaysGameswithNames = async (db, date, seasonId) => {
     }
 }
 
+// Function to get all upcoming games for a given seasonId
+export const getUpcomingGames = async (db, seasonId) => {
+    try {
+        const query = `
+            SELECT 
+                Games.id, 
+                Games.gameId, 
+                Games.seasonId, 
+                Games.date, 
+                Games.timestamp, 
+                Teams.teamName as homeTeamName, 
+                Teams.abbreviation as homeTeamAbv, 
+                Teams2.teamName as awayTeamName, 
+                Teams2.abbreviation as awayTeamAbv 
+            FROM 
+                Games 
+            JOIN 
+                Teams ON Games.homeTeamId = Teams.id 
+            JOIN 
+                Teams as Teams2 ON Games.awayTeamId = Teams2.id 
+            WHERE 
+                DATE(Games.date) >= DATE('now') 
+                AND Games.seasonId = ?
+        `;
+
+        const allRows = await db.getAllAsync(query, [seasonId]);
+        return allRows;
+    } catch (error) {
+        console.error('Error in getUpcomingGames:', error);
+        throw error;
+    }
+}
+
 // Function to get a game
 export const getGame = async (db, gameId) => {
     try {
