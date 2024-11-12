@@ -3,8 +3,7 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
 import { DBContext } from '@/contexts/DBContext';
 import { getLogoUrl } from '@/db/general/Teams';
-import { retrieveMarketsDB } from '@/api/prop-odds/markets';
-import { retrieveMarketData } from '@/api/the-odds/markets';
+import { retrieveBig3Markets } from '@/api/the-odds/markets';
 import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
 import MainBettingLines from './MainBettingLines/MainBettingLines';
@@ -32,7 +31,7 @@ export default function GameComponent({ game }) {
     };
 
     const fetchMarketProps = async () => {
-        retrieveMarketData(db, gameId, ['moneyline', 'spread', 'totals']).then((data) => {
+        retrieveBig3Markets(db, gameId).then((data) => {
             setMarketProps(data);
         });
     };
