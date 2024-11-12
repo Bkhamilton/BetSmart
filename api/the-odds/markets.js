@@ -4,7 +4,7 @@ import { getSeasonByDate } from "@/db/general/Seasons";
 import { getTeamId } from "@/db/general/Teams";
 import { insertGame, getTodaysGameswithNames, getGameByGameId } from "@/db/general/Games";
 import { insertBetTarget, getBetTargetsByGameId, getBetTargetIdByName } from "@/db/bet-general/BetTargets";
-import { insertBetMarket, getBetMarketByGame } from "@/db/api/BetMarkets";
+import { insertBetMarket, getBetMarketByGame, clearGameBetMarkets } from "@/db/api/BetMarkets";
 import { getBookieId } from "@/db/general/Bookies";
 import { insertFetchHistory, leagueFetchedOnDate } from "@/db/api/FetchHistory";
 import { insertMarketFetchHistory, marketFetchedOnDate } from '@/db/api/MarketFetchHistory';
@@ -191,20 +191,19 @@ const addGameToDB = async (db, game, league) => {
         // If betTarget is not in DB, add it
 
         const betTarget = await getBetTargetsByGameId(db, id);
-        let betTargetId;
         if (betTarget.length === 0) {
-            betTargetId = await insertBetTarget(db, 'Game', `${away_team} vs ${home_team}`, null, id);
-        } else {
-            betTargetId = betTarget[0].id;
+            clearGameBetMarkets(db, id);
         }
+        const betTargetId = await insertBetTarget(db, 'Game', `${away_team} vs ${home_team}`, null, id);
         for (let book of bookmakers) {
             // if bookie is not in valid list of bookies, return
             if (!bookieMapping[book.title]) return;
             await handleBookie(db, book, game.id, betTargetId);
         }
-        await insertMarketFetchHistory(db, id, 'moneyline', commence_time);
-        await insertMarketFetchHistory(db, id, 'spread', commence_time);
-        await insertMarketFetchHistory(db, id, 'totals', commence_time);
+        const date = new Date();
+        await insertMarketFetchHistory(db, id, 'moneyline', date);
+        await insertMarketFetchHistory(db, id, 'spread', date);
+        await insertMarketFetchHistory(db, id, 'totals', date);
     } catch (error) {
         console.error(error);
     }
@@ -309,21 +308,7 @@ export const retrieveMarketData = async (db, gameId, markets) => {
         let data = [];
         for (let market of markets) {
             const value = await getBetMarketByGame(db, gameId, market);
-            if (value.length > 0) {
-                // We have data!!
-                data.push({ market, data: value });
-            } else {
-                const today = new Date();
-                const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-                const fetched = await marketFetchedOnDate(db, market, gameId, date);
-                if (!fetched) {
-                    // If it hasn't been fetched today, fetch it
-                    const league = await getLeagueByGameId(db, gameId);
-                    await fetchMarketData(db, league);
-                    const fetchedData = await getBetMarketByGame(db, gameId, market);
-                    data.push({ market, data: fetchedData });
-                }
-            }
+            data.push({ market, data: value });
         }
         return data;
     } catch (error) {
@@ -339,4 +324,5 @@ export const retrieveBig3Markets = async (db, gameId) => {
         console.error(error);
     }
 }
-  
+
+// export const refreshBettingMarkets = async (db, leagues) => {
