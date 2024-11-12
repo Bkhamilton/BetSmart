@@ -19,7 +19,8 @@ const lossTitles = [
   { name: "Overconfidence", description: "Losses due to overestimating chances." },
   { name: "Parlay Pitfalls", description: "Failures with parlay bets." },
   { name: "Bankroll Management", description: "Losses that occurred when betting amounts were disproportionate to the user's overall bankroll." },
-  { name: "Lack of Research", description: "Losing due to insufficient research." }
+  { name: "Lack of Research", description: "Losing due to insufficient research." },
+  { name: "Outpacing Unit Size", description: "Losing by betting too much on a single event." }
 ];
 
 export default function BetAnalysis({ streak }) {
