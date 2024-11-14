@@ -9,6 +9,7 @@ import { getBookieId } from "@/db/general/Bookies";
 import { insertFetchHistory, leagueFetchedOnDate } from "@/db/api/FetchHistory";
 import { insertMarketFetchHistory, marketFetchedOnDate } from '@/db/api/MarketFetchHistory';
 import { getDateFull } from "@/utils/dateFunctions";
+import { createScheduler } from "@/api/cloudDB/scheduler";
 // Handling array of objects
 /*
 Main object fields: 
@@ -258,8 +259,6 @@ export const retrieveBig3Markets = async (db, gameId) => {
     }
 }
 
-
-
 export const refreshBettingMarkets = async (db, league) => {
     try {
         const leagueName = leagueMapping[league.leagueName];
@@ -272,6 +271,16 @@ export const refreshBettingMarkets = async (db, league) => {
     } catch (error) {
         console.error(error);
     }    
+}
+
+export const refreshBettingMarketsLeagues = async (db, leagues) => {
+    try {
+        for (let league of leagues) {
+            await refreshBettingMarkets(db, league);
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 export const refreshAllBettingMarkets = async (db) => {
