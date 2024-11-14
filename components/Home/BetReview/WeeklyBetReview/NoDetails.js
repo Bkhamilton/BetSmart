@@ -4,7 +4,7 @@ import { Text, View, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import StatCounter from './StatCounter';
 
-export default function NoDetails({ betsWon, totalBets, amountBet, amountWon }) {
+export default function NoDetails({ betsWon, totalBets, amountBet, amountWon, stats }) {
 
     const { text, greenText, redText } = useTheme();
 
@@ -35,10 +35,9 @@ export default function NoDetails({ betsWon, totalBets, amountBet, amountWon }) 
             </ClearView>
             <View style={styles.divider} />
             <ClearView style={styles.spreadContainer}>
-                <StatCounter title="SPREAD" won={3} total={3} />
-                <StatCounter title="ML" won={2} total={3} />
-                <StatCounter title="PLAYER" won={8} total={12} />
-                <StatCounter title="TOTAL" won={16} total={26} />
+                {stats.map(stat => (
+                    <StatCounter key={stat.title} title={stat.title} won={stat.won} total={stat.total} />
+                ))}
             </ClearView>  
         </>
     );

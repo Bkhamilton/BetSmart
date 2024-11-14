@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
-import { betSlipResults } from '@/data/exampleBetData';
+import { betSlipResults, noDetailStats } from '@/data/exampleBetData';
 import NoDetails from './NoDetails';
 import ShowDetails from './ShowDetails';
 
@@ -40,7 +40,7 @@ export default function YesterdaysBets({ bets }) {
     return (
         <ClearView style={styles.container}>
             <View style={{ paddingBottom: 8 }}>
-                <Text style={{ fontSize: 20, fontWeight: '600' }}>Yesterday's Bets</Text>
+                <Text style={{ fontSize: 20, fontWeight: '600' }}>Weekly Bet Review</Text>
             </View>
             <Pressable 
                 onPressIn={handlePressIn}
@@ -51,16 +51,17 @@ export default function YesterdaysBets({ bets }) {
                 { 
                     showDetails ? 
                     <ShowDetails
-                    betSlips={betSlips}
-                    betsWon={betsWon}
-                    totalBets={totalBets}
+                        betSlips={betSlips}
+                        betsWon={betsWon}
+                        totalBets={totalBets}
                     /> 
                     : 
                     <NoDetails
-                    amountBet={amountBet}
-                    amountWon={amountWon}
-                    betsWon={betsWon}
-                    totalBets={totalBets}
+                        amountBet={amountBet}
+                        amountWon={amountWon}
+                        betsWon={betsWon}
+                        totalBets={totalBets}
+                        stats={noDetailStats}
                     />
                 } 
             </Pressable>
