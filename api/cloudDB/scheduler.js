@@ -32,3 +32,22 @@ export const buildScheduler = async (db) => {
 
     return scheduler;
 }
+
+export const createScheduler = async (db) => {
+    const scheduler = await buildScheduler(db);
+    for (const league in scheduler) {
+        if (!scheduler[league]) {
+            console.log(`No games for ${league} today`);
+            continue;
+        }
+        const earliestStartTime = new Date(scheduler[league]);
+        // Subtract an hour from the start time
+        earliestStartTime.setHours(earliestStartTime.getHours() - 1);
+
+        const time = getTime(earliestStartTime);
+        const amPm = getAmPm(earliestStartTime);
+        console.log(`Grabbing API Data for ${league} at ${time} ${amPm}`);
+        // Add the scheduler to the DB
+        // await insertScheduler(db, league, earliestStartTime);
+    } 
+}
