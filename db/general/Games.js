@@ -23,6 +23,42 @@ export const getGamesByDate = async (db, date, season) => {
 };
 
 // Function to get all of today's games for a given seasonId
+export const getGamesForResults = async (db, date, leagueName) => {
+    try {
+        const query = `
+            SELECT 
+                Games.id, 
+                Games.gameId, 
+                Games.seasonId,
+                Leagues.leagueName, 
+                Games.date, 
+                Games.timestamp,
+                Teams.teamName as homeTeamName, 
+                Teams2.teamName as awayTeamName 
+            FROM 
+                Games 
+            JOIN 
+                Teams ON Games.homeTeamId = Teams.id 
+            JOIN 
+                Teams as Teams2 ON Games.awayTeamId = Teams2.id 
+            JOIN
+                Seasons ON Games.seasonId = Seasons.id
+            JOIN
+                Leagues ON Seasons.leagueId = Leagues.id
+            WHERE 
+                DATE(Games.date) = ? 
+                AND Leagues.leagueName = ?
+        `;
+
+        const allRows = await db.getAllAsync(query, [date, leagueName]);
+        return allRows;
+    } catch (error) {
+        console.error('Error in getTodaysGameswithNames:', error);
+        throw error;
+    }
+}
+
+// Function to get all of today's games for a given seasonId
 export const getTodaysGameswithNames = async (db, date, seasonId) => {
     try {
         const query = `
