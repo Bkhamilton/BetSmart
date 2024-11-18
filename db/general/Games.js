@@ -135,6 +135,16 @@ export const getGame = async (db, gameId) => {
     }
 };
 
+export const getGameByTeams = async (db, homeTeamId, awayTeamId, date) => {
+    try {
+        const game = await db.getAllAsync('SELECT * FROM Games WHERE homeTeamId = ? AND awayTeamId = ? AND date = ?', [homeTeamId, awayTeamId, date]);
+        return game[0];
+    } catch (error) {
+        console.error('Error in getGameByTeams:', error);
+        throw error;
+    }
+}
+
 export const getGameByGameId = async (db, gameId) => {
     try {
         const game = await db.getAllAsync('SELECT * FROM Games WHERE gameId = ?', [gameId]);
