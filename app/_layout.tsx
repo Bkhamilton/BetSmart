@@ -9,6 +9,7 @@ import { initializeDatabase } from '@/api/sqlite';
 import { UserContextProvider } from '@/contexts/UserContext';
 import { DBContextProvider } from '@/contexts/DBContext';
 import { FirebaseContextProvider } from '@/contexts/FirebaseContext';
+import { SupabaseContextProvider } from '@/contexts/SupabaseContext';
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -48,13 +49,15 @@ export default function RootLayout() {
 
   return (
     <SQLiteProvider databaseName="BetSmart.db" onInit={initializeDatabase} useSuspense>
-      <FirebaseContextProvider>
-        <UserContextProvider>
-          <DBContextProvider>
-            <RootLayoutNav />
-          </DBContextProvider>
-        </UserContextProvider>
-      </FirebaseContextProvider>
+      <SupabaseContextProvider>
+        <FirebaseContextProvider>
+          <UserContextProvider>
+            <DBContextProvider>
+              <RootLayoutNav />
+            </DBContextProvider>
+          </UserContextProvider>
+        </FirebaseContextProvider>
+      </SupabaseContextProvider>
     </SQLiteProvider>
   );
 }
