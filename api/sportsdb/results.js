@@ -1,4 +1,6 @@
-import { getGamesForResults } from '@/db/general/Games.js';
+import { getGamesForResults, getGameByTeams } from '@/db/general/Games.js';
+import { getTeamId } from '@/db/general/Teams.js';
+import { insertGameResult } from '@/db/api/GameResults.js';
 /*
     Goal: Get the results of a specific match by using sportsDB Api
 
@@ -33,8 +35,8 @@ const getResultsData = async (league, date, homeTeam, awayTeam) => {
 }
 
 // Function to print the results of a specific match
-export async function displayResults(league, date, homeTeam, awayTeam) {
-    const results = await getResultsData(league, date, homeTeam, awayTeam);
+export async function displayResults(league, timestamp, date, homeTeam, awayTeam) {
+    const results = await getResultsData(league, timestamp, homeTeam, awayTeam);
     if (!results.event) {
         console.log('No results found for ' + homeTeam + ' vs ' + awayTeam);
         return;
@@ -50,6 +52,9 @@ export async function displayResults(league, date, homeTeam, awayTeam) {
     const totalPoints = parseInt(game.intHomeScore) + parseInt(game.intAwayScore);
 
     const resultsObject = {
+        homeTeam,
+        awayTeam,
+        date,
         homeScore,
         awayScore,
         winner,
@@ -58,4 +63,30 @@ export async function displayResults(league, date, homeTeam, awayTeam) {
     }
 
     return resultsObject;
+}
+
+export const fetchResults = async (db, leagueName, checkDate) => {
+    let testGames = await getGamesForResults(db, checkDate, leagueName);
+    const resultsArray = [];
+    for (const game of testGames) {
+        // First, convert timestamp to YYYY-MM-DD
+        const date = game.timestamp.split('T')[0];
+        // Get the results of the game
+        const results = await displayResults(leagueName, date, game.date, game.homeTeamName, game.awayTeamName);
+        resultsArray.push(results);
+    }
+    return resultsArray;
+}
+
+export const addResults = async (db, leagueName, checkDate) => {
+    const results = await fetchResults(db, leagueName, checkDate);
+    for (const result of results) {
+        // Add the results to Game Results table
+        const homeTeamId = await getTeamId(db, result.homeTeam);
+        const awayTeamId = await getTeamId(db, result.awayTeam);
+        const game = await getGameByTeams(db, homeTeamId.id, awayTeamId.id, result.date);
+        await insertGameResult(db, game.gameId, result.homeScore, result.awayScore, result.winner, result.spread, result.totalPoints);
+        console.log('Added results for ' + result.homeTeam + ' vs ' + result.awayTeam + ' on ' + game.gameId);
+    }
+    return results;
 }
