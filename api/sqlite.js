@@ -303,3 +303,21 @@ export const createPlayersTable = async (db) => {
   `);
   console.log('Players table created');
 }
+
+// Function to create a Game Results Table
+export const createGameResultsTable = async (db) => {
+  await db.execAsync(`
+    CREATE TABLE IF NOT EXISTS GameResults (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      gameId INTEGER NOT NULL,
+      homeScore INTEGER NOT NULL,
+      awayScore INTEGER NOT NULL,
+      winner TEXT NOT NULL,
+      spread TEXT NOT NULL,
+      totalPoints INTEGER NOT NULL,
+      FOREIGN KEY(gameId) REFERENCES Games(id),
+      UNIQUE (gameId, homeScore, awayScore, winner, spread, totalPoints)
+    );
+  `);
+  console.log('GameResults table created');
+};
