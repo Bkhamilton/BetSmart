@@ -45,18 +45,18 @@ export const SupabaseContextProvider = ({ children }: SupabaseContextValueProvid
     useEffect(() => {
       const getLeagues = async () => {
         try {
-          const { data: leagues, error } = await supabase.from('Leagues').select();
-  
-          if (error) {
-            console.error('Error fetching todos:', error.message);
-            return;
-          }
-  
-          if (leagues && leagues.length > 0) {
-            setLeagues(leagues);
-          }
+            const { data: leagues, error } = await supabase.from('Leagues').select();
+    
+            if (error) {
+                console.error('Error fetching todos:', error.message);
+                return;
+            }
+    
+            if (leagues && leagues.length > 0) {
+                setLeagues(leagues);
+            }
         } catch (error) {
-          console.error('Error fetching todos:', error.message);
+            console.error('Error fetching todos:', error.message);
         }
       };
   
@@ -65,7 +65,7 @@ export const SupabaseContextProvider = ({ children }: SupabaseContextValueProvid
 
     const value = {
         supabase,
-        leagues,
+        leagues
     };
 
     return (
