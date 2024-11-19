@@ -1,8 +1,7 @@
 import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { BetContext } from '@/contexts/BetContext/BetContext';
-import { DBContext } from '@/contexts/DBContext';
-import { FirebaseContext } from '@/contexts/FirebaseContext';
+import { SupabaseContext } from '@/contexts/SupabaseContext';
 import { View } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';
 import GameList from '@/components/PlaceBet/SelectGame/GameList/GameList';
@@ -19,7 +18,7 @@ import useHookSelectGame from '@/hooks/useHookSelectGame';
 export default function SelectGameScreen() {
 
   const { league, betSlip } = useContext(BetContext);
-  const { leagues } = useContext(FirebaseContext);
+  const { leagues } = useContext(SupabaseContext);
 
   const {
     betSlipModalVisible,

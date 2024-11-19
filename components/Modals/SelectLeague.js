@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Modal } from 'react-native';
 import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
-import { DBContext } from '@/contexts/DBContext';
+import { SupabaseContext } from '@/contexts/SupabaseContext';
 import useTheme from '@/hooks/useTheme';
 
 export default function SelectLeague({ visible, close, selectLeague }) {
@@ -11,7 +11,7 @@ export default function SelectLeague({ visible, close, selectLeague }) {
         close();
     }
 
-    const { leagues } = useContext(DBContext);
+    const { leagues } = useContext(SupabaseContext);
 
     const { grayBackground, grayBorder } = useTheme();
 
