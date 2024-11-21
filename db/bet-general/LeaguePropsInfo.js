@@ -11,6 +11,28 @@ export const getAllLeaguePropsInfo = async (db) => {
     }
 };
 
+// Function to get all league props info with different fields
+export const getAllLeaguePropsInfoWithFields = async (db) => {
+    try {
+        const allRows = await db.getAllAsync(`
+            SELECT
+                lpi.id,
+                lp.id AS leaguePropId,
+                lpi.propValue
+            FROM
+                LeaguePropsInfo lpi
+            JOIN
+                LeagueProps lp
+            ON
+                lpi.propName = lp.propName AND lpi.leagueId = lp.leagueId    
+        `)
+        return allRows;
+    } catch (error) {
+        console.error('Error in getAllLeaguePropsInfoWithFields:', error);
+        throw error;
+    }
+}
+
 // Function to get all league prop info by leagueId
 export const getLeaguePropInfoByLeagueId = async (db, leagueId) => {
     try {
