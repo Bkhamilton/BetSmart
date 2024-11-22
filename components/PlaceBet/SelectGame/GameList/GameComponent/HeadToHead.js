@@ -1,12 +1,21 @@
 import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Text, View, ClearView } from '@/components/Themed';
+import useTheme from '@/hooks/useTheme';
 
 export default function HeadToHead({ homeLogo, homeTeam, awayLogo, awayTeam }) {
+
+    const { grayBackground, grayBorder } = useTheme();
+
     return (
         <ClearView style={styles.container}>
             <ClearView style={styles.gameTeamContainer}>
-                { awayLogo ? <Image style={styles.teamIcon} source={{uri: awayLogo}}/> : null }
+                { 
+                    awayLogo ?
+                    <Image style={styles.teamIcon} source={{uri: awayLogo}}/>
+                    : 
+                    null 
+                }
                 <Text>{awayTeam}</Text>
             </ClearView>
             <ClearView style={styles.versusContainer}>
@@ -15,7 +24,12 @@ export default function HeadToHead({ homeLogo, homeTeam, awayLogo, awayTeam }) {
                 <View style={styles.rightBar} />
             </ClearView>
             <ClearView style={styles.gameTeamContainer}>
-                { homeLogo ? <Image style={styles.teamIcon} source={{uri: homeLogo}}/> : null }
+                { 
+                    homeLogo ?
+                    <Image style={styles.teamIcon} source={{uri: homeLogo}}/>
+                    : 
+                    null 
+                }
                 <Text>{homeTeam}</Text>
             </ClearView>
         </ClearView>
