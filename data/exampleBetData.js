@@ -431,100 +431,149 @@ export const playoffBets = [
   }
 ];
 
-export const betSlipsRaw = [{
-  id: 1,
-  betAmount: 20,
-  betWon: 40,
-  betStatus: 'won'
-},
-{
-  id: 2,
-  betAmount: 30,
-  betWon: 0,
-  betStatus: 'lost'
-},
-{
-  id: 3,
-  betAmount: 10,
-  betWon: 20,
-  betStatus: 'won'
-},
-{
-  id: 4,
-  betAmount: 40,
-  betWon: 0,
-  betStatus: 'lost'
-},
-{
-  id: 5,
-  betAmount: 20,
-  betWon: 40,
-  betStatus: 'won'
-},
-{
-  id: 6,
-  betAmount: 30,
-  betWon: 0,
-  betStatus: 'lost'
-},
-{
-  id: 7,
-  betAmount: 10,
-  betWon: 20,
-  betStatus: 'won'
-},
-{
-  id: 8,
-  betAmount: 40,
-  betWon: 0,
-  betStatus: 'lost'
-}]
-
 export const betSlipResults = [{
   id: 1,
   betAmount: 20,
   winnings: 40,
-  result: 1
+  result: 1,
+  odds: '+100',
+  bets: [
+    {
+      "id": 141,
+      "betSlipId": 97,
+      "gameId": "2ac4732d168fd3fd0958719e2b11aad1",
+      "odds": "+100",
+      "seasonId": 7,
+      "date": "2024-11-17",
+      "timestamp": "2024-11-17T21:26:00Z",
+      "homeTeamName": "Buffalo Bills",
+      "awayTeamName": "Kansas City Chiefs",
+      "leagueId": 2,
+      "league": "NFL",
+      "legs": [
+        {
+          "legId": 143,
+          "participantBetId": 141,
+          "betMarketId": 123152,
+          "marketType": "moneyline",
+          "value": "Buffalo Bills",
+          "odds": "+100",
+          "overUnder": "",
+          "betTargetId": 34,
+          "betTarget": "Buffalo Bills",
+          "targetType": "Team",
+          "betTypeId": 1,
+          "betType": "Main"
+        }
+      ]
+    },
+  ]
 },
 {
   id: 2,
   betAmount: 30,
   winnings: 0,
-  result: 0
+  result: 0,
+  odds: '-120',
+  bets: []
 },
 {
   id: 3,
   betAmount: 10,
   winnings: 20,
-  result: 1
+  result: 1,
+  odds: '+100',
+  bets: []
 },
 {
   id: 4,
   betAmount: 40,
   winnings: 0,
-  result: 0
+  result: 0,
+  odds: '-210',
+  bets: []
 },
 {
   id: 5,
   betAmount: 20,
-  winnings: 40,
-  result: 1
+  winnings: 50,
+  result: 1,
+  odds: '+150',
+  bets: []
 },
 {
   id: 6,
   betAmount: 30,
   winnings: 0,
-  result: 0
+  result: 0,
+  odds: '-130',
+  bets: []
 },
 {
   id: 7,
   betAmount: 10,
-  winnings: 20,
-  result: 1
+  winnings: 30,
+  result: 1,
+  odds: '+200',
+  bets: []
 },
 {
   id: 8,
   betAmount: 40,
   winnings: 0,
-  result: 0
+  result: 0,
+  odds: '-140',
+  bets: []
 }]
+
+export const noDetailStats = [{
+  title: 'SPREAD',
+  won: 3,
+  total: 3
+}, {
+  title: 'ML',
+  won: 2,
+  total: 3
+}, {
+  title: 'PLAYER',
+  won: 8,
+  total: 12
+}, {
+  title: 'TOTAL',
+  won: 16,
+  total: 26
+}]
+
+export const detailStats = [{
+  title: 'SPREAD',
+  won: 3,
+  total: 3
+}, {
+  title: 'ML',
+  won: 2,
+  total: 3
+}, {
+  title: 'O/U',
+  won: 3,
+  total: 8
+}, {
+  title: 'PTS',
+  won: 2,
+  total: 4
+}, {
+  title: 'AST',
+  won: 3,
+  total: 3
+}, {
+  title: 'REB',
+  won: 2,
+  total: 3
+}, {
+  title: '3PT',
+  won: 1,
+  total: 2
+}, {
+  title: 'TOTAL',
+  won: 16,
+  total: 26
+}]  
