@@ -7,6 +7,7 @@ export default function useTheme() {
     const themeColors = {
         tint: colorScheme === 'dark' ? Colors.dark.tint : Colors.light.tint,
         text: colorScheme === 'dark' ? Colors.dark.text : Colors.light.text,
+        tabBar: colorScheme === 'dark' ? Colors.dark.tabBar : Colors.light.tabBar,
         grayText: colorScheme === 'dark' ? '#dedede' : '#1f1f1f',
         borderColor: colorScheme === 'dark' ? Colors.dark.border : Colors.light.border,
         iconColor: colorScheme === 'dark' ? Colors.dark.icon : Colors.light.icon,
