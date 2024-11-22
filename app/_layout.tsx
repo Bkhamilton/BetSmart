@@ -5,7 +5,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { Suspense, useEffect } from 'react';
 import { SQLiteProvider } from 'expo-sqlite';
-import { initializeDatabase } from '@/api/sqlite';
+import { initializeDatabase } from '@/api/sqlite/startup';
 import { UserContextProvider } from '@/contexts/UserContext';
 import { DBContextProvider } from '@/contexts/DBContext';
 import { SupabaseContextProvider } from '@/contexts/SupabaseContext';
