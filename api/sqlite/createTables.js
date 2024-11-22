@@ -10,7 +10,7 @@ export const createTables = async (db) => {
   
 export const createAPITables = async (db) => {
     await db.execAsync(`
-        CREATE TABLE BetMarkets (
+        CREATE TABLE IF NOT EXISTS BetMarkets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             gameId TEXT NOT NULL,
             marketType TEXT NOT NULL,
@@ -25,7 +25,7 @@ export const createAPITables = async (db) => {
             FOREIGN KEY(bookieId) REFERENCES Bookies(Id),
             UNIQUE (gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
         );
-        CREATE TABLE FetchHistory (
+        CREATE TABLE IF NOT EXISTS FetchHistory (
             league TEXT,
             lastFetched TEXT NOT NULL,
             PRIMARY KEY (league, lastFetched),
@@ -117,7 +117,7 @@ export const createGeneralTables = async (db) => {
 
 export const createBetslipTables = async (db) => {
     await db.execAsync(`
-        CREATE TABLE BetSlips (
+        CREATE TABLE IF NOT EXISTS BetSlips (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             formatId INTEGER NOT NULL,
             date TEXT NOT NULL,
@@ -131,7 +131,7 @@ export const createBetslipTables = async (db) => {
             FOREIGN KEY (bookieId) REFERENCES Bookies(Id),
             UNIQUE (formatId, date, odds, betAmount, winnings, userId, bookieId)
         );
-        CREATE TABLE ParticipantBets (
+        CREATE TABLE IF NOT EXISTS ParticipantBets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             betSlipId INTEGER NOT NULL,
             gameId TEXT NOT NULL,
@@ -140,7 +140,7 @@ export const createBetslipTables = async (db) => {
             FOREIGN KEY (gameId) REFERENCES Games(gameId),
             UNIQUE (betSlipId, gameId, odds)
         );
-        CREATE TABLE Legs (
+        CREATE TABLE IF NOT EXISTS Legs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             participantBetId INTEGER NOT NULL,
             betMarketId INTEGER NOT NULL,
@@ -186,13 +186,13 @@ export const createBetGeneralTables = async (db) => {
             FOREIGN KEY(gameId) REFERENCES Games(gameId),
             UNIQUE (targetType, targetName, teamId, gameId)
         );
-        CREATE TABLE BetTypes (
+        CREATE TABLE IF NOT EXISTS BetTypes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             betType TEXT NOT NULL,
             description TEXT,
             UNIQUE (betType, description)
         );
-        CREATE TABLE BetFormats (
+        CREATE TABLE IF NOT EXISTS BetFormats (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             formatName TEXT NOT NULL UNIQUE,
             description TEXT,
