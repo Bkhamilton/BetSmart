@@ -44,14 +44,14 @@ function TabBarButton({ name, active }: TabBarButtonProps) {
 
 export default function TabLayout() {
 
-    const { grayBorder, tint } = useTheme();
+    const { grayBorder, tint, tabBar } = useTheme();
 
     return (
         <Tabs
-        screenOptions={{
-            tabBarActiveTintColor: tint,
-            tabBarItemStyle: {borderTopWidth: 1, borderColor: grayBorder}
-        }}
+            screenOptions={{
+                tabBarActiveTintColor: tint,
+                tabBarStyle: { backgroundColor: tabBar, borderTopWidth: 1, borderColor: grayBorder },
+            }}
         >
             <Tabs.Screen
                 name="index"
