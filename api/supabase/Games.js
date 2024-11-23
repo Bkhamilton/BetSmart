@@ -20,4 +20,18 @@ export const getGamesByDateAndSeason = async (supabase, date, seasonId) => {
     
     return data;
 }
+
+export const getGameByGameId = async (supabase, gameId) => {
+    const { data, error } = await supabase
+        .from('Games')
+        .select('*')
+        .eq('gameId', gameId)
+        .single();
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
     
