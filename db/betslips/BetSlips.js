@@ -34,6 +34,29 @@ export const getTodaysBetSlips = async (db, day) => {
     }
 };
 
+// Function to get total betSlips for a user over the last 7 days
+export const getLastWeekOfBetSlips = async (db, userId) => {
+    try {
+        const betSlipsLast7Days = await db.getAllAsync(`
+            SELECT 
+                bs.*,
+                bsr.result AS result
+            FROM 
+                BetSlips bs
+            LEFT JOIN
+                BetSlipsResults bsr ON bs.id = bsr.betSlipId
+            WHERE 
+                bs.userId = ? AND 
+                bs.date >= datetime('now', '-7 days') AND
+                bsr.betSlipId IS NOT NULL
+        `, [userId]);
+        return betSlipsLast7Days;
+    } catch (error) {
+        console.error('Error fetching total bet slips over the last 7 days:', error);
+        throw error;
+    }
+};
+
 // Function to get all open bet slips for a user
 export const getOpenBetSlips = async (db, userId) => {
     try {
