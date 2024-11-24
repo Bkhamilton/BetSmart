@@ -22,3 +22,20 @@ export const insertBetMarket = async (supabase, gameId, marketType, timestamp, v
         throw error;
     }
 }
+
+export const clearBetMarkets = async (supabase, gameId) => {
+    try {
+        const { data, error } = await supabase
+            .from('BetMarkets')
+            .delete()
+            .eq('gameId', gameId);
+        if (error) {
+            console.error('Error clearing bet markets:', error);
+            throw error;
+        }
+        return data;
+    } catch (error) {
+        console.error('Error clearing bet markets:', error);
+        throw error;
+    }
+}
