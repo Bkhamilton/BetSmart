@@ -34,4 +34,16 @@ export const getGameByGameId = async (supabase, gameId) => {
 
     return data;
 }
+
+export const insertGame = async (supabase, gameId, seasonId, date, timestamp, homeTeamId, awayTeamId) => {
+    const { data, error } = await supabase
+        .from('Games')
+        .insert({ gameId: gameId, seasonId: seasonId, date: date, timestamp: timestamp, homeTeamId: homeTeamId, awayTeamId: awayTeamId });
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
     
