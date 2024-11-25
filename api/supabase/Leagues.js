@@ -32,7 +32,8 @@ export const getLeagueByName = async (supabase, leagueName) => {
         const { data, error } = await supabase
             .from('Leagues')
             .select('*')
-            .eq('leagueName', leagueName);
+            .eq('leagueName', leagueName)
+            .single();
         if (error) {
             console.error(error);
             return;
