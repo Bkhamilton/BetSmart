@@ -4,7 +4,8 @@ export const getSeasonByDate = async (supabase, leagueId, date) => {
         .select('*')
         .eq('leagueId', leagueId)
         .lte('startDate', date)
-        .gte('endDate', date);
+        .gte('endDate', date)
+        .single();
 
     if (error) {
         throw new Error(error.message);
