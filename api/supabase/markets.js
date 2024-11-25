@@ -1,11 +1,11 @@
 import secrets from "@/secrets";
-import { getActiveLeagues } from "@/supabase/Leagues";
-import { getSeasonByDate } from "@/supabase/Seasons";
-import { getTeamId } from "@/supabase/Teams";
-import { insertGame, getGameByGameId } from "@/supabase/Games";
-import { insertBetTarget, getBetTargetsByGameId, getBetTargetIdByName } from "@/supabase/BetTargets";
-import { insertBetMarket, clearGameBetMarkets } from "@/supabase/BetMarkets";
-import { getBookieId } from "@/supabase/Bookies";
+import { getActiveLeagues } from "@/api/supabase/Leagues";
+import { getSeasonByDate } from "@/api/supabase/Seasons";
+import { getTeamId } from "@/api/supabase/Teams";
+import { insertGame, getGameByGameId } from "@/api/supabase/Games";
+import { insertBetTarget, getBetTargetsByGameId, getBetTargetId } from "@/api/supabase/BetTargets";
+import { insertBetMarket, clearGameBetMarkets } from "@/api/supabase/BetMarkets";
+import { getBookieId } from "@/api/supabase/Bookies";
 import { getDateFull } from "@/utils/dateFunctions";
 // Handling array of objects
 /*
@@ -60,7 +60,7 @@ ADD LATER
 
 /*
 DB Important Info:
-    Insert BetMarket => (db, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
+    Insert BetMarket => (supabase, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
 */
 
 const bookieMapping = {
@@ -77,7 +77,7 @@ const leagueMapping = {
     'NHL': 'icehockey_nhl'
 }
 
-export const getMarkets = async (db, league, markets) => {
+export const getMarkets = async (league, markets) => {
     try {
         const marketString = markets.join(',');
         const response = await fetch(`https://api.the-odds-api.com/v4/sports/${league}/odds/?apiKey=${secrets.THE_ODDS_API_KEY}&regions=us&markets=${marketString}&oddsFormat=american`);
@@ -88,10 +88,10 @@ export const getMarkets = async (db, league, markets) => {
     }
 }
 
-export const getBig3Markets = async (db, league) => {
+export const getBig3Markets = async (league) => {
     try {
         const markets = ['h2h', 'spreads', 'totals'];
-        const data = await getMarkets(db, league, markets);
+        const data = await getMarkets(league, markets);
         return data;
     } catch (error) {
         console.error(error)
@@ -119,90 +119,93 @@ const getOdds = (odds) => {
     }
 }
 
-const addOutcomeToDB = async (db, outcome, last_update, market, bookId, gameId, betTarget) => {
+const addOutcomeToDB = async (supabase, outcome, last_update, market, bookId, gameId, betTarget) => {
     try {
         const { name, price, point = null } = outcome;
-        // Insert BetMarket => (db, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
+        // Insert BetMarket => (supabase, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId)
         const marketType = getMarketType(market);
         const overUnder = name === 'Over' || name === 'Under' ? name : '';
         const value = market === 'h2h' ? name : point;
-        const betTargetId = name === 'Over' || name === 'Under' ? betTarget : await getBetTargetIdByName(db, name);
+        const betTargetId = name === 'Over' || name === 'Under' ? betTarget : await getBetTargetId(supabase, name);
         const odds = getOdds(price);
         if (!betTargetId) {
             console.log('No betTargetId found for ' + name);
             return;
         }
-        await insertBetMarket(db, gameId, marketType, last_update, value, odds, overUnder, betTargetId, bookId);
+        await insertBetMarket(supabase, gameId, marketType, last_update, value, odds, overUnder, betTargetId, bookId);
     } catch (error) {
         console.error(error);
     }
 }
 
-export const handleMarketData = async (db, market, bookieId, gameId, betTargetId) => {
+export const handleMarketData = async (supabase, market, bookieId, gameId, betTargetId) => {
     try {
         const { key, last_update, outcomes } = market;
         for (let outcome of outcomes) {
-            await addOutcomeToDB(db, outcome, last_update, key, bookieId, gameId, betTargetId);
+            await addOutcomeToDB(supabase, outcome, last_update, key, bookieId, gameId, betTargetId);
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-export const handleBookieData = async (db, book, gameId, betTargetId) => {
+export const handleBookieData = async (supabase, book, gameId, betTargetId) => {
     try {
         const { key, title, last_update, markets } = book;
-        const bookieId = await getBookieId(db, title);
+        const bookieId = await getBookieId(supabase, title);
         for (let market of markets) {
-            await handleMarketData(db, market, bookieId, gameId, betTargetId);
+            await handleMarketData(supabase, market, bookieId, gameId, betTargetId);
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-export const handleGameData = async (db, game, league) => {
+export const handleGameData = async (supabase, game, league) => {
     try {
         // Check if game is already in DB
         // If it is, don't add it again
-        const curGame = await getGameByGameId(db, game.id);
+        const curGame = await getGameByGameId(supabase, game.id);
         if (!curGame) {
             const date = getDateFull(game.commence_time);
-            const curSeason = await getSeasonByDate(db, league.id, date);
-            const homeTeam = await getTeamId(db, game.home_team);
+            const curSeason = await getSeasonByDate(supabase, league.id, date);
+            const homeTeam = await getTeamId(supabase, game.home_team);
             if (!homeTeam) {
                 console.log('No homeTeamId found for ' + game.home_team);
                 return;
             }
             const homeTeamId = homeTeam.id;
-            const awayTeam = await getTeamId(db, game.away_team);
+            const awayTeam = await getTeamId(supabase, game.away_team);
             if (!awayTeam) {
                 console.log('No awayTeamId found for ' + game.away_team);
                 return;
             }
             const awayTeamId = awayTeam.id;
-            await insertGame(db, game.id, curSeason.id, date, game.commence_time, homeTeamId, awayTeamId);
+            await insertGame(supabase, game.id, curSeason.id, date, game.commence_time, homeTeamId, awayTeamId);
         }
-        const betTarget = await getBetTargetsByGameId(db, game.id);
-        if (betTarget.length === 0) {
-            await clearGameBetMarkets(db, game.id);
+        const betTarget = await getBetTargetsByGameId(supabase, game.id);
+        let betTargetId;
+        if (betTarget.length !== 0) {
+            await clearGameBetMarkets(supabase, game.id);
+            betTargetId = betTarget[0].id;
+        } else {
+            betTargetId = await insertBetTarget(supabase, 'Game', `${game.away_team} vs ${game.home_team}`, null, game.id);
         }
-        const betTargetId = await insertBetTarget(db, 'Game', `${game.away_team} vs ${game.home_team}`, null, game.id);
         for (let book of game.bookmakers) {
             if (!bookieMapping[book.title]) continue;
-            await handleBookieData(db, book, game.id, betTargetId);
+            await handleBookieData(supabase, book, game.id, betTargetId);
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-export const refreshBettingMarkets = async (db, league) => {
+export const refreshBettingMarkets = async (supabase, league) => {
     try {
         const leagueName = leagueMapping[league.leagueName];
-        const data = await getBig3Markets(db, leagueName);
+        const data = await getBig3Markets(leagueName);
         for (let game of data) {
-            await handleGameData(db, game, league);
+            await handleGameData(supabase, game, league);
         }
         console.log('Refreshed betting markets for ' + league.leagueName);
         return data;
@@ -211,21 +214,21 @@ export const refreshBettingMarkets = async (db, league) => {
     }    
 }
 
-export const refreshBettingMarketsLeagues = async (db, leagues) => {
+export const refreshBettingMarketsLeagues = async (supabase, leagues) => {
     try {
         for (let league of leagues) {
-            await refreshBettingMarkets(db, league);
+            await refreshBettingMarkets(supabase, league);
         }
     } catch (error) {
         console.error(error);
     }
 }
 
-export const refreshAllBettingMarkets = async (db) => {
+export const refreshAllBettingMarkets = async (supabase) => {
     try {
-        const leagues = await getActiveLeagues(db);
+        const leagues = await getActiveLeagues(supabase);
         for (let league of leagues) {
-            await refreshBettingMarkets(db, league);
+            await refreshBettingMarkets(supabase, league);
         }
     } catch (error) {
         console.error(error);
