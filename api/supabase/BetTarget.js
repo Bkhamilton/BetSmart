@@ -16,6 +16,23 @@ export const getBetTargetId = async (supabase, targetName) => {
     }
 }
 
+export const getBetTargetsByGameId = async (supabase, gameId) => {
+    try {
+        const { data, error } = await supabase
+            .from('BetTargets')
+            .select('*')
+            .eq('gameId', gameId);
+        if (error) {
+            console.error('Error fetching bet targets by game id:', error);
+            throw error;
+        }
+        return data;
+    } catch (error) {
+        console.error('Error fetching bet targets by game id:', error);
+        throw error;
+    }
+}
+
 export const insertBetTarget = async (supabase, targetType, targetName, teamId, gameId) => {
     try {
         const { data, error } = await supabase
