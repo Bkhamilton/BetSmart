@@ -3,13 +3,12 @@ export const getBetTargetId = async (supabase, targetName) => {
         const { data, error } = await supabase
             .from('BetTargets')
             .select('id')
-            .eq('name', targetName)
-            .single();
+            .eq('targetName', targetName)
         if (error) {
             console.error('Error fetching bet target id:', error);
             throw error;
         }
-        return data.id;
+        return data ? data[0].id : null;
     } catch (error) {
         console.error('Error fetching bet target id:', error);
         throw error;
@@ -37,12 +36,12 @@ export const insertBetTarget = async (supabase, targetType, targetName, teamId, 
     try {
         const { data, error } = await supabase
             .from('BetTargets')
-            .insert({ type: targetType, name: targetName, teamId: teamId, gameId: gameId });
+            .insert({ targetType: targetType, targetName: targetName, teamId: teamId, gameId: gameId })
         if (error) {
             console.error('Error inserting bet target:', error);
             throw error;
         }
-        return data;
+        return data ? data[0].id : null;
     } catch (error) {
         console.error('Error inserting bet target:', error);
         throw error;
