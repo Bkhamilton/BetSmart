@@ -25,3 +25,18 @@ export const getTeamByName = async (supabase, teamName) => {
 
     return data;
 }
+
+export const getTeamId = async (supabase, teamName) => {
+    const { data, error } = await supabase
+        .from('Teams')
+        .select('id')
+        .eq('teamName', teamName)
+        .single();
+
+    if (error) {
+        console.error('Error getting team:', error);
+        throw error;
+    }
+
+    return data;
+}
