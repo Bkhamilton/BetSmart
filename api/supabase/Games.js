@@ -21,6 +21,32 @@ export const getGamesByDateAndSeason = async (supabase, date, seasonId) => {
     return data;
 }
 
+export const getGameByTeams = async (supabase, homeTeamId, awayTeamId, timestamp) => {
+    const { data, error } = await supabase
+        .from('Games')
+        .select('*')
+        .eq('homeTeamId', homeTeamId)
+        .eq('awayTeamId', awayTeamId)
+        .eq('timestamp', timestamp);
+
+    if (error) {
+        throw error;
+    }
+
+    return data ? data[0] : null;
+}
+
+export const getGamesForResults = async (supabase, date, seasonId) => {
+    const { data, error } = await supabase
+        .rpc('get_games_for_results', { input_date: date, input_season_id: seasonId });
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
+
 export const getGameByGameId = async (supabase, gameId) => {
     const { data, error } = await supabase
         .from('Games')
