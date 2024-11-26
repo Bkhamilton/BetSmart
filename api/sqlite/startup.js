@@ -1,7 +1,25 @@
 import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createClient } from '@supabase/supabase-js';
+import secrets from '@/secrets';
 import { createTables } from '@/api/sqlite/createTables';
 import { getActiveLeagueNames } from '@/db/general/Leagues';
+
+// Set up Supabase client
+const supabaseUrl = secrets.SUPABASE_URL;
+const supabaseKey = secrets.SUPABASE_API_KEY;
+const supabase = createClient(
+    supabaseUrl || "",
+    supabaseKey || "",
+    {
+        auth: {
+            storage: AsyncStorage,
+            autoRefreshToken: true,
+            persistSession: true,
+            detectSessionInUrl: false,
+        },
+    }
+);
 
 export const initializeDatabase = async (db) => {
   try {
@@ -12,12 +30,12 @@ export const initializeDatabase = async (db) => {
         console.log('First-time initialization');
         /*
         await setupDatabase(db);
-        await syncInitialData();
+        await syncInitialData(db, supabase);
         */
     } else {
         console.log('Subsequent loads');
         // Subsequent loads
-        // await checkForUpdates();
+        // await checkForUpdates(db, supabase);
     }
   } catch (error) {
     console.error('Error initializing database:', error.message);
