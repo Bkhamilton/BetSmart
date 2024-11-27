@@ -37,11 +37,12 @@ export const insertBetTarget = async (supabase, targetType, targetName, teamId, 
         const { data, error } = await supabase
             .from('BetTargets')
             .insert({ targetType: targetType, targetName: targetName, teamId: teamId, gameId: gameId })
+            .select('id');
         if (error) {
             console.error('Error inserting bet target:', error);
             throw error;
         }
-        return data ? data[0].id : null;
+        return data[0].id;
     } catch (error) {
         console.error('Error inserting bet target:', error);
         throw error;
