@@ -23,7 +23,7 @@ export const insertBetMarket = async (supabase, gameId, marketType, timestamp, v
     }
 }
 
-export const clearBetMarkets = async (supabase, gameId) => {
+export const clearGameBetMarkets = async (supabase, gameId) => {
     try {
         const { data, error } = await supabase
             .from('BetMarkets')
