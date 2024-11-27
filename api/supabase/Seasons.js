@@ -13,3 +13,15 @@ export const getSeasonByDate = async (supabase, leagueId, date) => {
 
     return data;
 }
+
+export const getAllSeasons = async (supabase) => {
+    const { data, error } = await supabase
+        .from('Seasons')
+        .select('*');
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return data;
+}

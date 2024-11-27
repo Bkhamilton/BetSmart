@@ -71,4 +71,14 @@ export const insertGame = async (supabase, gameId, seasonId, date, timestamp, ho
 
     return data;
 }
-    
+   
+export const getAllRelevantGames = async (supabase) => {
+    const { data, error } = await supabase
+        .rpc('get_all_relevant_games');
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
