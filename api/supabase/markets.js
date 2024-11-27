@@ -167,21 +167,22 @@ export const handleGameData = async (supabase, game, league) => {
         // If it is, don't add it again
         const curGame = await getGameByGameId(supabase, game.id);
         if (!curGame) {
+            console.log('Adding game ' + game.id + ' to DB');
             const date = getDateFull(game.commence_time);
             const curSeason = await getSeasonByDate(supabase, league.id, date);
-            const homeTeam = await getTeamId(supabase, game.home_team);
-            if (!homeTeam) {
+            const homeTeamId = await getTeamId(supabase, game.home_team);
+            if (!homeTeamId) {
                 console.log('No homeTeamId found for ' + game.home_team);
                 return;
             }
-            const homeTeamId = homeTeam.id;
-            const awayTeam = await getTeamId(supabase, game.away_team);
-            if (!awayTeam) {
+            const awayTeamId = await getTeamId(supabase, game.away_team);
+            if (!awayTeamId) {
                 console.log('No awayTeamId found for ' + game.away_team);
                 return;
             }
-            const awayTeamId = awayTeam.id;
             await insertGame(supabase, game.id, curSeason.id, date, game.commence_time, homeTeamId, awayTeamId);
+        } else {
+            console.log('Game ' + game.id + ' already in DB');
         }
         const betTarget = await getBetTargetsByGameId(supabase, game.id);
         let betTargetId;
@@ -202,6 +203,7 @@ export const handleGameData = async (supabase, game, league) => {
 
 export const refreshBettingMarkets = async (supabase, league) => {
     try {
+        console.log('Refreshing betting markets for ' + league.leagueName);
         const leagueName = leagueMapping[league.leagueName];
         const data = await getBig3Markets(leagueName);
         for (let game of data) {
