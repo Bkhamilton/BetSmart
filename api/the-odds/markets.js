@@ -186,11 +186,14 @@ export const handleGameData = async (db, game, league) => {
             const awayTeamId = awayTeam.id;
             await insertGame(db, game.id, curSeason.id, date, game.commence_time, homeTeamId, awayTeamId);
         }
-        const betTarget = await getBetTargetsByGameId(db, game.id);
-        if (betTarget.length === 0) {
-            await clearGameBetMarkets(db, game.id);
+        const betTarget = await getBetTargetsByGameId(supabase, game.id);
+        let betTargetId;
+        if (betTarget.length !== 0) {
+            await clearGameBetMarkets(supabase, game.id);
+            betTargetId = betTarget[0].id;
+        } else {
+            betTargetId = await insertBetTarget(supabase, 'Game', `${game.away_team} vs ${game.home_team}`, null, game.id);
         }
-        const betTargetId = await insertBetTarget(db, 'Game', `${game.away_team} vs ${game.home_team}`, null, game.id);
         for (let book of game.bookmakers) {
             if (!bookieMapping[book.title]) continue;
             await handleBookieData(db, book, game.id, betTargetId);
