@@ -28,6 +28,23 @@ export const getUpcomingBetMarkets = async (supabase) => {
     }
 }
 
+export const getMarketsForGame = async (supabase, gameId) => {
+    try {
+        const { data, error } = await supabase
+            .from('BetMarkets')
+            .select('*')
+            .eq('gameId', gameId);
+        if (error) {
+            console.error('Error getting markets for game:', error);
+            throw error;
+        }
+        return data;
+    } catch (error) {
+        console.error('Error getting markets for game:', error);
+        throw error;
+    }
+}
+
 export const insertBetMarket = async (supabase, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) => {
     try {
         const { data, error } = await supabase
