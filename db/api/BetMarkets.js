@@ -76,6 +76,17 @@ export const insertBetMarket = async (db, gameId, marketType, timestamp, value, 
   }
 };
 
+export const insertFullBetMarket = async (db, id, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) => {
+  console.log('Inserting full bet market:', id, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId);
+  try {
+    const result = await db.runAsync('INSERT INTO BetMarkets (id, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [id, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId]);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error('Error inserting full bet market:', error);
+    throw error;
+  }
+};
+
 // Function to update a bet market
 export const updateBetMarket = async (db, betMarketId, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) => {
   try {

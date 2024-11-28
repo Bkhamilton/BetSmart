@@ -168,6 +168,16 @@ export const insertGame = async (db, gameId, seasonId, date, timestamp, homeTeam
     }
 };
 
+export const insertFullGame = async (db, id, gameId, seasonId, date, timestamp, homeTeamId, awayTeamId) => {
+    try {
+        const result = await db.runAsync('INSERT INTO Games (id, gameId, seasonId, date, timestamp, homeTeamId, awayTeamId) VALUES (?, ?, ?, ?, ?, ?, ?)', [id, gameId, seasonId, date, timestamp, homeTeamId, awayTeamId]);
+        return result.lastInsertRowId;
+    } catch (error) {
+        console.error('Error in insertFullGame:', error);
+        throw error;
+    }
+}
+
 // Function to update a game
 export const updateGame = async (db, gameId, seasonId, date, timestamp, homeTeamId, awayTeamId) => {
     try {
