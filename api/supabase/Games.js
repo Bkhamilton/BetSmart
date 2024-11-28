@@ -8,8 +8,7 @@ export const getAllUpcomingGames = async (supabase) => {
         .from('Games')
         .select('*')
         .gte('date', date)
-        .order('timestamp');
-
+        .order('date', { ascending: true });
     if (error) {
         throw error;
     }
