@@ -1,4 +1,22 @@
 
+export const getAllUpcomingGames = async (supabase) => {
+    
+    const today = new Date();
+    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+    const { data, error } = await supabase
+        .from('Games')
+        .select('*')
+        .gte('date', date)
+        .order('timestamp');
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
+
 export const getUpcomingGames = async (supabase, seasonId) => {
     const { data, error } = await supabase
         .rpc('get_upcoming_games', { input_season_id: seasonId });
@@ -60,6 +78,17 @@ export const getGameByGameId = async (supabase, gameId) => {
     return data ? data[0] : null;
 }
 
+export const getAllRelevantGames = async (supabase) => {
+    const { data, error } = await supabase
+        .rpc('get_all_relevant_games');
+
+    if (error) {
+        throw error;
+    }
+
+    return data;
+}
+
 export const insertGame = async (supabase, gameId, seasonId, date, timestamp, homeTeamId, awayTeamId) => {
     const { data, error } = await supabase
         .from('Games')
@@ -72,13 +101,3 @@ export const insertGame = async (supabase, gameId, seasonId, date, timestamp, ho
     return data;
 }
    
-export const getAllRelevantGames = async (supabase) => {
-    const { data, error } = await supabase
-        .rpc('get_all_relevant_games');
-
-    if (error) {
-        throw error;
-    }
-
-    return data;
-}

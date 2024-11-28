@@ -1,3 +1,33 @@
+export const getAllRelevantBetMarkets = async (supabase) => {
+    try {
+        const { data, error } = await supabase
+            .rpc('get_all_relevant_bet_markets');
+        if (error) {
+            console.error('Error getting bet markets:', error);
+            throw error;
+        }
+        return data;
+    } catch (error) {
+        console.error('Error getting bet markets:', error);
+        throw error;
+    }
+}
+
+export const getUpcomingBetMarkets = async (supabase) => {
+    try {
+        const { data, error } = await supabase
+            .rpc('get_upcoming_bet_markets');
+        if (error) {
+            console.error('Error getting upcoming bet markets:', error);
+            throw error;
+        }
+        return data;
+    } catch (error) {
+        console.error('Error getting upcoming bet markets:', error);
+        throw error;
+    }
+}
+
 export const insertBetMarket = async (supabase, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) => {
     try {
         const { data, error } = await supabase
