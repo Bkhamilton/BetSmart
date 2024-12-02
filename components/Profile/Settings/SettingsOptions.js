@@ -23,12 +23,11 @@ export default function SettingsOptions({ onPress }) {
     }
 
     const accountData = [
-        { icon: 'moon', title: 'Dark Mode', pressIcon: 'toggle-on' },
-        { icon: 'notifications', title: 'Notifications', pressIcon: 'chevron-right' },
-        { icon: 'lock-open', title: 'Privacy', pressIcon: 'chevron-right' },
-        { icon: 'eye-off', title: 'Security', pressIcon: 'chevron-right' },
+        { icon: 'trash', title: 'Clear User Data', pressIcon: 'chevron-right' },
         { icon: 'help-circle', title: 'Help', pressIcon: 'chevron-right' },
         { icon: 'information-circle', title: 'About', pressIcon: 'chevron-right' },
+        { icon: 'cash', title: 'Support BetSmart', pressIcon: 'chevron-right' },
+        { icon: 'log-out', title: 'Log Out', pressIcon: 'chevron-right' },
     ]
 
     return (
