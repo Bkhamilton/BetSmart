@@ -19,15 +19,15 @@ export const syncBookies = async (db, supabase) => {
             return;
         }
 
-        await db.transaction(async (tx) => {
+        await db.withTransactionAsync(async () => {
             for (const bookie of bookies) {
-                await tx.executeSql(
+                await db.execAsync(
                     'INSERT INTO Bookies (id, name, description) VALUES (?, ?, ?)',
                     [bookie.id, bookie.name, bookie.description]
                 );
             }
         });
-
+        
         console.log('Bookies synced successfully');
     } catch (error) {
         console.error('Error syncing bookies:', error);
@@ -42,9 +42,9 @@ export const syncLeagues = async (db, supabase) => {
             return;
         }
 
-        await db.transaction(async (tx) => {
+        await db.withTransactionAsync(async () => {
             for (const league of leagues) {
-                await tx.executeSql(
+                await db.execAsync(
                     'INSERT INTO Leagues (id, leagueName, sport, description) VALUES (?, ?, ?, ?)',
                     [league.id, league.leagueName, league.sport, league.description]
                 );
@@ -65,9 +65,9 @@ export const syncSeasons = async (db, supabase) => {
             return;
         }
 
-        await db.transaction(async (tx) => {
+        await db.withTransactionAsync(async () => {
             for (const season of seasons) {
-                await tx.executeSql(
+                await db.execAsync(
                     'INSERT INTO Seasons (id, leagueId, year, description) VALUES (?, ?, ?, ?)',
                     [season.id, season.leagueId, season.year, season.description]
                 );
@@ -88,9 +88,9 @@ export const syncGames = async (db, supabase) => {
             return;
         }
 
-        await db.transaction(async (tx) => {
+        await db.withTransactionAsync(async () => {
             for (const game of games) {
-                await tx.executeSql(
+                await db.execAsync(
                     'INSERT INTO Games (id, gameId, seasonId, date, timestamp, homeTeamId, awayTeamId) VALUES (?, ?, ?, ?, ?, ?, ?)',
                     [game.id, game.gameId, game.seasonId, game.date, game.timestamp, game.homeTeamId, game.awayTeamId]
                 );
@@ -111,9 +111,9 @@ export const syncBetTypes = async (db, supabase) => {
             return;
         }
 
-        await db.transaction(async (tx) => {
+        await db.withTransactionAsync(async () => {
             for (const betType of betTypes) {
-                await tx.executeSql(
+                await db.execAsync(
                     'INSERT INTO BetTypes (id, betType, description) VALUES (?, ?, ?)',
                     [betType.id, betType.betType, betType.description]
                 );
@@ -134,9 +134,9 @@ export const syncBetTargets = async (db, supabase) => {
             return;
         }
 
-        await db.transaction(async (tx) => {
+        await db.withTransactionAsync(async () => {
             for (const betTarget of betTargets) {
-                await tx.executeSql(
+                await db.execAsync(
                     'INSERT INTO BetTargets (id, targetType, targetName, teamId, gameId) VALUES (?, ?, ?, ?, ?)',
                     [betTarget.id, betTarget.targetType, betTarget.targetName, betTarget.teamId, betTarget.gameId]
                 );
@@ -157,9 +157,9 @@ export const syncBetFormats = async (db, supabase) => {
             return;
         }
 
-        await db.transaction(async (tx) => {
+        await db.withTransactionAsync(async () => {
             for (const betFormat of betFormats) {
-                await tx.executeSql(
+                await db.execAsync(
                     'INSERT INTO BetFormats (id, formatName, description) VALUES (?, ?, ?)',
                     [betFormat.id, betFormat.formatName, betFormat.description]
                 );
@@ -180,9 +180,9 @@ export const syncBetMarkets = async (db, supabase) => {
             return;
         }
 
-        await db.transaction(async (tx) => {
+        await db.withTransactionAsync(async () => {
             for (const betMarket of betMarkets) {
-                await tx.executeSql(
+                await db.execAsync(
                     'INSERT INTO BetMarkets (id, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                     [betMarket.id, betMarket.gameId, betMarket.marketType, betMarket.timestamp, betMarket.value, betMarket.odds, betMarket.overUnder, betMarket.betTargetId, betMarket.bookieId]
                 );
@@ -203,9 +203,9 @@ export const syncGameResults = async (db, supabase) => {
             return;
         }
 
-        await db.transaction(async (tx) => {
+        await db.withTransactionAsync(async () => {
             for (const gameResult of gameResults) {
-                await tx.executeSql(
+                await db.execAsync(
                     'INSERT INTO GameResults (id, gameId, homeScore, awayScore, winner) VALUES (?, ?, ?, ?, ?)',
                     [gameResult.id, gameResult.gameId, gameResult.homeScore, gameResult.awayScore, gameResult.winner]
                 );
