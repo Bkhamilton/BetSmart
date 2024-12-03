@@ -3,17 +3,60 @@ import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/component
 import { FontAwesome5 } from '@expo/vector-icons';
 import AccountInfo from '@/components/Profile/Settings/AccountInfo';
 import SettingsOptions from '@/components/Profile/Settings/SettingsOptions';
+import ConfirmMessage from '@/components/Modals/ConfirmMessage';
+import OptionMenu from '@/components/Modals/OptionMenu';
 import useRouting from '@/hooks/useRouting';
+import useConfirmationState from '@/hooks/useConfirmationState';
 import useTheme from '@/hooks/useTheme';
 
 export default function SettingsScreen() {
 
     const { iconColor } = useTheme();
 
+    const { 
+        confirmationModalVisible, 
+        closeConfirmationModal, 
+        confirmMessage, 
+        onHandleConfirm,
+        confirmAction,
+        handleConfirmation,
+        handleConfirmNoModal,
+    } = useConfirmationState();
+
     const { handleProfilePage } = useRouting();
 
+    const onSelected = (title) => {
+        console.log(title);
+    }
+    
+    const handleSelect = (title) => {
+        switch (title) {
+            case 'Clear User Data':
+                handleConfirmNoModal('clear user data?', onSelected, title);
+            case 'Help':
+                console.log('help');
+                // Open Help Modal
+            case 'About':
+                console.log('about');
+                // Open About Page or Modal
+            case 'Support BetSmart':
+                console.log('support');
+                // Open Support Modal
+            case 'Log Out':
+                handleConfirmNoModal('log out?', onSelected, title);
+            default:
+                console.log('default');
+        }
+    }
+
     return (
-        <View style={styles.container}>
+        <>
+            <ConfirmMessage
+                visible={confirmationModalVisible}
+                close={closeConfirmationModal}
+                message={confirmMessage}
+                confirm={onHandleConfirm}
+            />
             <View style={styles.headerContainer}>
                 <TouchableOpacity 
                     onPress={handleProfilePage}
@@ -30,10 +73,10 @@ export default function SettingsScreen() {
                         <Text style={styles.accountHeaderText}>Account</Text>
                     </View>
                     <AccountInfo />
-                    <SettingsOptions onPress={handleProfilePage}/>
+                    <SettingsOptions onSelect={handleSelect} />
                 </ClearView>
             </ScrollView>
-        </View>
+        </>
     );
 }
 
