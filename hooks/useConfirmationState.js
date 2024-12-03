@@ -66,6 +66,18 @@ const useConfirmationState = () => {
         }
     };
 
+    const handleConfirmNoModal = async (message, handleResponse, target) => {
+        const response = await confirmAction(message);
+
+        if (response) {
+            if (Array.isArray(target)) {
+                handleResponse(...target);
+            } else {
+                handleResponse(target);
+            }
+        }
+    }
+
     return {
         confirmationModalVisible,
         setConfirmationModalVisible,
@@ -77,7 +89,8 @@ const useConfirmationState = () => {
         onHandleConfirm,
         startConfirmation,
         confirmAction,
-        handleConfirmation
+        handleConfirmation,
+        handleConfirmNoModal,
     };
 };
 
