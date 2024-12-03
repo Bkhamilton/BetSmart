@@ -4,18 +4,24 @@ import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
-export default function SettingsOptions({ onPress }) {
+export default function SettingsOptions({ onSelect }) {
 
     const { iconColor } = useTheme();
 
-    function SettingsOption({ icon, title, pressIcon, onPress }) {
+    function SettingsOption({ icon, title, pressIcon, onSelect }) {
         return (
             <View style={styles.optionContainer}>
-                <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <TouchableOpacity 
+                    style={{ flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}
+                    onPress={onSelect}
+                >
                     <Ionicons name={icon} size={18} color={iconColor} />
                     <Text style={styles.optionText}>{title}</Text>
                 </TouchableOpacity>
-                    <TouchableOpacity style={{ addingHorizontal: 6, paddingVertical: 6 }}>
+                <TouchableOpacity 
+                    style={{ addingHorizontal: 6, paddingVertical: 6 }}
+                    onPress={onSelect}    
+                >
                     <FontAwesome5 name={pressIcon} size={24} color={iconColor} />
                 </TouchableOpacity>
             </View>
@@ -38,7 +44,7 @@ export default function SettingsOptions({ onPress }) {
                         icon={item.icon}
                         title={item.title}
                         pressIcon={item.pressIcon}
-                        onPress={() => onPress(item.title)}
+                        onSelect={() => onSelect(item.title)}
                     />
                 </View>
             ))}
