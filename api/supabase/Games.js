@@ -78,8 +78,13 @@ export const getGameByGameId = async (supabase, gameId) => {
 }
 
 export const getAllRelevantGames = async (supabase) => {
+    const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
     const { data, error } = await supabase
-        .rpc('get_all_relevant_games');
+        .from('Games')
+        .select('gameId, seasonId, date, timestamp, homeTeamId, awayTeamId')
+        .gte('date', oneWeekAgo)
+        .order('date');
 
     if (error) {
         throw error;
