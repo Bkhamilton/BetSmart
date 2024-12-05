@@ -126,6 +126,30 @@ export const getParticipantBet = async (db, participantBetId) => {
   }
 };
 
+// Function to get all bets for a given array of betSlipIds
+export const getBetsByBetSlipIds = async (db, betSlipIds) => {
+  try {
+    // Construct placeholders for the array elements
+    const placeholders = betSlipIds.map(() => '?').join(',');
+
+    // Construct the SQL query
+    const query = `
+      SELECT 
+        * 
+      FROM 
+        ParticipantBets 
+      WHERE 
+        betSlipId IN (${placeholders})
+    `;
+
+    const allRows = await db.getAllAsync(query, betSlipIds);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting bets by betSlipIds:', error);
+    throw error;
+  }
+};
+
 // Function to insert a participant bet
 export const insertParticipantBet = async (db, betSlipId, gameId, odds) => {
   try {
@@ -157,6 +181,7 @@ export const deleteParticipantBet = async (db, participantBetId) => {
   }
 };
 
+// Function to delete participant bets by participantBetIds
 export const deleteBetsByBetSlipId = async (db, betSlipId) => {
   try {
     await db.runAsync('DELETE FROM ParticipantBets WHERE betSlipId = ?', [betSlipId]);
@@ -165,3 +190,24 @@ export const deleteBetsByBetSlipId = async (db, betSlipId) => {
     throw error;
   }
 }
+
+// Function to delete participant bets by participantBetIds
+export const deleteBetsByBetSlipIds = async (db, betSlipIds) => {
+  try {
+    const placeholders = betSlipIds.map(() => '?').join(',');
+    await db.runAsync(`DELETE FROM ParticipantBets WHERE betSlipId IN (${placeholders})`, betSlipIds);
+  } catch (error) {
+    console.error('Error deleting participant bets by betSlipIds:', error);
+    throw error;
+  }
+};
+
+// Function to clear all participant bets
+export const clearParticipantBets = async (db, userId) => {
+  try {
+    await db.runAsync('DELETE FROM ParticipantBets WHERE betSlipId IN (SELECT id FROM BetSlips WHERE userId = ?)', [userId]);
+  } catch (error) {
+    console.error('Error clearing participant bets:', error);
+    throw error;
+  }
+};

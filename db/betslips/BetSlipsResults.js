@@ -267,3 +267,24 @@ export const deleteBetSlipResult = async (db, betSlipId) => {
         throw error;
     }
 };
+
+// Function to delete bet slip results by betSlipIds
+export const deleteBetSlipResultsByBetSlipIds = async (db, betSlipIds) => {
+    try {
+        const placeholders = betSlipIds.map(() => '?').join(',');
+        await db.runAsync(`DELETE FROM BetSlipsResults WHERE betSlipId IN (${placeholders})`, betSlipIds);
+    } catch (error) {
+        console.error('Error deleting bet slip results by betSlipIds:', error);
+        throw error;
+    }
+};
+
+// Function to clear all bet slip results for a specific user
+export const clearBetSlipResults = async (db, userId) => {
+    try {
+        await db.runAsync('DELETE FROM BetSlipsResults WHERE betSlipId IN (SELECT id FROM BetSlips WHERE userId = ?)', [userId]);
+    } catch (error) {
+        console.error('Error clearing bet slip results:', error);
+        throw error;
+    }
+};

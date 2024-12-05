@@ -42,3 +42,14 @@ export const deleteParticipantBetResult = async (db, participantBetId) => {
         throw error;
     }
 };
+
+// Function to delete participant bets results by participantBetIds
+export const deleteParticipantBetResultsByParticipantBetIds = async (db, participantBetIds) => {
+    try {
+        const placeholders = participantBetIds.map(() => '?').join(',');
+        await db.runAsync(`DELETE FROM ParticipantBetsResults WHERE participantBetId IN (${placeholders})`, participantBetIds);
+    } catch (error) {
+        console.error('Error deleting participant bets results by participantBetIds:', error);
+        throw error;
+    }
+};

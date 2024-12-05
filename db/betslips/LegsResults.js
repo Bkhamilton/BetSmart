@@ -40,3 +40,14 @@ export const deleteLegResult = async (db, legId) => {
         throw error;
     }
 };
+
+// Function to delete legs results by legIds
+export const deleteLegsResultsByLegIds = async (db, legIds) => {
+    try {
+        const placeholders = legIds.map(() => '?').join(',');
+        await db.runAsync(`DELETE FROM LegsResults WHERE legId IN (${placeholders})`, legIds);
+    } catch (error) {
+        console.error('Error deleting legs results by legIds:', error);
+        throw error;
+    }
+};

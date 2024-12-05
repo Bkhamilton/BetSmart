@@ -97,6 +97,30 @@ export const getFavoriteBetType = async (db, userId) => {
   }
 };
 
+// Function to get all legs given an array of participantBetIds
+export const getLegsByParticipantBetIds = async (db, participantBetIds) => {
+  try {
+    // Construct placeholders for the array elements
+    const placeholders = participantBetIds.map(() => '?').join(',');
+
+    // Construct the SQL query
+    const query = `
+      SELECT 
+        * 
+      FROM 
+        Legs 
+      WHERE 
+        participantBetId IN (${placeholders})
+    `;
+
+    const allRows = await db.getAllAsync(query, participantBetIds);
+    return allRows;
+  } catch (error) {
+    console.error('Error getting legs by participantBetIds:', error);
+    throw error;
+  }
+};
+
 // Function to insert a leg
 export const insertLeg = async (db, participantBetId, betMarketId, betTypeId) => {
   try {
@@ -137,9 +161,21 @@ export const deleteLeg = async (db, legId) => {
   }
 };
 
+// Function to delete legs by participantBetId
 export const deleteLegsByParticipantBetId = async (db, participantBetId) => {
   try {
     await db.runAsync('DELETE FROM Legs WHERE participantBetId = ?', [participantBetId]);
+  } catch (error) {
+    console.error('Error deleting legs:', error);
+    throw error;
+  }
+}
+
+// Function to delete legs by participantBetIds
+export const deleteLegsByParticipantBetIds = async (db, participantBetIds) => {
+  try {
+    const placeholders = participantBetIds.map(() => '?').join(',');
+    await db.runAsync(`DELETE FROM Legs WHERE participantBetId IN (${placeholders})`, participantBetIds);
   } catch (error) {
     console.error('Error deleting legs:', error);
     throw error;

@@ -101,6 +101,16 @@ export const getBetSlip = async (db, betSlipId) => {
     }
 };
 
+export const getBetSlipsByUserId = async (db, userId) => {
+    try {
+        const betSlips = await db.getAllAsync('SELECT * FROM BetSlips WHERE userId = ?', [userId]);
+        return betSlips;
+    } catch (error) {
+        console.error('Error retrieving bet slips by user ID:', error);
+        throw error;
+    }
+};
+
 // Function to get total betSlips for a user
 export const getTotalBetSlips = async (db, userId) => {
     try {
@@ -202,6 +212,26 @@ export const deleteBetSlip = async (db, betSlipId, userId) => {
         await db.runAsync('DELETE FROM BetSlips WHERE id = ? AND userId = ?', [betSlipId, userId]);
     } catch (error) {
         console.error('Error deleting bet slip:', error);
+        throw error;
+    }
+};
+
+// Function to delete all bet slips for a user
+export const deleteBetSlipsByUserId = async (db, userId) => {
+    try {
+        await db.runAsync('DELETE FROM BetSlips WHERE userId = ?', [userId]);
+    } catch (error) {
+        console.error('Error deleting bet slips by user ID:', error);
+        throw error;
+    }
+}
+
+// Function to delete all bet slips for a user
+export const clearBetSlips = async (db, userId) => {
+    try {
+        await db.runAsync('DELETE FROM BetSlips WHERE userId = ?', [userId]);
+    } catch (error) {
+        console.error('Error clearing bet slips:', error);
         throw error;
     }
 };
