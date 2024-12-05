@@ -4,9 +4,9 @@ import { DBContext } from '@/contexts/DBContext';
 import { deleteBetSlip, getBetSlipsByUserId, deleteBetSlipsByUserId } from '@/db/betslips/BetSlips';
 import { deleteBetsByBetSlipId, getBetsByBetSlipIds, deleteBetsByBetSlipIds } from '@/db/betslips/ParticipantBets';
 import { deleteLegsByParticipantBetId, getLegsByParticipantBetIds, deleteLegsByParticipantBetIds } from '@/db/betslips/Legs';
-import { deleteLegsResultsByLegIds } from '@/db/betslips/LegResults';
-import { deleteParticipantBetResultsByParticipantBetIds } from '@/db/betslips/ParticipantBetResults';
-import { deleteBetSlipResultsByBetSlipIds } from '@/db/betslips/BetSlipResults';
+import { deleteLegsResultsByLegIds } from '@/db/betslips/LegsResults';
+import { deleteParticipantBetResultsByParticipantBetIds } from '@/db/betslips/ParticipantBetsResults';
+import { deleteBetSlipResultsByBetSlipIds } from '@/db/betslips/BetSlipsResults';
 import { updateUserBalance } from '@/db/user-specific/Balance';
 
 const useDatabaseFuncs = () => {
