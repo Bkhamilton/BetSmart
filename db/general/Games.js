@@ -11,6 +11,19 @@ export const getAllGames = async (db) => {
     }
 };
 
+// Function to get all upcoming games
+export const getAllUpcomingGames = async (db) => {
+    const today = new Date();
+    const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    try {
+        const allRows = await db.getAllAsync('SELECT * FROM Games WHERE DATE(date) >= ?', [date]);
+        return allRows;
+    } catch (error) {
+        console.error('Error in getAllUpcomingGames:', error);
+        throw error;
+    }
+}
+
 // Function to get all games by date
 export const getGamesByDate = async (db, date, season) => {
     try {

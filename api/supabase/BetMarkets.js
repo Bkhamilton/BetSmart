@@ -45,6 +45,26 @@ export const getMarketsForGame = async (supabase, gameId) => {
     }
 }
 
+export const getLastUpdatedMarket = async (supabase) => {
+    try {
+        const { data, error } = await supabase
+            .from('BetMarkets')
+            .select('timestamp')
+            .order('timestamp', { ascending: false })
+            .limit(1);
+
+        if (error) {
+            console.error('Error getting last updated market:', error);
+            throw error;
+        }
+
+        return data.length > 0 ? data[0].timestamp : null;
+    } catch (error) {
+        console.error('Error getting last updated market:', error);
+        throw error;
+    }
+};
+
 export const insertBetMarket = async (supabase, gameId, marketType, timestamp, value, odds, overUnder, betTargetId, bookieId) => {
     try {
         const { data, error } = await supabase
