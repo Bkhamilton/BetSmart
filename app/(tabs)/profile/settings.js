@@ -1,12 +1,17 @@
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { UserContext } from '@/contexts/UserContext';
+import { DBContext } from '@/contexts/DBContext';
 import AccountInfo from '@/components/Profile/Settings/AccountInfo';
 import SettingsOptions from '@/components/Profile/Settings/SettingsOptions';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
+import DoubleConfirm from '@/components/Modals/DoubleConfirm';
 import OptionMenu from '@/components/Modals/OptionMenu';
 import useRouting from '@/hooks/useRouting';
 import useConfirmationState from '@/hooks/useConfirmationState';
+import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
 import useTheme from '@/hooks/useTheme';
 
 export default function SettingsScreen() {
@@ -15,15 +20,25 @@ export default function SettingsScreen() {
 
     const { 
         confirmationModalVisible, 
+        doubleConfirmModalVisible,
         closeConfirmationModal, 
+        openDoubleConfirmModal,
+        closeDoubleConfirmModal,
         confirmMessage, 
         onHandleConfirm,
-        confirmAction,
-        handleConfirmation,
+        onHandleDoubleConfirm,
         handleConfirmNoModal,
+        handleDoubleConfirmation,
     } = useConfirmationState();
 
+    const {
+        clearUserData,
+        clearBettingData,
+    } = useDatabaseFuncs();
+
     const { handleProfilePage } = useRouting();
+
+    const { user } = useContext(UserContext);
 
     const onSelected = (title) => {
         console.log(title);
@@ -32,18 +47,26 @@ export default function SettingsScreen() {
     const handleSelect = (title) => {
         switch (title) {
             case 'Clear User Data':
-                handleConfirmNoModal('clear user data?', onSelected, title);
+                handleConfirmNoModal('clear all user data? This cannot be undone', clearUserData, user);
+                break;
+            case 'Clear Betting Data':
+                handleConfirmNoModal('clear all betting data? This cannot be undone', clearBettingData, user);
+                break;
             case 'Help':
-                console.log('help');
                 // Open Help Modal
+                console.log('help');
+                break;
             case 'About':
-                console.log('about');
                 // Open About Page or Modal
+                console.log('about');
+                break;
             case 'Support BetSmart':
-                console.log('support');
                 // Open Support Modal
+                console.log('support');
+                break;
             case 'Log Out':
                 handleConfirmNoModal('log out?', onSelected, title);
+                break;
             default:
                 console.log('default');
         }
@@ -56,6 +79,11 @@ export default function SettingsScreen() {
                 close={closeConfirmationModal}
                 message={confirmMessage}
                 confirm={onHandleConfirm}
+            />
+            <DoubleConfirm 
+                visible={doubleConfirmModalVisible}
+                close={closeDoubleConfirmModal}
+                confirm={onHandleDoubleConfirm}
             />
             <View style={styles.headerContainer}>
                 <TouchableOpacity 
