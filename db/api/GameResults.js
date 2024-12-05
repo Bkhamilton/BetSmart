@@ -31,19 +31,29 @@ export const getGameResultById = async (db, id) => {
 };
 
 // Function to insert a game result
-export const insertGameResult = async (db, gameId, homeScore, awayScore, winner, spread, totalPoints) => {
+export const insertGameResult = async (db, gameId, homeScore, awayScore, winner) => {
     try {
-        const result = await db.runAsync('INSERT INTO GameResults (gameId, homeScore, awayScore, winner, spread, totalPoints) VALUES (?, ?, ?, ?, ?, ?)', [gameId, homeScore, awayScore, winner, spread, totalPoints]);
+        const result = await db.runAsync('INSERT INTO GameResults (gameId, homeScore, awayScore, winner) VALUES (?, ?, ?, ?)', [gameId, homeScore, awayScore, winner]);
         return result.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting a game result:', error);
     }
 };
 
-// Function to update a game result
-export const updateGameResult = async (db, id, gameId, homeScore, awayScore, winner, spread, totalPoints) => {
+// Function to insert a full game result
+export const insertFullGameResult = async (db, id, gameId, homeScore, awayScore, winner) => {
     try {
-        await db.runAsync('UPDATE GameResults SET gameId = ?, homeScore = ?, awayScore = ?, winner = ?, spread = ?, totalPoints = ? WHERE id = ?', [gameId, homeScore, awayScore, winner, spread, totalPoints, id]);
+        const result = await db.runAsync('INSERT INTO GameResults (id, gameId, homeScore, awayScore, winner) VALUES (?, ?, ?, ?, ?)', [id, gameId, homeScore, awayScore, winner]);
+        return result.lastInsertRowId;
+    } catch (error) {
+        console.error('Error inserting a game result:', error);
+    }
+}
+
+// Function to update a game result
+export const updateGameResult = async (db, id, gameId, homeScore, awayScore, winner) => {
+    try {
+        await db.runAsync('UPDATE GameResults SET gameId = ?, homeScore = ?, awayScore = ?, winner = ? WHERE id = ?', [gameId, homeScore, awayScore, winner, id]);
     } catch (error) {
         console.error('Error updating a game result:', error);
     }
