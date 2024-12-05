@@ -1,9 +1,12 @@
 import { useContext } from 'react';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
-import { deleteBetSlip } from '@/db/betslips/BetSlips';
-import { deleteBetsByBetSlipId } from '@/db/betslips/ParticipantBets';
-import { deleteLegsByParticipantBetId } from '@/db/betslips/Legs'; 
+import { deleteBetSlip, getBetSlipsByUserId, deleteBetSlipsByUserId } from '@/db/betslips/BetSlips';
+import { deleteBetsByBetSlipId, getBetsByBetSlipIds, deleteBetsByBetSlipIds } from '@/db/betslips/ParticipantBets';
+import { deleteLegsByParticipantBetId, getLegsByParticipantBetIds, deleteLegsByParticipantBetIds } from '@/db/betslips/Legs';
+import { deleteLegsResultsByLegIds } from '@/db/betslips/LegResults';
+import { deleteParticipantBetResultsByParticipantBetIds } from '@/db/betslips/ParticipantBetResults';
+import { deleteBetSlipResultsByBetSlipIds } from '@/db/betslips/BetSlipResults';
 import { updateUserBalance } from '@/db/user-specific/Balance';
 
 const useDatabaseFuncs = () => {
@@ -36,8 +39,74 @@ const useDatabaseFuncs = () => {
         }
     };
 
+    const clearBettingData = async (user) => {
+        console.log('Clearing betting data');
+    
+        try {
+            await db.withTransactionAsync(async () => {
+                // Get all betslips for user
+                const betSlips = await getBetSlipsByUserId(db, user.id);
+                const betSlipIds = betSlips.map(betSlip => betSlip.id);
+    
+                // Get all bets from betslips
+                const bets = await getBetsByBetSlipIds(db, betSlipIds);
+                const betIds = bets.map(bet => bet.id);
+    
+                // Get all legs from bets
+                const legs = await getLegsByParticipantBetIds(db, betIds);
+                const legIds = legs.map(leg => leg.id);
+    
+                // Delete legs results
+                if (legIds.length > 0) {
+                    await deleteLegsResultsByLegIds(db, legIds);
+                }
+    
+                // Delete legs
+                if (betIds.length > 0) {
+                    await deleteLegsByParticipantBetIds(db, betIds);
+                }
+    
+                // Delete participant bet results
+                if (betIds.length > 0) {
+                    await deleteParticipantBetResultsByParticipantBetIds(db, betIds);
+                }
+    
+                // Delete bets
+                if (betSlipIds.length > 0) {
+                    await deleteBetsByBetSlipIds(db, betSlipIds);
+                }
+    
+                // Delete betslip results
+                if (betSlipIds.length > 0) {
+                    await deleteBetSlipResultsByBetSlipIds(db, betSlipIds);
+                }
+    
+                // Delete betslips
+                await deleteBetSlipsByUserId(db, user.id);
+    
+                console.log('Betting data cleared successfully');
+            });
+        } catch (error) {
+            console.error('Error clearing betting data:', error);
+        }
+    };
+
+    const clearUserData = async (user) => {
+        console.log(user);
+        /*
+        clear all User Data
+        This Includes:
+            - Balance
+            - Bonuses
+            - Transactions
+            clearBettingData(user)
+        */
+    }
+
     return {
         deleteUserBetSlip,
+        clearUserData,
+        clearBettingData,
     };
 };
 
