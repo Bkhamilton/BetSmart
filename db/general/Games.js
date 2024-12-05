@@ -197,3 +197,13 @@ export const deleteGame = async (db, gameId) => {
         throw error;
     }
 };
+
+// Function to clear all games
+export const clearGames = async (db) => {
+    try {
+        await db.runAsync('DELETE FROM Games');
+    } catch (error) {
+        console.error('Error in clearGames:', error);
+        throw error;
+    }
+}
