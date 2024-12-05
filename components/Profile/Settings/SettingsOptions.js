@@ -30,6 +30,7 @@ export default function SettingsOptions({ onSelect }) {
 
     const accountData = [
         { icon: 'trash', title: 'Clear User Data', pressIcon: 'chevron-right' },
+        { icon: 'document', title: 'Clear Betting Data', pressIcon: 'chevron-right' },
         { icon: 'help-circle', title: 'Help', pressIcon: 'chevron-right' },
         { icon: 'information-circle', title: 'About', pressIcon: 'chevron-right' },
         { icon: 'cash', title: 'Support BetSmart', pressIcon: 'chevron-right' },
