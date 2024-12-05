@@ -5,7 +5,7 @@ import { myBetList } from '@/data/exampleBetData';
 import ProfitDashboard from '@/components/Home/ProfitDashboard/ProfitDashboard';
 import LoginPage from '@/components/Modals/LoginPage';
 import SignUpPage from '@/components/Modals/SignUpPage';
-import YesterdaysBets from '@/components/Home/BetReview/YesterdaysBets/YesterdaysBets';
+import WeeklyBetReview from '@/components/Home/BetReview/WeeklyBetReview/WeeklyBetReview';
 import TransactionModal from '@/components/Modals/TransactionModal';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
 import AddBookie from '@/components/Modals/AddBookie';
@@ -230,7 +230,7 @@ export default function HomeScreen() {
                         />
                     ) 
                 }
-                <YesterdaysBets bets={myBetList}/>
+                <WeeklyBetReview bets={myBetList}/>
                 <BankReview 
                     transactions={userTransactions} 
                     addBookie={openAddBookieModal}  
