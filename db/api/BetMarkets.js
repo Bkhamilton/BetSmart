@@ -36,8 +36,8 @@ export const getBetMarketByLeg = async (db, gameId, leg) => {
 // Function to return the most recent timestamp for any bet market
 export const getLastUpdatedMarket = async (db) => {
     try {
-        const lastUpdatedMarket = await db.getAsync('SELECT MAX(timestamp) as lastUpdated FROM BetMarkets');
-        return lastUpdatedMarket.lastUpdated;
+        const lastUpdatedMarket = await db.getAllAsync('SELECT MAX(timestamp) as lastUpdated FROM BetMarkets');
+        return lastUpdatedMarket[0].lastUpdated;
     } catch (error) {
         console.error('Error getting last updated market:', error);
         throw error;
