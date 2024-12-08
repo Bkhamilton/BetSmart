@@ -230,12 +230,11 @@ export const resyncGames = async (db, supabase, games) => {
             for (const game of games) {
                 const existingGame = await db.getAllAsync('SELECT * FROM Games WHERE gameId = ?', [game.gameId]);
 
-                if (!existingGame) {
+                if (existingGame.length === 0) {
                     await insertFullGame(db, game.id, game.gameId, game.seasonId, game.date, game.timestamp, game.homeTeamId, game.awayTeamId);
                 }
             }
         })
-
         console.log('Games resynced successfully');
     } catch (error) {
         console.error('Error resyncing games:', error);
@@ -249,7 +248,6 @@ export const resyncBetMarkets = async (db, supabase, games) => {
     // If there already is betMarket data available for a given game, clear it and replace it with the new data
     try {
         for (const game of games) {
-            console.log(`Fetching bet markets for gameId: ${game.gameId}`);
             const gameMarkets = await getMarketsForGame(supabase, game.gameId);
             if (gameMarkets.length === 0) {
                 console.log(`No bet markets to resync for gameId: ${game.gameId}`);
@@ -263,13 +261,15 @@ export const resyncBetMarkets = async (db, supabase, games) => {
                 );
 
                 for (const market of gameMarkets) {
-                    console.log('Params:', market.id, game.gameId, market.marketType, market.timestamp, market.value, market.odds, market.overUnder, market.betTargetId, market.bookieId);
+                    const identicalMarket = await db.getAllAsync('SELECT * FROM BetMarkets WHERE gameId = ? AND marketType = ? AND timestamp = ? AND value = ? AND odds = ? AND overUnder = ? AND betTargetId = ? AND bookieId = ?', [game.gameId, market.marketType, market.timestamp, market.value, market.odds, market.overUnder, market.betTargetId, market.bookieId]);
+                    if (identicalMarket.length > 0) {
+                        continue;
+                    }
                     await insertFullBetMarket(db, market.id, game.gameId, market.marketType, market.timestamp, market.value, market.odds, market.overUnder, market.betTargetId, market.bookieId);
                 }
             });
-
-            console.log(`Bet markets resynced successfully for gameId: ${game.gameId}`);
         }
+        console.log('Bet markets resynced successfully');
     } catch (error) {
         console.error('Error resyncing bet markets:', error);
     }
@@ -292,6 +292,8 @@ export const resyncGameResults = async (db, supabase, games) => {
 
             console.log(`Game results resynced successfully for gameId: ${game.gameId}`);
         }
+    } catch (error) {
+        console.error('Error resyncing game results:', error);
     }
 };
 
@@ -306,22 +308,7 @@ export const updateGameInfo = async (db, supabase) => {
     await resyncBetMarkets(db, supabase, games);
 };
 
-export const checkForUpdates = async (db, supabase) => {
-    // TODO: Implement check for updates logic
-    // Check for updates to game info
-    // If there are updates, run the updateGameInfo function
-    // Check for updates to game results
-    // If there are updates, run the resyncGameResults function
+export const updateMarkets = async (db, supabase) => {
+    const games = await getAllUpcomingGames(supabase);
+    await resyncBetMarkets(db, supabase, games);
 }
-
-export const syncInitialData = async (db, supabase) => {
-    await syncBookies(db, supabase);
-    await syncLeagues(db, supabase);
-    await syncSeasons(db, supabase);
-    await syncGames(db, supabase);
-    await syncBetTypes(db, supabase);
-    await syncBetTargets(db, supabase);
-    await syncBetFormats(db, supabase);
-    await syncBetMarkets(db, supabase);
-    await syncGameResults(db, supabase);
-};
