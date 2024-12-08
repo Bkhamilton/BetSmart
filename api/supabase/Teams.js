@@ -53,3 +53,16 @@ export const getTeamsByLeagueId = async (supabase, leagueId) => {
 
     return data;
 }
+
+export const getAllTeams = async (supabase) => {
+    const { data, error } = await supabase
+        .from('Teams')
+        .select('*');
+
+    if (error) {
+        console.error('Error getting teams:', error);
+        throw error;
+    }
+
+    return data;
+}
