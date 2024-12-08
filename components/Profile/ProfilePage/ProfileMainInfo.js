@@ -25,7 +25,7 @@ export default function ProfileMainInfo() {
             .catch((error) => console.error('Error getting total bet slips:', error));
 
         getBetSlipResultsWinnings(db, id)
-            .then((winnings) => setTotalWinnings(winnings[0].totalWinnings.toFixed(2)))
+            .then((winnings) => setTotalWinnings(winnings[0].totalWinnings ? winnings[0].totalWinnings.toFixed(2) : 0))
             .catch((error) => console.error('Error getting total winnings:', error));
     }, [user, signedIn]);
 
