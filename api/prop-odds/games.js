@@ -1,4 +1,3 @@
-import secrets from "@/secrets";
 import { insertGame, getTodaysGameswithNames } from "@/db/general/Games";
 import { getTeamIds, getTeamId } from "@/db/general/Teams";
 import { getCurrentSeason, getSeasonByDate } from "@/db/general/Seasons";
@@ -10,7 +9,7 @@ export const getGames = async (db, sport) => {
     try {
       const today = new Date();
       const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-      const response = await fetch(`https://api.prop-odds.com/beta/games/${sport}?date=${date}&tz=America/New_York&api_key=${secrets.PROP_ODDS_API_KEY}`);
+      const response = await fetch(`https://api.prop-odds.com/beta/games/${sport}?date=${date}&tz=America/New_York&api_key=${process.env.EXPO_PUBLIC_PROP_ODDS_API_KEY}`);
       const data = await response.json();
       insertFetchHistory(db, sport, date);
       return data;
@@ -21,7 +20,7 @@ export const getGames = async (db, sport) => {
 
 export const getGamesDate = async (db, sport, date) => {
   try {
-    const response = await fetch(`https://api.prop-odds.com/beta/games/${sport}?date=${date}&tz=America/New_York&api_key=${secrets.PROP_ODDS_API_KEY}`);
+    const response = await fetch(`https://api.prop-odds.com/beta/games/${sport}?date=${date}&tz=America/New_York&api_key=${process.env.EXPO_PUBLIC_PROP_ODDS_API_KEY}`);
     return response;
   } catch (error) {
     console.error(error);

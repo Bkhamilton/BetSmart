@@ -1,4 +1,3 @@
-import secrets from "@/secrets";
 import { getLeagueByName, getLeagueByGameId, getActiveLeagues } from "@/db/general/Leagues";
 import { getSeasonByDate } from "@/db/general/Seasons";
 import { getTeamId } from "@/db/general/Teams";
@@ -6,10 +5,7 @@ import { insertGame, getTodaysGameswithNames, getGameByGameId } from "@/db/gener
 import { insertBetTarget, getBetTargetsByGameId, getBetTargetIdByName } from "@/db/bet-general/BetTargets";
 import { insertBetMarket, getBetMarketByGame, clearGameBetMarkets } from "@/db/api/BetMarkets";
 import { getBookieId } from "@/db/general/Bookies";
-import { insertFetchHistory, leagueFetchedOnDate } from "@/db/api/FetchHistory";
-import { insertMarketFetchHistory, marketFetchedOnDate } from '@/db/api/MarketFetchHistory';
 import { getDateFull } from "@/utils/dateFunctions";
-import { createScheduler } from "@/api/cloudDB/scheduler";
 // Handling array of objects
 /*
 Main object fields: 
@@ -83,7 +79,7 @@ const leagueMapping = {
 export const getMarkets = async (db, league, markets) => {
     try {
         const marketString = markets.join(',');
-        const response = await fetch(`https://api.the-odds-api.com/v4/sports/${league}/odds/?apiKey=${secrets.THE_ODDS_API_KEY}&regions=us&markets=${marketString}&oddsFormat=american`);
+        const response = await fetch(`https://api.the-odds-api.com/v4/sports/${league}/odds/?apiKey=${process.env.EXPO_PUBLIC_THE_ODDS_API_KEY}&regions=us&markets=${marketString}&oddsFormat=american`);
         const data = await response.json();
         return data;
     } catch (error) {

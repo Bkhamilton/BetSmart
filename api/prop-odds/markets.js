@@ -1,4 +1,3 @@
-import secrets from "@/secrets";
 import { getTeamsByAbbreviation } from "@/db/general/Teams";
 import { getBookieByName, getBookieNames } from "@/db/general/Bookies";
 import { getBetTargetId, getBetTargetIdByGameId } from "@/db/bet-general/BetTargets";
@@ -7,7 +6,7 @@ import { insertMarketFetchHistory, marketFetchedOnDate } from '@/db/api/MarketFe
 
 export const getMarkets = async (gameId) => {
     try {
-        const response = await fetch(`https://api.prop-odds.com/beta/markets/${gameId}?api_key=${secrets.PROP_ODDS_API_KEY}`);
+        const response = await fetch(`https://api.prop-odds.com/beta/markets/${gameId}?api_key=${process.env.EXPO_PUBLIC_PROP_ODDS_API_KEY}`);
         const data = await response.json();
         return data;
     } catch (error) {
@@ -19,7 +18,7 @@ export const getMarketProps = async (db, gameId, market) => {
     try {
       const today = new Date();
       const date = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-      const response = await fetch(`https://api.prop-odds.com/beta/odds/${gameId}/${market}?api_key=${secrets.PROP_ODDS_API_KEY}`);
+      const response = await fetch(`https://api.prop-odds.com/beta/odds/${gameId}/${market}?api_key=${process.env.EXPO_PUBLIC_PROP_ODDS_API_KEY}`);
       const data = await response.json();
       insertMarketFetchHistory(db, gameId, market, date);
       return data;

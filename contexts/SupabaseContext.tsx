@@ -2,7 +2,6 @@
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createClient } from '@supabase/supabase-js'
-import secrets from "@/secrets";
 
 interface SupabaseContextValue {
     supabase?: any;
@@ -25,8 +24,8 @@ interface SupabaseContextValueProviderProps {
 
 export const SupabaseContextProvider = ({ children }: SupabaseContextValueProviderProps) => {
     
-    const supabaseUrl = secrets.SUPABASE_URL
-    const supabaseKey = secrets.SUPABASE_API_KEY
+    const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_API_KEY
     const supabase = createClient(
         supabaseUrl || "",
         supabaseKey || "",
