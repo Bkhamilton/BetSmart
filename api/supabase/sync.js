@@ -1,6 +1,10 @@
 import { getAllBookies } from './Bookies'; // DONE
 import { getAllLeagues } from './Leagues'; // DONE
 import { getAllSeasons } from './Seasons'; // DONE
+import { getAllTeams } from './Teams'; // DONE
+import { getAllPlayers } from './Players'; // DONE
+import { getAllLeagueProps } from './LeagueProps'; // DONE
+import { getAllLeaguePropsInfo } from './LeaguePropsInfo'; // DONE
 import { getAllRelevantGames, getAllUpcomingGames } from './Games'; // DONE
 import { getAllBetTypes } from './BetTypes'; // DONE
 import { getAllRelevantBetTargets } from './BetTargets'; // DONE
@@ -69,8 +73,8 @@ export const syncSeasons = async (db, supabase) => {
         await db.withTransactionAsync(async () => {
             for (const season of seasons) {
                 await db.runAsync(
-                    'INSERT INTO Seasons (id, leagueId, year, description) VALUES (?, ?, ?, ?)',
-                    [season.id, season.leagueId, season.year, season.description]
+                    'INSERT INTO Seasons (id, leagueId, season, games, description, seasonType, startDate, endDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                    [season.id, season.leagueId, season.season, season.games, season.description, season.seasonType, season.startDate, season.endDate]
                 );
             }
         });
@@ -78,6 +82,98 @@ export const syncSeasons = async (db, supabase) => {
         console.log('Seasons synced successfully');
     } catch (error) {
         console.error('Error syncing seasons:', error);
+    }
+};
+
+export const syncTeams = async (db, supabase) => {
+    try {
+        const teams = await getAllTeams(supabase);
+        if (teams.length === 0) {
+            console.log('No teams to sync');
+            return;
+        }
+
+        await db.withTransactionAsync(async () => {
+            for (const team of teams) {
+                await db.runAsync(
+                    'INSERT INTO Teams (id, teamName, abbreviation, leagueId, logoUrl) VALUES (?, ?, ?, ?, ?)',
+                    [team.id, team.teamName, team.abbreviation, team.leagueId, team.logoUrl]
+                );
+            }
+        });
+
+        console.log('Teams synced successfully');
+    } catch (error) {
+        console.error('Error syncing teams:', error);
+    }
+};
+
+export const syncPlayers = async (db, supabase) => {
+    try {
+        const players = await getAllPlayers(supabase);
+        if (players.length === 0) {
+            console.log('No players to sync');
+            return;
+        }
+
+        await db.withTransactionAsync(async () => {
+            for (const player of players) {
+                await db.runAsync(
+                    'INSERT INTO Players (id, name, position, number, image, teamId) VALUES (?, ?, ?, ?, ?, ?)',
+                    [player.id, player.name, player.position, player.number, player.image, player.teamId]
+                );
+            }
+        });
+
+        console.log('Players synced successfully');
+    } catch (error) {
+        console.error('Error syncing players:', error);
+    }
+}
+
+export const syncLeagueProps = async (db, supabase) => {
+    try {
+        const leagueProps = await getAllLeagueProps(supabase);
+        if (leagueProps.length === 0) {
+            console.log('No league props to sync');
+            return;
+        }
+
+        await db.withTransactionAsync(async () => {
+            for (const prop of leagueProps) {
+                await db.runAsync(
+                    'INSERT INTO LeagueProps (id, propName, leagueId) VALUES (?, ?, ?)',
+                    [prop.id, prop.propName, prop.leagueId]
+                );
+            }
+        });
+
+        console.log('League props synced successfully');
+    } catch (error) {
+        console.error('Error syncing league props:', error);
+    }
+};
+
+export const syncLeaguePropsInfo = async (db, supabase) => {
+    try {
+        const leaguePropsInfo = await getAllLeaguePropsInfo(supabase);
+        if (leaguePropsInfo.length === 0) {
+            console.log('No league props info to sync');
+            return;
+        }
+
+        await db.withTransactionAsync(async () => {
+            for (const info of leaguePropsInfo) {
+                await db.runAsync(
+                    'INSERT INTO LeaguePropsInfo (id, propValue, leaguePropId) VALUES (?, ?, ?)',
+                    [info.id, info.propValue, info.leaguePropId]
+                );
+            }
+        });
+
+        console.log('League props info synced successfully');
+    } catch (error) {
+        console.error('Error syncing league props info:', error);
     }
 };
 
