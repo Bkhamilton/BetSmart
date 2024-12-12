@@ -1,4 +1,3 @@
-import secrets from "@/secrets";
 import { getActiveLeagues } from "@/api/supabase/Leagues";
 import { getSeasonByDate } from "@/api/supabase/Seasons";
 import { getTeamId } from "@/api/supabase/Teams";
@@ -80,7 +79,7 @@ const leagueMapping = {
 export const getMarkets = async (league, markets) => {
     try {
         const marketString = markets.join(',');
-        const response = await fetch(`https://api.the-odds-api.com/v4/sports/${league}/odds/?apiKey=${secrets.THE_ODDS_API_KEY}&regions=us&markets=${marketString}&oddsFormat=american`);
+        const response = await fetch(`https://api.the-odds-api.com/v4/sports/${league}/odds/?apiKey=${process.env.EXPO_PUBLIC_THE_ODDS_API_KEY}&regions=us&markets=${marketString}&oddsFormat=american`);
         const data = await response.json();
         return data;
     } catch (error) {
