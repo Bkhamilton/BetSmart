@@ -1,6 +1,6 @@
 export const getAllBetTypes = async (supabase) => {
     const { data, error } = await supabase
-        .from('bet_types')
+        .from('BetTypes')
         .select('*')
         
     if (error) throw error

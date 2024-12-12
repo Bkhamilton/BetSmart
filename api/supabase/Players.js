@@ -12,3 +12,16 @@ export const addPlayer = async (supabase, name, position, number, image, teamId)
 
     return data;
 };
+
+export const getAllPlayers = async (supabase) => {
+    const { data, error } = await supabase
+        .from('Players')
+        .select('*');
+
+    if (error) {
+        console.error('Error getting players:', error);
+        throw error;
+    }
+
+    return data;
+};
