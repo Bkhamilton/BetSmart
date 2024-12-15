@@ -4,11 +4,11 @@
     "slug": "BetSmart",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/BetSmart.jpeg",
+    "icon": "./assets/images/BetSmart.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/BetSmart.jpeg",
+      "image": "./assets/images/BetSmart.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,14 +21,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/BetSmart.jpeg",
+        "foregroundImage": "./assets/images/BetSmart.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/BetSmart.jpeg"
+      "favicon": "./assets/images/BetSmart.png"
     },
     "plugins": [
       "expo-router",
