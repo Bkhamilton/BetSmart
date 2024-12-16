@@ -85,6 +85,7 @@ export default function HomeScreen() {
         loginModalVisible,
         signUpModalVisible,
         login,
+        signUp,
         openLoginModal,
         closeLoginModal,
         openSignUpModal,
@@ -154,6 +155,7 @@ export default function HomeScreen() {
                 <SignUpPage 
                     visible={signUpModalVisible} 
                     close={closeSignUpModal}
+                    signUp={signUp}
                 />
                 <TransactionModal 
                     visible={transactionModalVisible} 

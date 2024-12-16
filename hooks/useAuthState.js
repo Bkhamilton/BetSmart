@@ -1,5 +1,5 @@
 import { useState, useCallback, useContext } from 'react';
-import { getUser } from '@/db/user-specific/Users';
+import { getUser, insertUser } from '@/db/user-specific/Users';
 import { insertUserSession, getMostRecentUserSession, insertNonActiveUserSession } from '@/db/user-specific/UserSessions';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
@@ -31,28 +31,52 @@ const useAuthState = (closeLoginModal) => {
         setSignUpModalVisible(false);
     }
     
+    const signUp = useCallback(async (username, email, name, password) => {
+        try {
+            // Check if the username is already taken
+            const user = await getUser(db, username);
+
+            if (user) {
+                setAuthError('Username is already taken');
+                return false;
+            }
+
+            // If the username is not taken, create a new user
+            const today = new Date().toISOString();
+            const userId = await insertUser(db, name, email, username, password);
+            await insertUserSession(db, userId, today);
+            setSignedIn(true);
+
+            closeSignUpModal();
+            setAuthError(null);
+            return true;
+        } catch (error) {
+            setAuthError('An error occurred during sign up');
+            return false;
+        }
+    }, [db, closeSignUpModal]);
 
     const login = useCallback(async (username, password) => {
         try {
-        // Check if the username and password match
-        const user = await getUser(db, username, password);
+            // Check if the username and password match
+            const user = await getUser(db, username, password);
 
-        if (!user) {
-            setAuthError('Invalid username or password');
-            return false;
-        }
+            if (!user) {
+                setAuthError('Invalid username or password');
+                return false;
+            }
 
-        // If the username and password match, create a new session
-        const today = new Date().toISOString();
-        await insertUserSession(db, user.id, today);
-        setSignedIn(true);
+            // If the username and password match, create a new session
+            const today = new Date().toISOString();
+            await insertUserSession(db, user.id, today);
+            setSignedIn(true);
 
-        closeLoginModal();
-        setAuthError(null);
-        return true;
+            closeLoginModal();
+            setAuthError(null);
+            return true;
         } catch (error) {
-        setAuthError('An error occurred during login');
-        return false;
+            setAuthError('An error occurred during login');
+            return false;
         }
     }, [db, closeLoginModal]);
 
@@ -84,6 +108,7 @@ const useAuthState = (closeLoginModal) => {
         signUpModalVisible,
         setSignUpModalVisible,
         login,
+        signUp,
         authError,
         openLoginModal,
         closeLoginModal,
