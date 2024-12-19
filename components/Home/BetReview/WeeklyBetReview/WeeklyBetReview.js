@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
-import { betSlipResults, noDetailStats } from '@/data/exampleBetData';
+import { weeklyBets } from '@/data/weeklyBets';
 import NoDetails from './NoDetails';
 import ShowDetails from './ShowDetails';
+import { countMarketTypes } from '@/utils/betSlipFunctions';
 
 export default function YesterdaysBets({ bets }) {
     // order betSlipResults by result, result: 1 first
-    const betSlips = betSlipResults.sort((a, b) => {
+    const betSlips = weeklyBets.sort((a, b) => {
         if (a.result === 1 && b.result === 0) return -1;
         if (a.result === 0 && b.result === 1) return 1;
         return b.winnings - a.winnings;
     });
+    
+    const [amountBet, setAmountBet] = useState(0);
+    const [amountWon, setAmountWon] = useState(0);
+    const [totalBets, setTotalBets] = useState(0);
+    const [betsWon, setBetsWon] = useState(0);
+    const [marketTypes, setMarketTypes] = useState({});
 
-    const amountBet = betSlips.reduce((acc, bet) => acc + bet.betAmount, 0);
-    const amountWon = betSlips.reduce((acc, bet) => acc + bet.winnings, 0);
-    const totalBets = betSlips.length;
-    const betsWon = betSlips.filter(bet => bet.result === 1).length;
+    useEffect(() => {
+        setAmountBet(betSlips.reduce((acc, bet) => acc + bet.betAmount, 0));
+        setAmountWon(betSlips.reduce((acc, bet) => acc + bet.winnings, 0));
+        setTotalBets(betSlips.length);
+        setBetsWon(betSlips.filter(bet => bet.result === 1).length);
+        setMarketTypes(countMarketTypes(betSlips));
+        console.log(JSON.stringify(countMarketTypes(betSlips)));
+    }, [betSlips]);
 
     const [opacity, setOpacity] = useState(1);
 
@@ -54,6 +65,7 @@ export default function YesterdaysBets({ bets }) {
                         betSlips={betSlips}
                         betsWon={betsWon}
                         totalBets={totalBets}
+                        marketTypes={marketTypes}
                     /> 
                     : 
                     <NoDetails
@@ -61,7 +73,7 @@ export default function YesterdaysBets({ bets }) {
                         amountWon={amountWon}
                         betsWon={betsWon}
                         totalBets={totalBets}
-                        stats={noDetailStats}
+                        marketTypes={marketTypes}
                     />
                 } 
             </Pressable>
