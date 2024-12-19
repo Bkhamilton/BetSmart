@@ -23,6 +23,7 @@ export const weeklyBets = [
                 "awayTeamName": "Detroit Pistons",
                 "awayTeamAbv": "DET",
                 "leagueId": 1,
+                "result": 1,
                 "league": "NBA",
                 "legs": [
                     {
@@ -37,7 +38,8 @@ export const weeklyBets = [
                         "betTarget": "Charlotte Hornets",
                         "targetType": "Team",
                         "betTypeId": 1,
-                        "betType": "Main"
+                        "betType": "Main",
+                        "result": 1
                     }
                 ]
             },
@@ -54,6 +56,7 @@ export const weeklyBets = [
                 "awayTeamName": "Minnesota Timberwolves",
                 "awayTeamAbv": "MIN",
                 "leagueId": 1,
+                "result": 0,
                 "league": "NBA",
                 "legs": [
                     {
@@ -68,7 +71,8 @@ export const weeklyBets = [
                         "betTarget": "Minnesota Timberwolves",
                         "targetType": "Team",
                         "betTypeId": 1,
-                        "betType": "Main"
+                        "betType": "Main",
+                        "result": 0
                     }
                 ]
             }
@@ -98,6 +102,7 @@ export const weeklyBets = [
                 "awayTeamName": "Orlando Magic",
                 "awayTeamAbv": "ORL",
                 "leagueId": 1,
+                "result": 0,
                 "league": "NBA",
                 "legs": [
                     {
@@ -112,7 +117,8 @@ export const weeklyBets = [
                         "betTarget": "Los Angeles Lakers",
                         "targetType": "Team",
                         "betTypeId": 1,
-                        "betType": "Main"
+                        "betType": "Main",
+                        "result": 0
                     },
                     {
                         "legId": 163,
@@ -126,7 +132,8 @@ export const weeklyBets = [
                         "betTarget": "Orlando Magic vs Los Angeles Lakers",
                         "targetType": "Game",
                         "betTypeId": 1,
-                        "betType": "Main"
+                        "betType": "Main",
+                        "result": 0
                     }
                 ]
             },
@@ -143,6 +150,7 @@ export const weeklyBets = [
                 "awayTeamName": "Utah Jazz",
                 "awayTeamAbv": "UTA",
                 "leagueId": 1,
+                "result": 0,
                 "league": "NBA",
                 "legs": [
                     {
@@ -157,7 +165,8 @@ export const weeklyBets = [
                         "betTarget": "Utah Jazz",
                         "targetType": "Team",
                         "betTypeId": 1,
-                        "betType": "Main"
+                        "betType": "Main",
+                        "result": 0
                     }
                 ]
             },
@@ -174,6 +183,7 @@ export const weeklyBets = [
                 "awayTeamName": "Minnesota Timberwolves",
                 "awayTeamAbv": "MIN",
                 "leagueId": 1,
+                "result": 1,
                 "league": "NBA",
                 "legs": [
                     {
@@ -188,7 +198,8 @@ export const weeklyBets = [
                         "betTarget": "Toronto Raptors",
                         "targetType": "Team",
                         "betTypeId": 1,
-                        "betType": "Main"
+                        "betType": "Main",
+                        "result": 1
                     }
                 ]
             }
@@ -218,6 +229,7 @@ export const weeklyBets = [
                 "awayTeamName": "Detroit Pistons",
                 "awayTeamAbv": "DET",
                 "leagueId": 1,
+                "result": 1,
                 "league": "NBA",
                 "legs": [
                     {
@@ -232,7 +244,8 @@ export const weeklyBets = [
                         "betTarget": "Charlotte Hornets",
                         "targetType": "Team",
                         "betTypeId": 1,
-                        "betType": "Main"
+                        "betType": "Main",
+                        "result": 1
                     }
                 ]
             },
@@ -249,6 +262,7 @@ export const weeklyBets = [
                 "awayTeamName": "Minnesota Timberwolves",
                 "awayTeamAbv": "MIN",
                 "leagueId": 1,
+                "result": 1,
                 "league": "NBA",
                 "legs": [
                     {
@@ -263,7 +277,8 @@ export const weeklyBets = [
                         "betTarget": "Toronto Raptors",
                         "targetType": "Team",
                         "betTypeId": 1,
-                        "betType": "Main"
+                        "betType": "Main",
+                        "result": 1
                     }
                 ]
             }
