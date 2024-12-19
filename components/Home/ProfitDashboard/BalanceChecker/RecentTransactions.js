@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Text, View, Pressable, ClearView } from '@/components/Themed';
+import { Text, Pressable, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
 export default function RecentTransactions({ transactions, bookieId }) {

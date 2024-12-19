@@ -27,7 +27,6 @@ export default function YesterdaysBets({ bets }) {
         setTotalBets(betSlips.length);
         setBetsWon(betSlips.filter(bet => bet.result === 1).length);
         setMarketTypes(countMarketTypes(betSlips));
-        console.log(JSON.stringify(countMarketTypes(betSlips)));
     }, [betSlips]);
 
     const [opacity, setOpacity] = useState(1);

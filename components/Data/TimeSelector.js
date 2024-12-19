@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Text, View, ScrollView, Pressable } from '@/components/Themed';
+import { Text, View, Pressable } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
 export default function TimeSelector({ selectTime, curTime }) {

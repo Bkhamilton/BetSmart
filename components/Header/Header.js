@@ -5,18 +5,18 @@ import useTheme from '@/hooks/useTheme';
 
 export default function Header({ title, children }) {
 
-  const { grayBorder } = useTheme();
+    const { grayBorder } = useTheme();
 
-  return (
-    <View style={[styles.HeaderContainer, { borderColor: grayBorder }]}>
-        <View>
-          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{title}</Text>
+    return (
+        <View style={[styles.HeaderContainer, { borderColor: grayBorder }]}>
+            <View>
+                <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{title}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                {children}
+            </View>
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          {children}
-        </View>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({

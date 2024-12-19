@@ -13,41 +13,41 @@ export default function HomeHeader({ history, login, signup, openProfileOptions 
     const { signedIn } = useContext(UserContext);
 
     const HistoryButton = ({ onPress }) => (
-      <TouchableOpacity style={{ marginRight: 8 }} onPress={onPress} accessibilityLabel="Open Bet History">
-        <FontAwesome5 name='history' size={28} color={iconColor} />
-      </TouchableOpacity>
+        <TouchableOpacity style={{ marginRight: 8 }} onPress={onPress} accessibilityLabel="Open Bet History">
+            <FontAwesome5 name='history' size={28} color={iconColor} />
+        </TouchableOpacity>
     );
     
     const LoginButton = ({ onPress }) => (
-      <TouchableOpacity onPress={onPress} accessibilityLabel="Open Login">
-        <Ionicons name='person' size={28} color={iconColor} />
-      </TouchableOpacity>
+        <TouchableOpacity onPress={onPress} accessibilityLabel="Open Login">
+            <Ionicons name='person' size={28} color={iconColor} />
+        </TouchableOpacity>
     );
     
     const SignUpButton = ({ onPress }) => (
-      <TouchableOpacity onPress={onPress} accessibilityLabel="Open Sign Up">
-        <Ionicons name='person-add' size={28} color={iconColor} />
-      </TouchableOpacity>
+        <TouchableOpacity onPress={onPress} accessibilityLabel="Open Sign Up">
+            <Ionicons name='person-add' size={28} color={iconColor} />
+        </TouchableOpacity>
     );
 
     const ProfileButton = ({ onPress }) => (
-      <TouchableOpacity onPress={onPress} accessibilityLabel="Open Profile">
-        <View style={{ width: 30, height: 30, borderRadius: 15, borderWidth: 1 }}/>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={onPress} accessibilityLabel="Open Profile">
+            <View style={{ width: 30, height: 30, borderRadius: 15, borderWidth: 1 }}/>
+        </TouchableOpacity>
     );
 
     return (
         <Header title={'BetSmart'}>
-          { signedIn ?
-            <>
-              <HistoryButton onPress={history} />
-              <ProfileButton onPress={openProfileOptions} />
-            </>  :
-            <>
-              <LoginButton onPress={login} />
-              <SignUpButton onPress={signup} />
-            </>
-          }
+            { signedIn ?
+                <>
+                    <HistoryButton onPress={history} />
+                    <ProfileButton onPress={openProfileOptions} />
+                </>  :
+                <>
+                    <LoginButton onPress={login} />
+                    <SignUpButton onPress={signup} />
+                </>
+            }
         </Header>
     );
 }

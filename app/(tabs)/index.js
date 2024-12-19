@@ -27,7 +27,7 @@ import BankReview from '@/components/Home/BankReview/BankReview';
 
 export default function HomeScreen() {
 
-    const { user, userBalance, setBookie } = useContext(UserContext);
+    const { user, setBookie } = useContext(UserContext);
 
     const {
         confirmModalVisible,
@@ -51,7 +51,6 @@ export default function HomeScreen() {
         closeConfirmationModal,
         confirmMessage, 
         onHandleConfirm, 
-        confirmAction,
         handleConfirmation,
     } = useConfirmationState();
 
@@ -226,9 +225,9 @@ export default function HomeScreen() {
                 { 
                     betSlips && betSlips.length > 0 && (
                         <OpenBets 
-                        betSlips={betSlips} 
-                        confirm={openConfirmModal}
-                        openOptions={onOpenOptions}
+                            betSlips={betSlips} 
+                            confirm={openConfirmModal}
+                            openOptions={onOpenOptions}
                         />
                     ) 
                 }
