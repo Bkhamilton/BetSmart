@@ -4,9 +4,20 @@ import { Text, View, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import StatCounter from './StatCounter';
 
-export default function ShowDetails({ betSlips, betsWon, totalBets }) {
+export default function ShowDetails({ betSlips, betsWon, totalBets, marketTypes }) {
 
     const { text, greenText, redText } = useTheme();
+
+    // Function to chunk the array into groups of 4
+    const chunkArray = (array, chunkSize) => {
+        const chunks = [];
+        for (let i = 0; i < array.length; i += chunkSize) {
+            chunks.push(array.slice(i, i + chunkSize));
+        }
+        return chunks;
+    };
+
+    const chunkedMarketTypes = chunkArray(marketTypes, 4);    
 
     return (
         <>
@@ -42,18 +53,18 @@ export default function ShowDetails({ betSlips, betsWon, totalBets }) {
                 <Text style={styles.smallText}>Details</Text>
             </ClearView>
             <View style={styles.divider} />
-            <ClearView style={styles.spreadContainer}>
-                <StatCounter title="SPREAD" won={3} total={3} />
-                <StatCounter title="ML" won={2} total={3} />
-                <StatCounter title="O/U" won={3} total={8} />
-                <StatCounter title="PTS" won={2} total={4} />
-            </ClearView>
-            <ClearView style={styles.spreadContainer}>
-                <StatCounter title="AST" won={3} total={3} />
-                <StatCounter title="REB" won={2} total={3} />
-                <StatCounter title="3PT" won={1} total={2} />
-                <StatCounter title="TOTAL" won={16} total={26} />
-            </ClearView>               
+            {chunkedMarketTypes.map((chunk, index) => (
+                <ClearView key={index} style={styles.spreadContainer}>
+                    {chunk.map((marketType, idx) => (
+                        <StatCounter
+                            key={idx}
+                            title={marketType.marketType}
+                            won={marketType.won}
+                            total={marketType.total}
+                        />
+                    ))}
+                </ClearView>
+            ))}           
         </>
     );
 }
