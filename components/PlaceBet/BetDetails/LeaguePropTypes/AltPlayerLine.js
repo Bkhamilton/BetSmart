@@ -16,7 +16,7 @@ export default function AltPlayerLine() {
 
     return (
         <View style={styles.container}>
-            <PropBanner title={title} />
+            <PropBanner title={title} stat={title}/>
         </View>
     );
 }
