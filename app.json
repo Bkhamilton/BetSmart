@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "BetSmart",
-    "slug": "BetSmart",
+    "name": "BetSmarter",
+    "slug": "BetSmarter",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/BetSmart.png",
+    "icon": "./assets/images/BetSmarter.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/BetSmart.png",
+      "image": "./assets/images/BetSmarter.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,18 +17,18 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.hamiltondevelopment.BetSmart"
+      "bundleIdentifier": "com.hamiltondevelopment.BetSmarter"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/BetSmart.png",
+        "foregroundImage": "./assets/images/BetSmarter.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/BetSmart.png"
+      "favicon": "./assets/images/BetSmarter.png"
     },
     "plugins": [
       "expo-router",
