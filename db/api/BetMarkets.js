@@ -53,7 +53,7 @@ export const getBetMarketByGame = async (db, gameId, marketType) => {
             bt.targetName as targetName
         FROM 
             BetMarkets bm
-        JOIN 
+        LEFT JOIN 
             BetTargets bt ON bm.betTargetId = bt.id
         WHERE 
             bm.gameId = ? AND bm.marketType = ?
@@ -65,6 +65,27 @@ export const getBetMarketByGame = async (db, gameId, marketType) => {
     }
 };
 
+// Function to get all totals data for a game
+export const getTotalsDataFromGame = async (db, gameId) => {
+    try {
+        const allRows = await db.getAllAsync(`
+            SELECT 
+                bm.*,
+                bt.targetName as targetName 
+            FROM 
+                BetMarkets bm 
+            LEFT JOIN
+                BetTargets bt ON bm.betTargetId = bt.id
+            WHERE 
+                bm.gameId = ? AND 
+                bm.marketType = "totals"`, [gameId]);
+        return allRows;
+    } catch (error) {
+        console.error('Error getting bet markets by game:', error);
+        throw error;
+    }
+}
+
 // Function to get all bet markets for a game
 export const getBetMarketByGameId = async (db, gameId) => {
     try {
@@ -72,6 +93,17 @@ export const getBetMarketByGameId = async (db, gameId) => {
         return allRows;
     } catch (error) {
         console.error('Error getting bet markets by game:', error);
+        throw error;
+    }
+};
+
+// Function to get all unique marketTypes for a game
+export const getUniqueMarketTypesByGame = async (db, gameId) => {
+    try {
+        const uniqueMarketTypes = await db.getAllAsync('SELECT DISTINCT marketType FROM BetMarkets WHERE gameId = ?', [gameId]);
+        return uniqueMarketTypes.map((marketType) => marketType.marketType);
+    } catch (error) {
+        console.error('Error getting unique market types by game:', error);
         throw error;
     }
 };
