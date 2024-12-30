@@ -98,6 +98,17 @@ export const insertBetTarget = async (db, targetType, targetName, teamId, gameId
   }
 };
 
+// Function to insert a bet target with ID
+export const insertFullBetTarget = async (db, id, targetType, targetName, teamId, gameId) => {
+  try {
+    const result = await db.runAsync('INSERT INTO BetTargets (id, targetType, targetName, teamId, gameId) VALUES (?, ?, ?, ?, ?)', [id, targetType, targetName, teamId, gameId]);
+    return result.lastInsertRowId;
+  } catch (error) {
+    console.error('Error inserting full bet target:', error);
+    throw error;
+  }
+};
+
 // Function to update a bet target
 export const updateBetTarget = async (db, betTargetId, targetType, targetName, teamId, gameId) => {
   try {
