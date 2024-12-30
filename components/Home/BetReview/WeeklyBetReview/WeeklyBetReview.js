@@ -19,11 +19,11 @@ export default function YesterdaysBets({ bets }) {
     const [amountWon, setAmountWon] = useState(0);
     const [totalBets, setTotalBets] = useState(0);
     const [betsWon, setBetsWon] = useState(0);
-    const [marketTypes, setMarketTypes] = useState({});
+    const [marketTypes, setMarketTypes] = useState([]);
 
     useEffect(() => {
         setAmountBet(betSlips.reduce((acc, bet) => acc + bet.betAmount, 0));
-        setAmountWon(betSlips.reduce((acc, bet) => acc + bet.winnings, 0));
+        setAmountWon(betSlips.reduce((acc, bet) => bet.result === 1 ? acc + bet.winnings : acc, 0));
         setTotalBets(betSlips.length);
         setBetsWon(betSlips.filter(bet => bet.result === 1).length);
         setMarketTypes(countMarketTypes(betSlips));
