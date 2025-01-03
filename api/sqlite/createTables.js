@@ -207,11 +207,9 @@ export const createBetGeneralTables = async (db) => {
         );
         CREATE TABLE IF NOT EXISTS LeaguePropsInfo (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            leagueId INTEGER NOT NULL,
-            propName TEXT NOT NULL,
             propValue TEXT NOT NULL,
-            FOREIGN KEY(leagueId) REFERENCES Leagues(id),
-            FOREIGN KEY(propName) REFERENCES LeagueProps(propName),
+            leaguePropId INTEGER NOT NULL,
+            FOREIGN KEY(leaguePropId) REFERENCES LeagueProps(id),
             UNIQUE (leagueId, propName, propValue)
         );
     `);
