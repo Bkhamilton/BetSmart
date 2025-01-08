@@ -1,18 +1,29 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { Text, View, ClearView, TouchableOpacity } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
 import { bookieImages } from '@/constants/bookieConstants';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
+import { UserContext } from '@/contexts/UserContext';
 
 export default function BankReview({ transactions, addBookie }) {
+
+    const { signedIn, user } = useContext(UserContext);
 
     const { grayBackground, grayBorder, iconColor } = useTheme();
 
     const { handleTransactions } = useRouting();
 
     const { monthlyDeposits, monthlyWithdrawals } = useUserBalDataState();
+
+    const onAddBookie = () => {
+        if (!signedIn) {
+            alert('You must be signed in to add a bookie.');
+            return;
+        }
+        addBookie();
+    }
 
     return (
         <ClearView style={styles.container}>
@@ -57,7 +68,7 @@ export default function BankReview({ transactions, addBookie }) {
                     </TouchableOpacity>
                     <TouchableOpacity 
                         style={[styles.bottomButton, { backgroundColor: grayBorder, borderColor: grayBorder }]}
-                        onPress={addBookie}
+                        onPress={onAddBookie}
                     >
                         <Text style={styles.buttonText}>Add Bookie</Text>
                     </TouchableOpacity>

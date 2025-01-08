@@ -27,7 +27,7 @@ import BankReview from '@/components/Home/BankReview/BankReview';
 
 export default function HomeScreen() {
 
-    const { user, setBookie } = useContext(UserContext);
+    const { user, setBookie, signedIn } = useContext(UserContext);
 
     const {
         confirmModalVisible,
@@ -103,6 +103,10 @@ export default function HomeScreen() {
     const onSelectBookie = (balance) => {
         if (balance.bookieId === -1) {
             closeChooseBookieModal();
+            if (!signedIn) {
+                alert('You must be signed in to add a bookie.');
+                return;
+            }
             openAddBookieModal();
         } else {
             setBookie({ id: balance.bookieId, name: balance.bookieName });

@@ -11,6 +11,10 @@ export default function BankButtons({ selectBookie, openTransaction, bookie }) {
 
     const selectTransaction = (type) => {
         if (bookie.name === 'Total') return;
+        if (bookie.name === 'Default') {
+            alert('Please add a bookie first');
+            return;
+        }
         openTransaction(type);
     };
 
@@ -30,15 +34,15 @@ export default function BankButtons({ selectBookie, openTransaction, bookie }) {
 
     return (
         <ClearView style={styles.box}>
-            <ClearView style={[styles.transactionsContainer, { opacity: bookie.name === 'Total' ? 0.4 : 1 }]}>
+            <ClearView style={[styles.transactionsContainer, { opacity: (bookie.name === 'Total' || bookie.name === 'Default') ? 0.4 : 1 }]}>
                 <TransactionType type='Deposit'/>
                 <TransactionType type='Withdraw'/>
             </ClearView>
             <TouchableOpacity 
                 onLongPress={() => selectBookie(bookie.id)}
-                style={[styles.dollarContainer, { borderColor: accentGreen, borderWidth: bookie.name === 'Total' ? 10 : 2 }]}
+                style={[styles.dollarContainer, { borderColor: accentGreen, borderWidth: (bookie.name === 'Total' || bookie.name === 'Default') ? 10 : 2 }]}
             >
-                {bookie.name === 'Total' ? (
+                {(bookie.name === 'Total' || bookie.name === 'Default') ? (
                 <FontAwesome name="dollar" size={60} color={accentGreen}/>
                 ) : (
                 <Image source={bookieImages[bookie.name]} style={{ width: 100, height: 100, borderRadius: 50 }}/>
