@@ -42,7 +42,7 @@ const useHookNewBet = () => {
           closeBetSlipModal();
           setBetSlip(null);
         }
-        setTotalLegs(betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0);
+        setTotalLegs(betSlip ? (betSlip.bets ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0) : 0);
     }
     
     const removeBetSlip = () => {
