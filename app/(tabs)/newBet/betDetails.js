@@ -13,75 +13,75 @@ import ChoosePlayer from '@/components/Modals/ChoosePlayer';
 import BetDetailsHeader from '@/components/PlaceBet/BetDetails/BetDetailsHeader';
 
 export default function BetDetailsScreen() {
-   
-  const { league, betSlip } = useContext(BetContext);
+    
+    const { league, betSlip } = useContext(BetContext);
 
-  const { 
-    betSlipModalVisible,
-    chooseBookieModalVisible,
-    openBetSlipModal,
-    closeBetSlipModal,
-    openChooseBookieModal,
-    closeChooseBookieModal, 
-    selectBookie,
-    removeProp,
-    removeBetSlip,
-    confirmBet,
-  } = useHookNewBet();
+    const { 
+        betSlipModalVisible,
+        chooseBookieModalVisible,
+        openBetSlipModal,
+        closeBetSlipModal,
+        openChooseBookieModal,
+        closeChooseBookieModal, 
+        selectBookie,
+        removeProp,
+        removeBetSlip,
+        confirmBet,
+    } = useHookNewBet();
 
-  const {
-    leagueProps,
-    leaguePropInfo,
-    curLeagueProp,
-    selectLeagueProp,
-  } = useHookBetDetails();
+    const {
+        leagueProps,
+        leaguePropInfo,
+        curLeagueProp,
+        selectLeagueProp,
+    } = useHookBetDetails();
 
-  return (
-    <>
-      <ChooseBookie
-        visible={chooseBookieModalVisible}
-        close={closeChooseBookieModal}
-        selectBookie={selectBookie}
-      />
-      <ChoosePlayer/>
-      {
-        betSlip && (
-          <BetSlipModal
-            visible={betSlipModalVisible}
-            close={closeBetSlipModal}
-            removeProp={removeProp}
-            removeBetSlip={removeBetSlip}
-            confirm={confirmBet}
-          />
-        )
-      }
-      <BetDetailsHeader
-        league={league}
-        openChooseBookieModal={openChooseBookieModal}
-      />
-      <ScrollView>
-        <IntroInfo/>
-        {
-          leagueProps.length > 0 &&
-          <>
-            <LeaguePropSlider 
-              leagueProps={leagueProps}
-              selectLeagueProp={selectLeagueProp}
-              curLeagueProp={curLeagueProp}
+    return (
+        <>
+            <ChooseBookie
+                visible={chooseBookieModalVisible}
+                close={closeChooseBookieModal}
+                selectBookie={selectBookie}
             />
-            <LeaguePropInfo 
-              leagueProp={curLeagueProp}
-              leaguePropInfo={leaguePropInfo}
+            <ChoosePlayer/>
+            {
+                betSlip && (
+                <BetSlipModal
+                    visible={betSlipModalVisible}
+                    close={closeBetSlipModal}
+                    removeProp={removeProp}
+                    removeBetSlip={removeBetSlip}
+                    confirm={confirmBet}
+                />
+                )
+            }
+            <BetDetailsHeader
+                league={league}
+                openChooseBookieModal={openChooseBookieModal}
             />
-          </>
-        }
-      </ScrollView>
-      {
-        betSlip &&
-        <BetSlipBanner
-          onPress={openBetSlipModal}
-        />
-      }
-    </>
-  );
+            <ScrollView>
+                <IntroInfo/>
+                {
+                    leagueProps.length > 0 &&
+                    <>
+                        <LeaguePropSlider 
+                        leagueProps={leagueProps}
+                        selectLeagueProp={selectLeagueProp}
+                        curLeagueProp={curLeagueProp}
+                        />
+                        <LeaguePropInfo 
+                        leagueProp={curLeagueProp}
+                        leaguePropInfo={leaguePropInfo}
+                        />
+                    </>
+                }
+            </ScrollView>
+            {
+                betSlip &&
+                <BetSlipBanner
+                onPress={openBetSlipModal}
+                />
+            }
+        </>
+    );
 }
