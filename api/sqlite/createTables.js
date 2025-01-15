@@ -210,7 +210,7 @@ export const createBetGeneralTables = async (db) => {
             propValue TEXT NOT NULL,
             leaguePropId INTEGER NOT NULL,
             FOREIGN KEY(leaguePropId) REFERENCES LeagueProps(id),
-            UNIQUE (leagueId, propName, propValue)
+            UNIQUE (propValue, leaguePropId)
         );
     `);
 }
