@@ -17,7 +17,7 @@ import ProfilePageHeader from '@/components/Profile/ProfilePage/ProfilePageHeade
 
 export default function ProfileScreen() {
   
-    const { user } = useContext(UserContext);
+    const { user, signedIn } = useContext(UserContext);
 
     const { 
         confirmationModalVisible, 
@@ -45,6 +45,10 @@ export default function ProfileScreen() {
     } = useOptionsState();
 
     const onAddBookie = async (bookie) => {
+        if (!signedIn) {
+            alert('Please sign in to add a bookie');
+            return;
+        }
         handleConfirmation(`add ${bookie.name} as a bookie?`, closeAddBookieModal, addBookie, bookie);
     };
 
