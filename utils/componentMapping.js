@@ -77,7 +77,7 @@ const componentMapping = {
     'rush-props': RushProps,
     'receiving-props': ReceiveProps,
     'defense-props': DefenseProps,
-    'spec-team-props': SpecTeamProps,
+    'special-team-props': SpecTeamProps,
     'moneyline': Moneyline,
     'spread': Spread,
     'total-over-under': TotalOverUnder,

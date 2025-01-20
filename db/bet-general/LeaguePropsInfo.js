@@ -21,7 +21,7 @@ export const getAllLeaguePropsInfoWithFields = async (db) => {
                 lpi.propValue
             FROM
                 LeaguePropsInfo lpi
-            JOIN
+            LEFT JOIN
                 LeagueProps lp
             ON
                 lpi.propName = lp.propName AND lpi.leagueId = lp.leagueId    
@@ -65,6 +65,8 @@ export const getLeaguePropInfo = async (db, leagueId, propName) => {
                 LeaguePropsInfo lpi
             JOIN
                 LeagueProps lp
+            ON
+                lpi.leaguePropId = lp.id
             WHERE 
                     lp.leagueId = ? 
                 AND lp.propName = ?
@@ -77,9 +79,9 @@ export const getLeaguePropInfo = async (db, leagueId, propName) => {
 };
 
 // Function to insert a league prop info
-export const insertLeaguePropInfo = async (db, leagueId, propName, propValue) => {
+export const insertLeaguePropInfo = async (db, leaguePropId, propValue) => {
     try {
-        const result = await db.runAsync('INSERT INTO LeaguePropsInfo (leagueId, propName, propValue) VALUES (?, ?, ?)', [leagueId, propName, propValue]);
+        const result = await db.runAsync('INSERT INTO LeaguePropsInfo (leaguePropId, propValue) VALUES (?, ?)', [leaguePropId, propValue]);
         return result.lastInsertRowId;
     } catch (error) {
         console.error('Error in insertLeaguePropInfo:', error);

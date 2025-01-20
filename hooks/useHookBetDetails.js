@@ -22,6 +22,7 @@ const useHookBetDetails = () => {
     useEffect(() => {
         getLeaguePropsForLeague(db, league.id).then((props) => {
             const sortedProps = props.sort((a, b) => a.id - b.id);
+            console.log('sortedProps:', sortedProps);
             setLeagueProps(sortedProps);
         });
     }, []);
@@ -30,6 +31,7 @@ const useHookBetDetails = () => {
         if (curLeagueProp) {
             getLeaguePropInfo(db, league.id, curLeagueProp).then((info) => {
                 const sortedInfo = info.sort((a, b) => a.id - b.id);
+                console.log('sortedInfo:', sortedInfo);
                 setLeaguePropInfo(sortedInfo);
             });
         }
