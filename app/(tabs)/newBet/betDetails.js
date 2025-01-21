@@ -65,22 +65,22 @@ export default function BetDetailsScreen() {
                     leagueProps.length > 0 &&
                     <>
                         <LeaguePropSlider 
-                        leagueProps={leagueProps}
-                        selectLeagueProp={selectLeagueProp}
-                        curLeagueProp={curLeagueProp}
+                            leagueProps={leagueProps}
+                            selectLeagueProp={selectLeagueProp}
+                            curLeagueProp={curLeagueProp}
                         />
                         <LeaguePropInfo 
-                        leagueProp={curLeagueProp}
-                        leaguePropInfo={leaguePropInfo}
+                            leagueProp={curLeagueProp}
+                            leaguePropInfo={leaguePropInfo}
                         />
                     </>
                 }
             </ScrollView>
             {
                 betSlip &&
-                <BetSlipBanner
-                onPress={openBetSlipModal}
-                />
+                    <BetSlipBanner
+                        onPress={openBetSlipModal}
+                    />
             }
         </>
     );
