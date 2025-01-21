@@ -1,18 +1,20 @@
 import React, { useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Linking, Platform } from 'react-native';
+import StoreReview from 'react-native-store-review';
 import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { UserContext } from '@/contexts/UserContext';
-import { DBContext } from '@/contexts/DBContext';
 import AccountInfo from '@/components/Profile/Settings/AccountInfo';
 import SettingsOptions from '@/components/Profile/Settings/SettingsOptions';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 import DoubleConfirm from '@/components/Modals/DoubleConfirm';
-import OptionMenu from '@/components/Modals/OptionMenu';
 import useRouting from '@/hooks/useRouting';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
+import useHookSettings from '@/hooks/useHookSettings';
 import useTheme from '@/hooks/useTheme';
+import AboutModal from '@/components/Modals/AboutModal';
+import HelpModal from '@/components/Modals/HelpModal';
 
 export default function SettingsScreen() {
 
@@ -36,6 +38,13 @@ export default function SettingsScreen() {
         clearBettingData,
     } = useDatabaseFuncs();
 
+    const {
+        helpModalVisible,
+        aboutModalVisible,
+        handleHelpModal,
+        handleAboutModal,
+    } = useHookSettings();
+
     const { handleProfilePage } = useRouting();
 
     const { user } = useContext(UserContext);
@@ -43,6 +52,20 @@ export default function SettingsScreen() {
     const onSelected = (title) => {
         console.log(title);
     }
+
+    const handleSupport = () => {
+        if (Platform.OS === 'ios') {
+            if (StoreReview.isAvailable) {
+                StoreReview.requestReview();
+            } else {
+                // Fallback to opening the App Store URL if StoreReview is not available
+                Linking.openURL('https://apps.apple.com/app/idYOUR_APP_ID?action=write-review');
+            }
+        } else {
+            // Handle Android and other platforms here
+            console.log('Support for other platforms will be added later.');
+        }
+    };
     
     const handleSelect = (title) => {
         switch (title) {
@@ -54,15 +77,15 @@ export default function SettingsScreen() {
                 break;
             case 'Help':
                 // Open Help Modal
-                console.log('help');
+                handleHelpModal();
                 break;
             case 'About':
                 // Open About Page or Modal
-                console.log('about');
+                handleAboutModal();
                 break;
             case 'Support BetSmart':
                 // Open Support Modal
-                console.log('support');
+                handleSupport();
                 break;
             case 'Log Out':
                 handleConfirmNoModal('log out?', onSelected, title);
@@ -84,6 +107,14 @@ export default function SettingsScreen() {
                 visible={doubleConfirmModalVisible}
                 close={closeDoubleConfirmModal}
                 confirm={onHandleDoubleConfirm}
+            />
+            <AboutModal
+                visible={aboutModalVisible}
+                close={handleAboutModal}
+            />
+            <HelpModal
+                visible={helpModalVisible}
+                close={handleHelpModal}
             />
             <View style={styles.headerContainer}>
                 <TouchableOpacity 
