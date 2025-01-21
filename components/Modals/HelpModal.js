@@ -16,7 +16,7 @@ export default function HelpModal({ visible, close }) {
         },
         {
             title: 'How do I add a bookie?',
-            content: 'You can add a bookie from the Home screen or the Profile screen by pressing the Add Bookie button. You can add a bookie by entering the bookie name, the bookie website, and the bookie logo.'
+            content: 'You can add a bookie from the Home screen or the Profile screen by pressing the Add Bookie button. You can select from a list of supported bookie, or add your own!(To Come Soon).'
         }
     ]
 
