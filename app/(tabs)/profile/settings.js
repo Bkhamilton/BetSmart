@@ -55,12 +55,7 @@ export default function SettingsScreen() {
 
     const handleSupport = () => {
         if (Platform.OS === 'ios') {
-            if (StoreReview.isAvailable) {
-                StoreReview.requestReview();
-            } else {
-                // Fallback to opening the App Store URL if StoreReview is not available
-                Linking.openURL('https://apps.apple.com/app/idYOUR_APP_ID?action=write-review');
-            }
+            alert('Support us by leaving a review on the App Store!');
         } else {
             // Handle Android and other platforms here
             console.log('Support for other platforms will be added later.');
