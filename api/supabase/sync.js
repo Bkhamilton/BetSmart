@@ -388,7 +388,7 @@ export const resyncBetTargets = async (db, supabase, games) => {
 
             await db.withTransactionAsync(async () => {
                 for (const target of betTargets) {
-                    const existingTarget = await db.getAllAsync('SELECT * FROM BetTargets WHERE gameId = ? AND targetType = ? AND targetName = ? AND teamId = ?', [game.gameId, target.targetType, target.targetName, target.teamId]);
+                    const existingTarget = await db.getAllAsync('SELECT * FROM BetTargets where id = ?', [target.id]);
                     if (existingTarget.length > 0) {
                         continue;
                     }
