@@ -9,7 +9,7 @@ import { countMarketTypes } from '@/utils/betSlipFunctions';
 
 export default function YesterdaysBets({ bets }) {
     // order betSlipResults by result, result: 1 first
-    const betSlips = weeklyBets.sort((a, b) => {
+    const betSlips = bets.sort((a, b) => {
         if (a.result === 1 && b.result === 0) return -1;
         if (a.result === 0 && b.result === 1) return 1;
         return b.winnings - a.winnings;
@@ -23,9 +23,9 @@ export default function YesterdaysBets({ bets }) {
 
     useEffect(() => {
         setAmountBet(betSlips.reduce((acc, bet) => acc + bet.betAmount, 0));
-        setAmountWon(betSlips.reduce((acc, bet) => bet.result === 1 ? acc + bet.winnings : acc, 0));
+        setAmountWon(betSlips.reduce((acc, bet) => bet.result === '1' ? acc + bet.winnings : acc, 0));
         setTotalBets(betSlips.length);
-        setBetsWon(betSlips.filter(bet => bet.result === 1).length);
+        setBetsWon(betSlips.filter(bet => bet.result === '1').length);
         setMarketTypes(countMarketTypes(betSlips));
     }, [betSlips]);
 

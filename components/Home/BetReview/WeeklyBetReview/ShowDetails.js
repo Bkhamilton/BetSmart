@@ -36,7 +36,7 @@ export default function ShowDetails({ betSlips, betsWon, totalBets, marketTypes 
                     <Text style={{ fontSize: 16, fontWeight: '600' }}>Bet:</Text>
                     <ClearView>
                         {betSlips.map(bet => (
-                            <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.result === 1 ? '500' : '700', color: bet.result === 1 ? text : redText }}>{`$${bet.betAmount.toFixed(2)}`}</Text>
+                            <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.result === '1' ? '500' : '700', color: bet.result === '1' ? text : redText }}>{`$${bet.betAmount.toFixed(2)}`}</Text>
                         ))}
                     </ClearView>
                 </ClearView>
@@ -44,7 +44,7 @@ export default function ShowDetails({ betSlips, betsWon, totalBets, marketTypes 
                     <Text style={{ fontSize: 16, fontWeight: '600' }}>Won:</Text>
                     <ClearView>
                         {betSlips.map(bet => (
-                            <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.result === 1 ? '700' : '500', color: bet.result === 1 ? greenText : text }}>{`$${bet.winnings.toFixed(2)}`}</Text>
+                            <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.result === '1' ? '700' : '500', color: bet.result === '1' ? greenText : text }}>{`$${bet.winnings.toFixed(2)}`}</Text>
                         ))}
                     </ClearView>
                 </ClearView>

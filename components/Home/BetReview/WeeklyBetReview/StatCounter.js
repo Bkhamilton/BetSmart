@@ -7,9 +7,9 @@ export default function StatCounter({ title, won, total }) {
     // Function to determine font size
     const determineFontSize = (won, total) => {
         if (won.toString().length > 1 && total.toString().length > 1) {
-        return 11;
+            return 11;
         } else {
-        return 12;
+            return 12;
         }
     };
 

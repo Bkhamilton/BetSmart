@@ -46,7 +46,7 @@ export const countMarketTypes = (betSlips) => {
                     marketTypeCounts[mappedMarketType] = { total: 0, won: 0 };
                 }
                 marketTypeCounts[mappedMarketType].total++;
-                if (bet.result === 1) {
+                if (bet.result === '1') {
                     marketTypeCounts[mappedMarketType].won++;
                 }
             });
