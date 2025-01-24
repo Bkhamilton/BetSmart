@@ -35,6 +35,7 @@ export default function HomeScreen() {
         profileOptionsModalVisible,
         confirmedBetSlip,
         betSlips,
+        weeklyBets,
         refreshing,
         onRefresh,
         openChooseBookieModal,
@@ -235,7 +236,7 @@ export default function HomeScreen() {
                         />
                     ) 
                 }
-                <WeeklyBetReview bets={myBetList}/>
+                <WeeklyBetReview bets={weeklyBets}/>
                 <BankReview 
                     transactions={userTransactions} 
                     addBookie={openAddBookieModal}  

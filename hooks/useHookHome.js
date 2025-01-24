@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/contexts/UserContext';
-import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
-import { getOpenBetSlips } from '@/db/betslips/BetSlips';
+import { fillBetSlips, fillBetSlipsWithResults } from '@/contexts/BetContext/betSlipHelpers';
+import { getOpenBetSlips, getLastWeekOfBetSlips } from '@/db/betslips/BetSlips';
 import { confirmBetResults } from '@/utils/dbHelpers';
 import { DBContext } from '@/contexts/DBContext';
 
@@ -18,6 +18,8 @@ const useHookHome = () => {
     const [confirmedBetSlip, setConfirmedBetSlip] = useState({});
 
     const [betSlips, setBetSlips] = useState([]);
+
+    const [weeklyBets, setWeeklyBets] = useState([]);
 
     const [triggerFetch, setTriggerFetch] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
@@ -77,12 +79,28 @@ const useHookHome = () => {
         fetchData();
     }, [triggerFetch, trigger, user]);
 
+    useEffect(() => {
+        const fetchWeeklyBets = async () => {
+            try {
+                if (!user) return;
+                const betSlips = await getLastWeekOfBetSlips(db, user.id);
+                const betSlipsWithBets = await fillBetSlipsWithResults(db, betSlips);
+                console.log(JSON.stringify(betSlipsWithBets, null, 2));
+                setWeeklyBets(betSlipsWithBets);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        fetchWeeklyBets();
+    }, [triggerFetch, trigger, user]);
+
     return {
         confirmModalVisible,
         chooseBookieModalVisible,
         profileOptionsModalVisible,
         confirmedBetSlip, setConfirmedBetSlip,
         betSlips, setBetSlips,
+        weeklyBets,
         triggerFetch, setTriggerFetch,
         refreshing, setRefreshing,
         onRefresh,
