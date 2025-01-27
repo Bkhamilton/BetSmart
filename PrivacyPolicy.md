@@ -37,4 +37,4 @@ If you have questions about this privacy policy or our local-only data approach,
 By using BetSmarter, you acknowledge that all data you input will be stored locally on your device only.
 
 ---
-Last Updated: January 3, 2025
+Last Updated: January 26, 2025
