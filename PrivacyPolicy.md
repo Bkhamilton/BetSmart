@@ -6,23 +6,11 @@ Welcome to BetSmarter. We respect your privacy and are committed to protecting t
 
 ## Information We Collect
 
-### Data You Provide
-- **User-Reported Bets:** Information about the bets that users report within the app.
-
-### Data We Do Not Collect
-- We do not collect any personally identifiable information (PII) such as names, email addresses, or contact information.
-
-## How We Use Your Information
-
-The data we collect is used solely for the purpose of improving the app experience and providing better services. Specifically, we use the user-reported bets data to:
-- Analyze and improve app functionality.
-- Provide aggregated insights and statistics to users.
+We do not collect any of your user data. All personal and betting information will be kept on the user's phone and we do not access it at any time.
 
 ## Sharing Your Information
 
-We do not share your data with third parties, except in the following circumstances:
-- If required by law or legal process.
-- To protect the rights, property, or safety of our users or the public.
+We don't share your data with third parties. All of the data will be housed on the User's phone
 
 ## Data Security
 
