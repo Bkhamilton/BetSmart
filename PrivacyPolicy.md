@@ -1,32 +1,40 @@
 # Privacy Policy
 
 ## Introduction
+Welcome to BetSmarter. This privacy policy explains how your data is handled when using our app.
 
-Welcome to BetSmarter. We respect your privacy and are committed to protecting the personal data of our users. This privacy policy explains how we collect, use, and share information when you use our app.
+## Data Storage and Collection
+BetSmarter is designed with privacy-first principles:
+- All data is stored locally on your device only
+- We do not collect, transmit, or store any of your personal information
+- Your betting history, analysis, and any other data you input remains exclusively on your phone
+- We have no servers or databases that store user information
+- We cannot access your data in any way
 
-## Information We Collect
-
-We do not collect any of your user data. All personal and betting information will be kept on the user's phone and we do not access it at any time.
-
-## Sharing Your Information
-
-We don't share your data with third parties. All of the data will be housed on the User's phone
+## Third-Party Access
+- We do not share your data with any third parties
+- We do not integrate with any external services that could access your data
+- Your information never leaves your device
 
 ## Data Security
+Since all data remains locally on your device, its security depends on your device's built-in security features. We recommend:
+- Using your device's security features (passcode, Face ID, or fingerprint)
+- Keeping your device's operating system up to date
+- Backing up your device regularly using your preferred backup method
 
-We take reasonable measures to protect the data we collect from unauthorized access, use, or disclosure. However, no internet or email transmission is ever fully secure or error-free.
+## App Analytics
+- We do not use any analytics tools
+- We do not track app usage or user behavior
+- We have no ability to see how you use the app
 
 ## Changes to This Privacy Policy
-
-We may update this privacy policy from time to time. When we do, we will notify you by updating the date at the top of this policy. We encourage you to review this policy periodically to stay informed about how we are protecting your data.
+If we update this privacy policy, we will notify you by updating the date at the top of this policy and through an app notification when applicable.
 
 ## Contact Us
+If you have questions about this privacy policy or our local-only data approach, please contact us:
+- Email: hamiltondevstudio@gmail.com
 
-If you have any questions or concerns about this privacy policy, please contact us at:
-- **Email:** hamiltondevstudio@gmail.com
-
-By using our app, you agree to the terms of this privacy policy.
+By using BetSmarter, you acknowledge that all data you input will be stored locally on your device only.
 
 ---
-
-**Last Updated:** 1/3/2025
+Last Updated: January 3, 2025
