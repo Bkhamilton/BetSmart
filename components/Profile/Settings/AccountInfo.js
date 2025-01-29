@@ -4,12 +4,15 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity, ClearView } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
 import useTheme from '@/hooks/useTheme';
+import useRouting from '@/hooks/useRouting';
 
-export default function AccountInfo({ onPress }) {
+export default function AccountInfo() {
 
     const { user } = useContext(UserContext);
 
     const { iconColor, grayBackground } = useTheme();
+
+    const { handleEditProfile } = useRouting();
 
     useEffect(() => {
         if (!user) return;
@@ -22,14 +25,18 @@ export default function AccountInfo({ onPress }) {
                 <ClearView style={styles.accountInfoContainer}>
                     <Text style={{ fontWeight: '500', fontSize: 18 }}>{user.username}</Text>
                     <TouchableOpacity
-                    style={{ backgroundColor: 'transparent' }}
+                        style={{ backgroundColor: 'transparent' }}
+                        onPress={handleEditProfile}
                     >
-                    <Text>Profile Settings</Text>
+                        <Text>Profile Settings</Text>
                     </TouchableOpacity>
                 </ClearView>
             </ClearView>
             <ClearView style={styles.accountArrowContainer}>
-                <TouchableOpacity style={{ backgroundColor: 'transparent', paddingHorizontal: 6, paddingVertical: 10 }}>
+                <TouchableOpacity 
+                    style={{ backgroundColor: 'transparent', paddingHorizontal: 6, paddingVertical: 10 }}
+                    onPress={handleEditProfile}
+                >
                     <FontAwesome5 name="chevron-right" size={24} color={iconColor} />
                 </TouchableOpacity>
             </ClearView>

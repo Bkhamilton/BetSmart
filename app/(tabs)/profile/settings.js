@@ -45,7 +45,10 @@ export default function SettingsScreen() {
         handleAboutModal,
     } = useHookSettings();
 
-    const { handleProfilePage } = useRouting();
+    const { 
+        handleProfilePage,
+        handleEditProfile,
+    } = useRouting();
 
     const { user } = useContext(UserContext);
 
