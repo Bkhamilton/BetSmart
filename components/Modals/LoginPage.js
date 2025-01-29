@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, Modal, StatusBar, Alert } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { TouchableOpacity, Text, View, TextInput } from '@/components/Themed';
+import { StyleSheet, StatusBar, Alert } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { TouchableOpacity, Text, View, TextInput, Modal, ClearView, ScrollView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
 export default function LoginPage({ visible, close, login }) {
@@ -9,7 +9,7 @@ export default function LoginPage({ visible, close, login }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const { iconColor } = useTheme();
+    const { iconColor, backgroundColor, grayBackground, grayBorder } = useTheme();
 
     const handleLogin = async () => {
         try {
@@ -30,63 +30,53 @@ export default function LoginPage({ visible, close, login }) {
             transparent={false}
             visible={visible}
             onRequestClose={close}
+            style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
         >
-            <View style={styles.container}>
+            <View style={styles.headerContainer}>
                 <TouchableOpacity 
                     onPress={close}
-                    style={{ alignItems: 'flex-end'}} 
                 >
-                    <FontAwesome name='arrow-left' size={40} color={'red'}/>
+                    <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
                 </TouchableOpacity>
-
-                
-                {/* Main Modal Box */}
-                <View style={styles.mainPage}>
-                    {/* Title */}
-                    <View style={styles.title}>
-                        <Text style={styles.title}>Sign In</Text>
-                        <View style={styles.underline}></View>
-                    </View>
-                    
-                    {/* Username input */}
-                    <View style={styles.infoBox}>
-                        <Text style={styles.BoxTitle}>Username</Text>
-                        <View style={styles.inputBox}>
-                            <FontAwesome name='user' size={24} color={iconColor} />
+                <View style={{ paddingHorizontal: 16, }}>
+                    <Text style={styles.settingsHeaderText}>Log In</Text> 
+                </View>   
+            </View>
+            <ScrollView style={{ flex: 1, paddingHorizontal: 12 }}>
+                <View style={styles.container}>
+                    <View style={[styles.editOptionsContainer, { backgroundColor: grayBackground }]}>
+                        {/* Username */}
+                        <ClearView style={{ padding: 8 }}>
+                            <Text>Username</Text>
                             <TextInput
-                                style={styles.input}
-                                placeholder="Username"
+                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                placeholder={'Enter your username'}
                                 onChangeText={setUsername}
+                                value={username}
                                 autoCorrect={false}
-                                // Add necessary props and event handlers for username input
                             />
-                        </View>
-                    </View>
-
-                    {/* Password input */}
-                    <View style={styles.infoBox}>
-                        <Text style={styles.BoxTitle}>Password</Text>
-                        <View style={styles.inputBox}>
-                            <FontAwesome name='lock' size={24} color={iconColor} />
+                        </ClearView>
+                        {/* Password */}
+                        <ClearView style={{ padding: 8 }}>
+                            <Text>Password</Text>
                             <TextInput
-                                style={styles.input}
-                                placeholder="Password"
-                                secureTextEntry={true}
+                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                placeholder={'Enter your password'}
                                 onChangeText={setPassword}
+                                value={password}
                                 autoCorrect={false}
-                                // Add necessary props and event handlers for password input
+                                secureTextEntry={true}
                             />
-                        </View>
+                        </ClearView>
                     </View>
                 </View>
-                {/* Login Button */}
-                <TouchableOpacity 
-                    style={styles.button}
-                    onPress={() => handleLogin()}
-                >
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-            </View>
+            </ScrollView>
+            <TouchableOpacity 
+                style={{ alignItems: 'center', backgroundColor: 'green', paddingVertical: 12, marginVertical: 12 }}
+                onPress={() => handleLogin()}
+            >
+                <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
         </Modal>
     );
 }
@@ -94,58 +84,36 @@ export default function LoginPage({ visible, close, login }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 56,
-        paddingHorizontal: 10, 
-    },
-    mainPage: {
-        flex: .50,
-        paddingTop: 10,
-        marginTop: 100,
-    },
-    title: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        textAlign: 'left',
-        marginLeft: 5,
-    },
-    underline: {
-        borderWidth: 1,
-        width: 150,
-        height: 1,
-        opacity: 0.2,
-    },
-    infoBox: {
-        flex: .50,
-        marginTop: 20, 
-    },
-    BoxTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        margin: 10,
-    },
-    inputBox: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingLeft: 10,
-    },
-    input: {
-        width: 300,
-        height: 40,
-        margin: 12,
-        borderBottomWidth: 1,
-        padding: 10,
-    },
-    button: {
-        width: 300,
-        height: 40,
-        backgroundColor: 'pink',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 5,
+        paddingTop: 20,
     },
     buttonText: {
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
     },
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        height: 84, 
+        paddingHorizontal: 20, 
+        paddingTop: 48,
+        alignItems: 'center',
+    },
+    settingsHeaderText: {
+        fontSize: 32, 
+        fontWeight: 'bold'
+    },
+    editOptionsContainer: {
+        paddingVertical: 10,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+        marginVertical: 40,
+    },
+    editComponentInput: {
+        padding: 12, 
+        borderRadius: 16, 
+        borderWidth: 1, 
+        opacity: 0.8,
+        marginTop: 8,
+    }
 });
