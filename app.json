@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.hamiltondevelopment.BetSmart",
-      "buildNumber": "3"
+      "buildNumber": "7"
     },
     "android": {
       "adaptiveIcon": {
