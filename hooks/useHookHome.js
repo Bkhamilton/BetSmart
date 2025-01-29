@@ -85,7 +85,6 @@ const useHookHome = () => {
                 if (!user) return;
                 const betSlips = await getLastWeekOfBetSlips(db, user.id);
                 const betSlipsWithBets = await fillBetSlipsWithResults(db, betSlips);
-                console.log(JSON.stringify(betSlipsWithBets, null, 2));
                 setWeeklyBets(betSlipsWithBets);
             } catch (error) {
                 console.error('Error fetching data:', error);
