@@ -71,12 +71,14 @@ export default function LoginPage({ visible, close, login }) {
                     </View>
                 </View>
             </ScrollView>
-            <TouchableOpacity 
-                style={{ alignItems: 'center', backgroundColor: 'green', paddingVertical: 12, marginVertical: 12 }}
-                onPress={() => handleLogin()}
-            >
-                <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
+            <View>
+                <TouchableOpacity 
+                    style={{ alignItems: 'center', backgroundColor: 'green', paddingVertical: 12, marginBottom: 36, borderRadius: 8 }}
+                    onPress={() => handleLogin()}
+                >
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+            </View>
         </Modal>
     );
 }

@@ -110,12 +110,14 @@ export default function SignUpPage({ visible, close, signUp }) {
                 </View>
             </ScrollView>
             {/* Sign Up Button */}
-            <TouchableOpacity 
-                style={{ alignItems: 'center', backgroundColor: 'green', padding: 12, }}
-                onPress={onSignUp}
-            >
-                <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
+            <View>
+                <TouchableOpacity 
+                    style={{ alignItems: 'center', backgroundColor: 'green', padding: 12, marginBottom: 36, borderRadius: 8, marginHorizontal: 8 }}
+                    onPress={onSignUp}
+                >
+                    <Text style={styles.buttonText}>Sign Up</Text>
+                </TouchableOpacity>
+            </View>
         </Modal>
     );
 }
