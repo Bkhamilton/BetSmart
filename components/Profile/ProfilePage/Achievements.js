@@ -2,11 +2,21 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ScrollView } from '@/components/Themed';
 import { achievements } from '@/data/achievements';
+import useTheme from '@/hooks/useTheme';
 
 export default function Achievements() {
 
+    const { grayBackground, grayBorder } = useTheme();
+
     const AchievementComponent = ({ achievement }) => (
-        <View style={[styles.achievementContainer, { borderWidth: achievement.achieved ? 4 : 1 }]}>
+        <View 
+            style={[styles.achievementContainer, { 
+                borderWidth: achievement.achieved ? 4 : 1, 
+                backgroundColor: grayBackground, 
+                borderColor: grayBorder, 
+                opacity: achievement.achieved ? 1 : 0.3 
+            }]}
+        >
           <Text>{achievement.id}</Text>
         </View>
     );

@@ -1,8 +1,12 @@
 import React from 'react';
 import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
+import useTheme from '@/hooks/useTheme';
 
 export default function OptionMenu({ visible, close, options, selectOption }) {
+
+    const { grayBackground, grayBorder } = useTheme();
+
     return (
         <Modal
             animationType="fade"
@@ -14,7 +18,11 @@ export default function OptionMenu({ visible, close, options, selectOption }) {
                 <View style={styles.container}>
                     <View style={styles.optionBox}>
                         {options.map((option, index) => (
-                            <TouchableOpacity key={index} style={styles.option} onPress={() => selectOption(option)}>
+                            <TouchableOpacity 
+                                key={index} 
+                                style={[styles.option, { borderColor: grayBorder, backgroundColor: grayBackground }]} 
+                                onPress={() => selectOption(option)}
+                            >
                                 <Text style={styles.optionText}>{option}</Text>
                             </TouchableOpacity>
                         ))}
@@ -40,7 +48,7 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 8,
         borderWidth: 1,
-        marginBottom: 8,
+        marginVertical: 4,
     },
     optionText: {
         fontSize: 16,

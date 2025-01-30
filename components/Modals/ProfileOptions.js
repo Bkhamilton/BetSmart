@@ -3,12 +3,15 @@ import { StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
 import useRouting from '@/hooks/useRouting';
 import { UserContext } from '@/contexts/UserContext';
+import useTheme from '@/hooks/useTheme';
 
 export default function ProfileOptions({ visible, close, onSignOut }) {
 
     const { user } = useContext(UserContext);
 
     const { handleSettings, handleProfilePage } = useRouting();
+
+    const { grayBackground, grayBorder } = useTheme();
 
     const goToProfile = () => {
         close();
@@ -30,13 +33,22 @@ export default function ProfileOptions({ visible, close, onSignOut }) {
             <TouchableWithoutFeedback onPress={close}>
                 <View style={styles.container}>
                     <View style={styles.optionBox}>
-                        <TouchableOpacity style={styles.option} onPress={goToProfile}>
+                        <TouchableOpacity 
+                            style={[styles.option, { borderColor: grayBorder, backgroundColor: grayBackground }]} 
+                            onPress={goToProfile}
+                        >
                             <Text style={styles.optionText}>{user?.username}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.option} onPress={goToSettings}>
+                        <TouchableOpacity 
+                            style={[styles.option, { borderColor: grayBorder, backgroundColor: grayBackground }]} 
+                            onPress={goToSettings}
+                        >
                             <Text style={styles.optionText}>Settings</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.option} onPress={onSignOut}>
+                        <TouchableOpacity 
+                            style={[styles.option, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                            onPress={onSignOut}
+                        >
                             <Text style={styles.optionText}>Sign Out</Text>
                         </TouchableOpacity>                                                
                     </View>
@@ -63,7 +75,7 @@ const styles = StyleSheet.create({
         padding: 8,
         borderRadius: 8,
         borderWidth: 1,
-        marginBottom: 8,
+        marginVertical: 4,
     },
     optionText: {
         fontSize: 16,
