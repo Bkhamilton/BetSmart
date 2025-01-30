@@ -1,8 +1,12 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, Modal } from '@/components/Themed';
+import useTheme from '@/hooks/useTheme';
 
 export default function ConfirmMessage({ visible, close, message, confirm }) {
+
+    const { grayBackground, grayBorder } = useTheme();
+
     return (
         <Modal
             animationType="fade"
@@ -16,10 +20,16 @@ export default function ConfirmMessage({ visible, close, message, confirm }) {
                         Are you sure you want to {message}
                     </Text>
                     <View style={styles.buttonContainer}>
-                        <TouchableOpacity style={styles.button} onPress={() => confirm(true)}>
+                        <TouchableOpacity 
+                            style={[styles.button, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                            onPress={() => confirm(true)}
+                        >
                             <Text style={styles.buttonText}>YES</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => confirm(false)}>
+                        <TouchableOpacity 
+                            style={[styles.button, { borderColor: grayBorder, backgroundColor: grayBackground }]} 
+                            onPress={() => confirm(false)}
+                        >
                             <Text style={styles.buttonText}>NO</Text>
                         </TouchableOpacity>
                     </View>
@@ -50,9 +60,12 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     button: {
+        flex: 1,
+        alignItems: 'center',
         padding: 8,
         borderRadius: 8,
         borderWidth: 1,
+        marginHorizontal: 8,
     },
     buttonText: {
         fontSize: 16,
