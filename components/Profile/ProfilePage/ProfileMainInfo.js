@@ -4,7 +4,9 @@ import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
 import { getTotalBetSlips } from '@/db/betslips/BetSlips';
 import { getBetSlipResultsWinnings } from '@/db/betslips/BetSlipsResults';
-import { Text, View } from '@/components/Themed';
+import { Text, View, TouchableOpacity } from '@/components/Themed';
+import useTheme from '@/hooks/useTheme';
+import useRouting from '@/hooks/useRouting';
 
 export default function ProfileMainInfo() {
 
@@ -16,6 +18,10 @@ export default function ProfileMainInfo() {
 
     const [totalBets, setTotalBets] = useState(0);
     const [totalWinnings, setTotalWinnings] = useState(0);
+
+    const { grayBackground, grayBorder } = useTheme();
+
+    const { handleEditProfile } = useRouting();
 
     useEffect(() => {
         if (!signedIn) return;
@@ -40,6 +46,14 @@ export default function ProfileMainInfo() {
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{name}</Text>
                 </View>
                 <Text style={{ fontSize: 16 }}>{username}</Text>
+                <View style={{ marginTop: 8 }}>
+                    <TouchableOpacity 
+                        style={[styles.editProfileButton, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                        onPress={handleEditProfile}
+                    >
+                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Edit Profile</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
             <View style={{ paddingVertical: 12 }}>
                 <View style={{ height: 100, width: 100, borderRadius: 50, borderWidth: 1 }}/>
@@ -56,4 +70,11 @@ export default function ProfileMainInfo() {
         paddingLeft: 20,
         paddingVertical: 16,
     },
+    editProfileButton: {
+        paddingVertical: 4,
+        paddingHorizontal: 8,
+        borderRadius: 8,
+        borderWidth: 1,
+        alignItems: 'center',
+    }
   });
