@@ -2,22 +2,21 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { UserContext } from '@/contexts/UserContext';
-import useRouting from '@/hooks/useRouting';
 import useTheme from '@/hooks/useTheme';
 import EditProfileInfo from '@/components/Profile/EditProfile/EditProfileInfo';
+import { useRouter } from 'expo-router';
 
 export default function EditProfileScreen() {
 
     const { iconColor } = useTheme();
 
-    const { handleSettings } = useRouting();
+    const router = useRouter();
 
     return (
         <>
             <View style={styles.headerContainer}>
                 <TouchableOpacity 
-                    onPress={handleSettings}
+                    onPress={() => router.back()}
                 >
                     <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
                 </TouchableOpacity>

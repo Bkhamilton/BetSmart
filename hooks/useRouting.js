@@ -21,7 +21,7 @@ const useRouting = () => {
     };
 
     const handleEditProfile = () => {
-        router.replace('profile/editProfile');
+        router.navigate('profile/editProfile');
     };
 
     const handleTransactions = () => {
