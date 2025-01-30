@@ -15,7 +15,7 @@ import BookieBanner from './BookieBanner';
 export default function BetSlipModal({ visible, close, removeProp, removeBetSlip, confirm }) {
 
     const { betSlip, bookieId } = useContext(BetContext);
-    const { userBalance } = useContext(UserContext);
+    const { userBalance, signedIn } = useContext(UserContext);
     const { bookies } = useContext(DBContext);
 
     const { redText, mainGreen } = useTheme();
@@ -56,6 +56,11 @@ export default function BetSlipModal({ visible, close, removeProp, removeBetSlip
     }
 
     const onConfirm = () => {
+        // if user is not signed in, alert user to sign in
+        if (!signedIn) {
+            alert('Please sign in to place a bet');
+            return;
+        }
         // if wager is 0, return
         if (wager === 0) {
             return;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { TouchableOpacity, Text, View, Pressable, TextInput } from '@/components/Themed';
+import { TouchableOpacity, Text, View, Pressable, TextInput, ClearView } from '@/components/Themed';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { updateBetOdds } from '@/contexts/BetContext/betSlipHelpers';
@@ -11,7 +11,7 @@ export default function Bet({ bet, setBetSlipOdds, remove }) {
 
     const { betSlip, setBetSlip } = React.useContext(BetContext);
 
-    const { grayBackground, iconColor } = useTheme();
+    const { grayBackground, iconColor, backgroundColor } = useTheme();
 
     const numLegs = bet.legs.length;
 
@@ -37,22 +37,24 @@ export default function Bet({ bet, setBetSlipOdds, remove }) {
     }, [bet]);
 
     return (
-        <Pressable style={[styles.betContainer, { backgroundColor: grayBackground }]}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', backgroundColor: 'transparent' }}>
+        <Pressable 
+            style={[styles.betContainer, { backgroundColor: grayBackground, borderColor: backgroundColor }]}
+        >
+            <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
                 <Text>{bet.date}</Text>
                 <Text>{bet.league}</Text>
-            </View>
-            <View style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 2, backgroundColor: 'transparent' }}>
+            </ClearView>
+            <ClearView style={{ alignItems: 'center', justifyContent: 'center', paddingVertical: 2 }}>
                 <Text><Text style={{ fontWeight: 'bold' }}>{bet.away}</Text> vs <Text style={{ fontWeight: 'bold' }}>{bet.home}</Text></Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', paddingHorizontal: 8, backgroundColor: 'transparent' }}>
+            </ClearView>
+            <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center', paddingHorizontal: 8 }}>
                 <View style={{ flex: 0.2 }}>
 
                 </View>
-                <View style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent' }}>
+                <ClearView style={{ flex: 0.6, justifyContent: 'center', alignItems: 'center' }}>
                     <Text style={{ fontWeight: '500' }}>{numLegs} Leg{numLegs > 1 ? 's' : '' }</Text>
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 0.2, backgroundColor: 'transparent' }}>
+                </ClearView>
+                <ClearView style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 0.2 }}>
                     <Text style={{ fontSize: 16 }}>{bet.odds.charAt(0)}</Text>
                     <TextInput
                         style={{ fontSize: 16, backgroundColor: 'transparent' }}
@@ -66,8 +68,8 @@ export default function Bet({ bet, setBetSlipOdds, remove }) {
                     >
                         {lock ? <FontAwesome5 name={"lock"} size={16} color={iconColor} /> : <FontAwesome5 name={"unlock"} size={16} color={iconColor} />}
                     </TouchableOpacity>
-                </View>                                        
-            </View>
+                </ClearView>                                        
+            </ClearView>
             {bet.legs.map((leg, index) => (
                 <Leg key={index} leg={leg} currentBet={bet} onRemove={onRemove}/>
             ))}
@@ -77,7 +79,7 @@ export default function Bet({ bet, setBetSlipOdds, remove }) {
 
 const styles = StyleSheet.create({
     betContainer: {
-        borderTopWidth: 1,
+        borderTopWidth: 2,
         borderBottomWidth: 1,
         paddingTop: 8,
     },
