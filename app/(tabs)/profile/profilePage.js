@@ -7,7 +7,6 @@ import UserFavorites from '@/components/Profile/ProfilePage/UserFavorites';
 import Achievements from '@/components/Profile/ProfilePage/Achievements';
 import AddBookie from '@/components/Modals/AddBookie';
 import ActiveBookies from '@/components/Profile/ProfilePage/ActiveBookies';
-import useHookProfilePage from '@/hooks/useHookProfilePage';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
 import useOptionsState from '@/hooks/useOptionsState';
@@ -93,17 +92,17 @@ export default function ProfileScreen() {
             />
             <ScrollView
                 refreshControl={
-                <RefreshControl
-                    refreshing={false}
-                    onRefresh={() => console.log('refreshing')}
-                />
+                    <RefreshControl
+                        refreshing={false}
+                        onRefresh={() => console.log('refreshing')}
+                    />
                 }
             >
                 <ProfileMainInfo /> 
                 <UserFavorites player={"Zion Williamson"}/>
                 <ActiveBookies 
-                addBookie={openAddBookieModal}
-                openOptions={onOpenOptions}
+                    addBookie={openAddBookieModal}
+                    openOptions={onOpenOptions}
                 />
                 <Achievements />
                 <View style={styles.section}>
@@ -124,11 +123,6 @@ export default function ProfileScreen() {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Privacy Settings</Text>
                     {/* Add privacy settings components here */}
-                </View>
-
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Support/Help</Text>
-                    {/* Add support/help components here */}
                 </View>
             </ScrollView>
         </>

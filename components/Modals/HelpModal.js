@@ -8,7 +8,7 @@ export default function HelpModal({ visible, close }) {
     const helpText = [
         {
             title: 'What is BetSmarter?',
-            content: 'BetSmarter is a sports betting app that helps you track your bets and analyze your betting history. You can view your betting performance, track your bankroll, and analyze your betting trends.'
+            content: 'BetSmarter is a sports bet tracking app that helps you track your bets and analyze your betting history. You can view your betting performance, track your bankroll, and analyze your betting trends.'
         },
         {
             title: 'How do I add a bet?',
