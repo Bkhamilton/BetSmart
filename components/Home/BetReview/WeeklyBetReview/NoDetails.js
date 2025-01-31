@@ -16,20 +16,29 @@ export default function NoDetails({ betsWon, totalBets, amountBet, amountWon, ma
                     <Text style={[styles.smallText, { color: greenText }]}>Show More</Text>
                 </ClearView>
             </ClearView>
-            <ClearView style={[styles.spreadContainer, { paddingHorizontal: 12 }]}>
-                <ClearView style={[styles.infoContainer, { flex: 0.3 }]}>
-                    <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
-                    <Text style={[styles.mediumText, { marginBottom: 6 }]}> bets</Text>
-                </ClearView>
-                <ClearView style={[styles.infoContainer, { marginBottom: 6, flex: 0.35, marginLeft: 16 }]}>
-                    <Text style={styles.mediumText}>Bet:</Text>
-                    <Text style={{ fontSize: 18, fontWeight: '700', color: redText, marginBottom: -2 }}>{`$${amountBet.toFixed(2)}`}</Text>
-                </ClearView>
-                <ClearView style={[styles.infoContainer, { marginBottom: 6, flex: 0.35, marginLeft: 16  }]}>
-                    <Text style={styles.mediumText}>Won:</Text>
-                    <Text style={{ fontSize: 18, fontWeight: '700', color: greenText, marginBottom: -2 }}>{`$${amountWon.toFixed(2)}`}</Text>
-                </ClearView>
-            </ClearView>
+            {
+                totalBets === 0 ? (
+                    <ClearView style={{ padding: 8 }}>
+                        <Text style={{ fontSize: 24, fontWeight: '600', textAlign: 'center', opacity: 0.5 }}>No bets placed</Text>
+                    </ClearView>
+                ) : (
+                    <ClearView style={[styles.spreadContainer, { paddingHorizontal: 12 }]}>
+                        <ClearView style={[styles.infoContainer, { flex: 0.3 }]}>
+                            <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
+                            <Text style={[styles.mediumText, { marginBottom: 6 }]}> bets</Text>
+                        </ClearView>
+                        <ClearView style={[styles.infoContainer, { marginBottom: 6, flex: 0.35, marginLeft: 16 }]}>
+                            <Text style={styles.mediumText}>Bet:</Text>
+                            <Text style={{ fontSize: 18, fontWeight: '700', color: redText, marginBottom: -2 }}>{`$${amountBet.toFixed(2)}`}</Text>
+                        </ClearView>
+                        <ClearView style={[styles.infoContainer, { marginBottom: 6, flex: 0.35, marginLeft: 16  }]}>
+                            <Text style={styles.mediumText}>Won:</Text>
+                            <Text style={{ fontSize: 18, fontWeight: '700', color: greenText, marginBottom: -2 }}>{`$${amountWon.toFixed(2)}`}</Text>
+                        </ClearView>
+                    </ClearView>
+                )
+            }
+
             <ClearView style={{ paddingHorizontal: 4, paddingTop: 8, opacity: 0.4 }}>
                 <Text style={styles.smallText}>Details</Text>
             </ClearView>
