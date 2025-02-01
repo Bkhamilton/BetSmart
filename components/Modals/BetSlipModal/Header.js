@@ -8,7 +8,7 @@ export default function Header({ totalLegs, onClose }) {
 
     const { betSlip } = useContext(BetContext);
 
-    const { mainGreen } = useTheme();
+    const { mainGreen, grayBorder } = useTheme();
 
     return (
         <View style={styles.headerContainer}>
@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'space-between', 
         width: '100%',
-        borderBottomWidth: 1,
     },
     legsContainer: {
         borderWidth: 1, 
