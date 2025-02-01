@@ -24,6 +24,10 @@ const useRouting = () => {
         router.navigate('profile/editProfile');
     };
 
+    const handleEditPreferences = () => {
+        router.navigate('profile/betPreferences');
+    }
+
     const handleTransactions = () => {
         router.replace('profile/transactionHistory');
     }
@@ -42,6 +46,7 @@ const useRouting = () => {
         handleBetHistory,
         handleSettings,
         handleEditProfile,
+        handleEditPreferences,
         handleTransactions,
         handleSelectGame,
         handleCloseBetDetails,
