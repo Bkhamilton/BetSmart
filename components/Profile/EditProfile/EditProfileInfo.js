@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { UserContext } from '@/contexts/UserContext';
 import { TouchableOpacity, Text, View, ScrollView, TextInput, ClearView } from '@/components/Themed';
@@ -8,18 +8,20 @@ import { AntDesign } from '@expo/vector-icons';
 export default function EditProfileInfo() {
 
     const { iconColor, grayBackground, grayBorder, backgroundColor } = useTheme();
+    
+    const { user, signedIn } = useContext(UserContext);
 
-    const EditComponent = ({ title, placeholder }) => {
-        return (
-            <ClearView style={{ padding: 8 }}>
-                <Text>{title}</Text>
-                <TextInput
-                    style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                    placeholder={placeholder}
-                />
-            </ClearView>
-        );
-    }
+    const [name, setName] = useState(signedIn ? user.name : '');
+    const [username, setUsername] = useState(signedIn ? user.username : '');
+    const [email, setEmail] = useState(signedIn ? user.email : '');
+    const [password, setPassword] = useState('');
+
+    const handleSaveChanges = () => {
+        if (!signedIn) {
+            alert('Please sign in to save changes');
+            return;
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -35,30 +37,56 @@ export default function EditProfileInfo() {
                 </View>
                 <View style={[styles.editOptionsContainer, { backgroundColor: grayBackground }]}>
                     {/* Name */}
-                    <EditComponent
-                        title="Name"
-                        placeholder="Enter your name"
-                    />
+                    <ClearView style={{ padding: 8 }}>
+                        <Text>Name</Text>
+                        <TextInput
+                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                            placeholder={'Enter your name'}
+                            autoCorrect={false}
+                            value={name}
+                            onChangeText={setName}
+                        />
+                    </ClearView>
                     {/* Username */}
-                    <EditComponent
-                        title="Username"
-                        placeholder="Enter your username"
-                    />
+                    <ClearView style={{ padding: 8 }}>
+                        <Text>Username</Text>
+                        <TextInput
+                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                            placeholder={'Enter your username'}
+                            autoCorrect={false}
+                            value={username}
+                            onChangeText={setUsername}
+                        />
+                    </ClearView>                    
                     {/* Email */}
-                    <EditComponent
-                        title="Email"
-                        placeholder="Enter your email"
-                    />
+                    <ClearView style={{ padding: 8 }}>
+                        <Text>Email</Text>
+                        <TextInput
+                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                            placeholder={'Enter your email address'}
+                            autoCorrect={false}
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+                    </ClearView>                    
                     {/* Password */}
-                    <EditComponent
-                        title="Password"
-                        placeholder="Enter your password"
-                    />
-                    {/* Save Changes */}
+                    <ClearView style={{ padding: 8 }}>
+                        <Text>Password</Text>
+                        <TextInput
+                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                            placeholder={'Enter your password'}
+                            autoCorrect={false}
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+                    </ClearView>             
                 </View>
             </ScrollView>
             <View style={{ paddingVertical: 16, paddingHorizontal: 8 }}>
-                <TouchableOpacity style={styles.saveButton}>
+                <TouchableOpacity 
+                    style={styles.saveButton}
+                    onPress={handleSaveChanges}    
+                >
                     <Text>Save Changes</Text>
                 </TouchableOpacity>
             </View>
