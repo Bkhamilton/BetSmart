@@ -30,7 +30,7 @@ export default function ShowDetails({ betSlips, betsWon, totalBets, marketTypes 
             {
                 totalBets === 0 ? (
                     <ClearView style={{ padding: 8 }}>
-                        <Text style={{ fontSize: 24, fontWeight: '600', textAlign: 'center', opacity: 0.5 }}>No bets placed</Text>
+                        <Text style={{ fontSize: 24, fontWeight: '600', textAlign: 'center', opacity: 0.5 }}>No bets to review</Text>
                     </ClearView>
                 ) : (
                     <ClearView style={[styles.spreadContainer, { paddingHorizontal: 12 }]}>
