@@ -36,7 +36,7 @@ function TabBarButton({ name, active }: TabBarButtonProps) {
                     borderColor: borderColor,
                 }}
             >
-                <FontAwesome name="plus" size={24} color={iconColor}/>
+                <FontAwesome name={name} size={24} color={iconColor}/>
             </TouchableOpacity>
         </Link>
     );
@@ -80,8 +80,8 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
                     tabBarButton: (props) => (
                         <TabBarButton 
-                        name="plus"
-                        active={true}            
+                            name="plus"
+                            active={true}            
                         />
                     ),
                     headerShown: false,
