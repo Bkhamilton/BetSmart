@@ -10,13 +10,22 @@ export default function EditPreferences() {
     
     const { user, signedIn } = useContext(UserContext);
 
-    const [bankroll, setBankroll] = useState('');
-    const [dailyLimit, setDailyLimit] = useState('');
-    const [unitSize, setUnitSize] = useState('');
-    const [preferredLeagues, setPreferredLeagues] = useState('');
-    const [preferredBetTypes, setPreferredBetTypes] = useState('');
-    const [riskTolerance, setRiskTolerance] = useState('');
-    const [oddsFormat, setOddsFormat] = useState('');
+    const [preferences, setPreferences] = useState({
+        bankroll: '',
+        dailyLimit: '',
+        unitSize: '',
+        preferredLeagues: '',
+        preferredBetTypes: '',
+        riskTolerance: '',
+        oddsFormat: '',
+    });
+
+    const handleInputChange = (name, value) => {
+        setPreferences({
+            ...preferences,
+            [name]: value,
+        });
+    };
 
     const handleSaveChanges = () => {
         if (!signedIn) {
@@ -36,8 +45,8 @@ export default function EditPreferences() {
                             style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
                             placeholder={'Enter your total Bankroll'}
                             autoCorrect={false}
-                            value={bankroll}
-                            onChangeText={setBankroll}
+                            value={preferences.bankroll}
+                            onChangeText={(value) => handleInputChange('bankroll', value)}
                         />
                     </ClearView>
                     {/* Daily Limit */}
@@ -45,43 +54,43 @@ export default function EditPreferences() {
                         <Text>Daily Limit</Text>
                         <TextInput
                             style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter your Daily Limit'}
+                            placeholder={'Enter your daily limit'}
                             autoCorrect={false}
-                            value={dailyLimit}
-                            onChangeText={setDailyLimit}
+                            value={preferences.dailyLimit}
+                            onChangeText={(value) => handleInputChange('dailyLimit', value)}
                         />
-                    </ClearView>                    
+                    </ClearView>
                     {/* Unit Size */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Unit Size</Text>
                         <TextInput
                             style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter a Unit Size'}
+                            placeholder={'Enter your unit size'}
                             autoCorrect={false}
-                            value={unitSize}
-                            onChangeText={setUnitSize}
+                            value={preferences.unitSize}
+                            onChangeText={(value) => handleInputChange('unitSize', value)}
                         />
-                    </ClearView>                    
-                    {/* League */}
+                    </ClearView>
+                    {/* Preferred Leagues */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Preferred Leagues</Text>
                         <TextInput
                             style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
                             placeholder={'Enter your preferred leagues'}
                             autoCorrect={false}
-                            value={preferredLeagues}
-                            onChangeText={setPreferredLeagues}
+                            value={preferences.preferredLeagues}
+                            onChangeText={(value) => handleInputChange('preferredLeagues', value)}
                         />
                     </ClearView>
-                    {/* Bet Types */}
+                    {/* Preferred Bet Types */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Preferred Bet Types</Text>
                         <TextInput
                             style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
                             placeholder={'Enter your preferred bet types'}
                             autoCorrect={false}
-                            value={preferredBetTypes}
-                            onChangeText={setPreferredBetTypes}
+                            value={preferences.preferredBetTypes}
+                            onChangeText={(value) => handleInputChange('preferredBetTypes', value)}
                         />
                     </ClearView>
                     {/* Risk Tolerance */}
@@ -91,10 +100,10 @@ export default function EditPreferences() {
                             style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
                             placeholder={'Enter your risk tolerance'}
                             autoCorrect={false}
-                            value={riskTolerance}
-                            onChangeText={setRiskTolerance}
+                            value={preferences.riskTolerance}
+                            onChangeText={(value) => handleInputChange('riskTolerance', value)}
                         />
-                    </ClearView>   
+                    </ClearView>
                     {/* Odds Format */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Odds Format</Text>
@@ -102,10 +111,10 @@ export default function EditPreferences() {
                             style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
                             placeholder={'Enter your odds format'}
                             autoCorrect={false}
-                            value={oddsFormat}
-                            onChangeText={setOddsFormat}
+                            value={preferences.oddsFormat}
+                            onChangeText={(value) => handleInputChange('oddsFormat', value)}
                         />
-                    </ClearView>                                                       
+                    </ClearView>                                                    
                 </View>
             </ScrollView>
             <View style={{ paddingVertical: 16, paddingHorizontal: 8 }}>
