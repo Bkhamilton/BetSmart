@@ -13,6 +13,7 @@ import useOptionsState from '@/hooks/useOptionsState';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 import OptionMenu from '@/components/Modals/OptionMenu';
 import ProfilePageHeader from '@/components/Profile/ProfilePage/ProfilePageHeader';
+import BettingPreferences from '@/components/Profile/ProfilePage/BettingPreferences';
 
 export default function ProfileScreen() {
   
@@ -105,15 +106,7 @@ export default function ProfileScreen() {
                     openOptions={onOpenOptions}
                 />
                 <Achievements />
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Personal Information</Text>
-                    {/* Add personal information components here */}
-                </View>
-
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Betting Preferences</Text>
-                    {/* Add betting preferences components here */}
-                </View>
+                <BettingPreferences />
 
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Bankroll Management</Text>
