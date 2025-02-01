@@ -3,19 +3,19 @@ import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
-import useRouting from '@/hooks/useRouting';
 import BalanceBox from '@/components/PlaceBet/BalanceBox';
+import { useRouter } from 'expo-router';
 
 export default function BetDetailsHeader({ league, openChooseBookieModal }) {
 
-    const { handleCloseBetDetails } = useRouting();
+    const router = useRouter();
 
     const { iconColor, grayBorder } = useTheme();
 
     return (
         <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
             <View style={{ flex: 0.3 }}>
-                <TouchableOpacity onPress={handleCloseBetDetails}>
+                <TouchableOpacity onPress={() => router.back()}>
                     <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
                 </TouchableOpacity>
             </View>
