@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
@@ -10,6 +10,20 @@ export default function BettingPreferences() {
 
     const { handleEditPreferences } = useRouting();
 
+    const [preferences, setPreferences] = useState({
+        bankroll: 1000,
+        dailyLimit: 100,
+        unitSize: 'S ($5) M ($10) L ($20)',
+        preferredLeagues: 'NBA, NFL',
+        preferredBetTypes: 'ML, Spread, O/U',
+        riskTolerance: 'Moderate',
+        oddsFormat: 'American',
+    });
+    
+    useEffect(() => {
+        // fetch user's betting preferences
+    }, []);
+
     return (
         <View style={styles.container}>
             <View style={{ paddingHorizontal: 20 }}>
@@ -18,31 +32,31 @@ export default function BettingPreferences() {
             <View style={[styles.mainContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
                 <ClearView style={styles.preferenceContainer}>
                     <Text style={{ fontSize: 16 }}>Bankroll:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>$1000</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '600' }}>${preferences.bankroll}</Text>
                 </ClearView>
                 <ClearView style={styles.preferenceContainer}>
                     <Text style={{ fontSize: 16 }}>Daily Limit:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>$100</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '600' }}>${preferences.dailyLimit}</Text>
                 </ClearView>
                 <ClearView style={styles.preferenceContainer}>
                     <Text style={{ fontSize: 16 }}>Unit Size:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>S ($5) M ($10) L ($20)</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{preferences.unitSize}</Text>
                 </ClearView>
                 <ClearView style={styles.preferenceContainer}>
                     <Text style={{ fontSize: 16 }}>Preferred Leagues:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>NBA, NFL</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{preferences.preferredLeagues}</Text>
                 </ClearView>
                 <ClearView style={styles.preferenceContainer}>
                     <Text style={{ fontSize: 16 }}>Preferred Bet Types:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>ML, Spread, O/U</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{preferences.preferredBetTypes}</Text>
                 </ClearView>
                 <ClearView style={styles.preferenceContainer}>
                     <Text style={{ fontSize: 16 }}>Risk Tolerance:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>Moderate</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{preferences.riskTolerance}</Text>
                 </ClearView>
                 <ClearView style={styles.preferenceContainer}>
                     <Text style={{ fontSize: 16 }}>Odds Format:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>American</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{preferences.oddsFormat}</Text>
                 </ClearView>
                 <TouchableOpacity
                     style={[styles.addBookieContainer, { backgroundColor: grayBorder }]}

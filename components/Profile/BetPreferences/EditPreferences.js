@@ -41,24 +41,32 @@ export default function EditPreferences() {
                     {/* Bankroll */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Bankroll</Text>
-                        <TextInput
-                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter your total Bankroll'}
-                            autoCorrect={false}
-                            value={preferences.bankroll}
-                            onChangeText={(value) => handleInputChange('bankroll', value)}
-                        />
+                        <ClearView style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ marginRight: 8, fontSize: 20 }}>$</Text>
+                            <TextInput
+                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                placeholder={'0.00'}
+                                autoCorrect={false}
+                                value={preferences.bankroll}
+                                onChangeText={(value) => handleInputChange('bankroll', value)}
+                                keyboardType={'numeric'}
+                            />
+                        </ClearView>
                     </ClearView>
                     {/* Daily Limit */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Daily Limit</Text>
-                        <TextInput
-                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter your daily limit'}
-                            autoCorrect={false}
-                            value={preferences.dailyLimit}
-                            onChangeText={(value) => handleInputChange('dailyLimit', value)}
-                        />
+                        <ClearView style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text style={{ marginRight: 8, fontSize: 20 }}>$</Text>
+                            <TextInput
+                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                placeholder={'0.00'}
+                                autoCorrect={false}
+                                value={preferences.dailyLimit}
+                                onChangeText={(value) => handleInputChange('dailyLimit', value)}
+                                keyboardType={'numeric'}
+                            />
+                        </ClearView>
                     </ClearView>
                     {/* Unit Size */}
                     <ClearView style={{ padding: 8 }}>
@@ -107,13 +115,20 @@ export default function EditPreferences() {
                     {/* Odds Format */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Odds Format</Text>
-                        <TextInput
-                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter your odds format'}
-                            autoCorrect={false}
-                            value={preferences.oddsFormat}
-                            onChangeText={(value) => handleInputChange('oddsFormat', value)}
-                        />
+                        <ClearView style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <TouchableOpacity 
+                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.oddsFormat === 'American' ? backgroundColor : grayBorder, flex: 1, marginRight: 4 }]}
+                                onPress={() => handleInputChange('oddsFormat', 'American')}
+                            >
+                                <Text style={{ color: iconColor, textAlign: 'center' }}>American</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.oddsFormat === 'Decimal' ? backgroundColor : grayBorder, flex: 1, marginLeft: 4 }]}
+                                onPress={() => handleInputChange('oddsFormat', 'Decimal')}
+                            >
+                                <Text style={{ color: iconColor, textAlign: 'center' }}>Decimal</Text>
+                            </TouchableOpacity>
+                        </ClearView>
                     </ClearView>                                                    
                 </View>
             </ScrollView>
