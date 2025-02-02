@@ -17,7 +17,6 @@ const useHookTransactions = () => {
         }
         const fetchTransactions = async () => {
             const transactions = await getTransactionInfoByUser(db, user.id);
-            console.log(JSON.stringify(transactions));
             setTransactions(transactions);
         }
         fetchTransactions();
