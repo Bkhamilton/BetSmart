@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { UserContext } from '@/contexts/UserContext';
 import { TouchableOpacity, Text, View, ScrollView, TextInput, ClearView } from '@/components/Themed';
+import Slider from '@react-native-community/slider';
 import useTheme from '@/hooks/useTheme';
 
 export default function EditPreferences() {
@@ -25,6 +26,14 @@ export default function EditPreferences() {
             ...preferences,
             [name]: value,
         });
+    };
+
+    const handleUpdateOption = (name, value) => {
+        if (preferences[name] === value) {
+            handleInputChange(name, '');
+        } else {
+            handleInputChange(name, value);
+        }
     };
 
     const handleSaveChanges = () => {
@@ -104,12 +113,17 @@ export default function EditPreferences() {
                     {/* Risk Tolerance */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Risk Tolerance</Text>
-                        <TextInput
-                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter your risk tolerance'}
-                            autoCorrect={false}
-                            value={preferences.riskTolerance}
-                            onChangeText={(value) => handleInputChange('riskTolerance', value)}
+                        <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 8 }}>
+                            <Text style={{ opacity: 0.6 }}>Safe</Text>
+                            <Text style={{ opacity: 0.6 }}>Risky</Text>
+                        </ClearView>
+                        <Slider
+                            style={{width: '100%', height: 40}}
+                            minimumValue={0}
+                            maximumValue={1}
+                            minimumTrackTintColor="#FFFFFF"
+                            maximumTrackTintColor="#000000"
+                            onValueChange={(value) => handleInputChange('riskTolerance', value)}
                         />
                     </ClearView>
                     {/* Odds Format */}
@@ -118,13 +132,13 @@ export default function EditPreferences() {
                         <ClearView style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <TouchableOpacity 
                                 style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.oddsFormat === 'American' ? backgroundColor : grayBorder, flex: 1, marginRight: 4 }]}
-                                onPress={() => handleInputChange('oddsFormat', 'American')}
+                                onPress={() => handleUpdateOption('oddsFormat', 'American')}
                             >
                                 <Text style={{ color: iconColor, textAlign: 'center' }}>American</Text>
                             </TouchableOpacity>
                             <TouchableOpacity 
                                 style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.oddsFormat === 'Decimal' ? backgroundColor : grayBorder, flex: 1, marginLeft: 4 }]}
-                                onPress={() => handleInputChange('oddsFormat', 'Decimal')}
+                                onPress={() => handleUpdateOption('oddsFormat', 'Decimal')}
                             >
                                 <Text style={{ color: iconColor, textAlign: 'center' }}>Decimal</Text>
                             </TouchableOpacity>
