@@ -243,7 +243,7 @@ export const fillBetSlips = async (db, betSlips) => {
         const betSlipIds = betSlips.map(betSlip => betSlip.id);
         const participantBets = await getAllValidParticipantBets(db, betSlipIds);
         const participantBetIds = participantBets.map(participantBet => participantBet.id);
-        const legs = await getAllValidLegsWithResults(db, participantBetIds);
+        const legs = await getAllValidLegs(db, participantBetIds);
 
         // Add legs to participantBets
         const participantBetsWithLegs = participantBets.map(participantBet => ({
