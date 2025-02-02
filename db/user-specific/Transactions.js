@@ -44,6 +44,32 @@ export const getTransactionsByUser = async (db, userId) => {
     }
 };
 
+// Function to get all transactions for a specific user including bookie name
+export const getTransactionInfoByUser = async (db, userId) => {
+    try {
+        const transactions = await db.getAllAsync(`
+            SELECT 
+                Transactions.*, 
+                Bookies.name as bookieName 
+            FROM 
+                Transactions 
+            JOIN 
+                Bookies 
+            ON 
+                Transactions.bookieId = Bookies.id 
+            WHERE 
+                Transactions.userId = ?
+            ORDER BY
+                Transactions.timestamp DESC
+            LIMIT 100    
+            `, [userId]);
+        return transactions;
+    } catch (error) {
+        console.error('Error retrieving transactions by user with bookie:', error);
+        throw error;
+    }
+};
+
 // Function to get all info related to deposits in the last 7 days for a given user
 export const getAllWeeklyDeposits = async (db, userId) => {
     try {
