@@ -38,7 +38,7 @@ export default function Leg({ leg, currentBet, onRemove }) {
                 return `${betTargetName} ${stat.toUpperCase()}`;
             case 'spread':
                 return `${betTargetName} ${stat} ${line}`;
-            case 'total_over_under':
+            case 'totals':
                 return `${betTargetName} Total ${overUnder} ${line}`;
             default:
                 return '';

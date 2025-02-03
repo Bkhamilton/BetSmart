@@ -14,7 +14,7 @@ export const displayLeg = (leg, betTargetName) => {
                 return `${betTargetName} ${marketType.toUpperCase()}`;
             case 'spread':
                 return `${betTargetName} ${marketType} ${value}`;
-            case 'total_over_under':
+            case 'totals':
                 return `Total ${overUnder} ${value}`;
             default:
                 return '';
