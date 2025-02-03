@@ -7,13 +7,13 @@ import useRouting from '@/hooks/useRouting';
 
 export default function TransactionHeader() {
 
-    const { iconColor } = useTheme();
+    const { iconColor, grayBorder } = useTheme();
 
     const { handleProfilePage } = useRouting();
 
     return (
         <>
-            <View style={styles.headerContainer}>
+            <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
                 <View style={{ flex: 0.2, }}>
                     <TouchableOpacity 
                         onPress={handleProfilePage}
