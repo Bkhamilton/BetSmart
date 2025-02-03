@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, SectionList } from 'react-native';
+import { StyleSheet, SectionList, Image } from 'react-native';
 import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
+import { bookieImages } from '@/constants/bookieConstants';
 
 export default function TransactionList({ transactions }) {
 
@@ -33,9 +34,10 @@ export default function TransactionList({ transactions }) {
         return (
             <View style={[styles.transactionContainer, { borderColor: grayBorder, backgroundColor: grayBackground }]}>
                 <ClearView style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                    <View style={[styles.iconContainer, { backgroundColor: grayBorder, borderColor: backgroundColor }]}>
-                        <Text style={{ color: 'white' }}>0</Text>
-                    </View>
+                    <Image 
+                        source={bookieImages[transaction.bookieName]}
+                        style={styles.iconContainer}
+                    />
                     <ClearView style={{ justifyContent: 'center', marginLeft: 8 }}>
                         <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 2 }}>{transaction.bookieName}</Text>
                         <Text style={{ fontSize: 16, opacity: 0.7, marginTop: 2 }}>{transaction.transactionType}</Text>
