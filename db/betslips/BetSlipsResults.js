@@ -74,16 +74,20 @@ export const getWinningestBetSlipLast7Days = async (db, userId) => {
     }
 };
 
-// Function to return count of true and false betSlipResults
-export const getBetSlipResultsCount = async (db) => {
+// Function to return count of true and false betSlipResults for a specific user
+export const getBetSlipResultsCount = async (db, userId) => {
     try {
         const result = await db.getAllAsync(`
             SELECT 
-                COUNT(result) as count, result 
+                COUNT(R.result) as count, R.result 
             FROM 
-                BetSlipsResults 
+                BetSlipsResults R
+            LEFT JOIN 
+                BetSlips B ON R.betSlipId = B.id
+            WHERE 
+                B.userId = ?
             GROUP BY 
-                result`);
+                R.result`, [userId]);
         return result;
     } catch (error) {
         console.error('Error getting bet slip result:', error);
@@ -208,6 +212,31 @@ export const getProfitLast7Days = async (db, userId) => {
                      FROM BetSlips B
                      LEFT JOIN BetSlipsResults R ON B.id = R.betSlipId
                      WHERE B.userId = ? AND B.date >= date('now', '-7 days') AND R.result = 0), 0) 
+                AS totalProfit
+            `, [userId, userId]);
+        return result[0].totalProfit;
+    } catch (error) {
+        console.error('Error getting bet slip result:', error);
+        throw error;
+    }
+};
+
+// Function to get total profit from bet slips for a specific user
+export const getTotalProfit = async (db, userId) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT 
+                COALESCE(
+                    (SELECT SUM(B.winnings) 
+                     FROM BetSlips B
+                     LEFT JOIN BetSlipsResults R ON B.id = R.betSlipId
+                     WHERE B.userId = ? AND R.result = 1), 0) 
+                - 
+                COALESCE(
+                    (SELECT SUM(B.betAmount) 
+                     FROM BetSlips B
+                     LEFT JOIN BetSlipsResults R ON B.id = R.betSlipId
+                     WHERE B.userId = ? AND R.result = 0), 0) 
                 AS totalProfit
             `, [userId, userId]);
         return result[0].totalProfit;

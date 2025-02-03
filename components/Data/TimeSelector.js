@@ -38,13 +38,13 @@ export default function TimeSelector({ selectTime, curTime }) {
         <View style={styles.container}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '100%', backgroundColor: grayBorder }}>
                 {timeSlots.map((item) => (
-                <Pressable
-                    key={item.id}
-                    style={[styles.categoryContainer, { backgroundColor: curTime === item.title ? grayBackground : grayBorder, borderColor: curTime === item.title ? grayBorder : grayBackground }]}
-                    onPress={() => selectTime(item.title)}
-                >
-                    <Text>{item.title}</Text>
-                </Pressable>
+                    <Pressable
+                        key={item.id}
+                        style={[styles.categoryContainer, { backgroundColor: curTime === item.title ? grayBackground : grayBorder, borderColor: curTime === item.title ? grayBorder : grayBackground }]}
+                        onPress={() => selectTime(item.title)}
+                    >
+                        <Text>{item.title}</Text>
+                    </Pressable>
                 ))}
             </View>
         </View>
