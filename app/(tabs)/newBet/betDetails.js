@@ -70,7 +70,6 @@ export default function BetDetailsScreen() {
                             curLeagueProp={curLeagueProp}
                         />
                         <LeaguePropInfo 
-                            leagueProp={curLeagueProp}
                             leaguePropInfo={leaguePropInfo}
                         />
                     </>
