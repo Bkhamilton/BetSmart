@@ -7,7 +7,7 @@ import useRouting from '@/hooks/useRouting';
 
 export default function TransactionHeader() {
 
-    const { iconColor, grayBorder } = useTheme();
+    const { iconColor, grayBorder, backgroundColor } = useTheme();
 
     const { handleProfilePage } = useRouting();
 
@@ -29,7 +29,7 @@ export default function TransactionHeader() {
                         onPress={() => {}}
                         style={{ marginRight: 10 }}
                     >
-                        <Ionicons name="filter" size={20} color={iconColor} />
+                        <Ionicons name="filter" size={20} color={backgroundColor} />
                     </TouchableOpacity>
                 </View>
             </View>
