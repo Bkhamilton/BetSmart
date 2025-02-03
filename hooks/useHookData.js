@@ -1,46 +1,70 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/contexts/UserContext';
-import { useSQLiteContext } from 'expo-sqlite';
+import { DBContext } from '@/contexts/DBContext';
+import { getProfitByPeriod, getWonBetSlipCountByPeriod, getWinRateByPeriod, getROIByPeriod } from '@/db/data/data';
 
 const useHookData = () => {
 
     const [selectedTime, setSelectedTime] = useState('7D');
-    const [filteredData, setFilteredData] = useState([]);
+    const [data, setData] = useState({
+        totalProfit: 0,
+        wonBetCount: 0,
+        winRate: 0,
+        roi: 0,
+    });
+
+    const { user } = useContext(UserContext);
+    const { db } = useContext(DBContext);
   
     const selectTime = (timeRange) => {
-      setSelectedTime(timeRange);
+        setSelectedTime(timeRange);
+    };
+    
+    const getSQLPeriod = (selectedTime) => {
+        switch (selectedTime) {
+            case 'All':
+                return '-10 year'; // This will include all records
+            case '7D':
+                return '-7 days';
+            case '1M':
+                return '-1 month';
+            case '3M':
+                return '-3 months';
+            case '6M':
+                return '-6 months';
+            case '1Y':
+                return '-1 year';
+            default:
+                return 'start of time'; // Default to include all records
+        }
     };
 
-    /*
-
-    const getFilteredData = async (timeRange) => {
-      switch (timeRange) {
-        case '1D':
-          return await get1DData();
-        case '7D':
-          return await get7DData();
-        case '1M':
-          return await get1MData();
-        case '3M':
-          return await get3MData();
-        case '1Y':
-          return await get1YData();
-        default:
-          return await getAllData();
-      }
-    }
-
     useEffect(() => {
-      // Filter data based on selectedTime
-      // const filteredData = await getFilteredData(selectedTime);
-      // setFilteredData(filteredData);
+        const fetchData = async () => {
+            try {
+                const period = getSQLPeriod(selectedTime);
+                const profit = await getProfitByPeriod(db, user.id, period);
+                const wonCount = await getWonBetSlipCountByPeriod(db, user.id, period);
+                const rate = await getWinRateByPeriod(db, user.id, period);
+                const roi = await getROIByPeriod(db, user.id, period);
+                setData({
+                    totalProfit: profit,
+                    wonBetCount: wonCount,
+                    winRate: rate,
+                    roi: roi,
+                });
+                console.log(JSON.stringify(data));
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
     }, [selectedTime]);
-
-    */
 
     return {
         selectTime,
         selectedTime,
+        data,
     };
 };
 

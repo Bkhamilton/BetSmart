@@ -38,22 +38,22 @@ export default function AnalyticsDisplay({ data }) {
         <View style={styles.container}>
             <DataComponent
                 title="Profit"
-                value={0}
+                value={data.totalProfit}
                 label="$"
             />
             <DataComponent
                 title="Bets"
-                value={0}
+                value={data.wonBetCount}
                 label="Bets"
             />
             <DataComponent
                 title="Win Rate"
-                value={0}
+                value={data.winRate}
                 label="%"
             />
             <DataComponent
                 title="ROI"
-                value={0}
+                value={data.roi}
                 label="%"
             />      
         </View>

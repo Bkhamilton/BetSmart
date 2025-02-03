@@ -6,7 +6,11 @@ import useHookData from '@/hooks/useHookData';
 
 export default function DataScreen() {
 
-    const { selectTime, selectedTime } = useHookData();
+    const { 
+        selectTime, 
+        selectedTime,
+        data,
+    } = useHookData();
 
     return (
         <>
@@ -15,7 +19,7 @@ export default function DataScreen() {
                 selectedTime={selectedTime}
             />
             <ScrollView>
-                <AnalyticsDisplay data={selectedTime}/>
+                <AnalyticsDisplay data={data}/>
             </ScrollView>
         </>
     );
