@@ -60,7 +60,8 @@ export const getLeaguePropInfo = async (db, leagueId, propName) => {
     try {
         const leaguePropInfo = await db.getAllAsync(`
             SELECT 
-                lpi.* 
+                lpi.*,
+                lp.propName 
             FROM 
                 LeaguePropsInfo lpi
             JOIN
