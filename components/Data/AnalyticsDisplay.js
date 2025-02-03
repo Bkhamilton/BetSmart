@@ -5,7 +5,7 @@ import useTheme from '@/hooks/useTheme';
 
 export default function AnalyticsDisplay({ data }) {
 
-    const { grayBackground, grayBorder, iconColor } = useTheme();
+    const { grayBackground, grayBorder, iconColor, greenText, redText, text } = useTheme();
 
     const DataComponent = ({ title, value, label }) => {
 
@@ -21,6 +21,21 @@ export default function AnalyticsDisplay({ data }) {
                     return value;
             }
         }
+        
+        const styleValueText = () => {
+            switch (title) {
+                case 'Profit':
+                    return { color: value > 0 ? greenText : value < 0 ? redText : text };
+                case 'Bets':
+                    return { color: value > 5 ? greenText : text };
+                case 'Win Rate':
+                    return { color: value >= 50 ? greenText : (value < 50 && value >= 40) ? text : redText };
+                case 'ROI':
+                    return { color: value > 0 ? greenText : value < 0 ? redText : text };
+                default:
+                    return {};
+            }
+        }
 
         return (
             <View>
@@ -28,7 +43,7 @@ export default function AnalyticsDisplay({ data }) {
                     <Text style={styles.dataTitleText}>{title}</Text>
                 </View>
                 <View style={[styles.dataContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
-                    <Text style={{ fontSize: 28, fontWeight: '600' }}>{displayValueText()}</Text>
+                    <Text style={[{ fontSize: 28, fontWeight: '600' }, styleValueText()]}>{displayValueText()}</Text>
                 </View>
             </View>
         );
