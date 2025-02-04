@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { UserContext } from '@/contexts/UserContext';
+import { DBContext } from '@/contexts/DBContext';
 import { TouchableOpacity, Text, View, ScrollView, TextInput, ClearView } from '@/components/Themed';
 import Slider from '@react-native-community/slider';
 import useTheme from '@/hooks/useTheme';
@@ -10,6 +11,7 @@ export default function EditPreferences() {
     const { iconColor, grayBackground, grayBorder, backgroundColor } = useTheme();
     
     const { user, signedIn } = useContext(UserContext);
+    const { leagues } = useContext(DBContext);
 
     const [preferences, setPreferences] = useState({
         bankroll: '',
@@ -19,6 +21,12 @@ export default function EditPreferences() {
         preferredBetTypes: '',
         riskTolerance: '',
         oddsFormat: '',
+    });
+
+    const [unitSizes, setUnitSizes] = useState({
+        'S': '',
+        'M': '',
+        'L': '',
     });
 
     const handleInputChange = (name, value) => {
@@ -33,6 +41,14 @@ export default function EditPreferences() {
             handleInputChange(name, '');
         } else {
             handleInputChange(name, value);
+        }
+    };
+
+    const handleAddOption = (name, value) => {
+        if (preferences[name].includes(value)) {
+            handleInputChange(name, preferences[name].filter((option) => option !== value));
+        } else {
+            handleInputChange(name, [...preferences[name], value]);
         }
     };
 
@@ -80,35 +96,75 @@ export default function EditPreferences() {
                     {/* Unit Size */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Unit Size</Text>
-                        <TextInput
-                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter your unit size'}
-                            autoCorrect={false}
-                            value={preferences.unitSize}
-                            onChangeText={(value) => handleInputChange('unitSize', value)}
-                        />
+                        <ClearView style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 }}>
+                            <ClearView style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                                <Text style={{ marginHorizontal: 4, fontSize: 20 }}>S</Text>
+                                <TextInput
+                                    style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder, flex: 1 }]}
+                                    placeholder={'0.00'}
+                                    autoCorrect={false}
+                                    value={unitSizes['S']}
+                                    onChangeText={(value) => setUnitSizes({ ...unitSizes, 'S': value })}
+                                    keyboardType={'numeric'}
+                                />
+                            </ClearView>
+                            <ClearView style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                                <Text style={{ marginHorizontal: 4, fontSize: 20 }}>M</Text>
+                                <TextInput
+                                    style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder, flex: 1 }]}
+                                    placeholder={'0.00'}
+                                    autoCorrect={false}
+                                    value={unitSizes['M']}
+                                    onChangeText={(value) => setUnitSizes({ ...unitSizes, 'M': value })}
+                                    keyboardType={'numeric'}
+                                />
+                            </ClearView>
+                            <ClearView style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                                <Text style={{ marginHorizontal: 4, fontSize: 20 }}>L</Text>
+                                <TextInput
+                                    style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder, flex: 1 }]}
+                                    placeholder={'0.00'}
+                                    autoCorrect={false}
+                                    value={unitSizes['L']}
+                                    onChangeText={(value) => setUnitSizes({ ...unitSizes, 'L': value })}
+                                    keyboardType={'numeric'}
+                                />
+                            </ClearView>
+                        </ClearView>
                     </ClearView>
                     {/* Preferred Leagues */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Preferred Leagues</Text>
-                        <TextInput
-                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter your preferred leagues'}
-                            autoCorrect={false}
-                            value={preferences.preferredLeagues}
-                            onChangeText={(value) => handleInputChange('preferredLeagues', value)}
-                        />
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
+                            {
+                                leagues.map((league, index) => (
+                                    <TouchableOpacity 
+                                        key={index}
+                                        style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.preferredLeagues.includes(league.leagueName) ? backgroundColor : grayBorder }]}
+                                        onPress={() => handleAddOption('preferredLeagues', league.leagueName)}
+                                    >
+                                        <Text style={{ color: iconColor }}>{league.leagueName}</Text>
+                                    </TouchableOpacity>
+                                ))
+                            }
+                        </ScrollView>
                     </ClearView>
                     {/* Preferred Bet Types */}
                     <ClearView style={{ padding: 8 }}>
                         <Text>Preferred Bet Types</Text>
-                        <TextInput
-                            style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter your preferred bet types'}
-                            autoCorrect={false}
-                            value={preferences.preferredBetTypes}
-                            onChangeText={(value) => handleInputChange('preferredBetTypes', value)}
-                        />
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
+                            {
+                                ['ML', 'SPREAD', 'O/U', 'PLAYER', 'GAME', 'TEAM'].map((betType, index) => (
+                                    <TouchableOpacity 
+                                        key={index}
+                                        style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.preferredLeagues.includes(betType) ? backgroundColor : grayBorder }]}
+                                        onPress={() => handleAddOption('preferredLeagues', betType)}
+                                    >
+                                        <Text style={{ color: iconColor }}>{betType}</Text>
+                                    </TouchableOpacity>
+                                ))
+                            }
+                        </ScrollView>
                     </ClearView>
                     {/* Risk Tolerance */}
                     <ClearView style={{ padding: 8 }}>
@@ -161,6 +217,9 @@ export default function EditPreferences() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    horizontalScrollView: {
+        backgroundColor: 'transparent',
     },
     saveButton: {
         backgroundColor: '#00A86B',
