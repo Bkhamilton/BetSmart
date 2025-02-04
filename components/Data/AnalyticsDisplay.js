@@ -70,6 +70,11 @@ export default function AnalyticsDisplay({ data }) {
                 title="ROI"
                 value={data.roi}
                 label="%"
+            />
+            <DataComponent
+                title="Total $ Bet"
+                value={data.totalBetAmount}
+                label="$"
             />      
         </View>
     );

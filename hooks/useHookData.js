@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
-import { getProfitByPeriod, getWonBetSlipCountByPeriod, getWinRateByPeriod, getROIByPeriod } from '@/db/data/data';
+import { getProfitByPeriod, getWonBetSlipCountByPeriod, getWinRateByPeriod, getROIByPeriod, getTotalBetAmountByPeriod } from '@/db/data/data';
 
 const useHookData = () => {
 
@@ -39,32 +39,40 @@ const useHookData = () => {
         }
     };
 
+    const fetchData = async () => {
+        try {
+            const period = getSQLPeriod(selectedTime);
+            const profit = await getProfitByPeriod(db, user.id, period);
+            const wonCount = await getWonBetSlipCountByPeriod(db, user.id, period);
+            const rate = await getWinRateByPeriod(db, user.id, period);
+            const roi = await getROIByPeriod(db, user.id, period);
+            const totalBetAmount = await getTotalBetAmountByPeriod(db, user.id, period);
+            setData({
+                totalProfit: profit,
+                wonBetCount: wonCount,
+                winRate: rate,
+                roi: roi,
+                totalBetAmount: totalBetAmount,
+            });
+            console.log(JSON.stringify(data));
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const period = getSQLPeriod(selectedTime);
-                const profit = await getProfitByPeriod(db, user.id, period);
-                const wonCount = await getWonBetSlipCountByPeriod(db, user.id, period);
-                const rate = await getWinRateByPeriod(db, user.id, period);
-                const roi = await getROIByPeriod(db, user.id, period);
-                setData({
-                    totalProfit: profit,
-                    wonBetCount: wonCount,
-                    winRate: rate,
-                    roi: roi,
-                });
-                console.log(JSON.stringify(data));
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
         fetchData();
     }, [selectedTime]);
+
+    const refreshData = () => {
+        fetchData();
+    };
 
     return {
         selectTime,
         selectedTime,
         data,
+        refreshData,
     };
 };
 
