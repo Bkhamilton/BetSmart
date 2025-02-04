@@ -54,6 +54,26 @@ export const updateUser = async (db, id, name, email, username, password) => {
     }
 };
 
+// Function to update user info using user object
+export const updateUserInfo = async (db, user) => {
+    try {
+        await db.runAsync('UPDATE users SET name = ?, username = ?, email = ? WHERE id = ?', [user.name, user.username, user.email, user.id]);
+    } catch (error) {
+        console.error('Error updating user info:', error);
+        throw error;
+    }
+}
+
+// Function to update a user's password
+export const updateUserPassword = async (db, id, password) => {
+    try {
+        await db.runAsync('UPDATE users SET password = ? WHERE id = ?', [password, id]);
+    } catch (error) {
+        console.error('Error updating user password:', error);
+        throw error;
+    }
+};
+
 // Function to delete a user
 export const deleteUser = async (db, id) => {
     try {

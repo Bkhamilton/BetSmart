@@ -1,8 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { UserContext } from '@/contexts/UserContext';
+import { DBContext } from '@/contexts/DBContext';
 import { TouchableOpacity, Text, View, ScrollView, TextInput, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
+import { updateUserInfo, updateUserPassword } from '@/db/user-specific/Users';
 import { AntDesign } from '@expo/vector-icons';
 
 export default function EditProfileInfo() {
@@ -10,16 +12,31 @@ export default function EditProfileInfo() {
     const { iconColor, grayBackground, grayBorder, backgroundColor } = useTheme();
     
     const { user, signedIn } = useContext(UserContext);
+    const { db } = useContext(DBContext);
 
     const [name, setName] = useState(signedIn ? user.name : '');
     const [username, setUsername] = useState(signedIn ? user.username : '');
     const [email, setEmail] = useState(signedIn ? user.email : '');
     const [password, setPassword] = useState('');
 
+    const buildNewUser = () => {
+        return {
+            id: user.id,
+            name: name ? name : user.name,
+            username: username ? username : user.username,
+            email: email ? email : user.email,
+        };
+    };
+
     const handleSaveChanges = () => {
         if (!signedIn) {
             alert('Please sign in to save changes');
             return;
+        }
+        if (password) {
+            updateUserPassword(db, user.id, password);
+        } else {
+            updateUserInfo(db, buildNewUser());
         }
     };
 
