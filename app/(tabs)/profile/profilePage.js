@@ -14,6 +14,7 @@ import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 import OptionMenu from '@/components/Modals/OptionMenu';
 import ProfilePageHeader from '@/components/Profile/ProfilePage/ProfilePageHeader';
 import BettingPreferences from '@/components/Profile/ProfilePage/BettingPreferences';
+import BankrollManagement from '@/components/Profile/ProfilePage/BankrollManagement';
 
 export default function ProfileScreen() {
   
@@ -105,13 +106,9 @@ export default function ProfileScreen() {
                     addBookie={openAddBookieModal}
                     openOptions={onOpenOptions}
                 />
-                <Achievements />
                 <BettingPreferences />
-
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Bankroll Management</Text>
-                    {/* Add bankroll management components here */}
-                </View>
+                <Achievements />
+                <BankrollManagement />
 
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Privacy Settings</Text>
