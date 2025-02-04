@@ -53,6 +53,28 @@ export default function BetSlipList({ betSlips }) {
         );
     };
 
+    const OpenBetSlipComponent = ({ betSlip }) => {
+        return (
+            <View style={[styles.transactionContainer, { borderColor: grayBorder, backgroundColor: grayBackground }]}>
+                <ClearView style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                    <Image
+                        source={bookieImages[betSlip.bookieName]}
+                        style={styles.iconContainer}
+                    />
+                    <ClearView style={{ justifyContent: 'center', marginLeft: 8 }}>
+                        <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 2 }}>{betSlip.formatName}</Text>
+                        <Text style={{ fontSize: 16, opacity: 0.7, marginTop: 2 }}>{betSlip.odds}</Text>
+                    </ClearView>
+                </ClearView>
+                <ClearView style={{ justifyContent: 'center' }}>
+                    <View style={[styles.transactionAmount, { backgroundColor: grayBorder, borderColor: grayBorder }]}>
+                        <Text style={{ fontSize: 18, fontWeight: '600' }}>${betSlip.winnings ? betSlip.winnings.toFixed(2) : '0.00'}</Text>
+                    </View>
+                </ClearView>
+            </View>
+        );
+    };
+
     const renderSectionHeader = ({ section: { title } }) => (
         <View style={styles.header}>
             <Text style={[styles.headerText]}>{title}</Text>
@@ -63,7 +85,9 @@ export default function BetSlipList({ betSlips }) {
         <View style={styles.container}>
             <SectionList
                 sections={groupedBetSlips}
-                renderItem={({ item }) => <BetSlipComponent betSlip={item} />}
+                renderItem={({ item }) => (
+                    item.result ? <BetSlipComponent betSlip={item} /> : <OpenBetSlipComponent betSlip={item} />
+                )}
                 keyExtractor={(item, index) => index.toString()}
                 renderSectionHeader={renderSectionHeader}
                 renderSectionFooter={() => <View style={{ height: 10 }} />}
