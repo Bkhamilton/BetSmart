@@ -109,8 +109,7 @@ export const createGeneralTables = async (db) => {
             number TEXT NOT NULL,
             image TEXT,
             teamId INTEGER NOT NULL,
-            FOREIGN KEY(teamId) REFERENCES Teams(id),
-            UNIQUE (name, position, number, teamId)
+            FOREIGN KEY(teamId) REFERENCES Teams(id)
         );
     `);
 }
