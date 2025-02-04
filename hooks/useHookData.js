@@ -54,7 +54,6 @@ const useHookData = () => {
                 roi: roi,
                 totalBetAmount: totalBetAmount,
             });
-            console.log(JSON.stringify(data));
         } catch (error) {
             console.error('Error fetching data:', error);
         }
