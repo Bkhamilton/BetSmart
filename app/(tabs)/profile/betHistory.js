@@ -1,8 +1,7 @@
 import React from 'react';
-import { ScrollView } from '@/components/Themed';
-import BetSlipDisplay from '@/components/Profile/BetHistory/BetSlipDisplay/BetSlipDisplay';
 import BetHistoryHeader from '@/components/Profile/BetHistory/BetHistoryHeader';
 import useHookBetHistory from '@/hooks/useHookBetHistory';
+import BetSlipList from '@/components/Profile/BetHistory/BetSlipList';
 
 export default function BetHistoryScreen() {
     
@@ -14,13 +13,9 @@ export default function BetHistoryScreen() {
                 changeType={changeType}
                 selectedType={selectedType}
             />
-            <ScrollView>
-                <BetSlipDisplay
-                    betSlips={betSlips}
-                    selectedType={selectedType}
-                >
-                </BetSlipDisplay>
-            </ScrollView>
+            <BetSlipList
+                betSlips={betSlips}
+            />
         </>
     );
 }
