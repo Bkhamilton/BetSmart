@@ -41,7 +41,7 @@ export default function BetSlipList({ betSlips }) {
                     </View>
                     <ClearView style={{ justifyContent: 'center', marginLeft: 8 }}>
                         <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 2 }}>{betSlip.formatName}</Text>
-                        <Text style={{ fontSize: 16, opacity: 0.7, marginTop: 2 }}>{betSlip.betAmount.toFixed(2)}</Text>
+                        <Text style={{ fontSize: 16, opacity: 0.7, marginTop: 2 }}>${betSlip.betAmount.toFixed(2)}</Text>
                     </ClearView>
                 </ClearView>
                 <ClearView style={{ justifyContent: 'center' }}>
