@@ -12,6 +12,43 @@ export const getBetSlipResult = async (db, betSlipId) => {
     }
 };
 
+// Function to get all settled betslips for a specific user
+export const getSettledBetSlips = async (db, userId) => {
+    try {
+        const result = await db.getAllAsync(`
+            SELECT
+                B.id,
+                B.formatId,
+                BF.formatName AS formatName,
+                B.winnings,
+                B.betAmount,
+                B.date,
+                B.formatId,
+                B.bookieId,
+                BK.name AS bookieName,
+                B.userId,
+                R.result
+            FROM
+                BetSlips B
+            LEFT JOIN
+                BetSlipsResults R ON B.id = R.betSlipId
+            LEFT JOIN
+                Bookies BK ON B.bookieId = BK.id
+            LEFT JOIN
+                BetFormats BF ON B.formatId = BF.id
+            WHERE
+                B.userId = ? AND R.result IS NOT NULL
+            ORDER BY
+                B.date DESC
+            LIMIT 100`, [userId]);
+        const filledSlips = await fillBetSlips(db, result);
+        return filledSlips;    
+    } catch (error) {
+        console.error('Error getting bet slip results:', error);
+        throw error;
+    }
+};
+
 // Function to return the winningest betslip (highest winnings) for a specific user
 export const getWinningestBetSlip = async (db, userId) => {
     try {
