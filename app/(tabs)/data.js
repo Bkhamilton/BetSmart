@@ -1,4 +1,5 @@
 import React from 'react';
+import { RefreshControl } from 'react-native';
 import { ScrollView } from '@/components/Themed';
 import DataHeader from '@/components/Data/DataHeader';
 import AnalyticsDisplay from '@/components/Data/AnalyticsDisplay';
@@ -10,6 +11,7 @@ export default function DataScreen() {
         selectTime, 
         selectedTime,
         data,
+        refreshData,
     } = useHookData();
 
     return (
@@ -18,7 +20,14 @@ export default function DataScreen() {
                 selectTime={selectTime}
                 selectedTime={selectedTime}
             />
-            <ScrollView>
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={false}
+                        onRefresh={refreshData}
+                    />
+                }
+            >
                 <AnalyticsDisplay data={data}/>
             </ScrollView>
         </>
