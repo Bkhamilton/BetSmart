@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
@@ -12,11 +12,11 @@ export default function AnalyticsDisplay({ data }) {
         const displayValueText = () => {
             switch (label) {
                 case '$':
-                    return `$${value.toFixed(2)}`;
+                    return `$${value ? value.toFixed(2) : '0.00'}`;
                 case 'Bets':
                     return `${value} Bets`;
                 case '%':
-                    return `${value.toFixed(2)}%`;
+                    return `${value ? value.toFixed(2) : '0.00'}%`;
                 default:
                     return value;
             }
