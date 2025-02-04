@@ -3,6 +3,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { TouchableOpacity } from 'react-native';
 import useTheme from '@/hooks/useTheme';
+import { View } from '@/components/Themed';
 
 function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -79,10 +80,12 @@ export default function TabLayout() {
                     title: 'New Bet',
                     tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
                     tabBarButton: (props) => (
-                        <TabBarButton 
-                            name="plus"
-                            active={true}            
-                        />
+                        <View style={{ alignItems: 'center' }}>
+                            <TabBarButton 
+                                name="plus"
+                                active={true}            
+                            />
+                        </View>
                     ),
                     headerShown: false,
                 }}
