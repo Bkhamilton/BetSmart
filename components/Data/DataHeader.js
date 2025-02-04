@@ -8,7 +8,7 @@ import TimeSelector from './TimeSelector';
 
 export default function DataHeader({ selectTime, selectedTime }) {
 
-    const { iconColor } = useTheme();
+    const { iconColor, backgroundColor } = useTheme();
 
     return (
         <>
@@ -17,7 +17,7 @@ export default function DataHeader({ selectTime, selectedTime }) {
                     onPress={() => {}}
                     style={{ marginRight: 10 }}
                 >
-                    <Ionicons name="filter" size={20} color={iconColor} />
+                    <Ionicons name="filter" size={20} color={backgroundColor} />
                 </TouchableOpacity>
             </Header>
             <TimeSelector selectTime={selectTime} curTime={selectedTime}/>
