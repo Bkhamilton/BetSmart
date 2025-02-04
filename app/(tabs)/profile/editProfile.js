@@ -2,13 +2,33 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { UserContext } from '@/contexts/UserContext';
+import { DBContext } from '@/contexts/DBContext';
 import useTheme from '@/hooks/useTheme';
 import EditProfileInfo from '@/components/Profile/EditProfile/EditProfileInfo';
+import ConfirmMessage from '@/components/Modals/ConfirmMessage';
+import useConfirmationState from '@/hooks/useConfirmationState';
+import { updateUserPassword } from '@/db/user-specific/Users';
 import { useRouter } from 'expo-router';
 
 export default function EditProfileScreen() {
 
     const { iconColor } = useTheme();
+
+    const { user, signedIn } = useContext(UserContext);
+    const { db } = useContext(DBContext);
+
+    const { 
+        confirmationModalVisible, 
+        closeConfirmationModal, 
+        confirmMessage, 
+        onHandleConfirm,
+        handleConfirmation,
+    } = useConfirmationState();
+
+    const onChangePassword = (password) => {
+        handleConfirmation('change password?', closeConfirmationModal, updateUserPassword, [db, user.id, password]);
+    };
 
     const router = useRouter();
 
@@ -24,7 +44,15 @@ export default function EditProfileScreen() {
                     <Text style={styles.settingsHeaderText}>Edit Profile</Text> 
                 </View>   
             </View>
-            <EditProfileInfo />
+            <EditProfileInfo 
+                changePassword={onChangePassword}
+            />
+            <ConfirmMessage 
+                visible={confirmationModalVisible}
+                close={closeConfirmationModal}
+                message={confirmMessage}
+                confirm={onHandleConfirm}
+            />
         </>
     );
 }

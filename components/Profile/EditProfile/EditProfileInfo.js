@@ -7,7 +7,7 @@ import useTheme from '@/hooks/useTheme';
 import { updateUserInfo, updateUserPassword } from '@/db/user-specific/Users';
 import { AntDesign } from '@expo/vector-icons';
 
-export default function EditProfileInfo() {
+export default function EditProfileInfo({ changePassword }) {
 
     const { iconColor, grayBackground, grayBorder, backgroundColor } = useTheme();
     
@@ -34,7 +34,7 @@ export default function EditProfileInfo() {
             return;
         }
         if (password) {
-            updateUserPassword(db, user.id, password);
+            changePassword(password);
         } else {
             updateUserInfo(db, buildNewUser());
         }
