@@ -7,6 +7,7 @@ import { getBetSlipResultsWinnings } from '@/db/betslips/BetSlipsResults';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
+import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function ProfileMainInfo() {
 
@@ -19,7 +20,7 @@ export default function ProfileMainInfo() {
     const [totalBets, setTotalBets] = useState(0);
     const [totalWinnings, setTotalWinnings] = useState(0);
 
-    const { grayBackground, grayBorder } = useTheme();
+    const { iconColor, grayBackground, grayBorder } = useTheme();
 
     const { handleEditProfile } = useRouting();
 
@@ -56,7 +57,9 @@ export default function ProfileMainInfo() {
                 </View>
             </View>
             <View style={{ paddingVertical: 12 }}>
-                <View style={{ height: 100, width: 100, borderRadius: 50, borderWidth: 1 }}/>
+                <View style={{ height: 100, width: 100, borderRadius: 50, borderWidth: 1, justifyContent: 'flex-end', alignItems: 'center', overflow: 'hidden' }}>
+                    <FontAwesome6 name="user-large" size={80} color={iconColor} />
+                </View>
             </View>
         </View>
     );

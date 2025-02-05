@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import Header from '@/components/Header/Header';
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons, FontAwesome6 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import { UserContext } from '@/contexts/UserContext';
 
@@ -32,7 +32,9 @@ export default function HomeHeader({ history, login, signup, openProfileOptions 
 
     const ProfileButton = ({ onPress }) => (
         <TouchableOpacity onPress={onPress} accessibilityLabel="Open Profile">
-            <View style={{ width: 30, height: 30, borderRadius: 15, borderWidth: 1 }}/>
+            <View style={styles.profileButtonContainer}>
+                <FontAwesome6 name='user-large' size={22} color={iconColor} />
+            </View>
         </TouchableOpacity>
     );
 
@@ -51,3 +53,15 @@ export default function HomeHeader({ history, login, signup, openProfileOptions 
         </Header>
     );
 }
+
+const styles = StyleSheet.create({
+    profileButtonContainer: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        borderWidth: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        overflow: 'hidden',
+    },
+});

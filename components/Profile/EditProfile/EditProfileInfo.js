@@ -5,7 +5,7 @@ import { DBContext } from '@/contexts/DBContext';
 import { TouchableOpacity, Text, View, ScrollView, TextInput, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { updateUserInfo, updateUserPassword } from '@/db/user-specific/Users';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome6 } from '@expo/vector-icons';
 
 export default function EditProfileInfo({ changePassword }) {
 
@@ -45,11 +45,8 @@ export default function EditProfileInfo({ changePassword }) {
             <ScrollView style={{ flex: 1, paddingHorizontal: 12 }}>
                 {/* Image Change */}
                 <View style={{ alignItems: 'center', paddingVertical: 12 }}>
-                    <View style={styles.profileIconContainer}>
-                        <View style={styles.profileIcon}></View>
-                        <TouchableOpacity style={styles.editButton}>
-                            <AntDesign name="edit" size={24} color={iconColor} />
-                        </TouchableOpacity>
+                    <View style={{ marginTop: 20, height: 100, width: 100, borderRadius: 50, borderWidth: 1, justifyContent: 'flex-end', alignItems: 'center', overflow: 'hidden' }}>
+                        <FontAwesome6 name="user-large" size={80} color={iconColor} />
                     </View>
                 </View>
                 <View style={[styles.editOptionsContainer, { backgroundColor: grayBackground }]}>
