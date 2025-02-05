@@ -267,5 +267,13 @@ export const createUserSpecificTables = async (db) => {
             FOREIGN KEY(userId) REFERENCES Users(id),
             UNIQUE (bookieId, userId, bonusType, bonusAmount, timestamp, description)
         );
+        CREATE TABLE IF NOT EXISTS Preferences (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId INTEGER NOT NULL,
+            preferenceName TEXT NOT NULL,
+            preferenceValue TEXT NOT NULL,
+            FOREIGN KEY(userId) REFERENCES Users(id),
+            UNIQUE (userId, preferenceName, preferenceValue)
+        );
     `);
 }
