@@ -25,7 +25,7 @@ export default function ProfileMainInfo() {
 
     useEffect(() => {
         if (!signedIn) return;
-        if (user.id === 0) return;
+        if (id === 0) return;
         getTotalBetSlips(db, id)
             .then((total) => setTotalBets(total))
             .catch((error) => console.error('Error getting total bet slips:', error));
