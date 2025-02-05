@@ -35,6 +35,7 @@ export default function SettingsOptions({ onSelect }) {
         { icon: 'information-circle', title: 'About', pressIcon: 'chevron-right' },
         { icon: 'cash', title: 'Support BetSmart', pressIcon: 'chevron-right' },
         { icon: 'log-out', title: 'Log Out', pressIcon: 'chevron-right' },
+        { icon: 'lock-closed', title: 'Privacy Settings', pressIcon: 'chevron-right' },
     ]
 
     return (
