@@ -33,14 +33,13 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
 
     useEffect(() => {
         if (userPreferences.bankRoll === 0) return;
-        console.log(JSON.stringify(userPreferences));
         setPreferences(userPreferences);
         if (preferences.unitSize !== '') {
-            const unitSizes = preferences.unitSize.split(', ');
+            const unitSizes = userPreferences.unitSize.match(/\$\d+/g).map(size => size.replace('$', ''));
             setUnitSizes({
-                'S': unitSizes[0].split(': ')[1],
-                'M': unitSizes[1].split(': ')[1],
-                'L': unitSizes[2].split(': ')[1],
+                'S': unitSizes[0],
+                'M': unitSizes[1],
+                'L': unitSizes[2],
             });
         }
     }, [userPreferences]);
@@ -48,7 +47,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
     useEffect(() => {
         setPreferences({
             ...preferences,
-            unitSize: 'S: ' + unitSizes['S'] + ', M: ' + unitSizes['M'] + ', L: ' + unitSizes['L'],
+            unitSize: 'S ($' + unitSizes['S'] + ') M ($' + unitSizes['M'] + ') L ($' + unitSizes['L'] + ')',
         });
     }, [unitSizes]);
 

@@ -38,26 +38,12 @@ const useHookBetPreferences = () => {
             await insertPreference(db, user.id, 'bankroll', bankroll);
             await insertPreference(db, user.id, 'dailyLimit', dailyLimit);
             await insertPreference(db, user.id, 'unitSize', unitSize);
-            await insertPreference(db, user.id, 'preferredLeagues', preferredLeagues.join(','));
-            await insertPreference(db, user.id, 'preferredBetTypes', preferredBetTypes.join(','));
+            await insertPreference(db, user.id, 'preferredLeagues', preferredLeagues.filter(league => league !== '').join(','));
+            await insertPreference(db, user.id, 'preferredBetTypes', preferredBetTypes.filter(betType => betType !== '').join(','));
             await insertPreference(db, user.id, 'riskTolerance', riskTolerance);
             await insertPreference(db, user.id, 'oddsFormat', oddsFormat);
         } catch (error) {
             console.error('Error updating preferences:', error);
-        }
-    };
-
-    const setRiskTolerance = (riskTolerance) => {
-        if (riskTolerance > 85 ) {
-            return 'Risky';
-        } else if (riskTolerance > 60) {
-            return 'Moderately Risky';
-        } else if (riskTolerance > 40) {
-            return 'Balanced';
-        } else if (riskTolerance > 20) {
-            return 'Somewhat Safe';
-        } else {
-            return 'Safe';
         }
     };
 
