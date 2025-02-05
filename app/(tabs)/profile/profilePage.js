@@ -109,11 +109,6 @@ export default function ProfileScreen() {
                 <BettingPreferences />
                 <Achievements />
                 <BankrollManagement />
-
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Privacy Settings</Text>
-                    {/* Add privacy settings components here */}
-                </View>
             </ScrollView>
         </>
     );

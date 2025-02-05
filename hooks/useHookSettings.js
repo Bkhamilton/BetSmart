@@ -4,6 +4,7 @@ const useHookSettings = () => {
 
     const [helpModalVisible, setHelpModalVisible] = useState(false);
     const [aboutModalVisible, setAboutModalVisible] = useState(false);
+    const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
 
     const handleHelpModal = () => {
         setHelpModalVisible(!helpModalVisible);
@@ -13,11 +14,17 @@ const useHookSettings = () => {
         setAboutModalVisible(!aboutModalVisible);
     }
 
+    const handlePrivacyModal = () => {
+        setPrivacyModalVisible(!privacyModalVisible);
+    }
+
     return {
         helpModalVisible,
         aboutModalVisible,
+        privacyModalVisible,
         handleHelpModal,
         handleAboutModal,
+        handlePrivacyModal,
     };
 };
 

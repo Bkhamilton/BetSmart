@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Linking, Platform } from 'react-native';
-import StoreReview from 'react-native-store-review';
+import { StyleSheet, Platform } from 'react-native';
 import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { UserContext } from '@/contexts/UserContext';
@@ -15,6 +14,7 @@ import useHookSettings from '@/hooks/useHookSettings';
 import useTheme from '@/hooks/useTheme';
 import AboutModal from '@/components/Modals/AboutModal';
 import HelpModal from '@/components/Modals/HelpModal';
+import PrivacySettings from '@/components/Modals/PrivacySettings';
 
 export default function SettingsScreen() {
 
@@ -41,8 +41,10 @@ export default function SettingsScreen() {
     const {
         helpModalVisible,
         aboutModalVisible,
+        privacyModalVisible,
         handleHelpModal,
         handleAboutModal,
+        handlePrivacyModal,
     } = useHookSettings();
 
     const { 
@@ -85,6 +87,10 @@ export default function SettingsScreen() {
                 // Open Support Modal
                 handleSupport();
                 break;
+            case 'Privacy Settings':
+                // Open Privacy Settings
+                handlePrivacyModal();
+                break;
             case 'Log Out':
                 handleConfirmNoModal('log out?', onSelected, title);
                 break;
@@ -113,6 +119,10 @@ export default function SettingsScreen() {
             <HelpModal
                 visible={helpModalVisible}
                 close={handleHelpModal}
+            />
+            <PrivacySettings
+                visible={privacyModalVisible}
+                close={handlePrivacyModal}
             />
             <View style={styles.headerContainer}>
                 <TouchableOpacity 
