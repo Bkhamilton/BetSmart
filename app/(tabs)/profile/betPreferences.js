@@ -5,12 +5,15 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import { useRouter } from 'expo-router';
 import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
+import useHookBetPreferences from '@/hooks/useHookBetPreferences';
 
 export default function BetPreferencesScreen() {
 
     const { iconColor } = useTheme();
 
     const router = useRouter();
+
+    const { preferences, setPreferences, updatePreferences } = useHookBetPreferences();
 
     return (
         <>
@@ -24,7 +27,11 @@ export default function BetPreferencesScreen() {
                     <Text style={styles.settingsHeaderText}>Edit Preferences</Text> 
                 </View>   
             </View>
-            <EditPreferences />
+            <EditPreferences 
+                userPreferences={preferences}
+                setUserPreferences={setPreferences}
+                updatePreferences={updatePreferences}
+            />
         </>
     );
 }

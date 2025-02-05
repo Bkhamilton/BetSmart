@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
@@ -6,7 +6,9 @@ import { TouchableOpacity, Text, View, ScrollView, TextInput, ClearView } from '
 import Slider from '@react-native-community/slider';
 import useTheme from '@/hooks/useTheme';
 
-export default function EditPreferences() {
+export default function EditPreferences({ userPreferences, setUserPreferences, updatePreferences }) {
+
+    const betTypes = ['ML', 'SPREAD', 'O/U', 'PLAYER', 'GAME', 'TEAM'];
 
     const { iconColor, grayBackground, grayBorder, backgroundColor } = useTheme();
     
@@ -14,20 +16,41 @@ export default function EditPreferences() {
     const { leagues } = useContext(DBContext);
 
     const [preferences, setPreferences] = useState({
-        bankroll: '',
-        dailyLimit: '',
+        bankroll: 0,
+        dailyLimit: 0,
         unitSize: '',
-        preferredLeagues: '',
-        preferredBetTypes: '',
-        riskTolerance: '',
+        preferredLeagues: [],
+        preferredBetTypes: [],
+        riskTolerance: 0,
         oddsFormat: '',
     });
 
     const [unitSizes, setUnitSizes] = useState({
-        'S': '',
-        'M': '',
-        'L': '',
+        'S': 0,
+        'M': 0,
+        'L': 0,
     });
+
+    useEffect(() => {
+        if (userPreferences.bankRoll === 0) return;
+        console.log(JSON.stringify(userPreferences));
+        setPreferences(userPreferences);
+        if (preferences.unitSize !== '') {
+            const unitSizes = preferences.unitSize.split(', ');
+            setUnitSizes({
+                'S': unitSizes[0].split(': ')[1],
+                'M': unitSizes[1].split(': ')[1],
+                'L': unitSizes[2].split(': ')[1],
+            });
+        }
+    }, [userPreferences]);
+
+    useEffect(() => {
+        setPreferences({
+            ...preferences,
+            unitSize: 'S: ' + unitSizes['S'] + ', M: ' + unitSizes['M'] + ', L: ' + unitSizes['L'],
+        });
+    }, [unitSizes]);
 
     const handleInputChange = (name, value) => {
         setPreferences({
@@ -57,7 +80,26 @@ export default function EditPreferences() {
             alert('Please sign in to save changes');
             return;
         }
+        updatePreferences(preferences);
     };
+
+    const handleRiskTextStyle = (value) => {
+        const calculateFontWeight = (distance) => {
+            return 900 - Math.min(Math.floor(distance / 10) * 100, 500);
+        };
+    
+        const safeWeight = calculateFontWeight(Math.abs(value - 0));
+        const balancedWeight = calculateFontWeight(Math.abs(value - 50));
+        const riskyWeight = calculateFontWeight(Math.abs(value - 100));
+    
+        return {
+            safe: { fontWeight: safeWeight.toString() },
+            balanced: { fontWeight: balancedWeight.toString() },
+            risky: { fontWeight: riskyWeight.toString() },
+        };
+    };
+
+    const riskTextStyle = handleRiskTextStyle(preferences.riskTolerance);
 
     return (
         <View style={styles.container}>
@@ -140,7 +182,7 @@ export default function EditPreferences() {
                                 leagues.map((league, index) => (
                                     <TouchableOpacity 
                                         key={index}
-                                        style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.preferredLeagues.includes(league.leagueName) ? backgroundColor : grayBorder }]}
+                                        style={[styles.editComponentInput, { marginHorizontal: 4, borderColor: backgroundColor, backgroundColor: preferences.preferredLeagues.includes(league.leagueName) ? backgroundColor : grayBorder }]}
                                         onPress={() => handleAddOption('preferredLeagues', league.leagueName)}
                                     >
                                         <Text style={{ color: iconColor }}>{league.leagueName}</Text>
@@ -154,11 +196,11 @@ export default function EditPreferences() {
                         <Text>Preferred Bet Types</Text>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
                             {
-                                ['ML', 'SPREAD', 'O/U', 'PLAYER', 'GAME', 'TEAM'].map((betType, index) => (
+                                betTypes.map((betType, index) => (
                                     <TouchableOpacity 
                                         key={index}
-                                        style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.preferredLeagues.includes(betType) ? backgroundColor : grayBorder }]}
-                                        onPress={() => handleAddOption('preferredLeagues', betType)}
+                                        style={[styles.editComponentInput, { marginHorizontal: 4, borderColor: backgroundColor, backgroundColor: preferences.preferredBetTypes.includes(betType) ? backgroundColor : grayBorder }]}
+                                        onPress={() => handleAddOption('preferredBetTypes', betType)}
                                     >
                                         <Text style={{ color: iconColor }}>{betType}</Text>
                                     </TouchableOpacity>
@@ -170,16 +212,18 @@ export default function EditPreferences() {
                     <ClearView style={{ padding: 8 }}>
                         <Text>Risk Tolerance</Text>
                         <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 8 }}>
-                            <Text style={{ opacity: 0.6 }}>Safe</Text>
-                            <Text style={{ opacity: 0.6 }}>Risky</Text>
+                            <Text style={[styles.riskText, riskTextStyle.safe]}>Safe</Text>
+                            <Text style={[styles.riskText, riskTextStyle.balanced]}>Balanced</Text>
+                            <Text style={[styles.riskText, riskTextStyle.risky]}>Risky</Text>
                         </ClearView>
                         <Slider
                             style={{width: '100%', height: 40}}
                             minimumValue={0}
-                            maximumValue={1}
+                            maximumValue={100}
                             minimumTrackTintColor="#FFFFFF"
                             maximumTrackTintColor="#000000"
                             onValueChange={(value) => handleInputChange('riskTolerance', value)}
+                            value={preferences.riskTolerance}
                         />
                     </ClearView>
                     {/* Odds Format */}
@@ -259,5 +303,9 @@ const styles = StyleSheet.create({
         borderWidth: 1, 
         opacity: 0.8,
         marginTop: 8,
+    },
+    riskText: {
+        opacity: 0.6,
+        fontSize: 16,
     }
 });
