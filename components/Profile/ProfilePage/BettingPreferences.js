@@ -1,14 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
+import { DBContext } from '@/contexts/DBContext';
+import { UserContext } from '@/contexts/UserContext';
+import { getPreferences } from '@/db/user-specific/Preferences';
 
 export default function BettingPreferences() {
 
     const { iconColor, grayBorder, grayBackground } = useTheme();
 
     const { handleEditPreferences } = useRouting();
+
+    const { db } = useContext(DBContext);
+    const { user } = useContext(UserContext);
 
     const [preferences, setPreferences] = useState({
         bankroll: 1000,
@@ -19,9 +25,38 @@ export default function BettingPreferences() {
         riskTolerance: 'Moderate',
         oddsFormat: 'American',
     });
+
+    const setRiskTolerance = (riskTolerance) => {
+        if (riskTolerance > 85 ) {
+            return 'Risky';
+        } else if (riskTolerance > 60) {
+            return 'Moderately Risky';
+        } else if (riskTolerance > 40) {
+            return 'Balanced';
+        } else if (riskTolerance > 20) {
+            return 'Somewhat Safe';
+        } else {
+            return 'Safe';
+        }
+    };
     
     useEffect(() => {
         // fetch user's betting preferences
+        getPreferences(db, user.id)
+            .then((result) => {
+                if (result) {
+                    const preferences = result;
+                    setPreferences({
+                        bankroll: preferences.bankroll,
+                        dailyLimit: preferences.dailyLimit,
+                        unitSize: preferences.unitSize,
+                        preferredLeagues: preferences.preferredLeagues,
+                        preferredBetTypes: preferences.preferredBetTypes,
+                        riskTolerance: setRiskTolerance(preferences.riskTolerance),
+                        oddsFormat: preferences.oddsFormat,
+                    });
+                }
+            });
     }, []);
 
     return (
