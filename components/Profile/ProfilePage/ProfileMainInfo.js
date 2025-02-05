@@ -26,6 +26,7 @@ export default function ProfileMainInfo() {
 
     useEffect(() => {
         if (!signedIn) return;
+        if (!id) return;
         if (id === 0) return;
         getTotalBetSlips(db, id)
             .then((total) => setTotalBets(total))
