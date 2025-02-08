@@ -12,6 +12,7 @@ import { getLastUpdatedMarket } from './BetMarkets';
 
 export const syncInitialData = async (db, supabase) => {
     // Sync initial data
+    await syncUsers(db);
     await syncBookies(db, supabase);
     await syncLeagues(db, supabase);
     await syncSeasons(db, supabase);

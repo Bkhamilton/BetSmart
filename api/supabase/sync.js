@@ -17,6 +17,22 @@ import { insertFullGameResult } from '@/db/api/GameResults';
 import { insertFullBetTarget } from '@/db/bet-general/BetTargets';
 
 // Description: Sync data from Supabase to SQLite database
+
+export const syncUsers = async (db) => {
+    try {
+        await db.withTransactionAsync(async () => {
+            await db.runAsync(
+                'INSERT INTO Users (id, name, email, username, password) VALUES (?, ?, ?, ?, ?)',
+                [1, 'Admin', 'email@email.com', 'admin', 'password']
+            );
+        });
+        
+        console.log('Bookies synced successfully');
+    } catch (error) {
+        console.error('Error syncing bookies:', error);
+    }
+}
+
 export const syncBookies = async (db, supabase) => {
     try {
         const bookies = await getAllBookies(supabase);
