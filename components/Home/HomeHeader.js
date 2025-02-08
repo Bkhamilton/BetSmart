@@ -39,7 +39,7 @@ export default function HomeHeader({ history, login, signup, openProfileOptions 
     );
 
     return (
-        <Header title={'BetSmart'}>
+        <Header title={'BetSmarter'}>
             { signedIn ?
                 <>
                     <HistoryButton onPress={history} />
