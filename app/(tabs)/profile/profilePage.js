@@ -6,10 +6,13 @@ import ProfileMainInfo from '@/components/Profile/ProfilePage/ProfileMainInfo';
 import UserFavorites from '@/components/Profile/ProfilePage/UserFavorites';
 import Achievements from '@/components/Profile/ProfilePage/Achievements';
 import AddBookie from '@/components/Modals/AddBookie';
+import LoginPage from '@/components/Modals/LoginPage';
+import SignUpPage from '@/components/Modals/SignUpPage';
 import ActiveBookies from '@/components/Profile/ProfilePage/ActiveBookies';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
 import useOptionsState from '@/hooks/useOptionsState';
+import useAuthState from '@/hooks/useAuthState';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 import OptionMenu from '@/components/Modals/OptionMenu';
 import ProfilePageHeader from '@/components/Profile/ProfilePage/ProfilePageHeader';
@@ -45,6 +48,17 @@ export default function ProfileScreen() {
         handleOpenOptions,
     } = useOptionsState();
 
+    const {
+        loginModalVisible,
+        signUpModalVisible,
+        login,
+        signUp,
+        openLoginModal,
+        closeLoginModal,
+        closeSignUpModal,
+        handleSignUp,
+    } = useAuthState();
+
     const onAddBookie = async (bookie) => {
         if (!signedIn) {
             alert('Please sign in to add a bookie');
@@ -72,8 +86,17 @@ export default function ProfileScreen() {
 
     return (
         <>
-            <ProfilePageHeader
-                user={user}
+            <ProfilePageHeader/>
+            <LoginPage 
+                visible={loginModalVisible} 
+                close={closeLoginModal} 
+                login={login}
+                handleSignUp={handleSignUp}
+            />
+            <SignUpPage 
+                visible={signUpModalVisible} 
+                close={closeSignUpModal}
+                signUp={signUp}
             />
             <AddBookie 
                 visible={addBookieModalVisible} 
@@ -100,7 +123,9 @@ export default function ProfileScreen() {
                     />
                 }
             >
-                <ProfileMainInfo /> 
+                <ProfileMainInfo 
+                    handleSignIn={openLoginModal}
+                /> 
                 <UserFavorites player={"Zion Williamson"}/>
                 <ActiveBookies 
                     addBookie={openAddBookieModal}
