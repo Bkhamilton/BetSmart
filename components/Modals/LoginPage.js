@@ -4,12 +4,12 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View, TextInput, Modal, ClearView, ScrollView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
-export default function LoginPage({ visible, close, login }) {
+export default function LoginPage({ visible, close, login, handleSignUp }) {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const { iconColor, backgroundColor, grayBackground, grayBorder } = useTheme();
+    const { iconColor, backgroundColor, grayBackground, grayBorder, greenText } = useTheme();
 
     const handleLogin = async () => {
         try {
@@ -69,6 +69,14 @@ export default function LoginPage({ visible, close, login }) {
                             />
                         </ClearView>
                     </View>
+                </View>
+                <View style={{ flexDirection: 'row', paddingHorizontal: 12, paddingVertical: 8, justifyContent: 'center' }}>
+                    <Text style={{ textAlign: 'center' }}>Don't have an account?</Text>
+                    <TouchableOpacity 
+                        onPress={handleSignUp}
+                    >
+                        <Text style={{ textAlign: 'center', color: greenText }}> Sign Up</Text>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
             <View>

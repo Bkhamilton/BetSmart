@@ -102,6 +102,12 @@ const useAuthState = (closeLoginModal) => {
         }
     };    
 
+    // function to close login modal and open up sign up modal
+    const handleSignUp = () => {
+        closeLoginModal();
+        openSignUpModal();
+    };
+
     return {
         loginModalVisible,
         setLoginModalVisible,
@@ -115,6 +121,7 @@ const useAuthState = (closeLoginModal) => {
         openSignUpModal,
         closeSignUpModal,
         signOutUser,
+        handleSignUp,
     };
 };
 

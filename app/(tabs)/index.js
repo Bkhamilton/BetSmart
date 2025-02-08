@@ -91,6 +91,7 @@ export default function HomeScreen() {
         openSignUpModal,
         closeSignUpModal,
         signOutUser,
+        handleSignUp,
     } = useAuthState();
 
     const {
@@ -155,6 +156,7 @@ export default function HomeScreen() {
                     visible={loginModalVisible} 
                     close={closeLoginModal} 
                     login={login}
+                    handleSignUp={handleSignUp}
                 />
                 <SignUpPage 
                     visible={signUpModalVisible} 
