@@ -9,7 +9,7 @@ import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
 import { FontAwesome6 } from '@expo/vector-icons';
 
-export default function ProfileMainInfo() {
+export default function ProfileMainInfo({ handleSignIn }) {
 
     const { user, signedIn } = useContext(UserContext);
 
@@ -25,9 +25,11 @@ export default function ProfileMainInfo() {
     const { handleEditProfile } = useRouting();
 
     useEffect(() => {
-        if (!signedIn) return;
-        if (!id) return;
-        if (id === 0) return;
+        if (!signedIn || !id || id === 0) {
+            setTotalBets(0);
+            setTotalWinnings(0);
+            return;
+        }
         getTotalBetSlips(db, id)
             .then((total) => setTotalBets(total))
             .catch((error) => console.error('Error getting total bet slips:', error));
@@ -45,21 +47,32 @@ export default function ProfileMainInfo() {
                     <Text>${totalWinnings} All Time</Text>
                 </View>
                 <View style={{ paddingVertical: 4 }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{name}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{signedIn ? name : 'No User'}</Text>
                 </View>
-                <Text style={{ fontSize: 16 }}>{username}</Text>
+                <Text style={{ fontSize: 16 }}>{signedIn ? username : ''}</Text>
                 <View style={{ marginTop: 8 }}>
-                    <TouchableOpacity 
-                        style={[styles.editProfileButton, { borderColor: grayBorder, backgroundColor: grayBackground }]}
-                        onPress={handleEditProfile}
-                    >
-                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Edit Profile</Text>
-                    </TouchableOpacity>
+                    {
+                        signedIn ? (
+                            <TouchableOpacity 
+                                style={[styles.editProfileButton, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                onPress={handleEditProfile}
+                            >
+                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Edit Profile</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity 
+                                style={[styles.editProfileButton, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                onPress={handleSignIn}
+                            >
+                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Sign In</Text>
+                            </TouchableOpacity>
+                        )
+                    }
                 </View>
             </View>
             <View style={{ paddingVertical: 12 }}>
-                <View style={{ height: 100, width: 100, borderRadius: 50, borderWidth: 1, justifyContent: 'flex-end', alignItems: 'center', overflow: 'hidden' }}>
-                    <FontAwesome6 name="user-large" size={80} color={iconColor} />
+                <View style={styles.profileIcon}>
+                    <FontAwesome6 name="user-large" size={80} color={iconColor} style={{ opacity: signedIn ? 1 : 0.4 }}/>
                 </View>
             </View>
         </View>
@@ -80,5 +93,14 @@ export default function ProfileMainInfo() {
         borderRadius: 8,
         borderWidth: 1,
         alignItems: 'center',
+    },
+    profileIcon: {
+        height: 100,
+        width: 100,
+        borderRadius: 50,
+        borderWidth: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        overflow: 'hidden',
     }
   });

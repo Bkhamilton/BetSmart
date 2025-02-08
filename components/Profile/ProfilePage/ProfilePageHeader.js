@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
+import { UserContext } from '@/contexts/UserContext';
 import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
 
-export default function ProfilePageHeader({ user }) {
+export default function ProfilePageHeader() {
+
+    const { user, signedIn } = useContext(UserContext);
 
     const { iconColor, grayBorder } = useTheme();
 
@@ -15,7 +18,7 @@ export default function ProfilePageHeader({ user }) {
         <View style={[styles.headerContainer, { borderColor: grayBorder }]}>
             <View>
                 <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
-                    {user ? user.username : 'Username'}
+                    {signedIn ? user.username : 'BetSmarter'}
                 </Text>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
