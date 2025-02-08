@@ -12,6 +12,7 @@ import useConfirmationState from '@/hooks/useConfirmationState';
 import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
 import useHookSettings from '@/hooks/useHookSettings';
 import useTheme from '@/hooks/useTheme';
+import useAuthState from '@/hooks/useAuthState';
 import AboutModal from '@/components/Modals/AboutModal';
 import HelpModal from '@/components/Modals/HelpModal';
 import PrivacySettings from '@/components/Modals/PrivacySettings';
@@ -52,10 +53,14 @@ export default function SettingsScreen() {
         handleEditProfile,
     } = useRouting();
 
+    const {
+        signOutUser,
+    } = useAuthState();
+
     const { user } = useContext(UserContext);
 
-    const onSelected = (title) => {
-        console.log(title);
+    const handleSignOut = (user) => {
+        signOutUser(user.id);
     }
 
     const handleSupport = () => {
@@ -92,7 +97,7 @@ export default function SettingsScreen() {
                 handlePrivacyModal();
                 break;
             case 'Log Out':
-                handleConfirmNoModal('log out?', onSelected, title);
+                handleConfirmNoModal('log out?', handleSignOut, user);
                 break;
             default:
                 console.log('default');
