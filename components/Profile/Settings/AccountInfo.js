@@ -6,9 +6,9 @@ import { UserContext } from '@/contexts/UserContext';
 import useTheme from '@/hooks/useTheme';
 import useRouting from '@/hooks/useRouting';
 
-export default function AccountInfo() {
+export default function AccountInfo({ signIn }) {
 
-    const { user } = useContext(UserContext);
+    const { user, signedIn } = useContext(UserContext);
 
     const { iconColor, grayBackground } = useTheme();
 
@@ -23,13 +23,30 @@ export default function AccountInfo() {
             <ClearView style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
                 <View style={styles.accountImageContainer}/>
                 <ClearView style={styles.accountInfoContainer}>
-                    <Text style={{ fontWeight: '500', fontSize: 18 }}>{user.username}</Text>
-                    <TouchableOpacity
-                        style={{ backgroundColor: 'transparent' }}
-                        onPress={handleEditProfile}
-                    >
-                        <Text>Profile Settings</Text>
-                    </TouchableOpacity>
+                    {
+                        signedIn ? (
+                            <>
+                                <Text style={{ fontWeight: '500', fontSize: 18 }}>{user.username}</Text>
+                                <TouchableOpacity
+                                    style={{ backgroundColor: 'transparent' }}
+                                    onPress={handleEditProfile}
+                                >
+                                    <Text>Profile Settings</Text>
+                                </TouchableOpacity>
+                            </>
+                        ) : (
+                            <>
+                                <Text style={{ fontWeight: '500', fontSize: 18 }}>No User</Text>
+                                <TouchableOpacity
+                                    style={{ backgroundColor: 'transparent' }}
+                                    onPress={signIn}
+                                >
+                                    <Text>Sign in</Text>
+                                </TouchableOpacity>
+                            </>
+                        )
+                    }
+
                 </ClearView>
             </ClearView>
             <ClearView style={styles.accountArrowContainer}>
