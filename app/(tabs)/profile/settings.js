@@ -7,6 +7,8 @@ import AccountInfo from '@/components/Profile/Settings/AccountInfo';
 import SettingsOptions from '@/components/Profile/Settings/SettingsOptions';
 import ConfirmMessage from '@/components/Modals/ConfirmMessage';
 import DoubleConfirm from '@/components/Modals/DoubleConfirm';
+import LoginPage from '@/components/Modals/LoginPage';
+import SignUpPage from '@/components/Modals/SignUpPage';
 import useRouting from '@/hooks/useRouting';
 import useConfirmationState from '@/hooks/useConfirmationState';
 import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
@@ -37,6 +39,7 @@ export default function SettingsScreen() {
     const {
         clearUserData,
         clearBettingData,
+        deleteAccount,
     } = useDatabaseFuncs();
 
     const {
@@ -54,6 +57,14 @@ export default function SettingsScreen() {
     } = useRouting();
 
     const {
+        loginModalVisible,
+        signUpModalVisible,
+        login,
+        signUp,
+        openLoginModal,
+        closeLoginModal,
+        closeSignUpModal,
+        handleSignUp,
         signOutUser,
     } = useAuthState();
 
@@ -99,6 +110,8 @@ export default function SettingsScreen() {
             case 'Log Out':
                 handleConfirmNoModal('log out?', handleSignOut, user);
                 break;
+            case 'Delete Account':
+                handleConfirmNoModal('delete your account? This cannot be undone', deleteAccount, [user, signOutUser]);
             default:
                 console.log('default');
         }
@@ -106,6 +119,17 @@ export default function SettingsScreen() {
 
     return (
         <>
+            <LoginPage 
+                visible={loginModalVisible} 
+                close={closeLoginModal} 
+                login={login}
+                handleSignUp={handleSignUp}
+            />
+            <SignUpPage 
+                visible={signUpModalVisible} 
+                close={closeSignUpModal}
+                signUp={signUp}
+            />        
             <ConfirmMessage
                 visible={confirmationModalVisible}
                 close={closeConfirmationModal}
@@ -144,7 +168,9 @@ export default function SettingsScreen() {
                     <View style={styles.accountHeader}>
                         <Text style={styles.accountHeaderText}>Account</Text>
                     </View>
-                    <AccountInfo />
+                    <AccountInfo 
+                        signIn={openLoginModal}
+                    />
                     <SettingsOptions onSelect={handleSelect} />
                 </ClearView>
             </ScrollView>

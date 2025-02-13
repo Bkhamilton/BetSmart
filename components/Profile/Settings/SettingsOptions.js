@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { Text, View, TouchableOpacity } from '@/components/Themed';
+import { UserContext } from '@/contexts/UserContext';
 import useTheme from '@/hooks/useTheme';
 
 export default function SettingsOptions({ onSelect }) {
 
     const { iconColor } = useTheme();
+
+    const { signedIn } = useContext(UserContext);
 
     function SettingsOption({ icon, title, pressIcon, onSelect }) {
         return (
@@ -35,7 +38,6 @@ export default function SettingsOptions({ onSelect }) {
         { icon: 'information-circle', title: 'About', pressIcon: 'chevron-right' },
         { icon: 'cash', title: 'Support BetSmart', pressIcon: 'chevron-right' },
         { icon: 'lock-closed', title: 'Privacy Settings', pressIcon: 'chevron-right' },
-        { icon: 'log-out', title: 'Log Out', pressIcon: 'chevron-right' },
     ]
 
     return (
@@ -50,6 +52,28 @@ export default function SettingsOptions({ onSelect }) {
                     />
                 </View>
             ))}
+            {
+                signedIn && (
+                    <>
+                        <View style={{ marginVertical: 4}}>
+                            <SettingsOption
+                                icon={'log-out'}
+                                title={'Log Out'}
+                                pressIcon={'chevron-right'}
+                                onSelect={() => onSelect('Log Out')}
+                            />
+                        </View>
+                        <View style={{ marginVertical: 4}}> 
+                            <SettingsOption
+                                icon={'person-remove'}
+                                title={'Delete Account'}
+                                pressIcon={'chevron-right'}
+                                onSelect={() => onSelect('Delete Account')}
+                            />
+                        </View>
+                    </>
+                )
+            }
         </View>
     );
 }

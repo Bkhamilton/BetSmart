@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
+import { deleteUser } from '@/db/user-specific/Users';
 import { deleteBetSlip, getBetSlipsByUserId, deleteBetSlipsByUserId } from '@/db/betslips/BetSlips';
 import { deleteBetsByBetSlipId, getBetsByBetSlipIds, deleteBetsByBetSlipIds } from '@/db/betslips/ParticipantBets';
 import { deleteLegsByParticipantBetId, getLegsByParticipantBetIds, deleteLegsByParticipantBetIds } from '@/db/betslips/Legs';
@@ -103,10 +104,19 @@ const useDatabaseFuncs = () => {
         */
     }
 
+    const deleteAccount = async (user, signOut) => {
+        // clear all user data before deleting user
+        await clearUserData(user);
+        await signOut(user.id);
+        await deleteUser(db, user.id);
+        console.log('Account deleted successfully');
+    }
+
     return {
         deleteUserBetSlip,
         clearUserData,
         clearBettingData,
+        deleteAccount,
     };
 };
 
