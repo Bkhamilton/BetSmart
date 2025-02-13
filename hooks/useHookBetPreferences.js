@@ -18,6 +18,8 @@ const useHookBetPreferences = () => {
         oddsFormat: '',
     });
 
+    const [trigger, setTrigger] = useState(false);
+
     const updatePreferences = async (preferences) => {
         try {
             // Ensure all values are defined
@@ -42,6 +44,8 @@ const useHookBetPreferences = () => {
             await insertPreference(db, user.id, 'preferredBetTypes', preferredBetTypes.filter(betType => betType !== '').join(','));
             await insertPreference(db, user.id, 'riskTolerance', riskTolerance);
             await insertPreference(db, user.id, 'oddsFormat', oddsFormat);
+
+            setTrigger(!trigger);
         } catch (error) {
             console.error('Error updating preferences:', error);
         }
@@ -65,7 +69,7 @@ const useHookBetPreferences = () => {
                     }
                 });
         }
-    }, [signedIn]);
+    }, [signedIn, trigger]);
 
     return {
         preferences,
