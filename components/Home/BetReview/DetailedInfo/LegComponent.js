@@ -5,15 +5,13 @@ import { DBContext } from '@/contexts/DBContext';
 import { getLogoUrl } from '@/db/general/Teams';
 import { displayLeg } from '@/utils/betSlipFunctions';
 import { getTeamAbbreviationByName } from '@/db/general/Teams';
+import useTheme from '@/hooks/useTheme';
 
 export default function LegComponent({ leg, children }) {
-
     const { db } = useContext(DBContext);
-
+    const { grayBorder } = useTheme();
     const { marketType, value, odds, overUnder, betTargetId, betTarget, targetType, betType } = leg;
-
     const [betTargetName, setBetTargetName] = useState('');
-
     const [targetLogo, setTargetLogo] = useState('');
 
     const getName = async () => {
@@ -42,7 +40,6 @@ export default function LegComponent({ leg, children }) {
             const name = await getName(betTargetId);
             setBetTargetName(name);
         };
-
         fetchName();
     }, []);
 
@@ -52,39 +49,54 @@ export default function LegComponent({ leg, children }) {
                 getLogoUrl(db, betTarget).then((url) => setTargetLogo(url.logoUrl + '/preview'));
             };
         };
-
         fetchTargetLogo(db, betTarget);
     }, [betTarget]);
 
     return (
-        <ClearView>
-            <ClearView style={styles.container}>
-                {
-                    targetLogo == '' ? 
-                    <View style={[styles.targetIcon, { borderWidth: 1 }]} /> 
-                    : 
+        <View style={[styles.container, { borderColor: grayBorder }]}>
+            <View style={styles.legContent}>
+                {targetLogo ? (
                     <Image style={styles.targetIcon} source={{uri: targetLogo}}/>
-                }
-                <ClearView style={{ paddingLeft: 4 }}>
-                    <Text style={{ fontWeight: '600' }}>{getTargetHeader()}</Text>
-                    <Text>{displayLeg(leg, betTargetName)}</Text>
-                </ClearView>
-            </ClearView>
+                ) : (
+                    <View style={[styles.targetIcon, { borderWidth: 1, borderColor: grayBorder }]} />
+                )}
+                <View style={styles.legTextContainer}>
+                    <Text style={styles.targetHeader}>{getTargetHeader()}</Text>
+                    <Text style={styles.legDetails}>{displayLeg(leg, betTargetName)}</Text>
+                </View>
+            </View>
             {children}
-        </ClearView>
-
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 8,
+        marginBottom: 8,
+    },
+    legContent: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     targetIcon: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        marginRight: 4,
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        marginRight: 8,
+    },
+    legTextContainer: {
+        flex: 1,
+    },
+    targetHeader: {
+        fontSize: 14,
+        fontWeight: '600',
+        marginBottom: 2,
+    },
+    legDetails: {
+        fontSize: 14,
+        opacity: 0.9,
     },
 });

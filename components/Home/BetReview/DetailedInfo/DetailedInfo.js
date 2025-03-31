@@ -26,10 +26,10 @@ export default function DetailedInfo({ betSlips, confirm, openOptions }) {
 
     return (
         <ScrollView 
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ alignItems: 'flex-start' }}
-        style={{ paddingLeft: 10 }}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ alignItems: 'flex-start' }}
+            style={{ paddingLeft: 10 }}
         >
             {betSlips.map((betSlip) => (
                 <BetSlip key={betSlip.id} betSlip={betSlip}/>
