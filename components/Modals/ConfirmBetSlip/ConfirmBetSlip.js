@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Animated } from 'react-native';
 import { TouchableOpacity, Text, View, Modal, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { Feather } from '@expo/vector-icons';
@@ -8,27 +8,33 @@ import ResolveComponent from './ResolveComponent';
 import LegComponent from '../../Home/BetReview/DetailedInfo/LegComponent';
 
 export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
-
-    const { redText, mainGreen } = useTheme();
-
+    const { redText, mainGreen, backgroundColor, grayBackground, text } = useTheme();
     const totalLegs = betSlip ? betSlip.bets.reduce((total, bet) => total + bet.legs.length, 0) : 0;
-
     const [resolvedLegs, setResolvedLegs] = useState(Array(totalLegs).fill(null));
+    const [progressAnim] = useState(new Animated.Value(0));
 
     useEffect(() => {
-        // Reset resolvedLegs state when betslip changes
         setResolvedLegs(Array(totalLegs).fill(null));
     }, [betSlip]);
 
+    useEffect(() => {
+        // Animate progress when resolved legs change
+        const resolvedCount = resolvedLegs.filter(leg => leg !== null).length;
+        Animated.timing(progressAnim, {
+            toValue: resolvedCount / totalLegs,
+            duration: 300,
+            useNativeDriver: false
+        }).start();
+    }, [resolvedLegs]);
+
     const handleLegResolved = (index, result) => {
         setResolvedLegs(prev => {
-          const newResolvedLegs = [...prev];
-          newResolvedLegs[index] = result;
-          return newResolvedLegs;
+            const newResolvedLegs = [...prev];
+            newResolvedLegs[index] = result;
+            return newResolvedLegs;
         });
     };
 
-    // Function to handle Bet Resolved based on leg results
     const handleBetResolved = (bet) => {
         const resolvedLegs = bet.legs.map(leg => leg.result);
         return resolvedLegs.every(leg => leg === true);
@@ -50,31 +56,45 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
     let legIndex = 0;
 
     const Leg = ({ leg, legIndex, resolveLeg }) => {
-
-        const { grayBackground, redText, backgroundColor } = useTheme();
-
-        const [results, setResults] = useState(null);
+        const { grayBackground, redText, mainGreen, backgroundColor } = useTheme();
+        const [result, setResult] = useState(null);
         
-        const resolve = (result) => {
-            leg['result'] = result;
-            setResults(result);
-            resolveLeg(legIndex, result);
+        const resolve = (res) => {
+            leg['result'] = res;
+            setResult(res);
+            resolveLeg(legIndex, res);
         };
-    
+
         return (
             <LegComponent leg={leg}>
-                <View style={[styles.resultsContainer, { backgroundColor: results === null ? 'transparent' : results ? redText : 'green' }]}>
+                <View style={styles.resultsContainer}>
                     <TouchableOpacity 
-                        style={[styles.iconButton, { backgroundColor: results === false ? grayBackground : backgroundColor }]}
+                        style={[
+                            styles.iconButton,
+                            result === false && styles.lostButton,
+                            { backgroundColor: result === false ? redText + '20' : backgroundColor }
+                        ]}
                         onPress={() => resolve(false)}
                     >
-                        <Feather name="x" size={24} color={redText} />
+                        <Feather 
+                            name="x" 
+                            size={24} 
+                            color={result === false ? backgroundColor : redText} 
+                        />
                     </TouchableOpacity>
                     <TouchableOpacity 
-                        style={[styles.iconButton, { backgroundColor: results === true ? grayBackground : backgroundColor }]}
+                        style={[
+                            styles.iconButton,
+                            result === true && styles.wonButton,
+                            { backgroundColor: result === true ? mainGreen + '20' : backgroundColor }
+                        ]}
                         onPress={() => resolve(true)}
                     >
-                        <Feather name="check" size={24} color="green" />
+                        <Feather 
+                            name="check" 
+                            size={24} 
+                            color={result === true ? backgroundColor : mainGreen} 
+                        />
                     </TouchableOpacity>
                 </View>
             </LegComponent>
@@ -83,25 +103,29 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
       
     const BetComponent = ({ bet, resolveLeg }) => {
         return (
-            <ClearView>
-                <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text>{bet.league}</Text>
-                    <Text>{bet.odds}</Text>
+            <ClearView style={styles.betContainer}>
+                <ClearView style={styles.betHeader}>
+                    <Text style={styles.betLeague}>{bet.league}</Text>
+                    <Text style={styles.betOdds}>{bet.odds}</Text>
                 </ClearView>
-                <ClearView>
-                    <Text>{bet.date}</Text>
+                <ClearView style={styles.betDateContainer}>
+                    <Text style={styles.betDate}>{bet.date}</Text>
                 </ClearView>
-                <ClearView style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                    <Text style={{ fontSize: 18, fontWeight: '600' }}>{bet.homeTeamAbv} vs {bet.awayTeamAbv}</Text>
+                <ClearView style={styles.matchupContainer}>
+                    <Text style={styles.matchupText}>{bet.homeTeamAbv} vs {bet.awayTeamAbv}</Text>
                 </ClearView>
-                {
-                    bet.legs.map((leg, index) => (
-                        <Leg key={index} leg={leg} legIndex={legIndex++} resolveLeg={resolveLeg}/>
-                    ))
-                }
+                {bet.legs.map((leg, index) => (
+                    <Leg key={index} leg={leg} legIndex={legIndex++} resolveLeg={resolveLeg}/>
+                ))}
             </ClearView>
         );
-    }; 
+    };
+
+    const resolvedCount = resolvedLegs.filter(leg => leg !== null).length;
+    const progressWidth = progressAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0%', '100%']
+    });
 
     return (
         <Modal
@@ -112,36 +136,50 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
             style={styles.modalContainer}
         >
             <View style={styles.container}>
-                <View style={styles.innerContainer}>
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.betText}>{getDateFull(betSlip.date)}</Text>
-                        <Text style={styles.betText}>{betSlip.odds}</Text>
+                <View style={[styles.innerContainer, { backgroundColor }]}>
+                    <View style={styles.headerContainer}>
+                        <View style={styles.dateOddsContainer}>
+                            <Text style={styles.betText}>{getDateFull(betSlip.date)}</Text>
+                            <Text style={styles.betText}>{betSlip.odds}</Text>
+                        </View>
+                        <TouchableOpacity 
+                            style={[styles.closeButton, { backgroundColor: redText }]}
+                            onPress={handleClose}
+                        >
+                            <Feather name="x" size={18} color={backgroundColor} />
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity 
-                        style={[styles.closeButton, { backgroundColor: redText }]}
-                        onPress={handleClose}
-                    >
-                        <Text>Close</Text>
-                    </TouchableOpacity>
-                    <View style={styles.titleContainer}>
-                        <ClearView>
-                            <Text style={styles.betText}>Bet</Text>
-                            <Text style={styles.betText}>${betSlip.betAmount.toFixed(2)}</Text>
-                        </ClearView>
-                        <ClearView>
-                            <Text style={styles.betText}>To Win</Text>
-                            <Text style={styles.betText}>${betSlip.winnings.toFixed(2)}</Text>
-                        </ClearView>
+
+                    <View style={styles.stakeContainer}>
+                        <View style={styles.stakeBox}>
+                            <Text style={styles.stakeLabel}>Bet</Text>
+                            <Text style={styles.stakeAmount}>${betSlip.betAmount.toFixed(2)}</Text>
+                        </View>
+                        <View style={styles.stakeBox}>
+                            <Text style={styles.stakeLabel}>To Win</Text>
+                            <Text style={styles.stakeAmount}>${betSlip.winnings.toFixed(2)}</Text>
+                        </View>
                     </View>
+
                     {betSlip.bets.map((betDetail, index) => (
                         <BetComponent key={index} bet={betDetail} resolveLeg={handleLegResolved}/>
                     ))}
-                    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                        <Text>
-                        {resolvedLegs.filter(leg => leg !== null).length} / {totalLegs} Legs Resolved 
+
+                    <View style={styles.progressContainer}>
+                        <View style={styles.progressBackground}>
+                            <Animated.View 
+                                style={[
+                                    styles.progressBar,
+                                    { width: progressWidth }
+                                ]}
+                            />
+                        </View>
+                        <Text style={styles.progressText}>
+                            {resolvedCount} of {totalLegs} legs resolved
                         </Text>
                     </View>
-                    {resolvedLegs.filter(leg => leg !== null).length === totalLegs && (
+
+                    {resolvedCount === totalLegs && (
                         <ResolveComponent 
                             resolvedLegs={resolvedLegs} 
                             totalLegs={totalLegs} 
@@ -150,7 +188,6 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
                     )}
                 </View>
             </View>
-
         </Modal>
     );
 }
@@ -161,46 +198,138 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
+        padding: 16,
     },
     innerContainer: {
-        width: '80%',
-        paddingVertical: 16,
-        paddingHorizontal: 8,
-        borderRadius: 8,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: '100%',
+        maxWidth: 400,
+        padding: 16,
+        borderRadius: 12,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginBottom: 12,
+    },
+    dateOddsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '70%',
     },
     closeButton: {
-        width: '100%', 
-        borderRadius: 8, 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        paddingVertical: 6,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    titleContainer: {
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        backgroundColor: 'transparent', 
-        width: '100%',
-        paddingHorizontal: 16,
+    stakeContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 16,
     },
-    resultsContainer: {
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        borderRadius: 8,
-    },
-    iconButton: {
-        padding: 4,
+    stakeBox: {
+        width: '48%',
+        padding: 12,
         borderRadius: 8,
         borderWidth: 1,
-        margin: 4,
+        alignItems: 'center',
+    },
+    stakeLabel: {
+        fontSize: 14,
+        opacity: 0.8,
+        marginBottom: 4,
+    },
+    stakeAmount: {
+        fontSize: 18,
+        fontWeight: '600',
+    },
+    betContainer: {
+        marginBottom: 16,
+        borderBottomWidth: 1,
+        paddingBottom: 12,
+    },
+    betHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 4,
+    },
+    betLeague: {
+        fontWeight: '600',
+    },
+    betOdds: {
+        fontWeight: '600',
+        color: '#2ecc71',
+    },
+    betDateContainer: {
+        marginBottom: 8,
+    },
+    betDate: {
+        fontSize: 12,
+        opacity: 0.7,
+    },
+    matchupContainer: {
+        width: '100%',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    matchupText: {
+        fontSize: 18,
+        fontWeight: '600',
+    },
+    resultsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginTop: 8,
+    },
+    iconButton: {
+        padding: 8,
+        borderRadius: 20,
+        borderWidth: 1,
+        marginLeft: 8,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    wonButton: {
+        borderColor: '#2ecc71',
+    },
+    lostButton: {
+        borderColor: '#e74c3c',
+    },
+    progressContainer: {
+        marginTop: 16,
+        alignItems: 'center',
+    },
+    progressBackground: {
+        height: 6,
+        width: '100%',
+        backgroundColor: '#f0f0f0',
+        borderRadius: 3,
+        marginBottom: 8,
+        overflow: 'hidden',
+    },
+    progressBar: {
+        height: '100%',
+        backgroundColor: '#2ecc71',
+        borderRadius: 3,
+    },
+    progressText: {
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    betText: {
+        fontSize: 16,
+        fontWeight: '500',
     },
 });

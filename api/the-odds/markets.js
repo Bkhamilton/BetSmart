@@ -79,7 +79,7 @@ const leagueMapping = {
 export const getMarkets = async (db, league, markets) => {
     try {
         const marketString = markets.join(',');
-        const response = await fetch(`https://api.the-odds-api.com/v4/sports/${league}/odds/?apiKey=${process.env.EXPO_PUBLIC_THE_ODDS_API_KEY}&regions=us&markets=${marketString}&oddsFormat=american`);
+        const response = await fetch(`https://api.the-odds-api.com/v4/sports/${league}/odds/?apiKey=${process.env.EXPO_PUBLIC_THE_ODDS_FREE_API_KEY}&regions=us&markets=${marketString}&oddsFormat=american`);
         const data = await response.json();
         return data;
     } catch (error) {
