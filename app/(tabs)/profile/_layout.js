@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 
-export default function NewBetLayout() {
+export default function ProfileLayout() {
   return (
     <Stack>
       <Stack.Screen name="profilePage" options={{ headerShown: false }} />
