@@ -5,27 +5,27 @@ import DetailedInfo from '@/components/Home/BetReview/DetailedInfo/DetailedInfo'
 import useTheme from '@/hooks/useTheme';
 
 export default function OpenBets({ betSlips, confirm, openOptions }) {
-    const { mainGreen, text } = useTheme();
+    const { mainGreen, text, grayBackground, grayBorder } = useTheme();
 
     const BigPictureInfo = ({ totalBets, betAmount, toWin }) => {
         return (
-            <View style={styles.mainInfoContainer}>
-                <View style={styles.countContainer}>
+            <ClearView style={[styles.mainInfoContainer, { borderColor: grayBorder }]}>
+                <ClearView style={styles.countContainer}>
                     <Text style={styles.betCount}>{totalBets}</Text>
-                    <Text style={styles.betLabel}>Open Bets</Text>
-                </View>
+                    <Text style={styles.betLabel}>Open Bet{totalBets !== 1 ? 's' : ''}</Text>
+                </ClearView>
                 
-                <View style={styles.amountsContainer}>
-                    <View style={styles.amountRow}>
+                <ClearView style={styles.amountsContainer}>
+                    <ClearView style={styles.amountRow}>
                         <Text style={styles.amountLabel}>Total Wager:</Text>
                         <Text style={styles.amountValue}>${betAmount.toFixed(2)}</Text>
-                    </View>
-                    <View style={styles.amountRow}>
+                    </ClearView>
+                    <ClearView style={styles.amountRow}>
                         <Text style={styles.amountLabel}>To Win:</Text>
                         <Text style={[styles.amountValue, { color: mainGreen }]}>${toWin.toFixed(2)}</Text>
-                    </View>
-                </View>
-            </View>
+                    </ClearView>
+                </ClearView>
+            </ClearView>
         );
     }
 
@@ -70,12 +70,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderRadius: 12,
-        paddingHorizontal: 16,
+        paddingHorizontal: 12,
         paddingVertical: 12,
         marginBottom: 8,
-        marginHorizontal: 8,
-        backgroundColor: 'rgba(0,0,0,0.03)',
+        marginHorizontal: 10,
+        borderBottomWidth: 1,
     },
     countContainer: {
         flexDirection: 'row',
