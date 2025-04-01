@@ -62,7 +62,6 @@ export default function BetSlipComponent({ betSlip, details, confirm, openOption
                     onPress={confirmBetSlip}
                 >
                     <Text style={styles.buttonText}>Confirm Bet</Text>
-                    <Feather name="arrow-right" size={18} color={backgroundColor} style={styles.buttonIcon} />
                 </TouchableOpacity>
             )}
         </ClearView>      
@@ -71,9 +70,9 @@ export default function BetSlipComponent({ betSlip, details, confirm, openOption
 
 const styles = StyleSheet.create({
     container: {
-        padding: 16,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
         borderRadius: 12,
-        marginBottom: 16,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -143,7 +142,6 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     confirmButton: {
-        width: '100%',
         borderRadius: 8,
         paddingVertical: 14,
         flexDirection: 'row',
