@@ -5,126 +5,168 @@ import useTheme from '@/hooks/useTheme';
 import StatCounter from './StatCounter';
 
 export default function ShowDetails({ betSlips, betsWon, totalBets, marketTypes }) {
-
     const { text, greenText, redText } = useTheme();
 
-    // Function to chunk the array into groups of 4
-    const chunkArray = (array, chunkSize) => {
-        const chunks = [];
-        for (let i = 0; i < array.length; i += chunkSize) {
-            chunks.push(array.slice(i, i + chunkSize));
-        }
-        return chunks;
-    };
-
-    const chunkedMarketTypes = chunkArray(marketTypes, 4);    
-
     return (
-        <>
+        <ClearView style={styles.container}>
             <ClearView style={styles.headerContainer}>
-                <Text style={styles.smallText}>Main Info</Text>
-                <ClearView style={{ width: 58, alignItems: 'flex-start' }}>
-                    <Text style={[styles.smallText, { color: greenText }]}>Show Less</Text>
-                </ClearView>
-            </ClearView>
-            {
-                totalBets === 0 ? (
-                    <ClearView style={{ padding: 8 }}>
-                        <Text style={{ fontSize: 24, fontWeight: '600', textAlign: 'center', opacity: 0.5 }}>No bets to review</Text>
-                    </ClearView>
-                ) : (
-                    <ClearView style={[styles.spreadContainer, { paddingHorizontal: 12 }]}>
-                        <ClearView style={[styles.detailsContainer, { flex: 0.3 }]}>
-                            <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
-                            <Text style={{ fontSize: 16, fontWeight: '600', marginTop: 20 }}> bets</Text>
-                        </ClearView>
-                        <ClearView style={[styles.detailsContainer, { marginBottom: 6, marginTop: 20, flex: 0.35, marginLeft: 16 }]}>
-                            <Text style={{ fontSize: 16, fontWeight: '600' }}>Bet:</Text>
-                            <ClearView>
-                                {betSlips.map(bet => (
-                                    <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.result === '1' ? '500' : '700', color: bet.result === '1' ? text : redText }}>{`$${bet.betAmount.toFixed(2)}`}</Text>
-                                ))}
-                            </ClearView>
-                        </ClearView>
-                        <ClearView style={[styles.detailsContainer, { marginBottom: 6, marginTop: 20, flex: 0.35, marginLeft: 16 }]}>
-                            <Text style={{ fontSize: 16, fontWeight: '600' }}>Won:</Text>
-                            <ClearView>
-                                {betSlips.map(bet => (
-                                    <Text key={bet.id} style={{ fontSize: 18, fontWeight: bet.result === '1' ? '700' : '500', color: bet.result === '1' ? greenText : text }}>{`$${bet.winnings.toFixed(2)}`}</Text>
-                                ))}
-                            </ClearView>
-                        </ClearView>
-                    </ClearView>
-                )
-            }
-            <ClearView style={{ paddingHorizontal: 4, paddingTop: 8, opacity: 0.4 }}>
-                <Text style={styles.smallText}>Details</Text>
+                <Text style={styles.smallText}>WEEKLY REVIEW</Text>
+                <Text style={[styles.smallText, { color: greenText }]}>HIDE DETAILS</Text>
             </ClearView>
             <View style={styles.divider} />
-            {chunkedMarketTypes.map((chunk, index) => (
-                <ClearView key={index} style={styles.spreadContainer}>
-                    {chunk.map((marketType, idx) => (
-                        <StatCounter
-                            key={idx}
-                            title={marketType.marketType}
-                            won={marketType.won}
-                            total={marketType.total}
-                        />
-                    ))}
+
+            {totalBets === 0 ? (
+                <ClearView style={styles.emptyState}>
+                    <Text style={styles.emptyText}>No bets to review</Text>
                 </ClearView>
-            ))}           
-        </>
+            ) : (
+                <>
+                    <ClearView style={styles.summaryContainer}>
+                        <ClearView style={styles.statContainer}>
+                            <Text style={styles.largeStat}>{`${betsWon}/${totalBets}`}</Text>
+                            <Text style={styles.statLabel}>BETS</Text>
+                        </ClearView>
+                        
+                        <ClearView style={styles.amountContainer}>
+                            <ClearView style={styles.amountGroup}>
+                                <Text style={styles.amountLabel}>BET</Text>
+                                {betSlips.map(bet => (
+                                    <Text 
+                                        key={bet.id} 
+                                        style={[
+                                            styles.betDetailValue, 
+                                            { 
+                                                color: bet.result === '1' ? text : redText,
+                                                fontWeight: bet.result === '1' ? '500' : '700'
+                                            }
+                                        ]}
+                                    >
+                                        {`$${bet.betAmount.toFixed(2)}`}
+                                    </Text>
+                                ))}
+                            </ClearView>
+                            
+                            <ClearView style={styles.amountGroup}>
+                                <Text style={styles.amountLabel}>WON</Text>
+                                {betSlips.map(bet => (
+                                    <Text 
+                                        key={bet.id} 
+                                        style={[
+                                            styles.betDetailValue, 
+                                            { 
+                                                color: bet.result === '1' ? greenText : text,
+                                                fontWeight: bet.result === '1' ? '700' : '500'
+                                            }
+                                        ]}
+                                    >
+                                        {`$${bet.winnings.toFixed(2)}`}
+                                    </Text>
+                                ))}
+                            </ClearView>
+                        </ClearView>
+                    </ClearView>
+
+                    <Text style={styles.sectionLabel}>BY MARKET TYPE</Text>
+                    <View style={styles.divider} />
+
+                    <ClearView style={styles.statsGrid}>
+                        {marketTypes.map((stat, index) => (
+                            <StatCounter 
+                                key={index}
+                                title={stat.marketType}
+                                won={stat.won}
+                                total={stat.total}
+                            />
+                        ))}
+                    </ClearView>
+                </>
+            )}
+        </ClearView>
     );
 }
 
 const styles = StyleSheet.create({
-    headerContainer: {
-        opacity: 0.4, 
-        paddingHorizontal: 4, 
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        paddingBottom: 2,
-    },
     container: {
-        paddingVertical: 16,   
-        backgroundColor: 'transparent',
-        paddingHorizontal: 10,  
-      },
-      mainInfo: {
-        borderWidth: 1,
-        paddingTop: 4,
-        paddingBottom: 8,
-        borderRadius: 8,
-        shadowOffset: {
-          width: 0,
-          height: 1,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 3.84,
-        elevation: 5,
-      },
-      infoContainer: {
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        backgroundColor: 'transparent',
-      },
-      detailsContainer: {
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-      },
-      divider: {
-        height: 1,
-        marginHorizontal: 4,
-        borderTopWidth: 1,
-        opacity: 0.2,
-        marginBottom: 6,
-      },
-      spreadContainer: {
+        paddingHorizontal: 16,
+        paddingVertical: 4,
+        borderRadius: 12,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    },
+    headerContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-      },
-      smallText: {
+    },
+    emptyState: {
+        padding: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    emptyText: {
+        fontSize: 18,
+        fontWeight: '600',
+        opacity: 0.5,
+    },
+    summaryContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 16,
+        paddingTop: 8,
+    },
+    statContainer: {
+        alignItems: 'center',
+        flex: 0.3,
+    },
+    amountContainer: {
+        flex: 0.7,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    amountGroup: {
+        alignItems: 'center',
+    },
+    largeStat: {
+        fontSize: 32,
+        fontWeight: '700',
+        marginBottom: 4,
+    },
+    statLabel: {
+        fontSize: 12,
+        fontWeight: '600',
+        opacity: 0.8,
+    },
+    amountLabel: {
+        fontSize: 12,
+        fontWeight: '600',
+        opacity: 0.8,
+        marginBottom: 8,
+    },
+    amountValue: {
+        fontSize: 18,
+        fontWeight: '700',
+    },
+    betDetailValue: {
+        fontSize: 16,
+        marginBottom: 8,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: 'rgba(83, 156, 216, 0.1)',
+        marginVertical: 4,
+    },
+    sectionLabel: {
         fontSize: 10,
-        fontWeight: '500'
-      }
+        fontWeight: '500',
+        opacity: 0.4,
+    },
+    statsGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    smallText: {
+        fontSize: 10,
+        fontWeight: '500',
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
+    },
 });

@@ -5,82 +5,137 @@ import useTheme from '@/hooks/useTheme';
 import StatCounter from './StatCounter';
 
 export default function NoDetails({ betsWon, totalBets, amountBet, amountWon, marketTypes }) {
-
     const { text, greenText, redText } = useTheme();
 
     return (
-        <>
+        <ClearView style={styles.container}>
             <ClearView style={styles.headerContainer}>
-                <Text style={styles.smallText}>Main Info</Text>
-                <ClearView style={{ width: 58, alignItems: 'flex-start' }}>
-                    <Text style={[styles.smallText, { color: greenText }]}>Show More</Text>
-                </ClearView>
-            </ClearView>
-            {
-                totalBets === 0 ? (
-                    <ClearView style={{ padding: 8 }}>
-                        <Text style={{ fontSize: 24, fontWeight: '600', textAlign: 'center', opacity: 0.5 }}>No bets to review</Text>
-                    </ClearView>
-                ) : (
-                    <ClearView style={[styles.spreadContainer, { paddingHorizontal: 12 }]}>
-                        <ClearView style={[styles.infoContainer, { flex: 0.3 }]}>
-                            <Text style={{ fontSize: 38, fontWeight: '700' }}>{`${betsWon}/${totalBets}`}</Text>
-                            <Text style={[styles.mediumText, { marginBottom: 6 }]}> bets</Text>
-                        </ClearView>
-                        <ClearView style={[styles.infoContainer, { marginBottom: 6, flex: 0.35, marginLeft: 16 }]}>
-                            <Text style={styles.mediumText}>Bet:</Text>
-                            <Text style={{ fontSize: 18, fontWeight: '700', color: redText, marginBottom: -2 }}>{`$${amountBet.toFixed(2)}`}</Text>
-                        </ClearView>
-                        <ClearView style={[styles.infoContainer, { marginBottom: 6, flex: 0.35, marginLeft: 16  }]}>
-                            <Text style={styles.mediumText}>Won:</Text>
-                            <Text style={{ fontSize: 18, fontWeight: '700', color: greenText, marginBottom: -2 }}>{`$${amountWon.toFixed(2)}`}</Text>
-                        </ClearView>
-                    </ClearView>
-                )
-            }
-
-            <ClearView style={{ paddingHorizontal: 4, paddingTop: 8, opacity: 0.4 }}>
-                <Text style={styles.smallText}>Details</Text>
+                <Text style={styles.smallText}>WEEKLY REVIEW</Text>
+                <Text style={[styles.smallText, { color: greenText }]}>SHOW DETAILS</Text>
             </ClearView>
             <View style={styles.divider} />
-            <ClearView style={styles.spreadContainer}>
-                {marketTypes.map(stat => (
-                    <StatCounter key={stat.marketType} title={stat.marketType} won={stat.won} total={stat.total} />
-                ))}
-            </ClearView>  
-        </>
+
+            {totalBets === 0 ? (
+                <ClearView style={styles.emptyState}>
+                    <Text style={styles.emptyText}>No bets to review</Text>
+                </ClearView>
+            ) : (
+                <>
+                    <ClearView style={styles.summaryContainer}>
+                        <ClearView style={styles.statContainer}>
+                            <Text style={styles.largeStat}>{`${betsWon}/${totalBets}`}</Text>
+                            <Text style={styles.statLabel}>BETS</Text>
+                        </ClearView>
+                        
+                        <ClearView style={styles.amountContainer}>
+                            <ClearView style={styles.amountGroup}>
+                                <Text style={styles.amountLabel}>BET</Text>
+                                <Text style={[styles.amountValue, { color: redText }]}>{`$${amountBet.toFixed(2)}`}</Text>
+                            </ClearView>
+                            
+                            <ClearView style={styles.amountGroup}>
+                                <Text style={styles.amountLabel}>WON</Text>
+                                <Text style={[styles.amountValue, { color: greenText }]}>{`$${amountWon.toFixed(2)}`}</Text>
+                            </ClearView>
+                        </ClearView>
+                    </ClearView>
+
+                    <Text style={styles.sectionLabel}>BY MARKET TYPE</Text>
+                    <View style={styles.divider} />
+
+                    <ClearView style={styles.statsGrid}>
+                        {marketTypes.map(stat => (
+                            <StatCounter key={stat.marketType} title={stat.marketType} won={stat.won} total={stat.total} />
+                        ))}
+                    </ClearView>
+                </>
+            )}
+        </ClearView>
     );
 }
 
 const styles = StyleSheet.create({
-    headerContainer: {
-        opacity: 0.4, 
-        paddingHorizontal: 4, 
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        paddingBottom: 2,
+    container: {
+        paddingHorizontal: 16,
+        paddingVertical: 4,
+        borderRadius: 12,
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
     },
-    infoContainer: {
+    headerContainer: {
         flexDirection: 'row',
-        alignItems: 'flex-end',
+        justifyContent: 'space-between',
+    },
+    emptyState: {
+        padding: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    emptyText: {
+        fontSize: 18,
+        fontWeight: '600',
+        opacity: 0.5,
+    },
+    summaryContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 16,
+        paddingTop: 8,
+    },
+    statContainer: {
+        alignItems: 'center',
+        flex: 0.3,
+    },
+    amountContainer: {
+        flex: 0.7,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    amountGroup: {
+        alignItems: 'center',
+    },
+    largeStat: {
+        fontSize: 32,
+        fontWeight: '700',
+        marginBottom: 4,
+    },
+    statLabel: {
+        fontSize: 12,
+        fontWeight: '600',
+        opacity: 0.8,
+    },
+    amountLabel: {
+        fontSize: 12,
+        fontWeight: '600',
+        opacity: 0.8,
+        marginBottom: 8,
+    },
+    amountValue: {
+        fontSize: 18,
+        fontWeight: '700',
+    },
+    betDetailValue: {
+        fontSize: 16,
+        marginBottom: 8,
     },
     divider: {
         height: 1,
-        marginHorizontal: 4,
-        borderTopWidth: 1,
-        opacity: 0.2,
-        marginBottom: 6,
+        backgroundColor: 'rgba(83, 156, 216, 0.1)',
+        marginVertical: 4,
     },
-    spreadContainer: {
+    sectionLabel: {
+        fontSize: 10,
+        fontWeight: '500',
+        opacity: 0.4,
+    },
+    statsGrid: {
         flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: 'space-between',
     },
     smallText: {
         fontSize: 10,
-        fontWeight: '500'
-    },
-    mediumText: {
-        fontSize: 16,
-        fontWeight: '600'
+        fontWeight: '500',
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
     },
 });
