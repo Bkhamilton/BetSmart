@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 4,
         borderRadius: 12,
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
     },
     headerContainer: {
         flexDirection: 'row',
