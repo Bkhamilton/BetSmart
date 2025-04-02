@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { UserContext } from '@/contexts/UserContext';
 import { TouchableOpacity, Text, View, ScrollView, ClearView } from '@/components/Themed';
@@ -8,9 +8,15 @@ import { bookieImages } from '@/constants/bookieConstants';
 
 export default function ActiveBookies({ addBookie, openOptions }) {
     
-    const { userBalance } = useContext(UserContext);
+    const { userBalance, signedIn } = useContext(UserContext);
     
     const { iconColor, grayBorder, grayBackground } = useTheme();
+
+    useEffect(() => {
+        if (!signedIn || !userBalance) {
+            return;
+        }
+    }, [signedIn, userBalance]);
 
     const BookieButton = ({ bookie }) => {
         return (

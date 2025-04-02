@@ -10,31 +10,25 @@ import useRouting from '@/hooks/useRouting';
 import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function ProfileMainInfo({ handleSignIn }) {
-
     const { user, signedIn } = useContext(UserContext);
-
     const { db } = useContext(DBContext);
-
-    const { id, name, email, username, password } = user;
-
     const [totalBets, setTotalBets] = useState(0);
     const [totalWinnings, setTotalWinnings] = useState(0);
-
     const { iconColor, grayBackground, grayBorder } = useTheme();
-
     const { handleEditProfile } = useRouting();
 
     useEffect(() => {
-        if (!signedIn || !id || id === 0) {
+        if (!signedIn || !user?.id) {  // Changed to use optional chaining
             setTotalBets(0);
             setTotalWinnings(0);
             return;
         }
-        getTotalBetSlips(db, id)
+        
+        getTotalBetSlips(db, user.id)  // Use user.id instead of destructured id
             .then((total) => setTotalBets(total))
             .catch((error) => console.error('Error getting total bet slips:', error));
 
-        getBetSlipResultsWinnings(db, id)
+        getBetSlipResultsWinnings(db, user.id)  // Use user.id here too
             .then((winnings) => setTotalWinnings(winnings[0].totalWinnings ? winnings[0].totalWinnings.toFixed(2) : 0))
             .catch((error) => console.error('Error getting total winnings:', error));
     }, [user, signedIn]);
@@ -47,27 +41,27 @@ export default function ProfileMainInfo({ handleSignIn }) {
                     <Text>${totalWinnings} All Time</Text>
                 </View>
                 <View style={{ paddingVertical: 4 }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{signedIn ? name : 'No User'}</Text>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+                        {signedIn ? user?.name : 'No User'}  {/* Use optional chaining */}
+                    </Text>
                 </View>
-                <Text style={{ fontSize: 16 }}>{signedIn ? username : ''}</Text>
+                <Text style={{ fontSize: 16 }}>{signedIn ? user?.username : ''}</Text>
                 <View style={{ marginTop: 8 }}>
-                    {
-                        signedIn ? (
-                            <TouchableOpacity 
-                                style={[styles.editProfileButton, { borderColor: grayBorder, backgroundColor: grayBackground }]}
-                                onPress={handleEditProfile}
-                            >
-                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Edit Profile</Text>
-                            </TouchableOpacity>
-                        ) : (
-                            <TouchableOpacity 
-                                style={[styles.editProfileButton, { borderColor: grayBorder, backgroundColor: grayBackground }]}
-                                onPress={handleSignIn}
-                            >
-                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Sign In</Text>
-                            </TouchableOpacity>
-                        )
-                    }
+                    {signedIn ? (
+                        <TouchableOpacity 
+                            style={[styles.editProfileButton, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                            onPress={handleEditProfile}
+                        >
+                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Edit Profile</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity 
+                            style={[styles.editProfileButton, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                            onPress={handleSignIn}
+                        >
+                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Sign In</Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
             <View style={{ paddingVertical: 12 }}>
@@ -77,7 +71,7 @@ export default function ProfileMainInfo({ handleSignIn }) {
             </View>
         </View>
     );
-  }
+}
   
   const styles = StyleSheet.create({
     container: {
