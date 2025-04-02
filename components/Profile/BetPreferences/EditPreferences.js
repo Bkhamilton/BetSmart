@@ -102,155 +102,166 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
 
     return (
         <View style={styles.container}>
-            <ScrollView style={{ flex: 1, paddingHorizontal: 12 }}>
+            <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
                 <View style={[styles.editOptionsContainer, { backgroundColor: grayBackground }]}>
                     {/* Bankroll */}
-                    <ClearView style={{ padding: 8 }}>
-                        <Text>Bankroll</Text>
-                        <ClearView style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ marginRight: 8, fontSize: 20 }}>$</Text>
+                    <ClearView style={styles.sectionContainer}>
+                        <Text style={styles.sectionTitle}>Bankroll</Text>
+                        <ClearView style={styles.currencyInputContainer}>
+                            <Text style={styles.currencySymbol}>$</Text>
                             <TextInput
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                style={[styles.currencyInput, { backgroundColor: grayBorder }]}
                                 placeholder={'0.00'}
-                                autoCorrect={false}
                                 value={preferences.bankroll}
                                 onChangeText={(value) => handleInputChange('bankroll', value)}
                                 keyboardType={'numeric'}
                             />
                         </ClearView>
                     </ClearView>
+
                     {/* Daily Limit */}
-                    <ClearView style={{ padding: 8 }}>
-                        <Text>Daily Limit</Text>
-                        <ClearView style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ marginRight: 8, fontSize: 20 }}>$</Text>
+                    <ClearView style={styles.sectionContainer}>
+                        <Text style={styles.sectionTitle}>Daily Limit</Text>
+                        <ClearView style={styles.currencyInputContainer}>
+                            <Text style={styles.currencySymbol}>$</Text>
                             <TextInput
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                style={[styles.currencyInput, { backgroundColor: grayBorder }]}
                                 placeholder={'0.00'}
-                                autoCorrect={false}
                                 value={preferences.dailyLimit}
                                 onChangeText={(value) => handleInputChange('dailyLimit', value)}
                                 keyboardType={'numeric'}
                             />
                         </ClearView>
                     </ClearView>
+
                     {/* Unit Size */}
-                    <ClearView style={{ padding: 8 }}>
-                        <Text>Unit Size</Text>
-                        <ClearView style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8 }}>
-                            <ClearView style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                                <Text style={{ marginHorizontal: 4, fontSize: 20 }}>S</Text>
-                                <TextInput
-                                    style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder, flex: 1 }]}
-                                    placeholder={'0.00'}
-                                    autoCorrect={false}
-                                    value={unitSizes['S']}
-                                    onChangeText={(value) => setUnitSizes({ ...unitSizes, 'S': value })}
-                                    keyboardType={'numeric'}
-                                />
-                            </ClearView>
-                            <ClearView style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                                <Text style={{ marginHorizontal: 4, fontSize: 20 }}>M</Text>
-                                <TextInput
-                                    style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder, flex: 1 }]}
-                                    placeholder={'0.00'}
-                                    autoCorrect={false}
-                                    value={unitSizes['M']}
-                                    onChangeText={(value) => setUnitSizes({ ...unitSizes, 'M': value })}
-                                    keyboardType={'numeric'}
-                                />
-                            </ClearView>
-                            <ClearView style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                                <Text style={{ marginHorizontal: 4, fontSize: 20 }}>L</Text>
-                                <TextInput
-                                    style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder, flex: 1 }]}
-                                    placeholder={'0.00'}
-                                    autoCorrect={false}
-                                    value={unitSizes['L']}
-                                    onChangeText={(value) => setUnitSizes({ ...unitSizes, 'L': value })}
-                                    keyboardType={'numeric'}
-                                />
-                            </ClearView>
+                    <ClearView style={styles.sectionContainer}>
+                        <Text style={styles.sectionTitle}>Unit Size</Text>
+                        <ClearView style={styles.unitSizeContainer}>
+                            {['S', 'M', 'L'].map((size) => (
+                                <ClearView key={size} style={styles.unitSizeInputContainer}>
+                                    <Text style={styles.unitSizeLabel}>{size}</Text>
+                                    <TextInput
+                                        style={[styles.unitSizeInput, { backgroundColor: grayBorder }]}
+                                        placeholder={'0.00'}
+                                        value={unitSizes[size]}
+                                        onChangeText={(value) => setUnitSizes({ ...unitSizes, [size]: value })}
+                                        keyboardType={'numeric'}
+                                    />
+                                </ClearView>
+                            ))}
                         </ClearView>
                     </ClearView>
+
                     {/* Preferred Leagues */}
-                    <ClearView style={{ padding: 8 }}>
-                        <Text>Preferred Leagues</Text>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
-                            {
-                                leagues.map((league, index) => (
-                                    <TouchableOpacity 
-                                        key={index}
-                                        style={[styles.editComponentInput, { marginHorizontal: 4, borderColor: backgroundColor, backgroundColor: preferences.preferredLeagues.includes(league.leagueName) ? backgroundColor : grayBorder }]}
-                                        onPress={() => handleAddOption('preferredLeagues', league.leagueName)}
-                                    >
-                                        <Text style={{ color: iconColor }}>{league.leagueName}</Text>
-                                    </TouchableOpacity>
-                                ))
-                            }
+                    <ClearView style={styles.sectionContainer}>
+                        <Text style={styles.sectionTitle}>Preferred Leagues</Text>
+                        <ScrollView 
+                            horizontal 
+                            showsHorizontalScrollIndicator={false} 
+                            style={{ backgroundColor: 'transparent' }}
+                            contentContainerStyle={styles.horizontalScrollContent}
+                        >
+                            {leagues.map((league) => (
+                                <TouchableOpacity 
+                                    key={league.leagueName}
+                                    style={[
+                                        styles.optionButton,
+                                        { 
+                                            backgroundColor: preferences.preferredLeagues.includes(league.leagueName) 
+                                                ? backgroundColor 
+                                                : grayBorder 
+                                        }
+                                    ]}
+                                    onPress={() => handleAddOption('preferredLeagues', league.leagueName)}
+                                >
+                                    <Text style={styles.optionButtonText}>{league.leagueName}</Text>
+                                </TouchableOpacity>
+                            ))}
                         </ScrollView>
                     </ClearView>
+
                     {/* Preferred Bet Types */}
-                    <ClearView style={{ padding: 8 }}>
-                        <Text>Preferred Bet Types</Text>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScrollView}>
-                            {
-                                betTypes.map((betType, index) => (
-                                    <TouchableOpacity 
-                                        key={index}
-                                        style={[styles.editComponentInput, { marginHorizontal: 4, borderColor: backgroundColor, backgroundColor: preferences.preferredBetTypes.includes(betType) ? backgroundColor : grayBorder }]}
-                                        onPress={() => handleAddOption('preferredBetTypes', betType)}
-                                    >
-                                        <Text style={{ color: iconColor }}>{betType}</Text>
-                                    </TouchableOpacity>
-                                ))
-                            }
+                    <ClearView style={styles.sectionContainer}>
+                        <Text style={styles.sectionTitle}>Preferred Bet Types</Text>
+                        <ScrollView 
+                            horizontal 
+                            showsHorizontalScrollIndicator={false} 
+                            style={{ backgroundColor: 'transparent' }}
+                            contentContainerStyle={styles.horizontalScrollContent}
+                        >
+                            {betTypes.map((betType) => (
+                                <TouchableOpacity 
+                                    key={betType}
+                                    style={[
+                                        styles.optionButton,
+                                        { 
+                                            backgroundColor: preferences.preferredBetTypes.includes(betType) 
+                                                ? backgroundColor 
+                                                : grayBorder 
+                                        }
+                                    ]}
+                                    onPress={() => handleAddOption('preferredBetTypes', betType)}
+                                >
+                                    <Text style={styles.optionButtonText}>{betType}</Text>
+                                </TouchableOpacity>
+                            ))}
                         </ScrollView>
                     </ClearView>
+
                     {/* Risk Tolerance */}
-                    <ClearView style={{ padding: 8 }}>
-                        <Text>Risk Tolerance</Text>
-                        <ClearView style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingTop: 8 }}>
-                            <Text style={[styles.riskText, riskTextStyle.safe]}>Safe</Text>
-                            <Text style={[styles.riskText, riskTextStyle.balanced]}>Balanced</Text>
-                            <Text style={[styles.riskText, riskTextStyle.risky]}>Risky</Text>
+                    <ClearView style={styles.sectionContainer}>
+                        <Text style={styles.sectionTitle}>Risk Tolerance</Text>
+                        <ClearView style={styles.riskToleranceContainer}>
+                            <ClearView style={styles.riskLabelsContainer}>
+                                <Text style={[styles.riskLabel, riskTextStyle.safe]}>Safe</Text>
+                                <Text style={[styles.riskLabel, riskTextStyle.balanced]}>Balanced</Text>
+                                <Text style={[styles.riskLabel, riskTextStyle.risky]}>Risky</Text>
+                            </ClearView>
+                            <Slider
+                                style={styles.slider}
+                                minimumValue={0}
+                                maximumValue={100}
+                                minimumTrackTintColor="#FFFFFF"
+                                maximumTrackTintColor="#000000"
+                                onValueChange={(value) => handleInputChange('riskTolerance', value)}
+                                value={preferences.riskTolerance}
+                            />
                         </ClearView>
-                        <Slider
-                            style={{width: '100%', height: 40}}
-                            minimumValue={0}
-                            maximumValue={100}
-                            minimumTrackTintColor="#FFFFFF"
-                            maximumTrackTintColor="#000000"
-                            onValueChange={(value) => handleInputChange('riskTolerance', value)}
-                            value={preferences.riskTolerance}
-                        />
                     </ClearView>
+
                     {/* Odds Format */}
-                    <ClearView style={{ padding: 8 }}>
-                        <Text>Odds Format</Text>
-                        <ClearView style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <TouchableOpacity 
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.oddsFormat === 'American' ? backgroundColor : grayBorder, flex: 1, marginRight: 4 }]}
-                                onPress={() => handleUpdateOption('oddsFormat', 'American')}
-                            >
-                                <Text style={{ color: iconColor, textAlign: 'center' }}>American</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity 
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: preferences.oddsFormat === 'Decimal' ? backgroundColor : grayBorder, flex: 1, marginLeft: 4 }]}
-                                onPress={() => handleUpdateOption('oddsFormat', 'Decimal')}
-                            >
-                                <Text style={{ color: iconColor, textAlign: 'center' }}>Decimal</Text>
-                            </TouchableOpacity>
+                    <ClearView style={styles.sectionContainer}>
+                        <Text style={styles.sectionTitle}>Odds Format</Text>
+                        <ClearView style={styles.oddsFormatContainer}>
+                            {['American', 'Decimal'].map((format) => (
+                                <TouchableOpacity 
+                                    key={format}
+                                    style={[
+                                        styles.oddsFormatButton,
+                                        { 
+                                            backgroundColor: preferences.oddsFormat === format 
+                                                ? backgroundColor 
+                                                : grayBorder 
+                                        }
+                                    ]}
+                                    onPress={() => handleUpdateOption('oddsFormat', format)}
+                                >
+                                    <Text style={styles.oddsFormatButtonText}>{format}</Text>
+                                </TouchableOpacity>
+                            ))}
                         </ClearView>
-                    </ClearView>                                                    
+                    </ClearView>
                 </View>
             </ScrollView>
-            <View style={{ paddingVertical: 16, paddingHorizontal: 8 }}>
+
+            {/* Save Button */}
+            <View style={styles.saveButtonContainer}>
                 <TouchableOpacity 
                     style={styles.saveButton}
                     onPress={handleSaveChanges}    
                 >
-                    <Text>Save Preferences</Text>
+                    <Text style={styles.saveButtonText}>Save Preferences</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -260,51 +271,120 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingHorizontal: 16,
     },
-    horizontalScrollView: {
-        backgroundColor: 'transparent',
+    scrollView: {
+        flex: 1,
+    },
+    scrollContent: {
+        paddingBottom: 20,
+    },
+    editOptionsContainer: {
+        borderRadius: 12,
+        padding: 16,
+        marginTop: 20,
+    },
+    sectionContainer: {
+        marginBottom: 24,
+    },
+    sectionTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 8,
+        opacity: 0.9,
+    },
+    currencyInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    currencySymbol: {
+        fontSize: 20,
+        marginRight: 8,
+    },
+    currencyInput: {
+        flex: 1,
+        padding: 12,
+        borderRadius: 8,
+        fontSize: 16,
+    },
+    unitSizeContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    unitSizeInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+        marginRight: 8,
+    },
+    unitSizeLabel: {
+        fontSize: 16,
+        marginRight: 8,
+        fontWeight: '600',
+    },
+    unitSizeInput: {
+        flex: 1,
+        padding: 12,
+        borderRadius: 8,
+        fontSize: 16,
+    },
+    horizontalScrollContent: {
+        paddingVertical: 4,
+    },
+    optionButton: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+        marginRight: 8,
+    },
+    optionButtonText: {
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    riskToleranceContainer: {
+        marginTop: 8,
+    },
+    riskLabelsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 4,
+    },
+    riskLabel: {
+        fontSize: 14,
+        opacity: 0.7,
+    },
+    slider: {
+        width: '100%',
+        height: 40,
+    },
+    oddsFormatContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    oddsFormatButton: {
+        flex: 1,
+        padding: 12,
+        borderRadius: 8,
+        marginHorizontal: 4,
+        alignItems: 'center',
+    },
+    oddsFormatButtonText: {
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    saveButtonContainer: {
+        paddingVertical: 16,
     },
     saveButton: {
         backgroundColor: '#00A86B',
+        padding: 16,
+        borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 10,
-        borderRadius: 4,
     },
-    profileIconContainer: {
-        position: 'relative',
-        alignItems: 'center',
-        paddingTop: 12,
-    },
-    profileIcon: {
-        width: 100,
-        height: 100,
-        borderRadius: '50%',
-        backgroundColor: '#ccc',
-    },
-    editButton: {
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
-        padding: 8,
-        backgroundColor: '#00A86B',
-        borderRadius: 50,
-    },
-    editOptionsContainer: {
-        paddingVertical: 10,
-        borderRadius: 8,
-        paddingHorizontal: 8,
-        marginVertical: 40,
-    },
-    editComponentInput: {
-        padding: 12, 
-        borderRadius: 16, 
-        borderWidth: 1, 
-        opacity: 0.8,
-        marginTop: 8,
-    },
-    riskText: {
-        opacity: 0.6,
+    saveButtonText: {
+        color: 'white',
         fontSize: 16,
-    }
+        fontWeight: '600',
+    },
 });

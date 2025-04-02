@@ -7,11 +7,19 @@ import ProgressBar from '../../Helpers/ProgressBar';
 
 export default function BankrollManagement() {
     
-    const { userBalance } = useContext(UserContext);
+    const { userBalance, preferences } = useContext(UserContext);
     const { grayBorder, grayBackground, bookieColors } = useTheme();
 
-    const totalBankroll = 1000;
-    const dailyLimit = 100;
+    const [totalBankroll, setTotalBankroll] = useState(0);
+    const [dailyLimit, setDailyLimit] = useState(100);
+
+    useEffect(() => {
+        if (preferences) {
+            setTotalBankroll(preferences.bankroll);
+            setDailyLimit(preferences.dailyLimit);
+        }
+    }, [preferences]);
+
     const totalAllocated = userBalance.reduce((total, balance) => total + balance.balance, 0);
     const unallocated = totalBankroll - totalAllocated;
 

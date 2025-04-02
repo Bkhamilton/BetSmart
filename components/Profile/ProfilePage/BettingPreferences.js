@@ -14,9 +14,7 @@ export default function BettingPreferences() {
     const { handleEditPreferences } = useRouting();
 
     const { db } = useContext(DBContext);
-    const { user, signedIn } = useContext(UserContext);
-
-    const { preferences, setPreferences } = useHookBetPreferences();
+    const { user, signedIn, preferences } = useContext(UserContext);
 
     const [tempPreferences, setTempPreferences] = useState({
         bankroll: 1000,

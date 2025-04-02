@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
+import { UserContext } from '@/contexts/UserContext';
 import { useRouter } from 'expo-router';
 import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
 import useHookBetPreferences from '@/hooks/useHookBetPreferences';
@@ -11,9 +12,11 @@ export default function BetPreferencesScreen() {
 
     const { iconColor } = useTheme();
 
+    const { updatePreferences } = useContext(UserContext);
+
     const router = useRouter();
 
-    const { preferences, setPreferences, updatePreferences } = useHookBetPreferences();
+    const { preferences, setPreferences } = useHookBetPreferences();
 
     return (
         <>
