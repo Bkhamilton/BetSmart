@@ -1,19 +1,21 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
-export default function InsightCard({ title }) {
+const { width: screenWidth } = Dimensions.get('window');
+const CARD_WIDTH = screenWidth * 0.9;
+const CARD_SPACING = 16;
 
-    const { name, description } = title;
+export default function InsightCard({ title }) {
 
     const { grayBackground, grayBorder } = useTheme();
 
     return (
-        <View style={[styles.container, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
+        <View style={[styles.card, { width: CARD_WIDTH, backgroundColor: grayBackground, borderColor: grayBorder }]}>
             <ClearView>
-                <Text style={styles.nameText}>{name}</Text>
-                <Text style={styles.descriptionText}>{description}</Text>
+                <Text style={styles.nameText}>{title.name}</Text>
+                <Text style={styles.descriptionText}>{title.description}</Text>
             </ClearView>
             <ClearView>
                 {/* Example Bets Here */}
@@ -23,13 +25,18 @@ export default function InsightCard({ title }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    card: {
         borderWidth: 1,
-        paddingHorizontal: 12,
-        height: 120,
-        borderRadius: 8,
-        paddingTop: 8,
+        borderRadius: 12,
+        padding: 16,
+        marginRight: CARD_SPACING,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     nameText: {
         fontSize: 16,

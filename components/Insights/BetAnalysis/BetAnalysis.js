@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { Text, View, ScrollView } from '@/components/Themed';
+import { StyleSheet, Dimensions } from 'react-native';
+import { Text, View, ScrollView, ClearView } from '@/components/Themed';
 import InsightCard from '@/components/Insights/InsightCard';
+import useTheme from '@/hooks/useTheme';
 
 const winTitles = [
     { name: "Value Victory", description: "Bets where the user correctly identified undervalued odds and capitalized on them." },
@@ -23,6 +24,10 @@ const lossTitles = [
     { name: "Outpacing Unit Size", description: "Losing by betting too much on a single event." }
 ];
 
+const { width: screenWidth } = Dimensions.get('window');
+const CARD_WIDTH = screenWidth * 0.9;
+const CARD_SPACING = 16;
+
 export default function BetAnalysis({ streak }) {
     const titles = streak === 'hot' ? winTitles : lossTitles;
     const analysisTitle = streak === 'hot' ? 'Win Analysis' : 'Loss Analysis';
@@ -34,9 +39,12 @@ export default function BetAnalysis({ streak }) {
                     <Text style={{ fontSize: 18, fontWeight: '500' }}>{analysisTitle}</Text>
                 </View>
                 <ScrollView
-                    horizontal={true}
+                    horizontal
                     showsHorizontalScrollIndicator={false}
-                    style={{ flexDirection: 'row', paddingVertical: 12, paddingLeft: 12 }}
+                    snapToInterval={CARD_WIDTH + CARD_SPACING}
+                    snapToAlignment="start"
+                    contentContainerStyle={styles.scrollContainer}
+                    decelerationRate="fast"
                 >
                     {titles.map((title, index) => (
                         <InsightCard key={index} title={title} />
@@ -50,5 +58,31 @@ export default function BetAnalysis({ streak }) {
 const styles = StyleSheet.create({
     container: {
         paddingTop: 8,
+    },
+    scrollContainer: {
+        paddingHorizontal: (screenWidth - CARD_WIDTH) / 2,
+        paddingVertical: 8,
+    },
+    card: {
+        borderWidth: 1,
+        borderRadius: 12,
+        padding: 16,
+        marginRight: CARD_SPACING,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    nameText: {
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    descriptionText: {
+        fontSize: 14,
+        fontWeight: '400',
+        maxWidth: CARD_WIDTH - CARD_SPACING, // Adjusted for padding
     },
 });

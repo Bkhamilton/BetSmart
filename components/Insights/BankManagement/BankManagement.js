@@ -1,14 +1,14 @@
 import React from 'react';
-import { StyleSheet, ScrollView, Dimensions } from 'react-native';
-import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
+import { StyleSheet, Dimensions } from 'react-native';
+import { TouchableOpacity, Text, View, ClearView, ScrollView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
 const { width: screenWidth } = Dimensions.get('window');
-const CARD_WIDTH = screenWidth * 0.8;
+const CARD_WIDTH = screenWidth * 0.9;
 const CARD_SPACING = 16;
 
 export default function BankManagement({ streak, deposits = 100, withdrawals = 50, depositTrend = 'neutral' }) {
-    const { grayBackground, grayBorder, iconColor, successColor, warningColor } = useTheme();
+    const { grayBackground, grayBorder, iconColor, greenText, redText } = useTheme();
 
     // Mock data - replace with your actual data later
     const cards = [
@@ -26,7 +26,7 @@ export default function BankManagement({ streak, deposits = 100, withdrawals = 5
                 ? 'Consider withdrawing some profits to secure your winnings!'
                 : 'Great job managing your bankroll during this winning streak!',
             footer: 'Bankroll Advice',
-            color: successColor
+            color: greenText
         }] : []),
         ...(streak === 'cold' ? [{
             id: 'cold-streak',
@@ -35,7 +35,7 @@ export default function BankManagement({ streak, deposits = 100, withdrawals = 5
                 ? 'Your recent deposits are high. Consider taking a break to reassess.'
                 : 'Every bettor goes through slumps. Stick to your strategy.',
             footer: 'Bankroll Advice',
-            color: warningColor
+            color: redText
         }] : []),
         {
             id: 'general-advice',
