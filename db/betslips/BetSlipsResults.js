@@ -88,15 +88,19 @@ export const getWinningestBetSlipLast7Days = async (db, userId) => {
                 B.id, 
                 B.winnings, 
                 B.betAmount, 
+                B.odds,
                 B.date, 
                 B.formatId, 
                 B.bookieId, 
+                Bo.name as bookieName,
                 B.userId, 
                 R.result
             FROM 
                 BetSlips B
             LEFT JOIN 
                 BetSlipsResults R ON B.id = R.betSlipId
+            LEFT JOIN
+                Bookies Bo ON B.bookieId = Bo.id
             WHERE 
                 B.userId = ? AND R.result = 1 AND B.date >= date('now', '-7 days')
             ORDER BY 

@@ -6,7 +6,7 @@ import InsightHeader from '@/components/Insights/InsightHeader';
 import InsightIntro from '@/components/Insights/InsightIntro/InsightIntro';
 import BetAnalysis from '@/components/Insights/BetAnalysis/BetAnalysis';
 import BankManagement from '@/components/Insights/BankManagement/BankManagement';
-import TopBet from '@/components/Insights/TopBet';
+import TopBet from '@/components/Insights/TopBet/TopBet';
 import useHookInsightsPage from '@/hooks/useHookInsights';
 import { SupabaseContext } from '@/contexts/SupabaseContext';
 
@@ -16,7 +16,7 @@ import { fetchAndUpdateRoster } from '@/api/sportsdb/players';
 
 export default function InsightScreen() {
 
-    const { streak, cycleStreak } = useHookInsightsPage();
+    const { streak, cycleStreak, topBet } = useHookInsightsPage();
 
     const refreshMarkets = async () => {
         const league = await getLeagueByName(supabase, 'NBA');
@@ -28,8 +28,8 @@ export default function InsightScreen() {
         await fetchAndUpdateRoster(db);
     }
 
-    const tempFunction = async () => {  
-        
+    const tempFunction = async () => {
+
     }
 
     const { db } = useContext(DBContext);
@@ -46,10 +46,10 @@ export default function InsightScreen() {
             <ScrollView>
                 <InsightIntro streak={streak} />
                 <BetAnalysis streak={streak} />
-                <TopBet />
+                <TopBet betSlip={topBet}/>
                 {/* Top Props */}
                 <BankManagement streak={streak} />
-                <ClearView style={{ padding: 20}}>
+                <ClearView style={{ padding: 20 }}>
                     <Text style={{ fontSize: 22, fontWeight: '600', textAlign: 'center' }}>Insight Data Coming Soon...</Text>
                 </ClearView>
             </ScrollView>

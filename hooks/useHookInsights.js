@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/contexts/UserContext';
-import { getWonBetSlipCountLast7Days, getProfitLast7Days } from '@/db/betslips/BetSlipsResults';
+import { getWonBetSlipCountLast7Days, getProfitLast7Days, getWinningestBetSlipLast7Days } from '@/db/betslips/BetSlipsResults';
 import { getBetSlipsLast7Days } from '@/db/betslips/BetSlips';
 import { DBContext } from '@/contexts/DBContext';
 
@@ -15,6 +15,7 @@ const useHookInsightsPage = () => {
     const [betsPlaced, setBetsPlaced] = useState(0);
     const [betsWon, setBetsWon] = useState(0);
     const [profit, setProfit] = useState(0);
+    const [topBet, setTopBet] = useState({});
 
     // function to cycle betwen hot, cold, and no streaks
     const cycleStreak = () => {
@@ -39,6 +40,9 @@ const useHookInsightsPage = () => {
             getProfitLast7Days(db, user.id).then((res) => {
                 setProfit(res);
             });
+            getWinningestBetSlipLast7Days(db, user.id).then((res) => {
+                setTopBet(res);
+            });
         } else {
             setBetsPlaced(0);
             setBetsWon(0);
@@ -51,7 +55,8 @@ const useHookInsightsPage = () => {
         cycleStreak,
         betsPlaced,
         betsWon,
-        profit
+        profit,
+        topBet,
     };
 };
 
