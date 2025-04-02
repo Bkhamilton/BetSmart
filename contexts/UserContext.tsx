@@ -4,6 +4,7 @@ import { getMostRecentActiveUserSession, getMostRecentSession } from '@/db/user-
 import { getUser, getUserById } from '@/db/user-specific/Users';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalanceByUser } from '@/db/user-specific/Balance';
+import { getPreferences, insertPreference, clearUserPreferences } from '@/db/user-specific/Preferences';
 
 interface User {
     id: number;
@@ -26,28 +27,49 @@ interface Bookie {
     name: string;
 }
 
+interface Preference {
+    bankroll: number;
+    dailyLimit: number;
+    unitSize: string;
+    preferredLeagues: string[];
+    preferredBetTypes: string[];
+    riskTolerance: number;
+    oddsFormat: string;
+}
+
+
 interface UserContextValue {
     user: User | null;
-    setUser: (user: User | null) => void;
     userBalance : Balance[] | null;
     setUserBalance : (userBalance : Balance[] | null) => void;
     bookie: Bookie | null;
     setBookie: (bookie: Bookie | null) => void;
     trigger: boolean;
     setTrigger: (trigger: boolean) => void;
+    preferences: Preference;
+    updatePreferences: (preferences: Preference) => Promise<void>;
     signedIn: boolean;
     setSignedIn: (signedIn: boolean) => void;
 }
 
 export const UserContext = createContext<UserContextValue>({
     user: null,
-    setUser: () => {},
     userBalance : null,
     setUserBalance : () => {},
     bookie: null,
     setBookie: () => {},
     trigger: false,
     setTrigger: () => {},
+    preferences: {
+        bankroll: 0,
+        dailyLimit: 0,
+        unitSize: '',
+        preferredLeagues: [],
+        preferredBetTypes: [],
+        riskTolerance: 0,
+        oddsFormat: '',
+    },
+    updatePreferences: async () => {},
     signedIn: false,
     setSignedIn: () => {},
 });
@@ -63,6 +85,17 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
     const [trigger, setTrigger] = useState<boolean>(false);
     const [fetchBalance, setFetchBalance] = useState<boolean>(false);
+
+    const [preferences, setPreferences] = useState({
+        bankroll: 0,
+        dailyLimit: 0,
+        unitSize: '',
+        preferredLeagues: [],
+        preferredBetTypes: [],
+        riskTolerance: 0,
+        oddsFormat: '',
+    });
+    const [triggerPreferences, setTriggerPreferences] = useState<boolean>(false);
 
     const [signedIn, setSignedIn] = useState<boolean>(false);
 
@@ -127,9 +160,64 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
     }, [fetchBalance]);
 
+    const updatePreferences = async (preferences: Preference) => {
+        try {
+            // Ensure user is signed in
+            if (!signedIn || !user) {
+                throw new Error('User is not signed in or user data is not available');
+            }
+            // Ensure all values are defined
+            const {
+                bankroll = 0,
+                dailyLimit = 0,
+                unitSize = '',
+                preferredLeagues = [],
+                preferredBetTypes = [],
+                riskTolerance = 0,
+                oddsFormat = ''
+            } = preferences;
+    
+            // Clear user preferences
+            await clearUserPreferences(db, user.id);
+    
+            // Insert preferences
+            await insertPreference(db, user.id, 'bankroll', bankroll);
+            await insertPreference(db, user.id, 'dailyLimit', dailyLimit);
+            await insertPreference(db, user.id, 'unitSize', unitSize);
+            await insertPreference(db, user.id, 'preferredLeagues', preferredLeagues.filter(league => league !== '').join(','));
+            await insertPreference(db, user.id, 'preferredBetTypes', preferredBetTypes.filter(betType => betType !== '').join(','));
+            await insertPreference(db, user.id, 'riskTolerance', riskTolerance);
+            await insertPreference(db, user.id, 'oddsFormat', oddsFormat);
+
+            setTriggerPreferences(!trigger);
+        } catch (error) {
+            console.error('Error updating preferences:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (signedIn && user) {
+            getPreferences(db, user.id)
+                .then((result) => {
+                    if (result) {
+                        const preferences = result;
+                        setPreferences({
+                            bankroll: preferences.bankroll,
+                            dailyLimit: preferences.dailyLimit,
+                            unitSize: preferences.unitSize,
+                            preferredLeagues: preferences.preferredLeagues.split(','),
+                            preferredBetTypes: preferences.preferredBetTypes.split(','),
+                            riskTolerance: preferences.riskTolerance,
+                            oddsFormat: preferences.oddsFormat,
+                        });
+                    }
+                });
+        }
+    }, [signedIn, triggerPreferences]);
+
     // useEffect to fetch user balance data on trigger change
     useEffect(() => {
-        if (trigger && signedIn) {
+        if (trigger && signedIn && user) {
             getBalanceByUser(db, user.id).then((newUserBalance) => {
                 setUserBalance(newUserBalance);
                 setTrigger(prev => !prev);
@@ -139,13 +227,14 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
     const value = {
         user,
-        setUser,
         userBalance,
         setUserBalance,
         bookie,
         setBookie,
         trigger,
         setTrigger,
+        preferences,
+        updatePreferences,
         signedIn,
         setSignedIn,
     };
