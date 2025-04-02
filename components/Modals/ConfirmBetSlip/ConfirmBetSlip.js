@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Animated } from 'react-native';
-import { TouchableOpacity, Text, View, Modal, ClearView } from '@/components/Themed';
+import { TouchableOpacity, Text, View, Modal, ClearView, ScrollView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { Feather } from '@expo/vector-icons';
 import { getDateFull } from '@/utils/dateFunctions';
@@ -68,32 +68,32 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
         return (
             <LegComponent leg={leg}>
                 <View style={styles.resultsContainer}>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={[
                             styles.iconButton,
                             result === false && styles.lostButton,
-                            { backgroundColor: result === false ? redText + '20' : backgroundColor }
+                            { backgroundColor: result === false ? redText : backgroundColor },
                         ]}
                         onPress={() => resolve(false)}
                     >
-                        <Feather 
-                            name="x" 
-                            size={24} 
-                            color={result === false ? backgroundColor : redText} 
+                        <Feather
+                            name="x"
+                            size={24}
+                            color={result === false ? backgroundColor : redText}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity 
+                    <TouchableOpacity
                         style={[
                             styles.iconButton,
                             result === true && styles.wonButton,
-                            { backgroundColor: result === true ? mainGreen + '20' : backgroundColor }
+                            { backgroundColor: result === true ? mainGreen : backgroundColor },
                         ]}
                         onPress={() => resolve(true)}
                     >
-                        <Feather 
-                            name="check" 
-                            size={24} 
-                            color={result === true ? backgroundColor : mainGreen} 
+                        <Feather
+                            name="check"
+                            size={24}
+                            color={result === true ? backgroundColor : mainGreen}
                         />
                     </TouchableOpacity>
                 </View>
@@ -161,9 +161,14 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
                         </View>
                     </View>
 
+                    <ScrollView 
+                        style={{ width: '100%', maxHeight: 400 }} 
+                        showsVerticalScrollIndicator={false}
+                    >
                     {betSlip.bets.map((betDetail, index) => (
                         <BetComponent key={index} bet={betDetail} resolveLeg={handleLegResolved}/>
                     ))}
+                    </ScrollView>
 
                     <View style={styles.progressContainer}>
                         <View style={styles.progressBackground}>
