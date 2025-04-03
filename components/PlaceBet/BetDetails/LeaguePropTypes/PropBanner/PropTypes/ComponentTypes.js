@@ -84,12 +84,18 @@ export const ToRecordComponent = ({ player, logo, odds, team }) => {
 }
 
 export const ToRecordValueComponent = ({ odds, values, team, select }) => {
-
     const { db } = useContext(DBContext);
-
     const [modalVisible, setModalVisible] = useState(false);
     const [players, setPlayers] = useState([]);
     const [target, setTarget] = useState(team.name);
+    const [oddsVal, setOddsVal] = useState(odds);
+    const [val, setVal] = useState(values[0]);
+    
+    const { grayBackground, grayBorder, text, primary } = useTheme();
+
+    useEffect(() => {
+        setVal(values[0]);
+    }, [values]);
 
     const openPlayerModal = (team) => {
         getPlayersByTeamName(db, team).then((res) => {
@@ -103,35 +109,36 @@ export const ToRecordValueComponent = ({ odds, values, team, select }) => {
         setModalVisible(false);
     }
 
-    const { grayBackground, grayBorder } = useTheme();
-
-    const [oddsVal, setOddsVal] = useState(odds);
-    const [val, setVal] = useState(values[0]);
-
-    useEffect(() => {
-        setVal(values[0]);
-    }, [values]);
-
     return (
         <>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
+            <View style={styles.container}>
+                {/* Team/Player Section */}
+                <TouchableOpacity 
+                    style={styles.teamPlayerContainer}
+                    onPress={() => openPlayerModal(team.name)}
+                >
+                    <View style={styles.avatarContainer}>
                         <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
-                        { team.logo !== '' ? <Image style={styles.teamIcon} source={{ uri: team.logo }} /> : null }
+                        {team.logo && (
+                            <Image 
+                                style={styles.teamLogo} 
+                                source={{ uri: team.logo }} 
+                                resizeMode="contain"
+                            />
+                        )}
                     </View>
-                    <TouchableOpacity 
-                        style={styles.playerContainer}
-                        onPress={() => openPlayerModal(team.name)}
-                    >
-                        <Text style={{ fontWeight: '400', fontSize: 13, }}>{target}</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text style={[styles.playerName, { color: text }]} numberOfLines={1}>
+                        {target}
+                    </Text>
+                </TouchableOpacity>
+
+                {/* Odds/Value Input Section */}
+                <View style={styles.inputsContainer}>
                     <TextInput
                         placeholder={val}
-                        keyboardType="default"
-                        style={styles.oddsContainer}
+                        placeholderTextColor="#999"
+                        keyboardType="decimal-pad"
+                        style={[styles.valueInput, { borderColor: grayBorder }]}
                         value={val}
                         onChangeText={(text) => {
                             if (/^[0-9.]*$/.test(text)) {
@@ -139,26 +146,29 @@ export const ToRecordValueComponent = ({ odds, values, team, select }) => {
                             }
                         }}
                     />
+                    
                     <TextInput
                         placeholder={odds}
-                        keyboardType="default"
-                        style={styles.oddsContainer}
+                        placeholderTextColor="#999"
+                        keyboardType="numbers-and-punctuation"
+                        style={[styles.oddsInput, { borderColor: grayBorder }]}
                         value={oddsVal}
                         onChangeText={(text) => {
                             if (/^[0-9+-]*$/.test(text)) {
                                 setOddsVal(text);
                             }
                         }}
-                        // Add necessary props and event handlers for amount input
-                    />  
+                    />
+                    
                     <TouchableOpacity 
-                        style={[styles.valueContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}
+                        style={[styles.addButton, { backgroundColor: grayBorder }]}
                         onPress={() => select(target, val, oddsVal)}
                     >
-                        <Text style={{ fontSize: 24, fontWeight: '500' }}>+</Text>
+                        <Text style={styles.addButtonText}>+</Text>
                     </TouchableOpacity>
                 </View>
             </View>
+
             <SelectPlayer
                 visible={modalVisible}
                 close={() => setModalVisible(false)}
@@ -248,13 +258,6 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         paddingVertical: 6
     },
-    playerIcon: {
-        width: 44,
-        height: 44,
-        borderRadius: 22,
-        marginRight: 16,
-        borderWidth: 2,
-    },
     valueContainer: {
         borderWidth: 1,
         borderRadius: 8,
@@ -298,5 +301,82 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 8,
-    }
+    },
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+    },
+    teamPlayerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+        marginRight: 12,
+    },
+    avatarContainer: {
+        position: 'relative',
+        marginRight: 12,
+    },
+    playerIcon: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        borderWidth: 1,
+    },
+    teamLogo: {
+        width: 16,
+        height: 16,
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        backgroundColor: 'white',
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#f0f0f0',
+    },
+    playerName: {
+        fontSize: 13,
+        fontWeight: '500',
+        flexShrink: 1,
+    },
+    inputsContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    valueInput: {
+        width: 52,
+        height: 40,
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+        marginRight: 8,
+        textAlign: 'center',
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    oddsInput: {
+        width: 60,
+        height: 40,
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+        marginRight: 8,
+        textAlign: 'center',
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    addButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    addButtonText: {
+        fontSize: 20,
+        fontWeight: '600',
+        color: 'white',
+    },
 });

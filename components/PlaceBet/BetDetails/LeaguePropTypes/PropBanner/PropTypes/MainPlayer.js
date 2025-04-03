@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ClearView } from '@/components/Themed';
 import { ToRecordValueComponent } from './ComponentTypes';
+import { BetContext } from '@/contexts/BetContext/BetContext';
 import useTheme from '@/hooks/useTheme';
 
 export default function MainPlayer({ stat, awayTeam, homeTeam }) {
+
+    const { league, currentGame, selectProp } = useContext(BetContext);
 
     const { grayBackground } = useTheme();
 
     const onSelectProp = (player, value, odds) => {
         console.log('Selected Prop:', stat, player, value, odds);
+        // selectProp needs: game, type, target, stat, value, overUnder, odds, bookieId
     }
 
     const pointValues = ['10', '15', '18', '20', '25', '30']
@@ -56,12 +60,12 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
 
     return (
         <View style={{ width: '100%', paddingBottom: 4 }}>
-            <View style={[styles.container, { backgroundColor: grayBackground }]}>
-                <ClearView style={{ paddingHorizontal: 8 }}>
-                    <Text style={{ fontSize: 16 }}>VALUE</Text>
+            <View style={[styles.container, { backgroundColor: 'transparent' }]}>
+                <ClearView style={{ paddingHorizontal: 16 }}>
+                    <Text style={{ fontSize: 16, opacity: 0.6 }}>VALUE</Text>
                 </ClearView>
                 <ClearView style={{ paddingHorizontal: 4, marginRight: 44 }}>
-                    <Text style={{ fontSize: 16 }}>ODDS</Text>
+                    <Text style={{ fontSize: 16, opacity: 0.6 }}>ODDS</Text>
                 </ClearView>
             </View>
             <View style={{ paddingHorizontal: 8 }}>
@@ -79,5 +83,6 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         width: '100%', 
         paddingVertical: 4,
+        paddingRight: 32,
     },
 });
