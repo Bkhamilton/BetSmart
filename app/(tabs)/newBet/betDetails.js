@@ -9,7 +9,6 @@ import useHookNewBet from '@/hooks/useHookNewBet';
 import useHookBetDetails from '@/hooks/useHookBetDetails';
 import BetSlipBanner from '@/components/PlaceBet/BetSlipBanner';
 import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
-import ChoosePlayer from '@/components/Modals/ChoosePlayer';
 import BetDetailsHeader from '@/components/PlaceBet/BetDetails/BetDetailsHeader';
 
 export default function BetDetailsScreen() {
@@ -43,7 +42,6 @@ export default function BetDetailsScreen() {
                 close={closeChooseBookieModal}
                 selectBookie={selectBookie}
             />
-            <ChoosePlayer/>
             {
                 betSlip && (
                 <BetSlipModal
