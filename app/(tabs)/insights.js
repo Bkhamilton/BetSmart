@@ -52,6 +52,10 @@ export default function InsightScreen() {
                 <ClearView style={{ padding: 20 }}>
                     <Text style={{ fontSize: 22, fontWeight: '600', textAlign: 'center' }}>Insight Data Coming Soon...</Text>
                 </ClearView>
+                {/* Preference Adherence */}
+                {/* Behavioral Analysis */}
+                {/* Learning Opportunities */}
+                {/* Future: Comparative Analysis */}
             </ScrollView>
         </>
     );

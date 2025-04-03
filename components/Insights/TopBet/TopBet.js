@@ -10,11 +10,11 @@ export default function TopBet({ betSlip }) {
 
     return (
         <View style={styles.container}>
-            <View style={{ paddingHorizontal: 20 }}>
+            <View style={{ paddingHorizontal: 20, paddingBottom: 8 }}>
                 <Text style={{ fontSize: 18, fontWeight: '500' }}>Top Bet</Text>
             </View>
             <View style={[styles.betSlipContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
-                <CompactBetSlip betSlip={betSlip} /> {/* Pass the toggle state */}
+                <CompactBetSlip betSlip={betSlip} />
             </View>
         </View>
     );

@@ -61,6 +61,7 @@ export default function BankManagement({ streak, deposits = 100, withdrawals = 5
                 snapToAlignment="start"
                 contentContainerStyle={styles.scrollContainer}
                 decelerationRate="fast"
+                style={{ backgroundColor: grayBackground }}
             >
                 {cards.map((card) => (
                     <View 
@@ -94,17 +95,9 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
     },
     card: {
-        borderWidth: 1,
         borderRadius: 12,
         padding: 16,
         marginRight: CARD_SPACING,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
     },
     cardTitle: {
         fontSize: 16,
