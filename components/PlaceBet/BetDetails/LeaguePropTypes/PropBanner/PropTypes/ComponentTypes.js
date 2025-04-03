@@ -2,8 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { TouchableOpacity, Text, View, TextInput } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
+import { DBContext } from '@/contexts/DBContext';
 import { bookieImages } from '@/constants/bookieConstants';
-import { ModalContext } from '@/contexts/BetContext/ModalContext';
+import { getPlayersByTeamName } from '@/db/general/Players';
+import SelectPlayer from '@/components/Modals/SelectPlayer';
 
 export const AltPlayerComponent = ({ player, logo, number, stat, odds }) => {
 
@@ -83,63 +85,87 @@ export const ToRecordComponent = ({ player, logo, odds, team }) => {
 
 export const ToRecordValueComponent = ({ odds, values, team, select }) => {
 
-    const { openPlayerModal, selectedValue } = useContext(ModalContext);
+    const { db } = useContext(DBContext);
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [players, setPlayers] = useState([]);
+    const [target, setTarget] = useState(team.name);
+
+    const openPlayerModal = (team) => {
+        getPlayersByTeamName(db, team).then((res) => {
+            setPlayers(res);
+        });
+        setModalVisible(true);
+    }
+
+    const selectPlayer = (player) => {
+        setTarget(player.name);
+        setModalVisible(false);
+    }
 
     const { grayBackground, grayBorder } = useTheme();
 
     const [oddsVal, setOddsVal] = useState(odds);
-    const [val, setVal] = useState(selectedValue ? selectedValue : values[0]);
+    const [val, setVal] = useState(values[0]);
 
     useEffect(() => {
         setVal(values[0]);
     }, [values]);
 
     return (
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
-                    <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
-                    { team.logo !== '' ? <Image style={styles.teamIcon} source={{ uri: team.logo }} /> : null }
+        <>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 6 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-end' }}>
+                        <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
+                        { team.logo !== '' ? <Image style={styles.teamIcon} source={{ uri: team.logo }} /> : null }
+                    </View>
+                    <TouchableOpacity 
+                        style={styles.playerContainer}
+                        onPress={() => openPlayerModal(team.name)}
+                    >
+                        <Text style={{ fontWeight: '400', fontSize: 13, }}>{target}</Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity 
-                    style={styles.playerContainer}
-                    onPress={() => openPlayerModal(team.name)}
-                >
-                    <Text style={{ fontWeight: '400', fontSize: 13, }}>{team.name}</Text>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TextInput
+                        placeholder={val}
+                        keyboardType="default"
+                        style={styles.oddsContainer}
+                        value={val}
+                        onChangeText={(text) => {
+                            if (/^[0-9.]*$/.test(text)) {
+                                setVal(text);
+                            }
+                        }}
+                    />
+                    <TextInput
+                        placeholder={odds}
+                        keyboardType="default"
+                        style={styles.oddsContainer}
+                        value={oddsVal}
+                        onChangeText={(text) => {
+                            if (/^[0-9+-]*$/.test(text)) {
+                                setOddsVal(text);
+                            }
+                        }}
+                        // Add necessary props and event handlers for amount input
+                    />  
+                    <TouchableOpacity 
+                        style={[styles.valueContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}
+                        onPress={() => select(team.name, val, oddsVal)}
+                    >
+                        <Text style={{ fontSize: 24, fontWeight: '500' }}>+</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TextInput
-                    placeholder={val}
-                    keyboardType="default"
-                    style={styles.oddsContainer}
-                    value={val}
-                    onChangeText={(text) => {
-                        if (/^[0-9.]*$/.test(text)) {
-                            setVal(text);
-                        }
-                    }}
-                />
-                <TextInput
-                    placeholder={odds}
-                    keyboardType="default"
-                    style={styles.oddsContainer}
-                    value={oddsVal}
-                    onChangeText={(text) => {
-                        if (/^[0-9+-]*$/.test(text)) {
-                            setOddsVal(text);
-                        }
-                    }}
-                    // Add necessary props and event handlers for amount input
-                />  
-                <TouchableOpacity 
-                    style={[styles.valueContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}
-                    onPress={() => select(team.name, val, oddsVal)}
-                >
-                    <Text style={{ fontSize: 24, fontWeight: '500' }}>+</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+            <SelectPlayer
+                visible={modalVisible}
+                close={() => setModalVisible(false)}
+                players={players}
+                selectPlayer={selectPlayer}
+            />
+        </>
     );
 }
 
