@@ -24,6 +24,7 @@ export default function useTheme() {
         caesars: colorScheme === 'dark' ? Colors.dark.caesars : Colors.light.caesars,
         pointsbet: colorScheme === 'dark' ? Colors.dark.pointsbet : Colors.light.pointsbet,
         barstool: colorScheme === 'dark' ? Colors.dark.barstool : Colors.light.barstool,
+        yellowText: colorScheme === 'dark' ? Colors.dark.yellowText : Colors.light.yellowText,
         // Add other color definitions here...
     }
 

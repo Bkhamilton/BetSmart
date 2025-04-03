@@ -23,6 +23,7 @@ export default {
         pointsbet: '#ed1b42',
         caesars: '#00322f',
         barstool: '#304977',
+        yellowText: '#FEE12B',
     },
     dark: {
         text: '#fff',
@@ -45,5 +46,6 @@ export default {
         pointsbet: '#bd0f2e',
         caesars: '#00322f',
         barstool: '#111a2b',
+        yellowText: '#FCE205',
     },
 };
