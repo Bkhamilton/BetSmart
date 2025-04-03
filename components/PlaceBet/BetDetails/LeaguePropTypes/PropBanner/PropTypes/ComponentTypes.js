@@ -153,7 +153,7 @@ export const ToRecordValueComponent = ({ odds, values, team, select }) => {
                     />  
                     <TouchableOpacity 
                         style={[styles.valueContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}
-                        onPress={() => select(team.name, val, oddsVal)}
+                        onPress={() => select(target, val, oddsVal)}
                     >
                         <Text style={{ fontSize: 24, fontWeight: '500' }}>+</Text>
                     </TouchableOpacity>
