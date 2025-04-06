@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         paddingHorizontal: (screenWidth - CARD_WIDTH) / 2,
-        paddingVertical: 8,
+        paddingVertical: 4,
     },
     card: {
         borderRadius: 12,
