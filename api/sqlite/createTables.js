@@ -304,6 +304,22 @@ export const createInsightTables = async (db) => {
         WHERE bsr.result IN (1, 0, -1)
         GROUP BY bs.userId;
 
+        CREATE VIEW LeaguePerformance AS
+        SELECT 
+            bs.userId,
+            l.leagueName,
+            COUNT(*) AS total_bets,
+            SUM(CASE WHEN pbr.result = 1 THEN 1 ELSE 0 END) AS wins,
+            SUM(CASE WHEN pbr.result = 0 THEN 1 ELSE 0 END) AS losses,
+            ROUND(SUM(CASE WHEN pbr.result = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS win_percentage
+        FROM BetSlips bs
+        JOIN ParticipantBets pb ON bs.id = pb.betSlipId
+        JOIN ParticipantBetsResults pbr ON pb.id = pbr.participantBetId
+        JOIN Games g ON pb.gameId = g.gameId
+        JOIN Seasons s ON g.seasonId = s.id
+        JOIN Leagues l ON s.leagueId = l.id
+        GROUP BY bs.userId, l.leagueName;
+
         CREATE VIEW MarketPerformance AS
         SELECT 
             bs.userId,
@@ -322,7 +338,7 @@ export const createInsightTables = async (db) => {
         CREATE VIEW BetTypePerformance AS
         SELECT 
             bs.userId,
-            bt.name AS bet_type,
+            bt.betType,
             COUNT(*) AS total_bets,
             SUM(CASE WHEN lr.result = 1 THEN 1 ELSE 0 END) AS wins,
             SUM(CASE WHEN lr.result = 0 THEN 1 ELSE 0 END) AS losses,
@@ -332,7 +348,7 @@ export const createInsightTables = async (db) => {
         JOIN Legs l ON pb.id = l.participantBetId
         JOIN LegsResults lr ON l.id = lr.legId
         JOIN BetTypes bt ON l.betTypeId = bt.id
-        GROUP BY bs.userId, bt.name;
+        GROUP BY bs.userId, bt.betType;
         
         CREATE VIEW OddsRangePerformance AS
         SELECT 
@@ -398,22 +414,6 @@ export const createInsightTables = async (db) => {
         ORDER BY userId, MIN(date) DESC;
         LIMIT 1;
 
-        CREATE VIEW LeaguePerformance AS
-        SELECT 
-            bs.userId,
-            l.leagueName,
-            COUNT(*) AS total_bets,
-            SUM(CASE WHEN pbr.result = 1 THEN 1 ELSE 0 END) AS wins,
-            SUM(CASE WHEN pbr.result = 0 THEN 1 ELSE 0 END) AS losses,
-            ROUND(SUM(CASE WHEN pbr.result = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS win_percentage
-        FROM BetSlips bs
-        JOIN ParticipantBets pb ON bs.id = pb.betSlipId
-        JOIN ParticipantBetsResults pbr ON pb.id = pbr.participantBetId
-        JOIN Games g ON pb.gameId = g.gameId
-        JOIN Seasons s ON g.seasonId = s.id
-        JOIN Leagues l ON s.leagueId = l.id
-        GROUP BY bs.userId, l.leagueName;
-
         CREATE VIEW DayOfWeekPerformance AS
         SELECT 
             bs.userId,
@@ -476,7 +476,7 @@ export const createInsightTables = async (db) => {
         CREATE VIEW BetFormatPerformance AS
         SELECT 
             bs.userId,
-            bf.name AS format_name,
+            bf.formatName AS format_name,
             COUNT(*) AS total_bets,
             SUM(CASE WHEN bsr.result = 1 THEN 1 ELSE 0 END) AS wins,
             SUM(CASE WHEN bsr.result = 0 THEN 1 ELSE 0 END) AS losses,
@@ -486,7 +486,7 @@ export const createInsightTables = async (db) => {
         FROM BetSlips bs
         JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
         JOIN BetFormats bf ON bs.formatId = bf.id
-        GROUP BY bs.userId, bf.name;
+        GROUP BY bs.userId, bf.formatName;
         
         CREATE VIEW BookiePerformance AS
         SELECT 
@@ -502,5 +502,22 @@ export const createInsightTables = async (db) => {
         JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
         JOIN Bookies bk ON bs.bookieId = bk.id
         GROUP BY bs.userId, bk.name;
+    `);
+}
+
+export const dropInsightTables = async (db) => {
+    await db.execAsync(`
+        DROP VIEW IF EXISTS OverallBettingPerformance;
+        DROP VIEW IF EXISTS MarketPerformance;
+        DROP VIEW IF EXISTS BetTypePerformance;
+        DROP VIEW IF EXISTS OddsRangePerformance;
+        DROP VIEW IF EXISTS RecentPerformance;
+        DROP VIEW IF EXISTS CurrentStreak;
+        DROP VIEW IF EXISTS LeaguePerformance;
+        DROP VIEW IF EXISTS DayOfWeekPerformance;
+        DROP VIEW IF EXISTS TimeOfDayPerformance;
+        DROP VIEW IF EXISTS BetSizePerformance;
+        DROP VIEW IF EXISTS BetFormatPerformance;
+        DROP VIEW IF EXISTS BookiePerformance;
     `);
 }
