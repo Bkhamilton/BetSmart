@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
     betSlipContainer: {
         borderWidth: 1,
         borderRadius: 12,
-        padding: 8,
         marginHorizontal: 16,
     },
 });
