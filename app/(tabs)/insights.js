@@ -27,17 +27,25 @@ export default function InsightScreen() {
     const { user } = useContext(UserContext);
 
     const [actionableInsights, setActionableInsights] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const initialize = async () => {
+            await createTempTables(db);
+            setLoading(false);
+        };
+        initialize();
+    }, []);
 
     useEffect(() => {
         const loadInsights = async () => {
             if (user) {
                 const insights = await getActionableInsights(db, user.id);
-                console.log(JSON.stringify(insights, null, 2));
                 setActionableInsights(insights);
             }
         };
         loadInsights();
-    }, [user]);
+    }, [user, loading]);
 
     const refreshMarkets = async () => {
         const league = await getLeagueByName(supabase, 'NBA');
@@ -55,13 +63,7 @@ export default function InsightScreen() {
 
     const renderInsightCard = (insight, index) => (
         <ClearView key={index} style={{ 
-            margin: 8, 
-            borderRadius: 8,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 4,
-            elevation: 2
+            margin: 8,
         }}>
             <Text style={{ 
                 fontSize: 16, 
@@ -91,13 +93,13 @@ export default function InsightScreen() {
             />
             <ScrollView>
                 <InsightIntro streak={streak} />
+                <BetAnalysis streak={streak} />
                 {/* Insight #1 - Top Performer */}
                 {actionableInsights.length > 0 && (
                     <View style={{ padding: 16, justifyContent: 'center', alignItems: 'center' }}>
                         {renderInsightCard(actionableInsights[0], 0)}
                     </View>
                 )}
-                <BetAnalysis streak={streak} />
                 <TopBet betSlip={topBet}/>
                 {actionableInsights.length > 1 && (
                     <View style={{ padding: 16, justifyContent: 'center', alignItems: 'center' }}>
