@@ -521,3 +521,51 @@ export const dropInsightTables = async (db) => {
         DROP VIEW IF EXISTS BookiePerformance;
     `);
 }
+
+export const createTempTables = async (db) => {
+    await db.execAsync(`
+        CREATE TEMPORARY TABLE RecentPerformance AS
+        SELECT 
+            bs.userId,
+            bs.id,
+            bs.date,
+            bsr.result,
+            bs.betAmount,
+            bs.winnings,
+            CASE WHEN bsr.result = 1 THEN bs.winnings - bs.betAmount 
+                WHEN bsr.result = 0 THEN -bs.betAmount 
+                ELSE 0 END AS net_result
+        FROM BetSlips bs
+        JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
+        ORDER BY bs.userId, bs.date DESC
+        LIMIT 15;
+
+        CREATE TEMPORARY TABLE CurrentStreak AS
+        WITH StreakData AS (
+            SELECT 
+                bs.userId,
+                bs.id,
+                bs.date,
+                bsr.result,
+                LAG(bsr.result) OVER (PARTITION BY bs.userId ORDER BY bs.date) AS prev_result
+            FROM BetSlips bs
+            JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
+            ORDER BY bs.userId, bs.date DESC
+        )
+        SELECT 
+            userId,
+            result AS current_streak_result,
+            COUNT(*) AS streak_length
+        FROM (
+            SELECT 
+                userId,
+                result,
+                SUM(CASE WHEN result <> prev_result OR prev_result IS NULL THEN 1 ELSE 0 END) 
+                    OVER (PARTITION BY userId ORDER BY date DESC) AS streak_group
+            FROM StreakData
+        ) 
+        GROUP BY userId, result, streak_group
+        ORDER BY userId, MIN(date) DESC;
+        LIMIT 1;
+    `);
+}

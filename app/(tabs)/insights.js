@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { ScrollView, ClearView, Text, View } from '@/components/Themed';
@@ -13,6 +13,8 @@ import { getLeagueByName } from '@/api/supabase/Leagues';
 import { refreshBettingMarkets } from '@/api/supabase/markets';
 import { fetchAndUpdateRoster } from '@/api/sportsdb/players';
 import PreferenceAdherence from '@/components/Insights/PreferenceAdherence/PreferenceAdherence';
+import { getActionableInsights } from '@/utils/insights';
+import { createTempTables } from '@/api/sqlite/createTables';
 
 export default function InsightScreen() {
 
@@ -23,6 +25,19 @@ export default function InsightScreen() {
     const { supabase, leagues } = useContext(SupabaseContext);
 
     const { user } = useContext(UserContext);
+
+    const [actionableInsights, setActionableInsights] = useState([]);
+
+    useEffect(() => {
+        const loadInsights = async () => {
+            if (user) {
+                const insights = await getActionableInsights(db, user.id);
+                console.log(JSON.stringify(insights, null, 2));
+                setActionableInsights(insights);
+            }
+        };
+        loadInsights();
+    }, [user]);
 
     const refreshMarkets = async () => {
         const league = await getLeagueByName(supabase, 'NBA');
@@ -38,6 +53,37 @@ export default function InsightScreen() {
 
     }
 
+    const renderInsightCard = (insight, index) => (
+        <ClearView key={index} style={{ 
+            margin: 8, 
+            borderRadius: 8,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 2
+        }}>
+            <Text style={{ 
+                fontSize: 16, 
+                fontWeight: '500', 
+                color: getTextColor(insight.type),
+                textAlign: 'center',
+            }}>
+                {insight.message}
+            </Text>
+        </ClearView>
+    );
+
+    const getTextColor = (type) => {
+        switch(type) {
+            case 'success': return '#2e7d32';
+            case 'warning': return '#ed6c02';
+            case 'improvement': return '#d32f2f';
+            case 'strategy': return '#1565c0';
+            default: return '#333333';
+        }
+    };
+
     return (
         <>
             <InsightHeader
@@ -45,17 +91,27 @@ export default function InsightScreen() {
             />
             <ScrollView>
                 <InsightIntro streak={streak} />
+                {/* Insight #1 - Top Performer */}
+                {actionableInsights.length > 0 && (
+                    <View style={{ padding: 16, justifyContent: 'center', alignItems: 'center' }}>
+                        {renderInsightCard(actionableInsights[0], 0)}
+                    </View>
+                )}
                 <BetAnalysis streak={streak} />
                 <TopBet betSlip={topBet}/>
-                <View style={{ padding: 24 }}>
-                    <Text style={{ fontSize: 16, fontWeight: '500', textAlign: 'center' }}>Your NBA unders hit 62% - consider increasing unit sizes</Text>
-                </View>
+                {actionableInsights.length > 1 && (
+                    <View style={{ padding: 16, justifyContent: 'center', alignItems: 'center' }}>
+                        {renderInsightCard(actionableInsights[1], 1)}
+                    </View>
+                )}
                 {/* Top Props */}
                 <BankManagement streak={streak} />
-                <ClearView style={{ padding: 20 }}>
-                    <Text style={{ fontSize: 22, fontWeight: '600', textAlign: 'center' }}>Insight Data Coming Soon...</Text>
-                </ClearView>
                 <PreferenceAdherence />
+                {actionableInsights.length > 2 && (
+                    <ClearView style={{ padding: 16, justifyContent: 'center', alignItems: 'center' }}>
+                        {renderInsightCard(actionableInsights[2], 2)}
+                    </ClearView>
+                )}
                 {/* Behavioral Analysis */}
                 {/* Learning Opportunities */}
                 {/* Future: Comparative Analysis */}
