@@ -18,6 +18,12 @@ export default function InsightScreen() {
 
     const { streak, cycleStreak, topBet } = useHookInsightsPage();
 
+    const { db } = useContext(DBContext);
+
+    const { supabase, leagues } = useContext(SupabaseContext);
+
+    const { user } = useContext(UserContext);
+
     const refreshMarkets = async () => {
         const league = await getLeagueByName(supabase, 'NBA');
 
@@ -31,12 +37,6 @@ export default function InsightScreen() {
     const tempFunction = async () => {
 
     }
-
-    const { db } = useContext(DBContext);
-
-    const { supabase, leagues } = useContext(SupabaseContext);
-
-    const { user } = useContext(UserContext);
 
     return (
         <>
