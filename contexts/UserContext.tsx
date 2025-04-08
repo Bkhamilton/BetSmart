@@ -5,6 +5,7 @@ import { getUser, getUserById } from '@/db/user-specific/Users';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalanceByUser } from '@/db/user-specific/Balance';
 import { getPreferences, insertPreference, clearUserPreferences } from '@/db/user-specific/Preferences';
+import { verifyLegalLocation } from '@/services/locationService';
 
 interface User {
     id: number;
@@ -52,6 +53,14 @@ interface UserContextValue {
     setSignedIn: (signedIn: boolean) => void;
 }
 
+interface LocationStatus {
+    verified: boolean;
+    isLegal: boolean | null;
+    state: string | null | undefined;
+    lastChecked: string | null | undefined;
+    error: string | null;
+}
+
 export const UserContext = createContext<UserContextValue>({
     user: null,
     userBalance : null,
@@ -86,7 +95,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const [trigger, setTrigger] = useState<boolean>(false);
     const [fetchBalance, setFetchBalance] = useState<boolean>(false);
 
-    const [preferences, setPreferences] = useState({
+    const [preferences, setPreferences] = useState<Preference>({
         bankroll: 0,
         dailyLimit: 0,
         unitSize: '',
@@ -100,6 +109,27 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const [signedIn, setSignedIn] = useState<boolean>(false);
 
     const db = useSQLiteContext();
+
+    const [locationStatus, setLocationStatus] = useState<LocationStatus>({
+        verified: false,
+        isLegal: null,
+        state: null,
+        lastChecked: null,
+        error: null
+    });
+    
+    const checkLocation = async () => {
+        const result = await verifyLegalLocation();
+        setLocationStatus({
+          verified: true,
+          isLegal: result.isLegal,
+          state: result.state,
+          lastChecked: result.timestamp,
+          error: result.error
+        });
+        return result;
+    };
+    
 
     useEffect(() => {
         const fetchUserData = async () => {
