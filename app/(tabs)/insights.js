@@ -68,7 +68,6 @@ export default function InsightScreen() {
             <Text style={{ 
                 fontSize: 16, 
                 fontWeight: '500', 
-                color: getTextColor(insight.type),
                 textAlign: 'center',
             }}>
                 {insight.message}
