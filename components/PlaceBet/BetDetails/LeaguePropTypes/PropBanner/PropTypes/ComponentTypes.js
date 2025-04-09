@@ -87,7 +87,7 @@ export const ToRecordValueComponent = ({ odds, values, team, select }) => {
     const { db } = useContext(DBContext);
     const [modalVisible, setModalVisible] = useState(false);
     const [players, setPlayers] = useState([]);
-    const [target, setTarget] = useState(team.name);
+    const [target, setTarget] = useState(team);
     const [oddsVal, setOddsVal] = useState(odds);
     const [val, setVal] = useState(values[0]);
     
@@ -105,7 +105,7 @@ export const ToRecordValueComponent = ({ odds, values, team, select }) => {
     }
 
     const selectPlayer = (player) => {
-        setTarget(player.name);
+        setTarget(player);
         setModalVisible(false);
     }
 
@@ -128,7 +128,7 @@ export const ToRecordValueComponent = ({ odds, values, team, select }) => {
                         )}
                     </View>
                     <Text style={[styles.playerName, { color: text }]} numberOfLines={1}>
-                        {target}
+                        {target.name}
                     </Text>
                 </TouchableOpacity>
 

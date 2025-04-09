@@ -3,17 +3,63 @@ import { StyleSheet } from 'react-native';
 import { Text, View, ClearView } from '@/components/Themed';
 import { ToRecordValueComponent } from './ComponentTypes';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import { DBContext } from '@/contexts/DBContext';
 import useTheme from '@/hooks/useTheme';
+import { getBetTargetIdByName } from '@/db/bet-general/BetTargets';
 
 export default function MainPlayer({ stat, awayTeam, homeTeam }) {
 
-    const { league, currentGame, selectProp } = useContext(BetContext);
+    const { league, currentGame, selectProp, bookieId } = useContext(BetContext);
+
+    const { db } = useContext(DBContext);
 
     const { grayBackground } = useTheme();
 
-    const onSelectProp = (player, value, odds) => {
-        console.log('Selected Prop:', stat, player, value, odds);
+    const getStatName = (stat) => {
+        switch (stat) {
+            case 'Player Points':
+                return 'pts';
+            case 'Player Assists':
+                return 'ast';
+            case 'Player Rebounds':
+                return 'reb';
+            case 'Player Threes':
+                return '3pt';
+            case 'Player Defense':
+                return 'def';
+            case 'Player Pass Yards':
+                return 'passYds';
+            case 'Player Rush Yards':
+                return 'rushYds';
+            case 'Player Rec Yards':
+                return 'recYds';
+            default:
+                return stat;
+        }
+    }
+
+    const onSelectProp = async (player, value, odds) => {
+        console.log('Selected Prop:', stat, JSON.stringify(player), value, odds);
+        const target = getBetTargetIdByName(db, player.name)
+        selectProp({
+            game: currentGame,
+            type: stat,
+            target: target,
+            stat: getStatName(stat),
+            value: value,
+            overUnder: 'over',
+            odds: odds,
+            bookieId: bookieId,
+        });
         // selectProp needs: game, type, target, stat, value, overUnder, odds, bookieId
+        // game: currentGame
+        // type: 'Player + stat'
+        // target: BetTarget for Player stat
+        // stat: getStatName(stat) ('pts', 'reb', ...)
+        // value: value
+        // overUnder: for player props, they will always be over
+        // odds: odds
+        // bookieId: bookieId
     }
 
     const pointValues = ['10', '15', '18', '20', '25', '30']
@@ -69,8 +115,8 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
                 </ClearView>
             </View>
             <View style={{ paddingHorizontal: 8 }}>
-                <ToRecordValueComponent team={awayTeam} odds={'-113'} values={getValues(stat)} select={onSelectProp} target={awayTarget}/>
-                <ToRecordValueComponent team={homeTeam} odds={'+108'} values={getValues(stat)} select={onSelectProp} target={homeTarget}/>
+                <ToRecordValueComponent team={awayTeam} odds={'-113'} values={getValues(stat)} select={onSelectProp}/>
+                <ToRecordValueComponent team={homeTeam} odds={'+108'} values={getValues(stat)} select={onSelectProp}/>
             </View>
         </View>
     )
