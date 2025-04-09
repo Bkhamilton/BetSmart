@@ -107,6 +107,7 @@ export const getWinningestBetSlipLast7Days = async (db, userId) => {
                 B.winnings DESC
             LIMIT 1`, [userId]);
         const winSlip = result[0];
+        if (!winSlip) return null; // Return null if no winning slip found
         const filledSlip = await fillBetSlips(db, [winSlip]);
         return filledSlip[0];
     } catch (error) {

@@ -47,6 +47,7 @@ const useHookInsightsPage = () => {
             setBetsPlaced(0);
             setBetsWon(0);
             setProfit(0);
+            setTopBet({});
         }
     }, [user, signedIn]);
     
