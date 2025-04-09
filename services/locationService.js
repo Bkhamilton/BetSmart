@@ -1,5 +1,5 @@
 import * as Location from 'expo-location';
-import { LEGAL_SPORTS_BETTING_STATES } from '../constants/legalStates';
+import { LEGAL_SPORTS_BETTING_STATES } from '@/constants/legalStates';
 
 export const verifyLegalLocation = async () => {
     try {
