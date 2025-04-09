@@ -24,10 +24,11 @@ import useAuthState from '@/hooks/useAuthState';
 import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
 import ProfileOptions from '@/components/Modals/ProfileOptions';
 import BankReview from '@/components/Home/BankReview/BankReview';
+import { LocationModal } from '@/components/Modals/LocationModal';
 
 export default function HomeScreen() {
 
-    const { user, setBookie, signedIn } = useContext(UserContext);
+    const { user, setBookie, signedIn, locationStatus } = useContext(UserContext);
 
     const {
         confirmModalVisible,
@@ -198,6 +199,7 @@ export default function HomeScreen() {
                     selectBookie={onSelectBookie}
                     extra={true}
                 />
+                <LocationModal />
                 {
                     confirmedBetSlip && confirmedBetSlip.bets && (
                     <ConfirmBetSlip

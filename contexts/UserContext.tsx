@@ -51,6 +51,8 @@ interface UserContextValue {
     updatePreferences: (preferences: Preference) => Promise<void>;
     signedIn: boolean;
     setSignedIn: (signedIn: boolean) => void;
+    locationStatus: LocationStatus;
+    checkLocation: () => Promise<void>;
 }
 
 interface LocationStatus {
@@ -81,6 +83,14 @@ export const UserContext = createContext<UserContextValue>({
     updatePreferences: async () => {},
     signedIn: false,
     setSignedIn: () => {},
+    locationStatus: {
+        verified: false,
+        isLegal: null,
+        state: null,
+        lastChecked: null,
+        error: null
+    },
+    checkLocation: async () => {},
 });
 
 interface UserContextProviderProps {
@@ -129,6 +139,14 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         });
         return result;
     };
+
+    useEffect(() => {
+        const checkLocationStatus = async () => {
+            const result = await checkLocation();
+            setLocationStatus(result);
+        };
+        checkLocationStatus();
+    }, []);
     
 
     useEffect(() => {
@@ -267,6 +285,8 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         updatePreferences,
         signedIn,
         setSignedIn,
+        locationStatus,
+        checkLocation,
     };
 
     return (
