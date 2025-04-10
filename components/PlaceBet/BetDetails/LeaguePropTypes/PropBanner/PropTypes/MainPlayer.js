@@ -40,7 +40,7 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
 
     const onSelectProp = async (player, value, odds) => {
         console.log('Selected Prop:', stat, JSON.stringify(player), value, odds);
-        const target = getBetTargetIdByName(db, player.name)
+        const target = await getBetTargetIdByName(db, player.name);
         selectProp({
             game: currentGame,
             type: stat,

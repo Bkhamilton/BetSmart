@@ -26,12 +26,30 @@ export default function Leg({ leg, currentBet, onRemove }) {
         fetchName();
     }, [leg]);
 
+    // function to condense full names to F. Lastname. Or if the last name is hyphenated, it will be F.L.L.
+    const condenseName = (fullName) => {
+        const parts = fullName.split(' ');
+        if (parts.length < 2) return fullName; // Return as is if the name doesn't have at least two parts
+    
+        const firstInitial = parts[0][0]; // Get the first initial without a dot
+        const lastName = parts[parts.length - 1];
+    
+        if (lastName.includes('-')) {
+            const hyphenatedParts = lastName.split('-');
+            const initials = hyphenatedParts.map(part => part[0]).join(''); // Concatenate initials without dots
+            return `${firstInitial}${initials}`;
+        }
+    
+        return `${firstInitial}. ${lastName}`; // Keep the dot for non-hyphenated last names
+    };
+
     const displayLeg = () => {
         switch (type) {
+        case 'Player Rebounds':
+        case 'Player Assists':
         case 'Player Points':
-            return `${betTarget} ${stat} ${line} ${overUnder}`;
         case 'Player Threes':
-            return `${betTarget} ${stat} ${line} ${overUnder}`;
+            return `${condenseName(betTargetName)} ${line}+ ${stat.toUpperCase()}`;
         case 'Main':
             switch (stat) {
             case 'moneyline':
@@ -39,7 +57,7 @@ export default function Leg({ leg, currentBet, onRemove }) {
             case 'spread':
                 return `${betTargetName} ${stat} ${line}`;
             case 'totals':
-                return `${betTargetName} Total ${overUnder} ${line}`;
+                return `${betTargetName} ${overUnder} ${line} pts`;
             default:
                 return '';
             }
