@@ -1,13 +1,31 @@
+export const condenseName = (fullName) => {
+    const parts = fullName.split(' ');
+    if (parts.length < 2) return fullName; // Return as is if the name doesn't have at least two parts
+
+    const firstInitial = parts[0][0]; // Get the first initial without a dot
+    const lastName = parts[parts.length - 1];
+
+    if (lastName.includes('-')) {
+        const hyphenatedParts = lastName.split('-');
+        const initials = hyphenatedParts.map(part => part[0]).join(''); // Concatenate initials without dots
+        return `${firstInitial}${initials}`;
+    }
+
+    return `${firstInitial}. ${lastName}`; // Keep the dot for non-hyphenated last names
+};
 
 export const displayLeg = (leg, betTargetName) => {
 
     const { marketType, value, odds, overUnder, betTargetId, betTarget, targetType, betType } = leg;
 
     switch (betType) {
-        case 'Player Points':
-            return `${betTarget} ${marketType} ${value} ${overUnder}`;
+        case 'Player Defense':
+        case 'Player Combos':
         case 'Player Threes':
-            return `${betTarget} ${marketType} ${value} ${overUnder}`;
+        case 'Player Rebounds':
+        case 'Player Assists':
+        case 'Player Points':
+            return `${condenseName(betTarget)} ${value}+ ${marketType.toUpperCase()}`;
         case 'Main':
             switch (marketType) {
             case 'moneyline':
