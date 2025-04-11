@@ -1,7 +1,7 @@
 // src/components/LocationModal.jsx
 import React from 'react';
 import { StyleSheet, Linking } from 'react-native';
-import { Text, View, Modal, TouchableOpacity } from '@/components/Themed';
+import { Text, View, ClearView, Modal, TouchableOpacity } from '@/components/Themed';
 import { UserContext } from '@/contexts/UserContext';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -45,7 +45,7 @@ export const LocationModal = () => {
             This app is for tracking purposes only and cannot be used in states where sports betting is prohibited.
           </Text>
 
-          <View style={styles.buttonContainer}>
+          <ClearView style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.button, styles.primaryButton]}
               onPress={checkLocation}
@@ -66,7 +66,7 @@ export const LocationModal = () => {
             >
               <Text style={styles.buttonText}>App Settings</Text>
             </TouchableOpacity>
-          </View>
+          </ClearView>
         </View>
       </View>
     </Modal>

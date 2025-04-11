@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ClearView } from '@/components/Themed';
 import { ToRecordValueComponent } from './ComponentTypes';
 import { BetContext } from '@/contexts/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
-import useTheme from '@/hooks/useTheme';
 import { getBetTargetIdByName } from '@/db/bet-general/BetTargets';
 
 export default function MainPlayer({ stat, awayTeam, homeTeam }) {
 
-    const { league, currentGame, selectProp, bookieId } = useContext(BetContext);
+    const { currentGame, selectProp, bookieId } = useContext(BetContext);
 
     const { db } = useContext(DBContext);
-
-    const { grayBackground } = useTheme();
 
     const getStatName = (stat) => {
         switch (stat) {
@@ -39,7 +36,6 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
     }
 
     const onSelectProp = async (player, value, odds) => {
-        console.log('Selected Prop:', stat, JSON.stringify(player), value, odds);
         const target = await getBetTargetIdByName(db, player.name);
         selectProp({
             game: currentGame,
@@ -51,15 +47,6 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
             odds: odds,
             bookieId: bookieId,
         });
-        // selectProp needs: game, type, target, stat, value, overUnder, odds, bookieId
-        // game: currentGame
-        // type: 'Player + stat'
-        // target: BetTarget for Player stat
-        // stat: getStatName(stat) ('pts', 'reb', ...)
-        // value: value
-        // overUnder: for player props, they will always be over
-        // odds: odds
-        // bookieId: bookieId
     }
 
     const pointValues = ['10', '15', '18', '20', '25', '30']
@@ -100,9 +87,6 @@ export default function MainPlayer({ stat, awayTeam, homeTeam }) {
                 return pointValues;
         }
     }
-
-    const [homeTarget, setHomeTarget] = useState(null);
-    const [awayTarget, setAwayTarget] = useState(null);
 
     return (
         <View style={{ width: '100%', paddingBottom: 4 }}>
