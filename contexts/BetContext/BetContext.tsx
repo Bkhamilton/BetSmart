@@ -6,12 +6,14 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { insertBetSlip } from '@/db/betslips/BetSlips';
 import { insertParticipantBet } from '@/db/betslips/ParticipantBets';
 import { insertLeg } from '@/db/betslips/Legs';
-import { insertBetMarket } from '@/db/api/BetMarkets';
+import { insertBetMarket, insertFullBetMarket } from '@/db/api/BetMarkets';
 import { getBetFormat } from '@/db/bet-general/BetFormats';
 import { getBetType } from '@/db/bet-general/BetTypes';
 import { getBetMarketByLeg } from '@/db/api/BetMarkets';
 import { getBetTargetId } from '@/db/bet-general/BetTargets'
 import { updateUserBalance } from '@/db/user-specific/Balance';
+
+const USER_GENERATED_ID_START = 1000001;
 
 interface Game {
     id: number;
@@ -34,11 +36,12 @@ interface League {
 interface BetSlip {
     id: number;
     type: string;
-    date: string;
+    date: Date;
     odds: number;
     betAmount: number;
     winnings: number;
     bets: Bet[];
+    bookieId: number;
 }
 
 interface Bet {
@@ -139,6 +142,10 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
 
     const confirmBetSlip = async (db: any) => {
         try {
+            if (!betSlip) {
+                console.error('No bet slip to confirm');
+                return;
+            }
             // Create BetSlip in DB
 
             const betSlipFormat = await getBetFormat(db, betSlip.type);
@@ -149,6 +156,11 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
 
             if (!betSlipId) {
                 console.error('Error inserting bet slip');
+                return;
+            }
+
+            if (!betSlip.bets || betSlip.bets.length === 0) {
+                console.error('No bets found in bet slip');
                 return;
             }
 
@@ -167,10 +179,30 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
                         if (!betMarket) {
                             // Add new bet market row with betSlip.bookieId and leg info
                             const timestamp = new Date().toISOString();
-                            betMarketId = await insertBetMarket(db, bet.gameId, leg.stat, timestamp, leg.line, leg.odds, leg.overUnder, leg.betTarget, betSlip.bookieId);
+
+                            const result = await db.getFirstAsync(
+                                'SELECT MAX(id) AS maxId FROM BetMarkets WHERE id >= ?',
+                                [USER_GENERATED_ID_START]
+                            );
+                            const nextId = result?.maxId ? result.maxId + 1 : USER_GENERATED_ID_START;
+
+                            // Insert the new BetMarket with the calculated ID
+                            betMarketId = await insertFullBetMarket(
+                                db,
+                                nextId,
+                                bet.gameId,
+                                leg.stat,
+                                timestamp,
+                                leg.line,
+                                leg.odds,
+                                leg.overUnder,
+                                leg.betTarget,
+                                betSlip.bookieId
+                            );
                         } else {
                             betMarketId = betMarket.id;
                         }
+                        
                         
                         await insertLeg(db, participantBetId, betMarketId, betType.id);
                     } catch (legError) {
@@ -183,7 +215,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
             }
 
             // Update balance for userBalance
-            await updateUserBalance(db, betSlip.bookieId, (betSlip.betAmount * -1), user.id);
+            await updateUserBalance(db, betSlip.bookieId, (betSlip.betAmount * -1), user!.id);
             setTrigger(true);
             setBetSlip(null);
             setTotalLegs(0);

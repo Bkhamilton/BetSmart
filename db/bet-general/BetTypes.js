@@ -52,3 +52,12 @@ export const deleteBetType = async (db, betTypeId) => {
     throw error;
   }
 };
+
+export const clearBetTypes = async (db) => {
+  try {
+    await db.runAsync('DELETE FROM BetTypes');
+  } catch (error) {
+    console.error('Error in clearBetTypes:', error);
+    throw error;
+  }
+}
