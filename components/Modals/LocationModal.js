@@ -144,7 +144,6 @@ const styles = StyleSheet.create({
     borderColor: '#8E8E93',
   },
   buttonText: {
-    color: 'white',
     fontSize: 16,
     fontWeight: '500',
   },
