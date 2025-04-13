@@ -42,8 +42,10 @@ export default function MainDisplay({ stat, homeTeam, awayTeam, data }) {
                         key={`${bookie.name}-${index}`}
                         stat={stat}
                         bookie={bookie.name}
-                        odds1={item.homeOdds}
-                        odds2={item.awayOdds}
+                        home={item.home}
+                        away={item.away}
+                        odds1={item.home.odds}
+                        odds2={item.away.odds}
                         homeTeam={homeTeam} 
                         awayTeam={awayTeam} 
                     />

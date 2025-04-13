@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import { DBContext } from '@/contexts/DBContext';
 import PropBanner from './PropBanner/PropBanner';
 
-import { getSpread } from "@/db/api/BetMarkets";
+import { getSpread, getBetMarketByGame } from "@/db/api/BetMarkets";
 import { groupByTimestampAndBookie, sortBetMarkets } from '@/utils/betMarketHelpers';
 
 export default function Spread() {
@@ -12,9 +13,9 @@ export default function Spread() {
 
     const title = 'Spread';
 
-    const [spreadData, setSpreadData] = useState([]);
+    const { db } = useContext(DBContext);
 
-    /*
+    const [spreadData, setSpreadData] = useState([]);
 
     // use useEffect to grab all Spread values for the currentGame
     useEffect(() => {
@@ -27,11 +28,9 @@ export default function Spread() {
         fetchSpread();
     }, [currentGame]);
 
-    */
-
     return (
         <>
-            <PropBanner title={title} type={"Main"} stat={"spread"}/>
+            <PropBanner title={title} type={"Main"} stat={"spread"} data={spreadData}/>
         </>
     );
 }

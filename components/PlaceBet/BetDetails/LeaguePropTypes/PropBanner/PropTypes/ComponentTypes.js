@@ -215,7 +215,7 @@ export const GenericComponent = ({ title, odds }) => {
     );
 }
 
-export const MainLineDisplay = ({ stat, bookie, odds1, odds2, homeTeam, awayTeam }) => {
+export const MainLineDisplay = ({ stat, bookie, home, away, homeTeam, awayTeam }) => {
 
     const { grayBackground, grayBorder } = useTheme();
 
@@ -226,13 +226,13 @@ export const MainLineDisplay = ({ stat, bookie, odds1, odds2, homeTeam, awayTeam
                 { awayTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: awayTeam.logo }} /> : null }
                 {/* Away Team Odds */}
                 <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds2}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{away.odds}</Text>
                 </TouchableOpacity>         
                 {/* Bookie Logo */}
                 <Image style={styles.bookieIcon} source={bookieImages[bookie]} />
                 {/* Home Team Odds */}
                 <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{odds1}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{home.odds}</Text>
                 </TouchableOpacity>       
                 {/* Home Team Logo */}
                 { homeTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: homeTeam.logo }} /> : null }       

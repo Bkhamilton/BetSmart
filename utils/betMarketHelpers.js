@@ -8,15 +8,43 @@ export const groupByTimestampAndBookie = (betMarkets, currentGame) => {
             grouped[key] = {
                 timestamp: betMarket.timestamp,
                 bookieId: betMarket.bookieId,
-                homeOdds: null,
-                awayOdds: null,
+                home: null,
+                away: null,
             };
         }
 
-        if (betMarket.targetName === currentGame.homeTeamName) {
-            grouped[key].homeOdds = betMarket.odds;
-        } else if (betMarket.targetName === currentGame.awayTeamName) {
-            grouped[key].awayOdds = betMarket.odds;
+        if (betMarket.marketType === 'moneyline') {
+            // Handle moneyline markets
+            if (betMarket.targetName === currentGame.homeTeamName) {
+                grouped[key].home = {
+                    odds: betMarket.odds,
+                    value: betMarket.value,
+                    betTargetId: betMarket.betTargetId,
+                };
+            } else if (betMarket.targetName === currentGame.awayTeamName) {
+                grouped[key].away = {
+                    odds: betMarket.odds,
+                    value: betMarket.value,
+                    betTargetId: betMarket.betTargetId,
+                };
+            }
+        } else if (betMarket.marketType === 'spread') {
+            // Handle spread markets
+            if (betMarket.value > 0) {
+                // Positive spread values belong to the home team
+                grouped[key].home = {
+                    odds: betMarket.odds,
+                    value: betMarket.value,
+                    betTargetId: betMarket.betTargetId,
+                };
+            } else if (betMarket.value < 0) {
+                // Negative spread values belong to the away team
+                grouped[key].away = {
+                    odds: betMarket.odds,
+                    value: betMarket.value,
+                    betTargetId: betMarket.betTargetId,
+                };
+            }
         }
     });
 
