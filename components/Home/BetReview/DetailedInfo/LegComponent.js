@@ -5,6 +5,7 @@ import { DBContext } from '@/contexts/DBContext';
 import { getLogoUrl } from '@/db/general/Teams';
 import { displayLeg } from '@/utils/betSlipFunctions';
 import { getTeamAbbreviationByName } from '@/db/general/Teams';
+import { getPlayerLogo } from '@/db/general/Players';
 import useTheme from '@/hooks/useTheme';
 
 export default function LegComponent({ leg, children }) {
@@ -47,7 +48,10 @@ export default function LegComponent({ leg, children }) {
         const fetchTargetLogo = async (db, betTarget) => {
             if (targetType === 'Team') {
                 getLogoUrl(db, betTarget).then((url) => setTargetLogo(url.logoUrl + '/preview'));
-            };
+            }
+            else if (targetType === 'Player') {
+                getPlayerLogo(db, betTarget).then((url) => setTargetLogo(url.image + '/preview'));
+            }
         };
         fetchTargetLogo(db, betTarget);
     }, [betTarget]);

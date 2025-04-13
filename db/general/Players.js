@@ -11,6 +11,17 @@ export const getAllPlayers = async (db) => {
     }
 };
 
+// Function to get player logo from player name
+export const getPlayerLogo = async (db, playerName) => {
+    try {
+        const player = await db.getAllAsync('SELECT image FROM Players WHERE name = ?', [playerName]);
+        return player[0];
+    } catch (error) {
+        console.error('Error in getPlayerLogo:', error);
+        throw error;
+    }
+}
+
 // Function to get a player by ID
 export const getPlayer = async (db, playerId) => {
     try {
