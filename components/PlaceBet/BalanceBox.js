@@ -14,7 +14,7 @@ export default function BalanceBox({ openModal }) {
     const [curBookie, setCurBookie] = useState({ balance: 0 });
 
     useEffect(() => {
-        if (userBalance.length > 0 && signedIn) {
+        if (userBalance && userBalance.length > 0 && signedIn) {
             const newBookie = userBalance.find(obj => obj.bookieId === bookieId);
             setCurBookie(newBookie);
         }
