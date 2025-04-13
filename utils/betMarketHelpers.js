@@ -10,6 +10,10 @@ export const groupByTimestampAndBookie = (betMarkets, currentGame) => {
                 bookieId: betMarket.bookieId,
                 home: null,
                 away: null,
+                totals: {
+                    over: null,
+                    under: null,
+                },
             };
         }
 
@@ -40,6 +44,21 @@ export const groupByTimestampAndBookie = (betMarkets, currentGame) => {
             } else if (betMarket.value < 0) {
                 // Negative spread values belong to the away team
                 grouped[key].away = {
+                    odds: betMarket.odds,
+                    value: betMarket.value,
+                    betTargetId: betMarket.betTargetId,
+                };
+            }
+        } else if (betMarket.marketType === 'totals') {
+            // Handle totals markets
+            if (betMarket.overUnder === 'Over') {
+                grouped[key].totals.over = {
+                    odds: betMarket.odds,
+                    value: betMarket.value,
+                    betTargetId: betMarket.betTargetId,
+                };
+            } else if (betMarket.overUnder === 'Under') {
+                grouped[key].totals.under = {
                     odds: betMarket.odds,
                     value: betMarket.value,
                     betTargetId: betMarket.betTargetId,

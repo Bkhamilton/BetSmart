@@ -4,6 +4,7 @@ import ToRecord from "../components/PlaceBet/BetDetails/LeaguePropTypes/PropBann
 import GenericProp from "../components/PlaceBet/BetDetails/LeaguePropTypes/PropBanner/PropTypes/GenericProp";
 import MainDisplay from "../components/PlaceBet/BetDetails/LeaguePropTypes/PropBanner/PropTypes/MainDisplay";
 import AltDisplay from "../components/PlaceBet/BetDetails/LeaguePropTypes/PropBanner/PropTypes/AltDisplay";
+import TotalDisplay from "../components/PlaceBet/BetDetails/LeaguePropTypes/PropBanner/PropTypes/TotalDisplay";
 import ToRecordValue from "../components/PlaceBet/BetDetails/LeaguePropTypes/PropBanner/PropTypes/ToRecordValue";
 
 const propBannerMapping = {
@@ -15,6 +16,7 @@ const propBannerMapping = {
     Generic: GenericProp,
     'To Record': ToRecord,
     'To Record Value': ToRecordValue,
+    'Total': TotalDisplay,
 };
 
 export default propBannerMapping;

@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { BetContext } from '@/contexts/BetContext/BetContext';
+import { DBContext } from '@/contexts/DBContext';
 import PropBanner from './PropBanner/PropBanner';
 
-import { getTotalOverUnder } from "@/db/api/BetMarkets";
+import { getTotalOverUnder, getBetMarketByGame } from "@/db/api/BetMarkets";
 import { groupByTimestampAndBookie, sortBetMarkets } from '@/utils/betMarketHelpers';
 
 export default function TotalOverUnder({ info }) {
@@ -12,14 +13,14 @@ export default function TotalOverUnder({ info }) {
 
     const title = 'Total Over/Under';
 
-    const [totalOverUnderData, setTotalOverUnderData] = useState([]);
+    const { db } = useContext(DBContext);
 
-    /*
+    const [totalOverUnderData, setTotalOverUnderData] = useState([]);
 
     // use useEffect to grab all Total Over/Under values for the currentGame
     useEffect(() => {
         const fetchTotalOverUnder = async () => {
-            const totalOverUnder = await getTotalOverUnder(db, currentGame.gameId);
+            const totalOverUnder = await getBetMarketByGame(db, currentGame.gameId, 'totals');
             const groupedTotalOverUnder = groupByTimestampAndBookie(totalOverUnder, currentGame);
             const sortedTotalOverUnder = sortBetMarkets(groupedTotalOverUnder);
             setTotalOverUnderData(sortedTotalOverUnder);
@@ -27,11 +28,9 @@ export default function TotalOverUnder({ info }) {
         fetchTotalOverUnder();
     }, [currentGame]);
 
-    */
-
     return (
         <>
-            <PropBanner title={title} type={"Main"} stat={"total_over_under"}/>
+            <PropBanner title={title} type={"Total"} stat={"totals"} data={totalOverUnderData}/>
         </>
     );
 }
