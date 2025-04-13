@@ -117,16 +117,34 @@ export const ToRecordValueComponent = ({ odds, values, team, select }) => {
                     style={styles.teamPlayerContainer}
                     onPress={() => openPlayerModal(team.name)}
                 >
-                    <View style={styles.avatarContainer}>
-                        <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
-                        {team.logo && (
-                            <Image 
-                                style={styles.teamLogo} 
-                                source={{ uri: team.logo }} 
-                                resizeMode="contain"
-                            />
-                        )}
-                    </View>
+                    {
+                        target.image ? (
+                            <View style={styles.avatarContainer}>
+                                <Image 
+                                    source={{ uri: target.image }} 
+                                    style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]} 
+                                />
+                                {team.logo && (
+                                    <Image 
+                                        style={styles.teamLogo} 
+                                        source={{ uri: team.logo }} 
+                                        resizeMode="contain"
+                                    />
+                                )}
+                            </View>
+                        ) : (
+                            <View style={styles.avatarContainer}>
+                                <View style={[styles.playerIcon, { backgroundColor: grayBackground, borderColor: grayBorder }]}/>
+                                {team.logo && (
+                                    <Image 
+                                        style={styles.teamLogo} 
+                                        source={{ uri: team.logo }} 
+                                        resizeMode="contain"
+                                    />
+                                )}
+                            </View>                            
+                        )
+                    }
                     <Text style={[styles.playerName, { color: text }]} numberOfLines={1}>
                         {target.name}
                     </Text>
