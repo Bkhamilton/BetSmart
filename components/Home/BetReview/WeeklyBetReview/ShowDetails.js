@@ -7,6 +7,12 @@ import StatCounter from './StatCounter';
 export default function ShowDetails({ betSlips, betsWon, totalBets, marketTypes }) {
     const { text, greenText, redText } = useTheme();
 
+    // Group market types into rows of 3
+    const groupedMarketTypes = [];
+    for (let i = 0; i < marketTypes.length; i += 3) {
+        groupedMarketTypes.push(marketTypes.slice(i, i + 3));
+    }
+
     return (
         <ClearView style={styles.container}>
             <ClearView style={styles.headerContainer}>
@@ -70,13 +76,21 @@ export default function ShowDetails({ betSlips, betsWon, totalBets, marketTypes 
                     <View style={styles.divider} />
 
                     <ClearView style={styles.statsGrid}>
-                        {marketTypes.map((stat, index) => (
-                            <StatCounter 
-                                key={index}
-                                title={stat.marketType}
-                                won={stat.won}
-                                total={stat.total}
-                            />
+                        {groupedMarketTypes.map((row, rowIndex) => (
+                            <ClearView key={`row-${rowIndex}`} style={styles.marketTypeRow}>
+                                {row.map(stat => (
+                                    <StatCounter 
+                                        key={stat.marketType}
+                                        title={stat.marketType}
+                                        won={stat.won}
+                                        total={stat.total}
+                                    />
+                                ))}
+                                {/* Add empty views if less than 3 in last row */}
+                                {row.length < 3 && Array(3 - row.length).fill().map((_, i) => (
+                                    <ClearView key={`empty-${i}`} style={styles.emptyStat} />
+                                ))}
+                            </ClearView>
                         ))}
                     </ClearView>
                 </>
@@ -158,9 +172,16 @@ const styles = StyleSheet.create({
         opacity: 0.4,
     },
     statsGrid: {
+        flexDirection: 'column',
+    },
+    marketTypeRow: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
         justifyContent: 'space-between',
+        marginBottom: 8,
+    },
+    emptyStat: {
+        flex: 1,
+        marginHorizontal: 4,
     },
     smallText: {
         fontSize: 10,

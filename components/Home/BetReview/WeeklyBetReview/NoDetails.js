@@ -7,6 +7,18 @@ import StatCounter from './StatCounter';
 export default function NoDetails({ betsWon, totalBets, amountBet, amountWon, marketTypes }) {
     const { text, greenText, redText } = useTheme();
 
+    // Get top 2 market types plus TOTAL (if exists)
+    const displayMarketTypes = [];
+    const totalMarket = marketTypes.find(m => m.marketType === 'TOTAL');
+    const otherMarkets = marketTypes.filter(m => m.marketType !== 'TOTAL');
+    
+    // Add up to 2 non-TOTAL markets
+    displayMarketTypes.push(...otherMarkets.slice(0, 2));
+    // Add TOTAL if it exists (will replace one if we already have 2)
+    if (totalMarket) {
+        displayMarketTypes.splice(2, 0, totalMarket).slice(0, 3);
+    }
+
     return (
         <ClearView style={styles.container}>
             <ClearView style={styles.headerContainer}>
@@ -44,9 +56,18 @@ export default function NoDetails({ betsWon, totalBets, amountBet, amountWon, ma
                     <View style={styles.divider} />
 
                     <ClearView style={styles.statsGrid}>
-                        {marketTypes.map(stat => (
-                            <StatCounter key={stat.marketType} title={stat.marketType} won={stat.won} total={stat.total} />
+                        {displayMarketTypes.map(stat => (
+                            <StatCounter 
+                                key={stat.marketType} 
+                                title={stat.marketType} 
+                                won={stat.won} 
+                                total={stat.total} 
+                                compact={true}
+                            />
                         ))}
+                        {marketTypes.length > 3 && (
+                            <Text style={styles.moreText}>+{marketTypes.length - 3} more</Text>
+                        )}
                     </ClearView>
                 </>
             )}
@@ -128,8 +149,13 @@ const styles = StyleSheet.create({
     },
     statsGrid: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
         justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    moreText: {
+        fontSize: 12,
+        opacity: 0.6,
+        marginLeft: 8,
     },
     smallText: {
         fontSize: 10,
