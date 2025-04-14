@@ -4,10 +4,18 @@ import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { Feather } from '@expo/vector-icons';
 
-export default function ResolveComponent({ resolvedLegs, totalLegs, handleConfirm }) {
-    const { mainGreen, redText, backgroundColor, text } = useTheme();
-    const trueLegs = resolvedLegs.filter(leg => leg === true).length;
-    const betWon = trueLegs === totalLegs;
+export default function ResolveComponent({ resolvedLegs, totalLegs, handleConfirm, hasPushedLegs }) {
+    const { mainGreen, redText, yellowText, backgroundColor, text } = useTheme();
+    const wonLegs = resolvedLegs.filter(leg => leg === 1).length;
+    const pushedLegs = resolvedLegs.filter(leg => leg === -1).length;
+    const lostLegs = resolvedLegs.filter(leg => leg === 0).length;
+    
+    // A bet is won if:
+    // 1. All legs are resolved (no nulls)
+    // 2. No legs are lost (0)
+    // 3. At least one leg is won (1)
+    const betWon = lostLegs === 0 && wonLegs > 0;
+    const allPushed = pushedLegs === totalLegs;
     
     // Animation for the result display
     const [fadeAnim] = useState(new Animated.Value(0));
@@ -20,35 +28,61 @@ export default function ResolveComponent({ resolvedLegs, totalLegs, handleConfir
         }).start();
     }, []);
 
+    const getResultMessage = () => {
+        if (allPushed) return 'All Legs Pushed';
+        if (betWon) return 'Bet Won!';
+        return 'Bet Lost';
+    };
+
+    const getResultColor = () => {
+        if (allPushed) return yellowText;
+        return betWon ? mainGreen : redText;
+    };
+
+    const getResultIcon = () => {
+        if (allPushed) return "minus-circle";
+        return betWon ? "check-circle" : "x-circle";
+    };
+
     return (
         <ClearView style={styles.container}>
             <Animated.View 
                 style={[
                     styles.resultContainer,
                     { 
-                        backgroundColor: betWon ? mainGreen + '20' : redText + '20',
-                        borderColor: betWon ? mainGreen : redText,
+                        backgroundColor: getResultColor() + '20',
+                        borderColor: getResultColor(),
                         opacity: fadeAnim
                     }
                 ]}
             >
                 <View style={styles.resultHeader}>
                     <Feather 
-                        name={betWon ? "check-circle" : "x-circle"} 
+                        name={getResultIcon()} 
                         size={24} 
-                        color={betWon ? mainGreen : redText} 
+                        color={getResultColor()} 
                     />
                     <Text style={[
                         styles.resultText,
-                        { color: betWon ? mainGreen : redText }
+                        { color: getResultColor() }
                     ]}>
-                        {betWon ? 'Bet Won!' : 'Bet Lost'}
+                        {getResultMessage()}
                     </Text>
                 </View>
                 
                 <View style={styles.legsContainer}>
                     <Text style={styles.legsText}>
-                        <Text style={{ fontWeight: '600' }}>{trueLegs}</Text> of <Text style={{ fontWeight: '600' }}>{totalLegs}</Text> legs successful
+                        <Text style={{ fontWeight: '600', color: mainGreen }}>{wonLegs}</Text> won,{' '}
+                        {pushedLegs > 0 && (
+                            <Text style={{ fontWeight: '600', color: yellowText }}>{pushedLegs}</Text>
+                        )}
+                        {pushedLegs > 0 && ' pushed'}
+                        {lostLegs > 0 && (
+                            <>
+                                {pushedLegs > 0 && ', '}
+                                <Text style={{ fontWeight: '600', color: redText }}>{lostLegs}</Text> lost
+                            </>
+                        )}
                     </Text>
                 </View>
             </Animated.View>
@@ -57,8 +91,8 @@ export default function ResolveComponent({ resolvedLegs, totalLegs, handleConfir
                 style={[
                     styles.resolveButton,
                     { 
-                        backgroundColor: betWon ? mainGreen : redText,
-                        shadowColor: betWon ? mainGreen : redText
+                        backgroundColor: getResultColor(),
+                        shadowColor: getResultColor()
                     }
                 ]}
                 onPress={handleConfirm}

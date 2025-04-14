@@ -36,12 +36,19 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
     };
 
     const handleBetResolved = (bet) => {
-        const resolvedLegs = bet.legs.map(leg => leg.result);
-        return resolvedLegs.every(leg => leg === true);
+        // A bet is won if all legs are either won (1) or pushed (-1), and at least one is won
+        const hasWinningLegs = bet.legs.some(leg => leg.result === 1);
+        const allLegsResolved = bet.legs.every(leg => leg.result !== null);
+        const noLosingLegs = bet.legs.every(leg => leg.result !== 0);
+        
+        return allLegsResolved && noLosingLegs && hasWinningLegs;
     };
 
     const handleConfirm = () => {
-        betSlip['result'] = resolvedLegs.every(leg => leg === true);
+        // Overall bet result is true if all non-pushed legs are won (1)
+        const nonPushedLegs = resolvedLegs.filter(leg => leg !== -1);
+        betSlip['result'] = nonPushedLegs.length > 0 && nonPushedLegs.every(leg => leg === 1);
+        
         betSlip.bets.forEach(bet => {
             bet['result'] = handleBetResolved(bet);
         });
@@ -56,7 +63,7 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
     let legIndex = 0;
 
     const Leg = ({ leg, legIndex, resolveLeg }) => {
-        const { grayBackground, redText, mainGreen, backgroundColor } = useTheme();
+        const { grayBackground, redText, mainGreen, backgroundColor, yellowText } = useTheme();
         const [result, setResult] = useState(null);
         
         const resolve = (res) => {
@@ -71,10 +78,27 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
                     <TouchableOpacity
                         style={[
                             styles.iconButton,
+                            result === -1 && styles.pushButton,
+                            { 
+                                backgroundColor: result === -1 ? yellowText : backgroundColor,
+                                borderColor: yellowText
+                            },
+                        ]}
+                        onPress={() => resolve(-1)}
+                    >
+                        <Feather
+                            name="minus"
+                            size={24}
+                            color={result === -1 ? backgroundColor : yellowText}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[
+                            styles.iconButton,
                             result === false && styles.lostButton,
                             { backgroundColor: result === false ? redText : backgroundColor },
                         ]}
-                        onPress={() => resolve(false)}
+                        onPress={() => resolve(0)}
                     >
                         <Feather
                             name="x"
@@ -88,7 +112,7 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
                             result === true && styles.wonButton,
                             { backgroundColor: result === true ? mainGreen : backgroundColor },
                         ]}
-                        onPress={() => resolve(true)}
+                        onPress={() => resolve(1)}
                     >
                         <Feather
                             name="check"
@@ -189,6 +213,7 @@ export default function ConfirmBetSlip({ visible, close, betSlip, confirm }) {
                             resolvedLegs={resolvedLegs} 
                             totalLegs={totalLegs} 
                             handleConfirm={handleConfirm}
+                            hasPushedLegs={resolvedLegs.includes(-1)}
                         />
                     )}
                 </View>
@@ -311,6 +336,9 @@ const styles = StyleSheet.create({
     },
     lostButton: {
         borderColor: '#e74c3c',
+    },
+    pushButton: {
+        borderColor: '#f39c12',
     },
     progressContainer: {
         marginTop: 16,
