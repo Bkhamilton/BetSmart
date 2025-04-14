@@ -16,6 +16,8 @@ import { insertFullGame } from '@/db/general/Games';
 import { insertFullGameResult } from '@/db/api/GameResults';
 import { insertFullBetTarget } from '@/db/bet-general/BetTargets';
 
+const USER_GENERATED_ID_START = 1000001;
+
 // Description: Sync data from Supabase to SQLite database
 
 export const syncUsers = async (db) => {
@@ -369,8 +371,8 @@ export const resyncBetMarkets = async (db, supabase, games) => {
 
             await db.withTransactionAsync(async () => {
                 await db.runAsync(
-                    'DELETE FROM BetMarkets WHERE gameId = ?',
-                    [game.gameId]
+                    'DELETE FROM BetMarkets WHERE gameId = ? AND id < ?',
+                    [game.gameId, USER_GENERATED_ID_START]
                 );
 
                 for (const market of gameMarkets) {
