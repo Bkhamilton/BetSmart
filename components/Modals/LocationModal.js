@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#34C759',
   },
   tertiaryButton: {
-    backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: '#8E8E93',
   },
