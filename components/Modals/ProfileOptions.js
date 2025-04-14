@@ -68,14 +68,12 @@ const styles = StyleSheet.create({
         paddingLeft: 110,
     },
     optionBox: {
-        padding: 4,
         borderRadius: 8,
     },
     option: {
-        padding: 8,
-        borderRadius: 8,
+        padding: 12,
+        borderRadius: 4,
         borderWidth: 1,
-        marginVertical: 4,
     },
     optionText: {
         fontSize: 16,

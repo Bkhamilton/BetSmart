@@ -41,14 +41,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     optionBox: {
-        padding: 16,
         borderRadius: 8,
     },
     option: {
-        padding: 8,
-        borderRadius: 8,
+        padding: 12,
+        borderRadius: 4,
         borderWidth: 1,
-        marginVertical: 4,
     },
     optionText: {
         fontSize: 16,
