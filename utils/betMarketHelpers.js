@@ -55,12 +55,14 @@ export const groupByTimestampAndBookie = (betMarkets, currentGame) => {
                 grouped[key].totals.over = {
                     odds: betMarket.odds,
                     value: betMarket.value,
+                    overUnder: betMarket.overUnder,
                     betTargetId: betMarket.betTargetId,
                 };
             } else if (betMarket.overUnder === 'Under') {
                 grouped[key].totals.under = {
                     odds: betMarket.odds,
                     value: betMarket.value,
+                    overUnder: betMarket.overUnder,
                     betTargetId: betMarket.betTargetId,
                 };
             }

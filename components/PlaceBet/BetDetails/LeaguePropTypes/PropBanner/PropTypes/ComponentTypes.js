@@ -257,9 +257,12 @@ export const LineDisplay = ({ type, bookie, left, right, leftTeam, rightTeam }) 
                     ]}
                 >
                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{left.odds}</Text>
-                    {type === 'spread' || type === 'totals' ? (
+                    {type === 'spread' && (
                         <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8 }}>{left.value}</Text>
-                    ) : null}
+                    )}
+                    {type === 'totals' && (
+                        <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8 }}>{left.overUnder.substring(0,1)} {left.value}</Text>
+                    )}
                 </TouchableOpacity>
                 {/* Bookie Logo */}
                 <Image style={styles.bookieIcon} source={bookieImages[bookie]} />
@@ -271,9 +274,12 @@ export const LineDisplay = ({ type, bookie, left, right, leftTeam, rightTeam }) 
                     ]}
                 >
                     <Text style={{ fontSize: 16, fontWeight: '500' }}>{right.odds}</Text>
-                    {type === 'spread' || type === 'totals' ? (
+                    {type === 'spread' && (
                         <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8 }}>{right.value}</Text>
-                    ) : null}
+                    )}
+                    {type === 'totals' && (
+                        <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8 }}>{right.overUnder.substring(0,1)} {right.value}</Text>
+                    )}
                 </TouchableOpacity>
                 {/* Right Team Logo */}
                 {rightTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: rightTeam.logo }} /> : null}
