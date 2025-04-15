@@ -30,7 +30,7 @@ export default function Spread() {
 
     return (
         <>
-            <PropBanner title={title} type={"Main"} stat={"spread"} data={spreadData}/>
+            <PropBanner title={title} type={"Spread"} stat={"spread"} data={spreadData}/>
         </>
     );
 }

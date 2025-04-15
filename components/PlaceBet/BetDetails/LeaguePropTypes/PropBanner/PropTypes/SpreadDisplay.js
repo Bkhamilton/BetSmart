@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text } from '@/components/Themed';
-import { TotalLineDisplay, LineDisplay } from './ComponentTypes';
+import { SpreadLineDisplay, LineDisplay } from './ComponentTypes';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
 import { getValidBookies } from '@/db/user-specific/Balance';
 
-export default function TotalDisplay({ stat, homeTeam, awayTeam, data }) {
+export default function SpreadDisplay({ stat, homeTeam, awayTeam, data }) {
 
     const { user, signedIn } = useContext(UserContext);
 
@@ -40,12 +40,12 @@ export default function TotalDisplay({ stat, homeTeam, awayTeam, data }) {
                 return bookieData.map((item, index) => (
                     <LineDisplay 
                         key={`${bookie.name}-${index}`}
-                        type="totals"
+                        type="spread"
                         bookie={bookie.name}
-                        left={item.totals.over}
-                        right={item.totals.under}
-                        leftTeam={homeTeam}
-                        rightTeam={awayTeam}
+                        left={item.away}
+                        right={item.home}
+                        leftTeam={awayTeam}
+                        rightTeam={homeTeam}
                     />
                 ));
             })}

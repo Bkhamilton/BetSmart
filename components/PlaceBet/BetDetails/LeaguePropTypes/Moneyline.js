@@ -30,7 +30,7 @@ export default function Moneyline() {
 
     return (
         <>
-            <PropBanner title={title} type={"Main"} stat={"moneyline"} data={moneylineData}/>
+            <PropBanner title={title} type={"Moneyline"} stat={"moneyline"} data={moneylineData}/>
         </>
     );
 }

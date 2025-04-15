@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text } from '@/components/Themed';
-import { TotalLineDisplay, LineDisplay } from './ComponentTypes';
+import { MainLineDisplay, LineDisplay } from './ComponentTypes';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
 import { getValidBookies } from '@/db/user-specific/Balance';
 
-export default function TotalDisplay({ stat, homeTeam, awayTeam, data }) {
+export default function MoneylineDisplay({ stat, homeTeam, awayTeam, data }) {
 
     const { user, signedIn } = useContext(UserContext);
 
@@ -38,14 +38,14 @@ export default function TotalDisplay({ stat, homeTeam, awayTeam, data }) {
                 const bookieData = data ? data.filter(item => item.bookieId === bookie.bookieId) : Array.from({ length: 1 }, () => ({ homeOdds: generateOdds(), awayOdds: generateOdds() }));
 
                 return bookieData.map((item, index) => (
-                    <LineDisplay 
+                    <LineDisplay
                         key={`${bookie.name}-${index}`}
-                        type="totals"
+                        type="moneyline"
                         bookie={bookie.name}
-                        left={item.totals.over}
-                        right={item.totals.under}
-                        leftTeam={homeTeam}
-                        rightTeam={awayTeam}
+                        left={item.away}
+                        right={item.home}
+                        leftTeam={awayTeam}
+                        rightTeam={homeTeam}
                     />
                 ));
             })}

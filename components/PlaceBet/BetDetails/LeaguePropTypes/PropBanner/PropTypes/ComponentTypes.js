@@ -239,36 +239,48 @@ export const MainLineDisplay = ({ stat, bookie, home, away, homeTeam, awayTeam }
             </View>
         </View>
     );
-}     
+}  
 
-export const TotalLineDisplay = ({ stat, bookie, over, under, homeTeam, awayTeam }) => {
-
+export const LineDisplay = ({ type, bookie, left, right, leftTeam, rightTeam }) => {
     const { grayBackground, grayBorder } = useTheme();
 
     return (
         <View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                {/* Away Team Logo */}
-                { awayTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: awayTeam.logo }} /> : null }
-                {/* Away Team Odds */}
-                <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{over.odds}</Text>
-                    <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8}}>{over.value}</Text>
-                </TouchableOpacity>         
+                {/* Left Team Logo */}
+                {leftTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: leftTeam.logo }} /> : null}
+                {/* Left Odds */}
+                <TouchableOpacity
+                    style={[
+                        styles.oddsContainer,
+                        { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 },
+                    ]}
+                >
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{left.odds}</Text>
+                    {type === 'spread' || type === 'totals' ? (
+                        <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8 }}>{left.value}</Text>
+                    ) : null}
+                </TouchableOpacity>
                 {/* Bookie Logo */}
                 <Image style={styles.bookieIcon} source={bookieImages[bookie]} />
-                {/* Home Team Odds */}
-                <TouchableOpacity style={[styles.oddsContainer, { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 }]}>
-                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{under.odds}</Text>
-                    <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8}}>{under.value}</Text>
-                </TouchableOpacity>       
-                {/* Home Team Logo */}
-                { homeTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: homeTeam.logo }} /> : null }       
+                {/* Right Odds */}
+                <TouchableOpacity
+                    style={[
+                        styles.oddsContainer,
+                        { backgroundColor: grayBackground, borderColor: grayBorder, width: 80 },
+                    ]}
+                >
+                    <Text style={{ fontSize: 16, fontWeight: '500' }}>{right.odds}</Text>
+                    {type === 'spread' || type === 'totals' ? (
+                        <Text style={{ fontSize: 12, fontWeight: '400', opacity: 0.8 }}>{right.value}</Text>
+                    ) : null}
+                </TouchableOpacity>
+                {/* Right Team Logo */}
+                {rightTeam.logo !== '' ? <Image style={styles.logoIcon} source={{ uri: rightTeam.logo }} /> : null}
             </View>
         </View>
     );
-}     
-
+};
 
 export const MainLineValueDisplay = ({ stat, value, bookie, odds1, odds2, homeTeam, awayTeam }) => {
 
