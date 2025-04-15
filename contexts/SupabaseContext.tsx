@@ -55,7 +55,7 @@ export const SupabaseContextProvider = ({ children }: SupabaseContextValueProvid
                 setLeagues(leagues);
             }
         } catch (error) {
-            console.error('Error fetching todos:', error.message);
+            console.error('Error fetching todos:', error);
         }
       };
   

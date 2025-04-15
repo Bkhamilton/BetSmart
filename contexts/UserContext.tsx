@@ -1,11 +1,12 @@
 // app/contexts/UserContext.tsx
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { getMostRecentActiveUserSession, getMostRecentSession } from '@/db/user-specific/UserSessions';
-import { getUser, getUserById } from '@/db/user-specific/Users';
+import { getMostRecentSession } from '@/db/user-specific/UserSessions';
+import { getUserById } from '@/db/user-specific/Users';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getBalanceByUser } from '@/db/user-specific/Balance';
 import { getPreferences, insertPreference, clearUserPreferences } from '@/db/user-specific/Preferences';
 import { verifyLegalLocation } from '@/services/locationService';
+import { LocationObjectCoords } from 'expo-location';
 
 interface User {
     id: number;
@@ -38,6 +39,17 @@ interface Preference {
     oddsFormat: string;
 }
 
+interface DBPreference {
+    id: number;
+    userId: number;
+    bankroll: number;
+    dailyLimit: number;
+    unitSize: string;
+    preferredLeagues: string;
+    preferredBetTypes: string;
+    riskTolerance: number;
+    oddsFormat: string;
+}
 
 interface UserContextValue {
     user: User | null;
@@ -52,7 +64,13 @@ interface UserContextValue {
     signedIn: boolean;
     setSignedIn: (signedIn: boolean) => void;
     locationStatus: LocationStatus;
-    checkLocation: () => Promise<void>;
+    checkLocation: () => Promise<{
+        isLegal: boolean | null;
+        state: string | null | undefined;
+        coordinates?: LocationObjectCoords;
+        timestamp: string | null | undefined;
+        error: any | null;
+    }>;
 }
 
 interface LocationStatus {
@@ -90,7 +108,15 @@ export const UserContext = createContext<UserContextValue>({
         lastChecked: null,
         error: null
     },
-    checkLocation: async () => {},
+    checkLocation: async () => {
+        return {
+            isLegal: null,
+            state: null,
+            coordinates: undefined,
+            timestamp: null,
+            error: null
+        };
+    },
 });
 
 interface UserContextProviderProps {
@@ -131,11 +157,11 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const checkLocation = async () => {
         const result = await verifyLegalLocation();
         setLocationStatus({
-          verified: true,
-          isLegal: result.isLegal,
-          state: result.state,
-          lastChecked: result.timestamp,
-          error: result.error
+            verified: true,
+            isLegal: result.isLegal,
+            state: result.state,
+            lastChecked: result.timestamp,
+            error: result.error
         });
         return result;
     };
@@ -143,7 +169,13 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     useEffect(() => {
         const checkLocationStatus = async () => {
             const result = await checkLocation();
-            setLocationStatus(result);
+            setLocationStatus({
+                verified: true,
+                isLegal: result.isLegal ?? null,
+                state: result.state ?? null,
+                lastChecked: result.timestamp ?? null,
+                error: result.error ?? null,
+            });
         };
         checkLocationStatus();
     }, []);
@@ -248,7 +280,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
             getPreferences(db, user.id)
                 .then((result) => {
                     if (result) {
-                        const preferences = result;
+                        const preferences = result as DBPreference;
                         setPreferences({
                             bankroll: preferences.bankroll,
                             dailyLimit: preferences.dailyLimit,

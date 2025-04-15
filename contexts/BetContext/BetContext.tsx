@@ -80,10 +80,10 @@ interface BetContextValue {
     setBookie: (bookie: string | null) => void;
     bookieId: Number | null;
     setBookieId: (bookieId: Number | null) => void;
-    selectProp: (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; }) => void;
+    selectProp: (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; bookieId: any; }) => void;
     totalLegs: Number | null;
     setTotalLegs: (totalLegs: number) => void;
-    confirmBetSlip: () => void;
+    confirmBetSlip: (db: any) => Promise<void>;
 }
 
 export const BetContext = createContext<BetContextValue>({
@@ -100,7 +100,7 @@ export const BetContext = createContext<BetContextValue>({
     selectProp: () => {},
     totalLegs: null,
     setTotalLegs: () => {},
-    confirmBetSlip: () => {},
+    confirmBetSlip: async () => {},
 });
 
 interface BetContextProviderProps {
@@ -123,7 +123,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
         const { game, type, target, stat, value, overUnder, odds, bookieId } = props;
 
         const leg = createLeg(type, target, stat, value, overUnder, odds, bookieId);
-        const bet = createBet(game.date, league.leagueName, game.gameId, game.homeTeamName, game.awayTeamName, odds, [leg]);
+        const bet = createBet(game.date, league!.leagueName, game.gameId, game.homeTeamName, game.awayTeamName, odds, [leg]);
 
         const today = new Date();
 
@@ -152,7 +152,7 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
             const betSlipDate = betSlip.date.toISOString();
             const betSlipOdds = betSlip.odds.toString();
         
-            const betSlipId = await insertBetSlip(db, betSlipFormat.id, betSlipDate, betSlipOdds, betSlip.betAmount, betSlip.winnings, user.id, betSlip.bookieId);
+            const betSlipId = await insertBetSlip(db, betSlipFormat.id, betSlipDate, betSlipOdds, betSlip.betAmount, betSlip.winnings, user!.id, betSlip.bookieId);
 
             if (!betSlipId) {
                 console.error('Error inserting bet slip');
