@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
-    "@react-native-async-storage/async-storage": "1.23.1",
-    "@react-native-community/slider": "^4.5.5",
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-community/slider": "^5.0.1",
     "@react-navigation/bottom-tabs": "^6.5.19",
     "@react-navigation/native": "^6.0.2",
     "@shopify/react-native-skia": "1.5.0",
@@ -40,8 +40,7 @@
     "react-native-screens": "^4.17.1",
     "react-native-store-review": "^0.4.3",
     "react-native-toast-message": "^2.2.0",
-    "react-native-web": "^0.21.2",
-    "victory-native": "^40.1.0"
+    "react-native-web": "^0.21.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
