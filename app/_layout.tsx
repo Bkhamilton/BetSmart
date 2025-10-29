@@ -47,7 +47,7 @@ export default function RootLayout() {
   }
 
   return (
-    <SQLiteProvider databaseName="BetSmart.db" onInit={initializeDatabase} useSuspense>
+    <SQLiteProvider databaseName="BetSmart.db" onInit={initializeDatabase} useSuspense={true}>
       <SupabaseContextProvider>
         <UserContextProvider>
           <DBContextProvider>
