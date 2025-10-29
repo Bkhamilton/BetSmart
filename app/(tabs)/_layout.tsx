@@ -58,7 +58,6 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: 'BetSmart',
-                    href: '/(tabs)/',
                     tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
                     tabBarLabel: 'Home',
                     headerShown: false,
@@ -68,7 +67,6 @@ export default function TabLayout() {
                 name="insights"
                 options={{
                     title: 'Insights',
-                    href: '/(tabs)/insights',
                     tabBarIcon: ({ color }) => <TabBarIcon name="eye" color={color} />,
                     tabBarLabel: 'Insights',
                     headerShown: false,
@@ -94,7 +92,6 @@ export default function TabLayout() {
                 name="data"
                 options={{
                     title: 'Data',
-                    href: '/(tabs)/data',
                     tabBarIcon: ({ color }) => <TabBarIcon name="pie-chart" color={color} />,
                     tabBarLabel: 'Data',
                     headerShown: false,
@@ -104,7 +101,6 @@ export default function TabLayout() {
                 name="profile"
                 options={{
                     title: 'Profile',
-                    href: '/(tabs)/profile/profilePage',
                     tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
                     headerShown: false,
                 }}
