@@ -25,6 +25,7 @@ export default function useTheme() {
         pointsbet: colorScheme === 'dark' ? Colors.dark.pointsbet : Colors.light.pointsbet,
         barstool: colorScheme === 'dark' ? Colors.dark.barstool : Colors.light.barstool,
         yellowText: colorScheme === 'dark' ? Colors.dark.yellowText : Colors.light.yellowText,
+        buttonGreen: colorScheme === 'dark' ? Colors.dark.buttonGreen : Colors.light.buttonGreen,
         // Add other color definitions here...
     }
 

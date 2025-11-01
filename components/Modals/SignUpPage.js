@@ -12,7 +12,7 @@ export default function SignUpPage({ visible, close, signUp }) {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const { iconColor, backgroundColor, grayBackground, grayBorder } = useTheme();
+    const { iconColor, backgroundColor, grayBackground, grayBorder, buttonGreen } = useTheme();
 
     const onSignUp = async () => {
         // Check if each field is filled out
@@ -125,7 +125,7 @@ export default function SignUpPage({ visible, close, signUp }) {
                     </View>
 
                     <TouchableOpacity 
-                        style={styles.signUpButton}
+                        style={[styles.signUpButton, { backgroundColor: buttonGreen }]}
                         onPress={onSignUp}
                     >
                         <Text style={styles.signUpButtonText}>Create Account</Text>
@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     signUpButton: {
-        backgroundColor: '#10b981',
         paddingVertical: 16,
         borderRadius: 12,
         alignItems: 'center',

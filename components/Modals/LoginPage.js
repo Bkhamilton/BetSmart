@@ -9,7 +9,7 @@ export default function LoginPage({ visible, close, login, handleSignUp }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const { iconColor, backgroundColor, grayBackground, grayBorder, greenText } = useTheme();
+    const { iconColor, backgroundColor, grayBackground, grayBorder, greenText, buttonGreen } = useTheme();
 
     const handleLogin = async () => {
         try {
@@ -77,7 +77,7 @@ export default function LoginPage({ visible, close, login, handleSignUp }) {
                     </View>
 
                     <TouchableOpacity 
-                        style={styles.loginButton}
+                        style={[styles.loginButton, { backgroundColor: buttonGreen }]}
                         onPress={() => handleLogin()}
                     >
                         <Text style={styles.loginButtonText}>Sign In</Text>
@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     loginButton: {
-        backgroundColor: '#10b981',
         paddingVertical: 16,
         borderRadius: 12,
         alignItems: 'center',
