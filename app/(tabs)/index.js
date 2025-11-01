@@ -214,7 +214,6 @@ export default function HomeScreen() {
             <HomeHeader 
                 history={handleBetHistory} 
                 login={openLoginModal} 
-                signup={openSignUpModal}
                 openProfileOptions={openProfileOptionsModal} 
             />
             <ScrollView
