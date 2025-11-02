@@ -9,7 +9,7 @@ export default function LoginPage({ visible, close, login, handleSignUp }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const { iconColor, backgroundColor, grayBackground, grayBorder, greenText } = useTheme();
+    const { iconColor, backgroundColor, grayBackground, grayBorder, greenText, buttonGreen } = useTheme();
 
     const handleLogin = async () => {
         try {
@@ -26,7 +26,7 @@ export default function LoginPage({ visible, close, login, handleSignUp }) {
 
     return (
         <Modal
-            animationType="none"
+            animationType="slide"
             transparent={false}
             visible={visible}
             onRequestClose={close}
@@ -35,95 +35,146 @@ export default function LoginPage({ visible, close, login, handleSignUp }) {
             <View style={styles.headerContainer}>
                 <TouchableOpacity 
                     onPress={close}
+                    style={styles.closeButton}
                 >
-                    <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
+                    <FontAwesome5 name="times" size={24} color={iconColor} />
                 </TouchableOpacity>
-                <View style={{ paddingHorizontal: 16, }}>
-                    <Text style={styles.settingsHeaderText}>Log In</Text> 
-                </View>   
             </View>
-            <ScrollView style={{ flex: 1, paddingHorizontal: 12 }}>
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
                 <View style={styles.container}>
-                    <View style={[styles.editOptionsContainer, { backgroundColor: grayBackground }]}>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.welcomeText}>Welcome Back</Text>
+                        <Text style={styles.subtitleText}>Sign in to continue</Text>
+                    </View>
+                    
+                    <View style={styles.formContainer}>
                         {/* Username */}
-                        <ClearView style={{ padding: 8 }}>
-                            <Text>Username</Text>
+                        <ClearView style={styles.inputContainer}>
+                            <Text style={styles.inputLabel}>Username</Text>
                             <TextInput
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                                 placeholder={'Enter your username'}
                                 onChangeText={setUsername}
                                 value={username}
                                 autoCorrect={false}
+                                autoCapitalize="none"
                             />
                         </ClearView>
+                        
                         {/* Password */}
-                        <ClearView style={{ padding: 8 }}>
-                            <Text>Password</Text>
+                        <ClearView style={styles.inputContainer}>
+                            <Text style={styles.inputLabel}>Password</Text>
                             <TextInput
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                                 placeholder={'Enter your password'}
                                 onChangeText={setPassword}
                                 value={password}
                                 autoCorrect={false}
+                                autoCapitalize="none"
                                 secureTextEntry={true}
                             />
                         </ClearView>
                     </View>
-                </View>
-                <View style={{ flexDirection: 'row', paddingHorizontal: 12, paddingVertical: 8, justifyContent: 'center' }}>
-                    <Text style={{ textAlign: 'center' }}>Don't have an account?</Text>
+
                     <TouchableOpacity 
-                        onPress={handleSignUp}
+                        style={[styles.loginButton, { backgroundColor: buttonGreen }]}
+                        onPress={() => handleLogin()}
                     >
-                        <Text style={{ textAlign: 'center', color: greenText }}> Sign Up</Text>
+                        <Text style={styles.loginButtonText}>Sign In</Text>
                     </TouchableOpacity>
+
+                    <View style={styles.signUpContainer}>
+                        <Text style={styles.signUpText}>Don't have an account? </Text>
+                        <TouchableOpacity 
+                            onPress={handleSignUp}
+                        >
+                            <Text style={[styles.signUpLink, { color: greenText }]}>Sign Up</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </ScrollView>
-            <View>
-                <TouchableOpacity 
-                    style={{ alignItems: 'center', backgroundColor: 'green', paddingVertical: 12, marginBottom: 36, borderRadius: 8 }}
-                    onPress={() => handleLogin()}
-                >
-                    <Text style={styles.buttonText}>Login</Text>
-                </TouchableOpacity>
-            </View>
         </Modal>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 20,
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
     headerContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
-        height: 84, 
+        justifyContent: 'flex-end',
         paddingHorizontal: 20, 
         paddingTop: 48,
+        paddingBottom: 12,
         alignItems: 'center',
     },
-    settingsHeaderText: {
+    closeButton: {
+        padding: 8,
+    },
+    scrollContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
+        paddingHorizontal: 24,
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingVertical: 40,
+    },
+    titleContainer: {
+        marginBottom: 48,
+        alignItems: 'center',
+    },
+    welcomeText: {
         fontSize: 32, 
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginBottom: 8,
     },
-    editOptionsContainer: {
-        paddingVertical: 10,
-        borderRadius: 8,
-        paddingHorizontal: 8,
-        marginVertical: 40,
+    subtitleText: {
+        fontSize: 16,
+        opacity: 0.7,
     },
-    editComponentInput: {
-        padding: 12, 
-        borderRadius: 16, 
+    formContainer: {
+        marginBottom: 32,
+    },
+    inputContainer: {
+        marginBottom: 20,
+    },
+    inputLabel: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 8,
+    },
+    input: {
+        padding: 16, 
+        borderRadius: 12, 
         borderWidth: 1, 
-        opacity: 0.8,
-        marginTop: 8,
-    }
+        fontSize: 16,
+    },
+    loginButton: {
+        paddingVertical: 16,
+        borderRadius: 12,
+        alignItems: 'center',
+        marginBottom: 24,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    loginButtonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: '600',
+    },
+    signUpContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    signUpText: {
+        fontSize: 15,
+    },
+    signUpLink: {
+        fontSize: 15,
+        fontWeight: '600',
+    },
 });

@@ -12,7 +12,7 @@ export default function SignUpPage({ visible, close, signUp }) {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const { iconColor, backgroundColor, grayBackground, grayBorder } = useTheme();
+    const { iconColor, backgroundColor, grayBackground, grayBorder, buttonGreen } = useTheme();
 
     const onSignUp = async () => {
         // Check if each field is filled out
@@ -31,7 +31,7 @@ export default function SignUpPage({ visible, close, signUp }) {
 
     return (
         <Modal
-            animationType="none"
+            animationType="slide"
             transparent={false}
             visible={visible}
             onRequestClose={close}
@@ -39,122 +39,169 @@ export default function SignUpPage({ visible, close, signUp }) {
             <View style={styles.headerContainer}>
                 <TouchableOpacity 
                     onPress={close}
+                    style={styles.closeButton}
                 >
-                    <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
+                    <FontAwesome5 name="times" size={24} color={iconColor} />
                 </TouchableOpacity>
-                <View style={{ paddingHorizontal: 16, }}>
-                    <Text style={styles.settingsHeaderText}>Sign Up</Text> 
-                </View>   
             </View>
-            <ScrollView style={{ flex: 1, paddingHorizontal: 12 }}>
+            <ScrollView 
+                style={{ flex: 1 }} 
+                contentContainerStyle={styles.scrollContent}
+                showsVerticalScrollIndicator={false}
+            >
                 <View style={styles.container}>
-                    <View style={[styles.editOptionsContainer, { backgroundColor: grayBackground }]}>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.welcomeText}>Create Account</Text>
+                        <Text style={styles.subtitleText}>Sign up to get started</Text>
+                    </View>
+
+                    <View style={styles.formContainer}>
                         {/* Name */}
-                        <ClearView style={{ padding: 8 }}>
-                            <Text>Name</Text>
+                        <ClearView style={styles.inputContainer}>
+                            <Text style={styles.inputLabel}>Name</Text>
                             <TextInput
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                                placeholder={'Enter your name'}
+                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                placeholder={'Enter your full name'}
                                 onChangeText={setName}
                                 value={name}
                                 autoCorrect={false}
                             />
                         </ClearView>
+                        
                         {/* Username */}
-                        <ClearView style={{ padding: 8 }}>
-                            <Text>Username</Text>
+                        <ClearView style={styles.inputContainer}>
+                            <Text style={styles.inputLabel}>Username</Text>
                             <TextInput
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                                placeholder={'Enter your username'}
+                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                placeholder={'Choose a username'}
                                 onChangeText={setUsername}
                                 value={username}
                                 autoCorrect={false}
+                                autoCapitalize="none"
                             />
                         </ClearView>
+                        
                         {/* Email */}
-                        <ClearView style={{ padding: 8 }}>
-                            <Text>Email</Text>
+                        <ClearView style={styles.inputContainer}>
+                            <Text style={styles.inputLabel}>Email</Text>
                             <TextInput
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                                 placeholder={'Enter your email address'}
                                 onChangeText={setEmail}
                                 value={email}
                                 autoCorrect={false}
+                                autoCapitalize="none"
+                                keyboardType="email-address"
                             />
                         </ClearView>
+                        
                         {/* Password */}
-                        <ClearView style={{ padding: 8 }}>
-                            <Text>Password</Text>
+                        <ClearView style={styles.inputContainer}>
+                            <Text style={styles.inputLabel}>Password</Text>
                             <TextInput
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                                placeholder={'Enter your password'}
+                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                placeholder={'Create a password'}
                                 onChangeText={setPassword}
                                 value={password}
                                 autoCorrect={false}
+                                autoCapitalize="none"
                                 secureTextEntry={true}
                             />
                         </ClearView>
+                        
                         {/* Confirm Password */}
-                        <ClearView style={{ padding: 8 }}>
-                            <Text>Confirm Password</Text>
+                        <ClearView style={styles.inputContainer}>
+                            <Text style={styles.inputLabel}>Confirm Password</Text>
                             <TextInput
-                                style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
+                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                                 placeholder={'Confirm your password'}
                                 onChangeText={setConfirmPassword}
                                 value={confirmPassword}
                                 autoCorrect={false}
+                                autoCapitalize="none"
                                 secureTextEntry={true}
                             />
                         </ClearView>
                     </View>
+
+                    <TouchableOpacity 
+                        style={[styles.signUpButton, { backgroundColor: buttonGreen }]}
+                        onPress={onSignUp}
+                    >
+                        <Text style={styles.signUpButtonText}>Create Account</Text>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
-            {/* Sign Up Button */}
-            <View>
-                <TouchableOpacity 
-                    style={{ alignItems: 'center', backgroundColor: 'green', padding: 12, marginBottom: 36, borderRadius: 8, marginHorizontal: 8 }}
-                    onPress={onSignUp}
-                >
-                    <Text style={styles.buttonText}>Sign Up</Text>
-                </TouchableOpacity>
-            </View>
         </Modal>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 20,
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
     headerContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
-        height: 84, 
+        justifyContent: 'flex-end',
         paddingHorizontal: 20, 
         paddingTop: 48,
+        paddingBottom: 12,
         alignItems: 'center',
     },
-    settingsHeaderText: {
+    closeButton: {
+        padding: 8,
+    },
+    scrollContent: {
+        flexGrow: 1,
+        paddingHorizontal: 24,
+        paddingBottom: 40,
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingTop: 20,
+    },
+    titleContainer: {
+        marginBottom: 40,
+        alignItems: 'center',
+    },
+    welcomeText: {
         fontSize: 32, 
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginBottom: 8,
     },
-    editOptionsContainer: {
-        paddingVertical: 10,
-        borderRadius: 8,
-        paddingHorizontal: 8,
-        marginVertical: 40,
+    subtitleText: {
+        fontSize: 16,
+        opacity: 0.7,
     },
-    editComponentInput: {
-        padding: 12, 
-        borderRadius: 16, 
+    formContainer: {
+        marginBottom: 24,
+    },
+    inputContainer: {
+        marginBottom: 20,
+    },
+    inputLabel: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 8,
+    },
+    input: {
+        padding: 16, 
+        borderRadius: 12, 
         borderWidth: 1, 
-        opacity: 0.8,
+        fontSize: 16,
+    },
+    signUpButton: {
+        paddingVertical: 16,
+        borderRadius: 12,
+        alignItems: 'center',
         marginTop: 8,
-    }
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    signUpButtonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: '600',
+    },
 });

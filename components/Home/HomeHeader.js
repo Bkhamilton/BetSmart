@@ -6,7 +6,7 @@ import { FontAwesome5, Ionicons, FontAwesome6 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import { UserContext } from '@/contexts/UserContext';
 
-export default function HomeHeader({ history, login, signup, openProfileOptions }) {
+export default function HomeHeader({ history, login, openProfileOptions }) {
 
     const { iconColor } = useTheme();
 
@@ -18,15 +18,9 @@ export default function HomeHeader({ history, login, signup, openProfileOptions 
         </TouchableOpacity>
     );
     
-    const LoginButton = ({ onPress }) => (
-        <TouchableOpacity onPress={onPress} accessibilityLabel="Open Login">
+    const SignInButton = ({ onPress }) => (
+        <TouchableOpacity onPress={onPress} accessibilityLabel="Sign In">
             <Ionicons name='person' size={28} color={iconColor} />
-        </TouchableOpacity>
-    );
-    
-    const SignUpButton = ({ onPress }) => (
-        <TouchableOpacity onPress={onPress} accessibilityLabel="Open Sign Up">
-            <Ionicons name='person-add' size={28} color={iconColor} />
         </TouchableOpacity>
     );
 
@@ -45,10 +39,7 @@ export default function HomeHeader({ history, login, signup, openProfileOptions 
                     <HistoryButton onPress={history} />
                     <ProfileButton onPress={openProfileOptions} />
                 </>  :
-                <>
-                    <LoginButton onPress={login} />
-                    <SignUpButton onPress={signup} />
-                </>
+                <SignInButton onPress={login} />
             }
         </Header>
     );

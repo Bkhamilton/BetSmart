@@ -1,5 +1,6 @@
 const tintColorLight = '#2f95dc';
 const tintColorDark = '#fff';
+const buttonGreen = '#10b981'; // Professional emerald green for primary buttons
 
 export default {
     light: {
@@ -24,6 +25,7 @@ export default {
         caesars: '#00322f',
         barstool: '#304977',
         yellowText: '#FEE12B',
+        buttonGreen: buttonGreen,
     },
     dark: {
         text: '#fff',
@@ -47,5 +49,6 @@ export default {
         caesars: '#00322f',
         barstool: '#111a2b',
         yellowText: '#FCE205',
+        buttonGreen: buttonGreen,
     },
 };
