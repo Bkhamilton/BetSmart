@@ -28,6 +28,11 @@ export default function HomeScreen() {
 
     const { user, setBookie, signedIn, locationStatus } = useContext(UserContext);
 
+    type BetSlip = {
+        bets?: any[];
+        // add other properties as needed
+    };
+
     const {
         confirmModalVisible,
         chooseBookieModalVisible,
@@ -44,6 +49,22 @@ export default function HomeScreen() {
         openProfileOptionsModal,
         closeProfileOptionsModal,
         onConfirmBetSlip,
+    }: {
+        confirmModalVisible: boolean;
+        chooseBookieModalVisible: boolean;
+        profileOptionsModalVisible: boolean;
+        confirmedBetSlip: BetSlip | null;
+        betSlips: BetSlip[];
+        weeklyBets: any[];
+        refreshing: boolean;
+        onRefresh: () => void;
+        openChooseBookieModal: () => void;
+        closeChooseBookieModal: () => void;
+        openConfirmModal: (betSlip: BetSlip) => void;
+        closeConfirmModal: () => void;
+        openProfileOptionsModal: () => void;
+        closeProfileOptionsModal: () => void;
+        onConfirmBetSlip: () => void;
     } = useHookHome();
 
     const { 
@@ -67,6 +88,7 @@ export default function HomeScreen() {
         closeTransactionModal,
         addBookie, 
         onConfirmTransaction, 
+        deleteBalBookie,
     } = useUserBalDataState();
 
     const { 
@@ -89,11 +111,11 @@ export default function HomeScreen() {
         deleteUserBetSlip
     } = useDatabaseFuncs();
 
-    const onAddBookie = async (bookie) => {
+    const onAddBookie = async (bookie : any) => {
         handleConfirmation(`add ${bookie.name} as a bookie?`, closeAddBookieModal, addBookie, bookie);
     };
 
-    const onSelectBookie = (balance) => {
+    const onSelectBookie = (balance : any) => {
         if (balance.bookieId === -1) {
             closeChooseBookieModal();
             if (!signedIn) {
@@ -107,15 +129,15 @@ export default function HomeScreen() {
         }
     }
 
-    const handleResponse = async (response, target) => {
+    const handleResponse = async (response : string, target : any) => {
         // if response is delete, confirm deletion
         if (response === 'Delete') {
             // if target is Balance object, delete balance
             if (target.balance >= 0) {
-                handleConfirmation(`delete ${target.bookieName} as a bookie?`, closeProfileOptionsModal, deleteBalBookie, [target.bookieId, user.id]);
+                handleConfirmation(`delete ${target.bookieName} as a bookie?`, closeProfileOptionsModal, deleteBalBookie, [target.bookieId, user!.id]);
             } else {
                 if (target.bets) {
-                    handleConfirmation(`delete bet slip?`, closeProfileOptionsModal, deleteUserBetSlip, [target, user.id], onRefresh);
+                    handleConfirmation(`delete bet slip?`, closeProfileOptionsModal, deleteUserBetSlip, [target, user!.id], onRefresh);
                 }
             }
         } else if (response === 'Edit') {
@@ -132,12 +154,12 @@ export default function HomeScreen() {
         }
     }
 
-    const onOpenOptions = async (target, options) => {
+    const onOpenOptions = async (target : any, options : any) => {
         handleOpenOptions(target, options, handleResponse);
     };
 
     const onSignOut = async () => {
-        handleConfirmation('sign out?', closeProfileOptionsModal, signOutUser, user.id);
+        handleConfirmation('sign out?', closeProfileOptionsModal, signOutUser, user!.id);
     };
 
     return (
@@ -195,7 +217,7 @@ export default function HomeScreen() {
                 openProfileOptions={openProfileOptionsModal} 
             />
             <ScrollView
-                showVerticalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 refreshControl={
                 <RefreshControl 
                     refreshing={refreshing} 
