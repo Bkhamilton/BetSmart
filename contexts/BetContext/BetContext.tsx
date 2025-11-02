@@ -12,79 +12,9 @@ import { getBetType } from '@/db/bet-general/BetTypes';
 import { getBetMarketByLeg } from '@/db/api/BetMarkets';
 import { getBetTargetId } from '@/db/bet-general/BetTargets'
 import { updateUserBalance } from '@/db/user-specific/Balance';
+import { Game, League, BetSlip, Bet, Leg, Bookie, BetContextValue } from '@/constants/types';
 
 const USER_GENERATED_ID_START = 1000001;
-
-interface Game {
-    id: number;
-    gameId: string;
-    date: string;
-    timestamp: string;
-    homeTeamName: string;
-    homeTeamAbv: string;
-    awayTeamName: string;
-    awayTeamAbv: string;
-}
-
-interface League {
-    id: number;
-    leagueName: string;
-    sport: string;
-    description: string;
-}
-
-interface BetSlip {
-    id: number;
-    type: string;
-    date: Date;
-    odds: number;
-    betAmount: number;
-    winnings: number;
-    bets: Bet[];
-    bookieId: number;
-}
-
-interface Bet {
-    date: string;
-    league: string;
-    gameId: string;
-    home: string;
-    away: string;
-    odds: number;
-    legs: Leg[];
-}
-
-interface Leg {
-    type: string;
-    betTarget: string;
-    stat: string;
-    line: string;
-    overUnder: string;
-    odds: string;
-}
-
-interface Bookie {
-    id: number;
-    name: string;
-    description: string;
-}
-
-interface BetContextValue {
-    betSlip: BetSlip | null;
-    setBetSlip: (betSlip: BetSlip | null) => void;
-    currentGame: Game | null;
-    setCurrentGame: (game: Game | null) => void;
-    league: League | null;
-    setLeague: (league: League | null) => void;
-    bookie: string | null;
-    setBookie: (bookie: string | null) => void;
-    bookieId: Number | null;
-    setBookieId: (bookieId: Number | null) => void;
-    selectProp: (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; bookieId: any; }) => void;
-    totalLegs: Number | null;
-    setTotalLegs: (totalLegs: number) => void;
-    confirmBetSlip: (db: any) => Promise<void>;
-}
 
 export const BetContext = createContext<BetContextValue>({
     betSlip: null,
