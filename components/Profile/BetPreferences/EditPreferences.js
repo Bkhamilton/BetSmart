@@ -102,7 +102,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
 
     return (
         <View style={styles.container}>
-            <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+            <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
                 <View style={[styles.editOptionsContainer, { backgroundColor: grayBackground }]}>
                     {/* Bankroll */}
                     <ClearView style={styles.sectionContainer}>
@@ -278,7 +278,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 16,
+        paddingHorizontal: 4,
     },
     scrollView: {
         flex: 1,
