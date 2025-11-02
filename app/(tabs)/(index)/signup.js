@@ -20,7 +20,7 @@ export default function SignUpScreen() {
     const { iconColor, grayBackground, grayBorder, buttonGreen } = useTheme();
     const router = useRouter();
     const { signUp } = useAuthState();
-    const { preferences, updatePreferences } = useContext(UserContext);
+    const { updatePreferences } = useContext(UserContext);
 
     const [userPreferences, setUserPreferences] = useState({
         bankroll: 0,

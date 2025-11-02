@@ -16,7 +16,7 @@ export default function SignUpPage({ visible, close, signUp }) {
     const [showPreferences, setShowPreferences] = useState(false);
 
     const { iconColor, backgroundColor, grayBackground, grayBorder, buttonGreen } = useTheme();
-    const { preferences, updatePreferences } = useContext(UserContext);
+    const { updatePreferences } = useContext(UserContext);
 
     const [userPreferences, setUserPreferences] = useState({
         bankroll: 0,
