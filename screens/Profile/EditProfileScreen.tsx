@@ -26,8 +26,8 @@ export default function EditProfileScreen() {
         handleConfirmation,
     } = useConfirmationState();
 
-    const onChangePassword = (password) => {
-        handleConfirmation('change password?', closeConfirmationModal, updateUserPassword, [db, user.id, password]);
+    const onChangePassword = (password: string) => {
+        handleConfirmation('change password?', closeConfirmationModal, updateUserPassword, [db, user!.id, password]);
     };
 
     const router = useRouter();
