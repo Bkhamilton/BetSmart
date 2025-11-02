@@ -21,6 +21,13 @@ export default function UserFavorites({ player }) {
     
     const [hasBets, setHasBets] = useState(null);
 
+    useEffect(() => {
+        // Check if user has any bets by checking for favorite bookie
+        getFavoriteBookie(db, user.id).then((res) => {
+            setHasBets(!!res);
+        });
+    }, []);
+
     const getFavorite = async (type) => {
         switch (type) {
             case 'League':
@@ -62,10 +69,6 @@ export default function UserFavorites({ player }) {
         useEffect(() => {
             getFavorite(type).then((res) => {
                 setFavorite(res);
-                // Check if this is the bookie type to determine if user has any bets
-                if (type === 'Bookie') {
-                    setHasBets(!!res);
-                }
             });
         }, []);
 
@@ -99,7 +102,7 @@ export default function UserFavorites({ player }) {
                     <Text style={styles.emptyStateText}>No bets found</Text>
                     <Text style={styles.emptyStateSubText}>Start placing bets to see your favorites here</Text>
                 </View>
-            ) : (
+            ) : hasBets === true ? (
                 <ScrollView 
                     horizontal 
                     showsHorizontalScrollIndicator={false}
@@ -111,7 +114,7 @@ export default function UserFavorites({ player }) {
                     <FavoriteComponent type="Bet" displayType="Legs"/>
                     <FavoriteComponent type="Player" displayType="Bets"/>
                 </ScrollView>
-            )}
+            ) : null}
         </>
     );
   
