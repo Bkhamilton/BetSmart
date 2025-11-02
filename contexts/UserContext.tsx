@@ -6,80 +6,15 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { getBalanceByUser } from '@/db/user-specific/Balance';
 import { getPreferences, insertPreference, clearUserPreferences } from '@/db/user-specific/Preferences';
 import { verifyLegalLocation } from '@/services/locationService';
-import { LocationObjectCoords } from 'expo-location';
-
-interface User {
-    id: number;
-    name: string;
-    email: string;
-    username: string;
-    password: string;
-}
-
-interface Balance {
-    id: number;
-    userId: number;
-    bookieId: number;
-    balance: number;
-    bookieName: string;
-}
-
-interface Bookie {
-    id: number;
-    name: string;
-}
-
-interface Preference {
-    bankroll: number;
-    dailyLimit: number;
-    unitSize: string;
-    preferredLeagues: string[];
-    preferredBetTypes: string[];
-    riskTolerance: number;
-    oddsFormat: string;
-}
-
-interface DBPreference {
-    id: number;
-    userId: number;
-    bankroll: number;
-    dailyLimit: number;
-    unitSize: string;
-    preferredLeagues: string;
-    preferredBetTypes: string;
-    riskTolerance: number;
-    oddsFormat: string;
-}
-
-interface UserContextValue {
-    user: User | null;
-    userBalance : Balance[] | null;
-    setUserBalance : (userBalance : Balance[] | null) => void;
-    bookie: Bookie | null;
-    setBookie: (bookie: Bookie | null) => void;
-    trigger: boolean;
-    setTrigger: (trigger: boolean) => void;
-    preferences: Preference;
-    updatePreferences: (preferences: Preference) => Promise<void>;
-    signedIn: boolean;
-    setSignedIn: (signedIn: boolean) => void;
-    locationStatus: LocationStatus;
-    checkLocation: () => Promise<{
-        isLegal: boolean | null;
-        state: string | null | undefined;
-        coordinates?: LocationObjectCoords;
-        timestamp: string | null | undefined;
-        error: any | null;
-    }>;
-}
-
-interface LocationStatus {
-    verified: boolean;
-    isLegal: boolean | null;
-    state: string | null | undefined;
-    lastChecked: string | null | undefined;
-    error: string | null;
-}
+import { 
+    User, 
+    Balance, 
+    Bookie, 
+    Preference, 
+    DBPreference, 
+    LocationStatus, 
+    UserContextValue 
+} from '@/constants/types';
 
 export const UserContext = createContext<UserContextValue>({
     user: null,

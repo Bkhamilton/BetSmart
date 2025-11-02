@@ -3,25 +3,7 @@ import React, { createContext, ReactNode, useEffect } from 'react';
 import { useSQLiteContext } from 'expo-sqlite';
 import { getAllBookies } from '@/db/general/Bookies';
 import { getAllLeagues } from '@/db/general/Leagues';
-
-interface Bookie {
-    id: number;
-    name: string;
-    description: string;
-}
-
-interface League {
-    id: number;
-    leagueName: string;
-    sport: string;
-    description: string;
-}
-
-interface DBContextValue {
-    db: any;
-    bookies: Bookie[];
-    leagues: League[];
-}
+import { Bookie, League, DBContextValue } from '@/constants/types';
 
 export const DBContext = createContext<DBContextValue>({
     db: null,

@@ -2,17 +2,7 @@
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createClient } from '@supabase/supabase-js'
-
-interface SupabaseContextValue {
-    supabase?: any;
-}
-
-interface League {
-    id: number;
-    leagueName: string;
-    sport: string;
-    description: string;
-}
+import { League, SupabaseContextValue } from '@/constants/types';
 
 export const SupabaseContext = createContext<SupabaseContextValue>({
     supabase: undefined,

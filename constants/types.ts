@@ -472,3 +472,55 @@ export interface SportData {
 }
 
 export interface AllSportsData extends Array<SportData> {}
+
+// ==================== Context Value Types ====================
+
+export interface UserContextValue {
+    user: User | null;
+    userBalance: Balance[] | null;
+    setUserBalance: (userBalance: Balance[] | null) => void;
+    bookie: Bookie | null;
+    setBookie: (bookie: Bookie | null) => void;
+    trigger: boolean;
+    setTrigger: (trigger: boolean) => void;
+    preferences: Preference;
+    updatePreferences: (preferences: Preference) => Promise<void>;
+    signedIn: boolean;
+    setSignedIn: (signedIn: boolean) => void;
+    locationStatus: LocationStatus;
+    checkLocation: () => Promise<{
+        isLegal: boolean | null;
+        state?: string | null | undefined;
+        coordinates?: any;
+        timestamp?: string | null | undefined;
+        error?: any;
+    }>;
+}
+
+export interface DBContextValue {
+    db: any;
+    bookies: Bookie[];
+    leagues: League[];
+}
+
+export interface SupabaseContextValue {
+    supabase?: any;
+    leagues?: League[];
+}
+
+export interface BetContextValue {
+    betSlip: BetSlip | null;
+    setBetSlip: (betSlip: BetSlip | null) => void;
+    currentGame: Game | null;
+    setCurrentGame: (game: Game | null) => void;
+    league: League | null;
+    setLeague: (league: League | null) => void;
+    bookie: string | null;
+    setBookie: (bookie: string | null) => void;
+    bookieId: Number | null;
+    setBookieId: (bookieId: Number | null) => void;
+    selectProp: (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; bookieId: any; }) => void;
+    totalLegs: Number | null;
+    setTotalLegs: (totalLegs: number) => void;
+    confirmBetSlip: (db: any) => Promise<void>;
+}
