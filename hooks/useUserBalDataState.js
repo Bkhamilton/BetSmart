@@ -3,7 +3,7 @@ import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { insertBalance, updateBalance, deleteBalance } from '@/db/user-specific/Balance';
 import { insertTransaction, getTransactionsByUser } from '@/db/user-specific/Transactions';
-import { getMonthlyWithdrawals, getMonthlyDeposits } from '@/db/user-specific/Transactions';
+import { getMonthlyWithdrawals, getMonthlyDeposits, getMonthlyBookieActivity } from '@/db/user-specific/Transactions';
 
 const useUserBalDataState = () => {
     
@@ -21,6 +21,7 @@ const useUserBalDataState = () => {
 
     const [monthlyDeposits, setMonthlyDeposits] = useState(0);
     const [monthlyWithdrawals, setMonthlyWithdrawals] = useState(0);
+    const [topBookie, setTopBookie] = useState(null);
 
     const openAddBookieModal = () => {
         setAddBookieModalVisible(true);
@@ -98,8 +99,18 @@ const useUserBalDataState = () => {
             }
         };
 
+        const fetchTopBookie = async () => {
+            if (user && signedIn) {
+                const bookieActivity = await getMonthlyBookieActivity(db, user.id);
+                setTopBookie(bookieActivity);
+            } else {
+                setTopBookie(null);
+            }
+        };
+
         fetchUserTransactions();
         fetchMonthlyBalanceChanges();
+        fetchTopBookie();
     }, [db, user, signedIn]);
 
     return {
@@ -110,6 +121,7 @@ const useUserBalDataState = () => {
         userTransactions,
         monthlyDeposits,
         monthlyWithdrawals,
+        topBookie,
         setUserTransactions,
         openAddBookieModal,
         closeAddBookieModal,

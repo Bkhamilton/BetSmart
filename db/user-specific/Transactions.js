@@ -154,6 +154,40 @@ export const getMonthlyWithdrawals = async (db, userId) => {
     }
 };
 
+// Function to get bookie activity (transaction count and net amount) for the last 30 days
+export const getMonthlyBookieActivity = async (db, userId) => {
+    try {
+        const bookieActivity = await db.getAllAsync(`
+            SELECT 
+                Transactions.bookieId,
+                Bookies.name as bookieName,
+                COUNT(*) as transactionCount,
+                COALESCE(SUM(CASE WHEN transactionType = 'Deposit' THEN amount ELSE 0 END), 0) as totalDeposits,
+                COALESCE(SUM(CASE WHEN transactionType = 'Withdraw' THEN amount ELSE 0 END), 0) as totalWithdrawals,
+                COALESCE(SUM(CASE WHEN transactionType = 'Deposit' THEN amount ELSE 0 END), 0) - 
+                COALESCE(SUM(CASE WHEN transactionType = 'Withdraw' THEN amount ELSE 0 END), 0) as netAmount
+            FROM 
+                Transactions
+            JOIN 
+                Bookies 
+            ON 
+                Transactions.bookieId = Bookies.id
+            WHERE 
+                Transactions.userId = ? 
+                AND Transactions.timestamp >= datetime("now", "-30 days")
+            GROUP BY 
+                Transactions.bookieId, Bookies.name
+            ORDER BY 
+                transactionCount DESC
+            LIMIT 1
+        `, [userId]);
+        return bookieActivity.length > 0 ? bookieActivity[0] : null;
+    } catch (error) {
+        console.error('Error retrieving monthly bookie activity:', error);
+        throw error;
+    }
+};
+
 // Function to get all deposit transactions
 export const getDepositTransactions = async (db) => {
     try {
