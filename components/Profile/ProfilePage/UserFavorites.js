@@ -18,6 +18,20 @@ export default function UserFavorites({ player }) {
     const db = useSQLiteContext();
 
     const { grayBackground, grayBorder } = useTheme();
+    
+    const [hasBets, setHasBets] = useState(null);
+
+    useEffect(() => {
+        // Check if user has any bets by checking for favorite bookie
+        getFavoriteBookie(db, user.id)
+            .then((res) => {
+                setHasBets(!!res);
+            })
+            .catch((error) => {
+                console.error('Error checking for bets:', error);
+                setHasBets(false);
+            });
+    }, [db, user.id]);
 
     const getFavorite = async (type) => {
         switch (type) {
@@ -58,7 +72,9 @@ export default function UserFavorites({ player }) {
         const [favorite, setFavorite] = useState(null);
 
         useEffect(() => {
-            getFavorite(type).then((res) => setFavorite(res));
+            getFavorite(type).then((res) => {
+                setFavorite(res);
+            });
         }, []);
 
         function capitalizeFirstLetter(string) {
@@ -86,17 +102,24 @@ export default function UserFavorites({ player }) {
             <View style={{ paddingHorizontal: 20 }}>
                 <Text style={{ fontSize: 18, fontWeight: '500' }}>Favorites</Text>
             </View>
-            <ScrollView 
-                horizontal 
-                showsHorizontalScrollIndicator={false}
-                style={{ paddingVertical: 12, paddingLeft: 12 }}
-            >
-                <FavoriteComponent type="Bookie" displayType="Bets"/>
-                <FavoriteComponent type="League" displayType="Bets"/>
-                <FavoriteComponent type="Team" displayType="Bets"/>
-                <FavoriteComponent type="Bet" displayType="Legs"/>
-                <FavoriteComponent type="Player" displayType="Bets"/>
-            </ScrollView>
+            {hasBets === false ? (
+                <View style={[styles.emptyStateContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
+                    <Text style={styles.emptyStateText}>No bets found</Text>
+                    <Text style={styles.emptyStateSubText}>Start placing bets to see your favorites here</Text>
+                </View>
+            ) : hasBets === true ? (
+                <ScrollView 
+                    horizontal 
+                    showsHorizontalScrollIndicator={false}
+                    style={{ paddingVertical: 12, paddingLeft: 12 }}
+                >
+                    <FavoriteComponent type="Bookie" displayType="Bets"/>
+                    <FavoriteComponent type="League" displayType="Bets"/>
+                    <FavoriteComponent type="Team" displayType="Bets"/>
+                    <FavoriteComponent type="Bet" displayType="Legs"/>
+                    <FavoriteComponent type="Player" displayType="Bets"/>
+                </ScrollView>
+            ) : null}
         </>
     );
   
@@ -113,5 +136,26 @@ export default function UserFavorites({ player }) {
     favoriteText: {
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    emptyStateContainer: {
+        borderWidth: 1,
+        borderRadius: 8,
+        marginHorizontal: 20,
+        marginVertical: 12,
+        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: 120,
+    },
+    emptyStateText: {
+        fontSize: 16,
+        fontWeight: '600',
+        marginBottom: 8,
+    },
+    emptyStateSubText: {
+        fontSize: 14,
+        fontWeight: '400',
+        textAlign: 'center',
+        opacity: 0.7,
     },
   });
