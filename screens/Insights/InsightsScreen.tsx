@@ -26,7 +26,7 @@ export default function InsightScreen() {
 
     const { user } = useContext(UserContext);
 
-    const [actionableInsights, setActionableInsights] = useState([]);
+    const [actionableInsights, setActionableInsights] = useState<{ message: string; priority: number; }[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -58,10 +58,10 @@ export default function InsightScreen() {
     }
 
     const tempFunction = async () => {
-
+        
     }
 
-    const renderInsightCard = (insight, index) => (
+    const renderInsightCard = (insight : any, index : number) => (
         <ClearView key={index} style={{ 
             margin: 8,
         }}>
@@ -75,7 +75,7 @@ export default function InsightScreen() {
         </ClearView>
     );
 
-    const getTextColor = (type) => {
+    const getTextColor = (type : string) => {
         switch(type) {
             case 'success': return '#2e7d32';
             case 'warning': return '#ed6c02';

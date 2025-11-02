@@ -1,35 +1,8 @@
 import React from 'react';
-import { RefreshControl } from 'react-native';
-import { ScrollView } from '@/components/Themed';
-import DataHeader from '@/components/Data/DataHeader';
-import AnalyticsDisplay from '@/components/Data/AnalyticsDisplay';
-import useHookData from '@/hooks/useHookData';
+import DataScreen from '@/screens/Data/DataScreen';
 
-export default function DataScreen() {
-
-    const { 
-        selectTime, 
-        selectedTime,
-        data,
-        refreshData,
-    } = useHookData();
-
+export default function Data() {
     return (
-        <>
-            <DataHeader
-                selectTime={selectTime}
-                selectedTime={selectedTime}
-            />
-            <ScrollView
-                refreshControl={
-                    <RefreshControl
-                        refreshing={false}
-                        onRefresh={refreshData}
-                    />
-                }
-            >
-                <AnalyticsDisplay data={data}/>
-            </ScrollView>
-        </>
-    );
+        <DataScreen />
+    )
 }
