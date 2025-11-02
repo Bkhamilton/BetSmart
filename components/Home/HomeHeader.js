@@ -5,12 +5,14 @@ import Header from '@/components/Header/Header';
 import { FontAwesome5, Ionicons, FontAwesome6 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import { UserContext } from '@/contexts/UserContext';
+import { useRouter } from 'expo-router';
 
-export default function HomeHeader({ history, login, openProfileOptions }) {
+export default function HomeHeader({ history, openProfileOptions }) {
 
     const { iconColor } = useTheme();
 
     const { signedIn } = useContext(UserContext);
+    const router = useRouter();
 
     const HistoryButton = ({ onPress }) => (
         <TouchableOpacity style={{ marginRight: 8 }} onPress={onPress} accessibilityLabel="Open Bet History">
@@ -18,8 +20,8 @@ export default function HomeHeader({ history, login, openProfileOptions }) {
         </TouchableOpacity>
     );
     
-    const SignInButton = ({ onPress }) => (
-        <TouchableOpacity onPress={onPress} accessibilityLabel="Sign In">
+    const SignInButton = () => (
+        <TouchableOpacity onPress={() => router.push('/(tabs)/(index)/login')} accessibilityLabel="Sign In">
             <Ionicons name='person' size={28} color={iconColor} />
         </TouchableOpacity>
     );
@@ -39,7 +41,7 @@ export default function HomeHeader({ history, login, openProfileOptions }) {
                     <HistoryButton onPress={history} />
                     <ProfileButton onPress={openProfileOptions} />
                 </>  :
-                <SignInButton onPress={login} />
+                <SignInButton />
             }
         </Header>
     );
