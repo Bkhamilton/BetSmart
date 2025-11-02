@@ -3,8 +3,6 @@ import { RefreshControl } from 'react-native';
 import { ScrollView } from '@/components/Themed';
 import { myBetList } from '@/data/exampleBetData';
 import ProfitDashboard from '@/components/Home/ProfitDashboard/ProfitDashboard';
-import LoginPage from '@/components/Modals/LoginPage';
-import SignUpPage from '@/components/Modals/SignUpPage';
 import WeeklyBetReview from '@/components/Home/BetReview/WeeklyBetReview/WeeklyBetReview';
 import TransactionModal from '@/components/Modals/TransactionModal';
 import ChooseBookie from '@/components/Modals/ChooseBookie';
@@ -83,16 +81,7 @@ export default function HomeScreen() {
     } = useRouting();
 
     const {
-        loginModalVisible,
-        signUpModalVisible,
-        login,
-        signUp,
-        openLoginModal,
-        closeLoginModal,
-        openSignUpModal,
-        closeSignUpModal,
         signOutUser,
-        handleSignUp,
     } = useAuthState();
 
     const {
@@ -153,17 +142,6 @@ export default function HomeScreen() {
     return (
         <>
             <>
-                <LoginPage 
-                    visible={loginModalVisible} 
-                    close={closeLoginModal} 
-                    login={login}
-                    handleSignUp={handleSignUp}
-                />
-                <SignUpPage 
-                    visible={signUpModalVisible} 
-                    close={closeSignUpModal}
-                    signUp={signUp}
-                />
                 <TransactionModal 
                     visible={transactionModalVisible} 
                     close={closeTransactionModal}
@@ -212,8 +190,7 @@ export default function HomeScreen() {
                 }
             </>
             <HomeHeader 
-                history={handleBetHistory} 
-                login={openLoginModal} 
+                history={handleBetHistory}
                 openProfileOptions={openProfileOptionsModal} 
             />
             <ScrollView
