@@ -7,7 +7,7 @@ import { bookieImages } from '@/constants/bookieConstants';
 import useUserBalDataState from '@/hooks/useUserBalDataState';
 import { UserContext } from '@/contexts/UserContext';
 
-export default function BankReview({ transactions, addBookie }) {
+export default function BankReview({ transactions, topBookie, addBookie }) {
     const { signedIn, user } = useContext(UserContext);
     const { grayBackground, grayBorder, iconColor, mainGreen, redText } = useTheme();
     const { handleTransactions } = useRouting();
@@ -15,6 +15,11 @@ export default function BankReview({ transactions, addBookie }) {
 
     const difference = monthlyDeposits - monthlyWithdrawals;
     const differenceColor = difference >= 0 ? mainGreen : redText;
+
+    // Determine net color for top bookie
+    const netAmount = topBookie?.netAmount || 0;
+    const netColor = netAmount >= 0 ? mainGreen : redText;
+    const netPrefix = netAmount >= 0 ? '+' : '';
 
     const onAddBookie = () => {
         if (!signedIn) {
@@ -51,13 +56,21 @@ export default function BankReview({ transactions, addBookie }) {
                     {/* Top Bookie */}
                     <ClearView style={styles.bookieContainer}>
                         <Text style={styles.secondaryLabel}>Top Bookie</Text>
-                        <ClearView style={styles.bookieInfo}>
-                            <Image 
-                                source={bookieImages['DraftKings']} 
-                                style={styles.bookieImage} 
-                            />
-                            <Text style={styles.bookieProfit}>+$50</Text>
-                        </ClearView>
+                        {topBookie ? (
+                            <ClearView style={styles.bookieInfo}>
+                                {bookieImages[topBookie.bookieName] && (
+                                    <Image 
+                                        source={bookieImages[topBookie.bookieName]} 
+                                        style={styles.bookieImage} 
+                                    />
+                                )}
+                                <Text style={[styles.bookieProfit, { color: netColor }]}>
+                                    {netPrefix}${Math.abs(netAmount).toFixed(2)}
+                                </Text>
+                            </ClearView>
+                        ) : (
+                            <Text style={styles.noBookieText}>No favorite</Text>
+                        )}
                     </ClearView>
                     
                     {/* Difference */}
@@ -166,7 +179,11 @@ const styles = StyleSheet.create({
     bookieProfit: {
         fontSize: 14,
         fontWeight: '600',
-        color: '#2ecc71',
+    },
+    noBookieText: {
+        fontSize: 12,
+        fontStyle: 'italic',
+        opacity: 0.6,
     },
     differenceContainer: {
         flex: 1,

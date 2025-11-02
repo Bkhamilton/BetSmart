@@ -59,7 +59,8 @@ export default function HomeScreen() {
         transactionModalVisible,
         transactionTitle,
         transactionBookie,
-        userTransactions, 
+        userTransactions,
+        topBookie, 
         openAddBookieModal,
         closeAddBookieModal, 
         openTransactionModal,
@@ -219,6 +220,7 @@ export default function HomeScreen() {
                 <WeeklyBetReview bets={weeklyBets}/>
                 <BankReview 
                     transactions={userTransactions} 
+                    topBookie={topBookie}
                     addBookie={openAddBookieModal}  
                 />
             </ScrollView>
