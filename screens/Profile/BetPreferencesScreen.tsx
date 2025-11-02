@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/components/Themed';
+import { Text, View, TouchableOpacity } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import { UserContext } from '@/contexts/UserContext';
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
         paddingBottom: 40
     },
     settingsHeaderText: {
-        fontSize: 32, 
+        fontSize: 26, 
         fontWeight: 'bold'
     },
     accountHeader: {
