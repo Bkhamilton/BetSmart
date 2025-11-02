@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View, TextInput, ScrollView, ClearView, Modal } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
+import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
+import { UserContext } from '@/contexts/UserContext';
 
 export default function SignUpPage({ visible, close, signUp }) {
 
@@ -11,8 +13,20 @@ export default function SignUpPage({ visible, close, signUp }) {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPreferences, setShowPreferences] = useState(false);
 
     const { iconColor, backgroundColor, grayBackground, grayBorder, buttonGreen } = useTheme();
+    const { preferences, updatePreferences } = useContext(UserContext);
+
+    const [userPreferences, setUserPreferences] = useState({
+        bankroll: 0,
+        dailyLimit: 0,
+        unitSize: '',
+        preferredLeagues: [],
+        preferredBetTypes: [],
+        riskTolerance: 0,
+        oddsFormat: '',
+    });
 
     const onSignUp = async () => {
         // Check if each field is filled out
@@ -26,7 +40,34 @@ export default function SignUpPage({ visible, close, signUp }) {
             return;
         }
         // Call the signUp function from the parent component
-        signUp(username, email, name, password);
+        const result = await signUp(username, email, name, password);
+        if (result) {
+            // Show preferences screen instead of closing
+            setShowPreferences(true);
+        }
+    }
+
+    const handleSavePreferences = async (prefs) => {
+        await updatePreferences(prefs);
+        // Reset state and close modal
+        setShowPreferences(false);
+        setUsername('');
+        setEmail('');
+        setName('');
+        setPassword('');
+        setConfirmPassword('');
+        close();
+    }
+
+    const handleClose = () => {
+        // Reset state when closing
+        setShowPreferences(false);
+        setUsername('');
+        setEmail('');
+        setName('');
+        setPassword('');
+        setConfirmPassword('');
+        close();
     }
 
     return (
@@ -34,104 +75,129 @@ export default function SignUpPage({ visible, close, signUp }) {
             animationType="slide"
             transparent={false}
             visible={visible}
-            onRequestClose={close}
+            onRequestClose={handleClose}
         >
-            <View style={styles.headerContainer}>
-                <TouchableOpacity 
-                    onPress={close}
-                    style={styles.closeButton}
-                >
-                    <FontAwesome5 name="times" size={24} color={iconColor} />
-                </TouchableOpacity>
-            </View>
-            <ScrollView 
-                style={{ flex: 1 }} 
-                contentContainerStyle={styles.scrollContent}
-                showsVerticalScrollIndicator={false}
-            >
-                <View style={styles.container}>
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.welcomeText}>Create Account</Text>
-                        <Text style={styles.subtitleText}>Sign up to get started</Text>
+            {showPreferences ? (
+                // Show preferences after signup
+                <>
+                    <View style={styles.headerContainer}>
+                        <TouchableOpacity 
+                            onPress={handleClose}
+                            style={styles.closeButton}
+                        >
+                            <FontAwesome5 name="times" size={24} color={iconColor} />
+                        </TouchableOpacity>
+                        <View style={{ paddingHorizontal: 16, }}>
+                            <Text style={styles.preferencesHeaderText}>Set Your Preferences</Text> 
+                        </View>
                     </View>
-
-                    <View style={styles.formContainer}>
-                        {/* Name */}
-                        <ClearView style={styles.inputContainer}>
-                            <Text style={styles.inputLabel}>Name</Text>
-                            <TextInput
-                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
-                                placeholder={'Enter your full name'}
-                                onChangeText={setName}
-                                value={name}
-                                autoCorrect={false}
-                            />
-                        </ClearView>
-                        
-                        {/* Username */}
-                        <ClearView style={styles.inputContainer}>
-                            <Text style={styles.inputLabel}>Username</Text>
-                            <TextInput
-                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
-                                placeholder={'Choose a username'}
-                                onChangeText={setUsername}
-                                value={username}
-                                autoCorrect={false}
-                                autoCapitalize="none"
-                            />
-                        </ClearView>
-                        
-                        {/* Email */}
-                        <ClearView style={styles.inputContainer}>
-                            <Text style={styles.inputLabel}>Email</Text>
-                            <TextInput
-                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
-                                placeholder={'Enter your email address'}
-                                onChangeText={setEmail}
-                                value={email}
-                                autoCorrect={false}
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                            />
-                        </ClearView>
-                        
-                        {/* Password */}
-                        <ClearView style={styles.inputContainer}>
-                            <Text style={styles.inputLabel}>Password</Text>
-                            <TextInput
-                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
-                                placeholder={'Create a password'}
-                                onChangeText={setPassword}
-                                value={password}
-                                autoCorrect={false}
-                                autoCapitalize="none"
-                                secureTextEntry={true}
-                            />
-                        </ClearView>
-                        
-                        {/* Confirm Password */}
-                        <ClearView style={styles.inputContainer}>
-                            <Text style={styles.inputLabel}>Confirm Password</Text>
-                            <TextInput
-                                style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
-                                placeholder={'Confirm your password'}
-                                onChangeText={setConfirmPassword}
-                                value={confirmPassword}
-                                autoCorrect={false}
-                                autoCapitalize="none"
-                                secureTextEntry={true}
-                            />
-                        </ClearView>
+                    <EditPreferences 
+                        userPreferences={userPreferences}
+                        setUserPreferences={setUserPreferences}
+                        updatePreferences={handleSavePreferences}
+                    />
+                </>
+            ) : (
+                // Show signup form
+                <>
+                    <View style={styles.headerContainer}>
+                        <TouchableOpacity 
+                            onPress={handleClose}
+                            style={styles.closeButton}
+                        >
+                            <FontAwesome5 name="times" size={24} color={iconColor} />
+                        </TouchableOpacity>
                     </View>
-
-                    <TouchableOpacity 
-                        style={[styles.signUpButton, { backgroundColor: buttonGreen }]}
-                        onPress={onSignUp}
+                    <ScrollView 
+                        style={{ flex: 1 }} 
+                        contentContainerStyle={styles.scrollContent}
+                        showsVerticalScrollIndicator={false}
                     >
-                        <Text style={styles.signUpButtonText}>Create Account</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+                        <View style={styles.container}>
+                            <View style={styles.titleContainer}>
+                                <Text style={styles.welcomeText}>Create Account</Text>
+                                <Text style={styles.subtitleText}>Sign up to get started</Text>
+                            </View>
+
+                            <View style={styles.formContainer}>
+                                {/* Name */}
+                                <ClearView style={styles.inputContainer}>
+                                    <Text style={styles.inputLabel}>Name</Text>
+                                    <TextInput
+                                        style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                        placeholder={'Enter your full name'}
+                                        onChangeText={setName}
+                                        value={name}
+                                        autoCorrect={false}
+                                    />
+                                </ClearView>
+                                
+                                {/* Username */}
+                                <ClearView style={styles.inputContainer}>
+                                    <Text style={styles.inputLabel}>Username</Text>
+                                    <TextInput
+                                        style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                        placeholder={'Choose a username'}
+                                        onChangeText={setUsername}
+                                        value={username}
+                                        autoCorrect={false}
+                                        autoCapitalize="none"
+                                    />
+                                </ClearView>
+                                
+                                {/* Email */}
+                                <ClearView style={styles.inputContainer}>
+                                    <Text style={styles.inputLabel}>Email</Text>
+                                    <TextInput
+                                        style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                        placeholder={'Enter your email address'}
+                                        onChangeText={setEmail}
+                                        value={email}
+                                        autoCorrect={false}
+                                        autoCapitalize="none"
+                                        keyboardType="email-address"
+                                    />
+                                </ClearView>
+                                
+                                {/* Password */}
+                                <ClearView style={styles.inputContainer}>
+                                    <Text style={styles.inputLabel}>Password</Text>
+                                    <TextInput
+                                        style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                        placeholder={'Create a password'}
+                                        onChangeText={setPassword}
+                                        value={password}
+                                        autoCorrect={false}
+                                        autoCapitalize="none"
+                                        secureTextEntry={true}
+                                    />
+                                </ClearView>
+                                
+                                {/* Confirm Password */}
+                                <ClearView style={styles.inputContainer}>
+                                    <Text style={styles.inputLabel}>Confirm Password</Text>
+                                    <TextInput
+                                        style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
+                                        placeholder={'Confirm your password'}
+                                        onChangeText={setConfirmPassword}
+                                        value={confirmPassword}
+                                        autoCorrect={false}
+                                        autoCapitalize="none"
+                                        secureTextEntry={true}
+                                    />
+                                </ClearView>
+                            </View>
+
+                            <TouchableOpacity 
+                                style={[styles.signUpButton, { backgroundColor: buttonGreen }]}
+                                onPress={onSignUp}
+                            >
+                                <Text style={styles.signUpButtonText}>Create Account</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
+                </>
+            )}
         </Modal>
     );
 }
@@ -139,7 +205,7 @@ export default function SignUpPage({ visible, close, signUp }) {
 const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
         paddingHorizontal: 20, 
         paddingTop: 48,
         paddingBottom: 12,
@@ -147,6 +213,11 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         padding: 8,
+    },
+    preferencesHeaderText: {
+        fontSize: 24, 
+        fontWeight: 'bold',
+        marginLeft: 8,
     },
     scrollContent: {
         flexGrow: 1,
