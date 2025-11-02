@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View, TextInput, ScrollView, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import { useRouter } from 'expo-router';
 import useAuthState from '@/hooks/useAuthState';
+import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
+import { UserContext } from '@/contexts/UserContext';
 
 export default function SignUpScreen() {
 
@@ -13,10 +15,12 @@ export default function SignUpScreen() {
     const [name, setName] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPreferences, setShowPreferences] = useState(false);
 
     const { iconColor, grayBackground, grayBorder, buttonGreen } = useTheme();
     const router = useRouter();
     const { signUp } = useAuthState();
+    const { updatePreferences } = useContext(UserContext);
 
     const onSignUp = async () => {
         // Check if each field is filled out
@@ -32,8 +36,46 @@ export default function SignUpScreen() {
         // Call the signUp function from the parent component
         const result = await signUp(username, email, name, password);
         if (result) {
-            router.back();
+            // Show preferences screen instead of going back
+            setShowPreferences(true);
         }
+    }
+
+    const handleSavePreferences = async (prefs) => {
+        await updatePreferences(prefs);
+        router.back();
+    }
+
+    // If showing preferences, render EditPreferences component
+    if (showPreferences) {
+        return (
+            <>
+                <View style={styles.headerContainer}>
+                    <TouchableOpacity 
+                        onPress={() => router.back()}
+                        style={styles.closeButton}
+                    >
+                        <FontAwesome5 name="times" size={24} color={iconColor} />
+                    </TouchableOpacity>
+                    <View style={{ paddingHorizontal: 16, }}>
+                        <Text style={styles.preferencesHeaderText}>Set Your Preferences</Text> 
+                    </View>
+                </View>
+                <EditPreferences 
+                    userPreferences={{
+                        bankroll: 0,
+                        dailyLimit: 0,
+                        unitSize: '',
+                        preferredLeagues: [],
+                        preferredBetTypes: [],
+                        riskTolerance: 0,
+                        oddsFormat: '',
+                    }}
+                    setUserPreferences={() => {}}
+                    updatePreferences={handleSavePreferences}
+                />
+            </>
+        );
     }
 
     return (
@@ -141,7 +183,7 @@ export default function SignUpScreen() {
 const styles = StyleSheet.create({
     headerContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
         paddingHorizontal: 20, 
         paddingTop: 48,
         paddingBottom: 12,
@@ -149,6 +191,11 @@ const styles = StyleSheet.create({
     },
     closeButton: {
         padding: 8,
+    },
+    preferencesHeaderText: {
+        fontSize: 24, 
+        fontWeight: 'bold',
+        marginLeft: 8,
     },
     scrollContent: {
         flexGrow: 1,
