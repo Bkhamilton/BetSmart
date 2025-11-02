@@ -70,7 +70,7 @@ export default function SettingsScreen() {
 
     const { user } = useContext(UserContext);
 
-    const handleSignOut = (user) => {
+    const handleSignOut = (user : any) => {
         signOutUser(user.id);
     }
 
@@ -83,7 +83,7 @@ export default function SettingsScreen() {
         }
     };
     
-    const handleSelect = (title) => {
+    const handleSelect = (title : string) => {
         switch (title) {
             case 'Clear User Data':
                 handleConfirmNoModal('clear all user data? This cannot be undone', clearUserData, user);
