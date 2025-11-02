@@ -3,7 +3,7 @@ import TransactionHeader from '@/components/Profile/TransactionHistory/Transacti
 import TransactionList from '@/components/Profile/TransactionHistory/TransactionList';
 import useHookTransactions from '@/hooks/useHookTransactions';
 
-export default function TransactionHistoryScreen() {
+export default function TransactionScreen() {
     
     const { transactions } = useHookTransactions();
 

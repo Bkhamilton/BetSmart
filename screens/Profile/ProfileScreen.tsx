@@ -59,7 +59,7 @@ export default function ProfileScreen() {
         handleSignUp,
     } = useAuthState();
 
-    const onAddBookie = async (bookie) => {
+    const onAddBookie = async (bookie: any) => {
         if (!signedIn) {
             alert('Please sign in to add a bookie');
             return;
@@ -67,12 +67,12 @@ export default function ProfileScreen() {
         handleConfirmation(`add ${bookie.name} as a bookie?`, closeAddBookieModal, addBookie, bookie);
     };
 
-    const handleResponse = async (response, target) => {
+    const handleResponse = async (response: string, target: any) => {
         // if response is delete, confirm deletion
         if (response === 'Delete') {
             // if target is Balance object, delete balance
             if (target.balance >= 0) {
-                handleConfirmation(`delete ${target.bookieName} as a bookie?`, closeConfirmationModal, deleteBalBookie, [target.bookieId, user.id]);
+                handleConfirmation(`delete ${target.bookieName} as a bookie?`, closeConfirmationModal, deleteBalBookie, [target.bookieId, user!.id]);
             } else {
                 console.log('delete bet');
                 console.log(JSON.stringify(target));
@@ -80,7 +80,7 @@ export default function ProfileScreen() {
         }
     }
 
-    const onOpenOptions = async (target, options) => {
+    const onOpenOptions = async (target: any, options: any) => {
         handleOpenOptions(target, options, handleResponse);
     };
 
