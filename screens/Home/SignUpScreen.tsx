@@ -41,7 +41,7 @@ export default function SignUpScreen() {
         }
     }
 
-    const handleSavePreferences = async (prefs) => {
+    const handleSavePreferences = async (prefs : any) => {
         await updatePreferences(prefs);
         router.back();
     }

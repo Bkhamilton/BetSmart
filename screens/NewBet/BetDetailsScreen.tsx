@@ -41,6 +41,7 @@ export default function BetDetailsScreen() {
                 visible={chooseBookieModalVisible}
                 close={closeChooseBookieModal}
                 selectBookie={selectBookie}
+                extra={null}
             />
             {
                 betSlip && (
