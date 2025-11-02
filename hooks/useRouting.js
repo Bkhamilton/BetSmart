@@ -13,7 +13,7 @@ const useRouting = () => {
     };
 
     const handleBetHistory = () => {
-      router.replace('profile/betHistory');
+      router.replace('(index)/history');
     };
 
     const handleSettings = () => {
@@ -41,6 +41,10 @@ const useRouting = () => {
         router.navigate('newBet/selectGame');
     };
 
+    const handleHome = () => {
+        router.replace('(index)');
+    };
+
     return {
         handleProfilePage,
         handleBetHistory,
@@ -50,6 +54,7 @@ const useRouting = () => {
         handleTransactions,
         handleSelectGame,
         handleCloseBetDetails,
+        handleHome,
     };
 };
 

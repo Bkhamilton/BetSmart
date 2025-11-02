@@ -10,14 +10,14 @@ export default function BetHistoryHeader({ changeType, selectedType }) {
 
     const { iconColor } = useTheme();
 
-    const { handleProfilePage } = useRouting();
+    const { handleHome } = useRouting();
 
     return (
         <>
             <View style={styles.headerContainer}>
                 <View style={{ flex: 0.2, }}>
                     <TouchableOpacity 
-                        onPress={handleProfilePage}
+                        onPress={handleHome}
                     >
                         <FontAwesome5 name="chevron-left" size={24} color={iconColor} />
                     </TouchableOpacity>  
