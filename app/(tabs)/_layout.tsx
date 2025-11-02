@@ -55,10 +55,9 @@ export default function TabLayout() {
             }}
         >
             <Tabs.Screen
-                name="index"
+                name="(index)"
                 options={{
                     title: 'BetSmart',
-                    href: '/(tabs)/',
                     tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
                     tabBarLabel: 'Home',
                     headerShown: false,
