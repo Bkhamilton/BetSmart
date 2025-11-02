@@ -107,6 +107,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
                     {/* Bankroll */}
                     <ClearView style={styles.sectionContainer}>
                         <Text style={styles.sectionTitle}>Bankroll</Text>
+                        <Text style={styles.helperText}>Your total betting budget</Text>
                         <ClearView style={styles.currencyInputContainer}>
                             <Text style={styles.currencySymbol}>$</Text>
                             <TextInput
@@ -122,6 +123,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
                     {/* Daily Limit */}
                     <ClearView style={styles.sectionContainer}>
                         <Text style={styles.sectionTitle}>Daily Limit</Text>
+                        <Text style={styles.helperText}>Maximum amount you can bet per day</Text>
                         <ClearView style={styles.currencyInputContainer}>
                             <Text style={styles.currencySymbol}>$</Text>
                             <TextInput
@@ -137,6 +139,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
                     {/* Unit Size */}
                     <ClearView style={styles.sectionContainer}>
                         <Text style={styles.sectionTitle}>Unit Size</Text>
+                        <Text style={styles.helperText}>Standard bet amounts for Small, Medium, and Large bets</Text>
                         <ClearView style={styles.unitSizeContainer}>
                             {['S', 'M', 'L'].map((size) => (
                                 <ClearView key={size} style={styles.unitSizeInputContainer}>
@@ -156,6 +159,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
                     {/* Preferred Leagues */}
                     <ClearView style={styles.sectionContainer}>
                         <Text style={styles.sectionTitle}>Preferred Leagues</Text>
+                        <Text style={styles.helperText}>Select the leagues you want to see in your feed</Text>
                         <ScrollView 
                             horizontal 
                             showsHorizontalScrollIndicator={false} 
@@ -184,6 +188,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
                     {/* Preferred Bet Types */}
                     <ClearView style={styles.sectionContainer}>
                         <Text style={styles.sectionTitle}>Preferred Bet Types</Text>
+                        <Text style={styles.helperText}>Choose your preferred types of bets to filter recommendations</Text>
                         <ScrollView 
                             horizontal 
                             showsHorizontalScrollIndicator={false} 
@@ -212,6 +217,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
                     {/* Risk Tolerance */}
                     <ClearView style={styles.sectionContainer}>
                         <Text style={styles.sectionTitle}>Risk Tolerance</Text>
+                        <Text style={styles.helperText}>Your betting strategy from conservative to aggressive</Text>
                         <ClearView style={styles.riskToleranceContainer}>
                             <ClearView style={styles.riskLabelsContainer}>
                                 <Text style={[styles.riskLabel, riskTextStyle.safe]}>Safe</Text>
@@ -233,6 +239,7 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
                     {/* Odds Format */}
                     <ClearView style={styles.sectionContainer}>
                         <Text style={styles.sectionTitle}>Odds Format</Text>
+                        <Text style={styles.helperText}>How odds are displayed throughout the app</Text>
                         <ClearView style={styles.oddsFormatContainer}>
                             {['American', 'Decimal'].map((format) => (
                                 <TouchableOpacity 
@@ -281,35 +288,46 @@ const styles = StyleSheet.create({
     },
     editOptionsContainer: {
         borderRadius: 12,
-        padding: 16,
+        padding: 20,
         marginTop: 20,
     },
     sectionContainer: {
-        marginBottom: 24,
+        marginBottom: 28,
     },
     sectionTitle: {
-        fontSize: 16,
-        fontWeight: '600',
-        marginBottom: 8,
-        opacity: 0.9,
+        fontSize: 18,
+        fontWeight: '700',
+        marginBottom: 6,
+        letterSpacing: 0.3,
+    },
+    helperText: {
+        fontSize: 13,
+        opacity: 0.6,
+        marginBottom: 12,
+        lineHeight: 18,
     },
     currencyInputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginTop: 4,
     },
     currencySymbol: {
         fontSize: 20,
         marginRight: 8,
+        fontWeight: '600',
     },
     currencyInput: {
         flex: 1,
-        padding: 12,
-        borderRadius: 8,
+        padding: 14,
+        borderRadius: 10,
         fontSize: 16,
+        borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
     },
     unitSizeContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginTop: 4,
     },
     unitSizeInputContainer: {
         flexDirection: 'row',
@@ -320,26 +338,32 @@ const styles = StyleSheet.create({
     unitSizeLabel: {
         fontSize: 16,
         marginRight: 8,
-        fontWeight: '600',
+        fontWeight: '700',
+        minWidth: 20,
     },
     unitSizeInput: {
         flex: 1,
-        padding: 12,
-        borderRadius: 8,
+        padding: 14,
+        borderRadius: 10,
         fontSize: 16,
+        borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
     },
     horizontalScrollContent: {
-        paddingVertical: 4,
+        paddingVertical: 6,
+        marginTop: 4,
     },
     optionButton: {
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: 20,
-        marginRight: 8,
+        paddingHorizontal: 18,
+        paddingVertical: 10,
+        borderRadius: 24,
+        marginRight: 10,
+        borderWidth: 2,
+        borderColor: 'rgba(0, 0, 0, 0.15)',
     },
     optionButtonText: {
         fontSize: 14,
-        fontWeight: '500',
+        fontWeight: '600',
     },
     riskToleranceContainer: {
         marginTop: 8,
@@ -347,10 +371,12 @@ const styles = StyleSheet.create({
     riskLabelsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 4,
+        marginBottom: 8,
+        paddingHorizontal: 4,
     },
     riskLabel: {
-        fontSize: 14,
+        fontSize: 13,
+        fontWeight: '600',
         opacity: 0.7,
     },
     slider: {
@@ -360,31 +386,41 @@ const styles = StyleSheet.create({
     oddsFormatContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        gap: 12,
+        marginTop: 4,
     },
     oddsFormatButton: {
         flex: 1,
-        padding: 12,
-        borderRadius: 8,
-        marginHorizontal: 4,
+        padding: 14,
+        borderRadius: 10,
         alignItems: 'center',
+        borderWidth: 2,
+        borderColor: 'rgba(0, 0, 0, 0.15)',
     },
     oddsFormatButtonText: {
         fontSize: 16,
-        fontWeight: '500',
+        fontWeight: '600',
     },
     saveButtonContainer: {
         paddingVertical: 16,
+        paddingHorizontal: 0,
     },
     saveButton: {
         backgroundColor: '#00A86B',
-        padding: 16,
-        borderRadius: 8,
+        padding: 18,
+        borderRadius: 12,
         alignItems: 'center',
         justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+        elevation: 3,
     },
     saveButtonText: {
         color: 'white',
-        fontSize: 16,
-        fontWeight: '600',
+        fontSize: 17,
+        fontWeight: '700',
+        letterSpacing: 0.5,
     },
 });
