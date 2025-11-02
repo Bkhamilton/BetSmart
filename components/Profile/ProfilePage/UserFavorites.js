@@ -23,10 +23,15 @@ export default function UserFavorites({ player }) {
 
     useEffect(() => {
         // Check if user has any bets by checking for favorite bookie
-        getFavoriteBookie(db, user.id).then((res) => {
-            setHasBets(!!res);
-        });
-    }, []);
+        getFavoriteBookie(db, user.id)
+            .then((res) => {
+                setHasBets(!!res);
+            })
+            .catch((error) => {
+                console.error('Error checking for bets:', error);
+                setHasBets(false);
+            });
+    }, [db, user.id]);
 
     const getFavorite = async (type) => {
         switch (type) {
