@@ -22,16 +22,6 @@ export default function SignUpScreen() {
     const { signUp } = useAuthState();
     const { updatePreferences } = useContext(UserContext);
 
-    const [userPreferences, setUserPreferences] = useState({
-        bankroll: 0,
-        dailyLimit: 0,
-        unitSize: '',
-        preferredLeagues: [],
-        preferredBetTypes: [],
-        riskTolerance: 0,
-        oddsFormat: '',
-    });
-
     const onSignUp = async () => {
         // Check if each field is filled out
         if (!username || !email || !name || !password || !confirmPassword) {
@@ -72,8 +62,16 @@ export default function SignUpScreen() {
                     </View>
                 </View>
                 <EditPreferences 
-                    userPreferences={userPreferences}
-                    setUserPreferences={setUserPreferences}
+                    userPreferences={{
+                        bankroll: 0,
+                        dailyLimit: 0,
+                        unitSize: '',
+                        preferredLeagues: [],
+                        preferredBetTypes: [],
+                        riskTolerance: 0,
+                        oddsFormat: '',
+                    }}
+                    setUserPreferences={() => {}}
                     updatePreferences={handleSavePreferences}
                 />
             </>
