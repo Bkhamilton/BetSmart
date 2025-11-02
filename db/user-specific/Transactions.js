@@ -178,7 +178,7 @@ export const getMonthlyBookieActivity = async (db, userId) => {
             GROUP BY 
                 Transactions.bookieId, Bookies.name
             ORDER BY 
-                transactionCount DESC, ABS(netAmount) DESC
+                transactionCount DESC
             LIMIT 1
         `, [userId]);
         return bookieActivity.length > 0 ? bookieActivity[0] : null;

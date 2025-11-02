@@ -64,7 +64,7 @@ export default function BankReview({ transactions, topBookie, addBookie }) {
                                         style={styles.bookieImage} 
                                     />
                                 )}
-                                <Text style={[styles.bookieProfit, { color: netColor }]}>
+                                <Text style={[styles.bookieNetAmount, { color: netColor }]}>
                                     {netPrefix}${Math.abs(netAmount).toFixed(2)}
                                 </Text>
                             </ClearView>
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginRight: 8,
     },
-    bookieProfit: {
+    bookieNetAmount: {
         fontSize: 14,
         fontWeight: '600',
     },
