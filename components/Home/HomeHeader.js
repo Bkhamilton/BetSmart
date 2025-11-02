@@ -20,7 +20,7 @@ export default function HomeHeader({ history, openProfileOptions }) {
         </TouchableOpacity>
     );
     
-    const SignInButton = ({ onPress }) => (
+    const SignInButton = () => (
         <TouchableOpacity onPress={() => router.push('/(tabs)/(index)/login')} accessibilityLabel="Sign In">
             <Ionicons name='person' size={28} color={iconColor} />
         </TouchableOpacity>
