@@ -5,6 +5,7 @@ export const createTables = async (db) => {
     await createBetslipTables(db);
     await createUserSpecificTables(db);
     await createAPITables(db);
+    await createInsightTables(db);
     console.log('Tables created');
 };
   
@@ -385,7 +386,7 @@ export const createInsightTables = async (db) => {
             END AS day_name,
             COUNT(*) AS total_bets,
             SUM(CASE WHEN bsr.result = 1 THEN 1 ELSE 0 END) AS wins,
-            SUM(CASE WHEN bsr.result = 0' THEN 1 ELSE 0 END) AS losses,
+            SUM(CASE WHEN bsr.result = 0 THEN 1 ELSE 0 END) AS losses,
             ROUND(SUM(CASE WHEN bsr.result = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) AS win_percentage
         FROM BetSlips bs
         JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
@@ -521,7 +522,7 @@ export const createTempTables = async (db) => {
             FROM StreakData
         ) 
         GROUP BY userId, result, streak_group
-        ORDER BY userId, MIN(date) DESC;
+        ORDER BY userId, MIN(date) DESC
         LIMIT 1;
     `);
 }
