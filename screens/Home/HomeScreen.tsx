@@ -23,15 +23,11 @@ import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
 import ProfileOptions from '@/components/Modals/ProfileOptions';
 import BankReview from '@/components/Home/BankReview/BankReview';
 import { LocationModal } from '@/components/Modals/LocationModal';
+import { Bookie, Balance, DBBetSlip, Bet } from '@/constants/types';
 
 export default function HomeScreen() {
 
     const { user, setBookie, signedIn, locationStatus } = useContext(UserContext);
-
-    type BetSlip = {
-        bets?: any[];
-        // add other properties as needed
-    };
 
     const {
         confirmModalVisible,
@@ -53,14 +49,14 @@ export default function HomeScreen() {
         confirmModalVisible: boolean;
         chooseBookieModalVisible: boolean;
         profileOptionsModalVisible: boolean;
-        confirmedBetSlip: BetSlip | null;
-        betSlips: BetSlip[];
-        weeklyBets: any[];
+        confirmedBetSlip: DBBetSlip | null;
+        betSlips: DBBetSlip[];
+        weeklyBets: DBBetSlip[];
         refreshing: boolean;
         onRefresh: () => void;
         openChooseBookieModal: () => void;
         closeChooseBookieModal: () => void;
-        openConfirmModal: (betSlip: BetSlip) => void;
+        openConfirmModal: (betSlip: DBBetSlip) => void;
         closeConfirmModal: () => void;
         openProfileOptionsModal: () => void;
         closeProfileOptionsModal: () => void;
@@ -111,11 +107,11 @@ export default function HomeScreen() {
         deleteUserBetSlip
     } = useDatabaseFuncs();
 
-    const onAddBookie = async (bookie : any) => {
+    const onAddBookie = async (bookie: Bookie) => {
         handleConfirmation(`add ${bookie.name} as a bookie?`, closeAddBookieModal, addBookie, bookie);
     };
 
-    const onSelectBookie = (balance : any) => {
+    const onSelectBookie = (balance: Balance) => {
         if (balance.bookieId === -1) {
             closeChooseBookieModal();
             if (!signedIn) {
@@ -129,32 +125,32 @@ export default function HomeScreen() {
         }
     }
 
-    const handleResponse = async (response : string, target : any) => {
+    const handleResponse = async (response: string, target: Balance | DBBetSlip) => {
         // if response is delete, confirm deletion
         if (response === 'Delete') {
             // if target is Balance object, delete balance
-            if (target.balance >= 0) {
+            if ('balance' in target && target.balance >= 0) {
                 handleConfirmation(`delete ${target.bookieName} as a bookie?`, closeProfileOptionsModal, deleteBalBookie, [target.bookieId, user!.id]);
             } else {
-                if (target.bets) {
+                if ('id' in target) {
                     handleConfirmation(`delete bet slip?`, closeProfileOptionsModal, deleteUserBetSlip, [target, user!.id], onRefresh);
                 }
             }
         } else if (response === 'Edit') {
             // if target is Balance object, edit balance
-            if (target.balance >= 0) {
+            if ('balance' in target && target.balance >= 0) {
                 // open transaction modal
                 console.log('edit balance');
             } else {
                 // open bet slip modal
-                if (target.bets) {
+                if ('id' in target) {
                     console.log('edit bet slip');
                 }
             }
         }
     }
 
-    const onOpenOptions = async (target : any, options : any) => {
+    const onOpenOptions = async (target: Balance | DBBetSlip, options: string[]) => {
         handleOpenOptions(target, options, handleResponse);
     };
 
