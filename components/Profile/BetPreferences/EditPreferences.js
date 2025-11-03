@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { UserContext } from '@/contexts/UserContext';
-import { DBContext } from '@/contexts/DBContext';
 import { TouchableOpacity, Text, View, ScrollView, TextInput, ClearView } from '@/components/Themed';
 import Slider from '@react-native-community/slider';
 import useTheme from '@/hooks/useTheme';
 
-export default function EditPreferences({ userPreferences, setUserPreferences, updatePreferences }) {
+export default function EditPreferences({ 
+    userPreferences, 
+    setUserPreferences, 
+    updatePreferences,
+    leagues = [],
+    onSave
+}) {
 
     const betTypes = ['ML', 'SPREAD', 'O/U', 'PLAYER', 'GAME', 'TEAM'];
 
     const { iconColor, grayBackground, grayBorder, backgroundColor } = useTheme();
-    
-    const { user, signedIn } = useContext(UserContext);
-    const { leagues } = useContext(DBContext);
 
     const [preferences, setPreferences] = useState({
         bankroll: 0,
@@ -75,11 +76,11 @@ export default function EditPreferences({ userPreferences, setUserPreferences, u
     };
 
     const handleSaveChanges = () => {
-        if (!signedIn) {
-            alert('Please sign in to save changes');
-            return;
+        if (onSave) {
+            onSave(preferences);
+        } else {
+            updatePreferences(preferences);
         }
-        updatePreferences(preferences);
     };
 
     const handleRiskTextStyle = (value) => {
