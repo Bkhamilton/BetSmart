@@ -9,6 +9,12 @@ import { LeagueContext, LeagueContextProvider } from '../LeagueContext';
 import { BookieSelectionContext, BookieSelectionContextProvider } from '../BookieSelectionContext';
 import { BetSlipContext, BetSlipContextProvider } from '../BetSlipContext';
 
+// Re-export the individual contexts and providers for direct use if needed
+export { GameContext, GameContextProvider } from '../GameContext';
+export { LeagueContext, LeagueContextProvider } from '../LeagueContext';
+export { BookieSelectionContext, BookieSelectionContextProvider } from '../BookieSelectionContext';
+export { BetSlipContext, BetSlipContextProvider } from '../BetSlipContext';
+
 // Create a combined context that provides all the values from the separate contexts
 export const BetContext = createContext<BetContextValue>({
     betSlip: null,
