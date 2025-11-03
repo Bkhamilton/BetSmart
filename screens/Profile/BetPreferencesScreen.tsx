@@ -4,6 +4,7 @@ import { Text, View, TouchableOpacity } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import useTheme from '@/hooks/useTheme';
 import { UserContext } from '@/contexts/UserContext';
+import { DBContext } from '@/contexts/DBContext';
 import { useRouter } from 'expo-router';
 import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
 import useHookBetPreferences from '@/hooks/useHookBetPreferences';
@@ -12,11 +13,20 @@ export default function BetPreferencesScreen() {
 
     const { iconColor } = useTheme();
 
-    const { updatePreferences } = useContext(UserContext);
+    const { updatePreferences, signedIn } = useContext(UserContext);
+    const { leagues } = useContext(DBContext);
 
     const router = useRouter();
 
     const { preferences, setPreferences } = useHookBetPreferences();
+
+    const handleSave = (updatedPreferences) => {
+        if (!signedIn) {
+            alert('Please sign in to save changes');
+            return;
+        }
+        updatePreferences(updatedPreferences);
+    };
 
     return (
         <>
@@ -33,7 +43,8 @@ export default function BetPreferencesScreen() {
             <EditPreferences 
                 userPreferences={preferences}
                 setUserPreferences={setPreferences}
-                updatePreferences={updatePreferences}
+                leagues={leagues}
+                onSave={handleSave}
             />
         </>
     );
