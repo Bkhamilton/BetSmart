@@ -532,3 +532,29 @@ export interface BetContextValue {
     setTotalLegs: (totalLegs: number) => void;
     confirmBetSlip: (db: any) => Promise<void>;
 }
+
+export interface GameContextValue {
+    currentGame: Game | null;
+    setCurrentGame: (game: Game | null) => void;
+}
+
+export interface LeagueContextValue {
+    league: League | null;
+    setLeague: (league: League | null) => void;
+}
+
+export interface BookieSelectionContextValue {
+    bookie: string | null;
+    setBookie: (bookie: string | null) => void;
+    bookieId: Number | null;
+    setBookieId: (bookieId: Number | null) => void;
+}
+
+export interface BetSlipContextValue {
+    betSlip: BetSlip | null;
+    setBetSlip: (betSlip: BetSlip | null) => void;
+    totalLegs: Number | null;
+    setTotalLegs: (totalLegs: number) => void;
+    selectProp: (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; bookieId: any; }) => void;
+    confirmBetSlip: (db: any) => Promise<void>;
+}
