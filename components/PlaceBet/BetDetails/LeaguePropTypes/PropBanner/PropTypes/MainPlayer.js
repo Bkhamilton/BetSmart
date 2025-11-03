@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View, ClearView } from '@/components/Themed';
 import { ToRecordValueComponent } from './ComponentTypes';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
 import { getBetTargetIdByName } from '@/db/bet-general/BetTargets';
 

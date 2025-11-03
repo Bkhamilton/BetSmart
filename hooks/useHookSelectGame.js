@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
 import { retrieveAllGames } from '@/api/the-odds/markets';
 

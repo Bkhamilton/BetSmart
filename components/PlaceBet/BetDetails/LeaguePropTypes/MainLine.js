@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import PropBanner from './PropBanner/PropBanner';
 
 export default function MainLine({ info }) {

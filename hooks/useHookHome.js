@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { UserContext } from '@/contexts/UserContext';
-import { fillBetSlips, fillBetSlipsWithResults } from '@/contexts/BetContext/betSlipHelpers';
+import { fillBetSlips, fillBetSlipsWithResults } from '@/contexts/NewBetContext/BetContext/betSlipHelpers';
 import { getOpenBetSlips, getLastWeekOfBetSlips } from '@/db/betslips/BetSlips';
 import { confirmBetResults } from '@/utils/dbHelpers';
 import { DBContext } from '@/contexts/DBContext';

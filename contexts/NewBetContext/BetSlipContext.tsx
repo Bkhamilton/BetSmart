@@ -1,53 +1,43 @@
-// app/contexts/BetContext/BetContext.tsx
+// app/contexts/NewBetContext/BetSlipContext.tsx
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { createLeg, createBet, createBetSlip, updateBetSlip, removeLeg } from '@/contexts/BetContext/betSlipHelpers';
+import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/NewBetContext/BetContext/betSlipHelpers';
 import { UserContext } from '../UserContext';
-import { useSQLiteContext } from 'expo-sqlite';
+import { GameContext } from './GameContext';
+import { LeagueContext } from './LeagueContext';
+import { BookieSelectionContext } from './BookieSelectionContext';
 import { insertBetSlip } from '@/db/betslips/BetSlips';
 import { insertParticipantBet } from '@/db/betslips/ParticipantBets';
 import { insertLeg } from '@/db/betslips/Legs';
-import { insertBetMarket, insertFullBetMarket } from '@/db/api/BetMarkets';
+import { insertFullBetMarket } from '@/db/api/BetMarkets';
 import { getBetFormat } from '@/db/bet-general/BetFormats';
 import { getBetType } from '@/db/bet-general/BetTypes';
 import { getBetMarketByLeg } from '@/db/api/BetMarkets';
-import { getBetTargetId } from '@/db/bet-general/BetTargets'
 import { updateUserBalance } from '@/db/user-specific/Balance';
-import { Game, League, BetSlip, Bet, Leg, Bookie, BetContextValue } from '@/constants/types';
+import { BetSlip, Bet, BetSlipContextValue } from '@/constants/types';
 
 const USER_GENERATED_ID_START = 1000001;
 
-export const BetContext = createContext<BetContextValue>({
+export const BetSlipContext = createContext<BetSlipContextValue>({
     betSlip: null,
     setBetSlip: () => {},
-    currentGame: null,
-    setCurrentGame: () => {},
-    league: null,
-    setLeague: () => {},
-    bookie: null,
-    setBookie: () => {},
-    bookieId: null,
-    setBookieId: () => {},
-    selectProp: () => {},
     totalLegs: null,
     setTotalLegs: () => {},
+    selectProp: () => {},
     confirmBetSlip: async () => {},
 });
 
-interface BetContextProviderProps {
+interface BetSlipContextProviderProps {
     children: ReactNode;
 }
 
-export const BetContextProvider = ({ children }: BetContextProviderProps) => {
-
-    const { user, setUserBalance, setTrigger } = useContext(UserContext);
+export const BetSlipContextProvider = ({ children }: BetSlipContextProviderProps) => {
+    const { user, setTrigger } = useContext(UserContext);
+    const { currentGame } = useContext(GameContext);
+    const { league } = useContext(LeagueContext);
+    const { bookieId } = useContext(BookieSelectionContext);
 
     const [betSlip, setBetSlip] = useState<BetSlip | null>(null);
-    const [currentGame, setCurrentGame] = useState<Game | null>(null);
-    const [league, setLeague] = useState<League | null>(null);
-    const [bookie, setBookie] = useState<string | null>('DraftKings');
-    const [bookieId, setBookieId] = useState<Number | null>(1);
-
-    const [totalLegs, setTotalLegs] = useState<Number | null>(0);
+    const [totalLegs, setTotalLegs] = useState<number | null>(0);
 
     const selectProp = (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; bookieId: any; }) => {
         const { game, type, target, stat, value, overUnder, odds, bookieId } = props;
@@ -157,23 +147,15 @@ export const BetContextProvider = ({ children }: BetContextProviderProps) => {
     const value = {
         betSlip,
         setBetSlip,
-        currentGame,
-        setCurrentGame,
-        league,
-        setLeague,
-        bookie,
-        setBookie,
-        bookieId,
-        setBookieId,
-        selectProp,
         totalLegs,
         setTotalLegs,
+        selectProp,
         confirmBetSlip,
     };
 
     return (
-        <BetContext.Provider value={value}>
+        <BetSlipContext.Provider value={value}>
             {children}
-        </BetContext.Provider>
+        </BetSlipContext.Provider>
     );
 };

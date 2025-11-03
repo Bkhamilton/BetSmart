@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { useRouter } from 'expo-router';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 
 const useRouting = () => {
 

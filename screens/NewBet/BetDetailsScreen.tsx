@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { ScrollView } from '@/components/Themed';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
 import LeaguePropSlider from '@/components/PlaceBet/BetDetails/LeaguePropSlider';

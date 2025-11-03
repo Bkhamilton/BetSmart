@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { getBetTargetId } from '@/db/bet-general/BetTargets';
 
 import { getBestOdds } from '@/utils/betMarketHelpers';

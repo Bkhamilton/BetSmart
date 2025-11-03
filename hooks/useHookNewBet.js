@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
-import { removeLeg, updateBetSlipAmounts, updateBetSlipBookie } from '@/contexts/BetContext/betSlipHelpers';
+import { removeLeg, updateBetSlipAmounts, updateBetSlipBookie } from '@/contexts/NewBetContext/BetContext/betSlipHelpers';
 
 const useHookNewBet = () => {
 

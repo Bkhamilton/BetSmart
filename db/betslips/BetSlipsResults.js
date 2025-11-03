@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-import { fillBetSlips } from '@/contexts/BetContext/betSlipHelpers';
+import { fillBetSlips } from '@/contexts/NewBetContext/BetContext/betSlipHelpers';
 
 // Function to get a bet slip result
 export const getBetSlipResult = async (db, betSlipId) => {

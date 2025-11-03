@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import PropBanner from './PropBanner/PropBanner';
 import useTheme from '@/hooks/useTheme';
 

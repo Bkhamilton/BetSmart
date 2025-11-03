@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, FlatList, Image } from 'react-native';
 import { Text, View, TouchableOpacity, ClearView } from '@/components/Themed';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { SupabaseContext } from '@/contexts/SupabaseContext';
 import useTheme from '@/hooks/useTheme';
 
