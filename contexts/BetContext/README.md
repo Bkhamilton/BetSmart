@@ -29,8 +29,8 @@ The BetContext has been refactored into multiple focused context files to improv
 **State**:
 - `bookie: string | null` - The name of the selected bookie (default: 'DraftKings')
 - `setBookie: (bookie: string | null) => void` - Updates the bookie name
-- `bookieId: Number | null` - The ID of the selected bookie (default: 1)
-- `setBookieId: (bookieId: Number | null) => void` - Updates the bookie ID
+- `bookieId: number | null` - The ID of the selected bookie (default: 1)
+- `setBookieId: (bookieId: number | null) => void` - Updates the bookie ID
 
 **Usage**: Tracks which bookie's odds are being displayed and used for bets
 
@@ -40,7 +40,7 @@ The BetContext has been refactored into multiple focused context files to improv
 **State**:
 - `betSlip: BetSlip | null` - The current bet slip with all bets and legs
 - `setBetSlip: (betSlip: BetSlip | null) => void` - Updates the bet slip
-- `totalLegs: Number | null` - Total number of legs across all bets
+- `totalLegs: number | null` - Total number of legs across all bets
 - `setTotalLegs: (totalLegs: number) => void` - Updates the total legs count
 
 **Actions**:
