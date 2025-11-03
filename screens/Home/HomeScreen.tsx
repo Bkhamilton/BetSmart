@@ -23,7 +23,7 @@ import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
 import ProfileOptions from '@/components/Modals/ProfileOptions';
 import BankReview from '@/components/Home/BankReview/BankReview';
 import { LocationModal } from '@/components/Modals/LocationModal';
-import { Bookie, Balance, DBBetSlip, Bet } from '@/constants/types';
+import { Bookie, Balance, DBBetSlip, DBBetSlipWithBets, Bet } from '@/constants/types';
 
 export default function HomeScreen() {
 
@@ -45,22 +45,6 @@ export default function HomeScreen() {
         openProfileOptionsModal,
         closeProfileOptionsModal,
         onConfirmBetSlip,
-    }: {
-        confirmModalVisible: boolean;
-        chooseBookieModalVisible: boolean;
-        profileOptionsModalVisible: boolean;
-        confirmedBetSlip: DBBetSlip | null;
-        betSlips: DBBetSlip[];
-        weeklyBets: DBBetSlip[];
-        refreshing: boolean;
-        onRefresh: () => void;
-        openChooseBookieModal: () => void;
-        closeChooseBookieModal: () => void;
-        openConfirmModal: (betSlip: DBBetSlip) => void;
-        closeConfirmModal: () => void;
-        openProfileOptionsModal: () => void;
-        closeProfileOptionsModal: () => void;
-        onConfirmBetSlip: () => void;
     } = useHookHome();
 
     const { 
@@ -125,7 +109,7 @@ export default function HomeScreen() {
         }
     }
 
-    const handleResponse = async (response: string, target: Balance | DBBetSlip) => {
+    const handleResponse = async (response: string, target: Balance | DBBetSlipWithBets) => {
         // if response is delete, confirm deletion
         if (response === 'Delete') {
             // if target is Balance object, delete balance
@@ -150,7 +134,7 @@ export default function HomeScreen() {
         }
     }
 
-    const onOpenOptions = async (target: Balance | DBBetSlip, options: string[]) => {
+    const onOpenOptions = async (target: Balance | DBBetSlipWithBets, options: string[]) => {
         handleOpenOptions(target, options, handleResponse);
     };
 
@@ -198,11 +182,11 @@ export default function HomeScreen() {
                 />
                 <LocationModal />
                 {
-                    confirmedBetSlip && confirmedBetSlip.bets && (
+                    confirmedBetSlip && (confirmedBetSlip as DBBetSlipWithBets).bets && (
                     <ConfirmBetSlip
                         visible={confirmModalVisible}
                         close={closeConfirmModal}
-                        betSlip={confirmedBetSlip}
+                        betSlip={confirmedBetSlip as DBBetSlipWithBets}
                         confirm={onConfirmBetSlip}
                     />
                     )
@@ -229,13 +213,13 @@ export default function HomeScreen() {
                 { 
                     betSlips && betSlips.length > 0 && (
                         <OpenBets 
-                            betSlips={betSlips} 
+                            betSlips={betSlips as DBBetSlipWithBets[]} 
                             confirm={openConfirmModal}
                             openOptions={onOpenOptions}
                         />
                     ) 
                 }
-                <WeeklyBetReview bets={weeklyBets}/>
+                <WeeklyBetReview bets={weeklyBets as DBBetSlipWithBets[]}/>
                 <BankReview 
                     transactions={userTransactions} 
                     topBookie={topBookie}
