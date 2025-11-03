@@ -23,7 +23,7 @@ export default function OnboardingScreen() {
   };
 
   const handleComplete = () => {
-    router.replace('/(tabs)');
+    router.replace('/(tabs)/(index)');
   };
 
   const handleClose = () => {

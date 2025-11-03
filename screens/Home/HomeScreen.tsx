@@ -225,13 +225,13 @@ export default function HomeScreen() {
                 { 
                     betSlips && betSlips.length > 0 && (
                         <OpenBets 
-                            betSlips={betSlips as DBBetSlipWithBets[]} // Safe: useHookHome returns betSlips from fillBetSlips which adds bets property
+                            betSlips={betSlips as DBBetSlipWithBets[]}
                             confirm={openConfirmModal}
                             openOptions={onOpenOptions}
                         />
                     ) 
                 }
-                <WeeklyBetReview bets={weeklyBets as DBBetSlipWithBets[]} /> {/* Safe: useHookHome returns weeklyBets from fillBetSlipsWithResults */}
+                <WeeklyBetReview bets={weeklyBets as DBBetSlipWithBets[]} />
                 <BankReview 
                     transactions={userTransactions} 
                     topBookie={topBookie}
