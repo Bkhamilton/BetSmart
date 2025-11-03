@@ -183,7 +183,7 @@ export const getMoneyline = async (db, gameId) => {
             WHERE 
                 bm.gameId = ? AND bm.marketType = "moneyline"
         ) ranked
-        WHERE rn = 1
+        WHERE ranked.rn = 1
         `, [gameId]);
         return moneyline;
     } catch (error) {
