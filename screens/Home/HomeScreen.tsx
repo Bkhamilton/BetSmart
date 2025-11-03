@@ -40,7 +40,7 @@ export default function HomeScreen() {
                value !== undefined &&
                typeof value === 'object' && 
                'bets' in value && 
-               Array.isArray((value as any).bets) &&
+               Array.isArray((value as { bets?: unknown }).bets) &&
                'formatId' in value;
     };
 
@@ -225,13 +225,13 @@ export default function HomeScreen() {
                 { 
                     betSlips && betSlips.length > 0 && (
                         <OpenBets 
-                            betSlips={betSlips as DBBetSlipWithBets[]} 
+                            betSlips={betSlips as DBBetSlipWithBets[]} // Safe: useHookHome returns betSlips from fillBetSlips which adds bets property
                             confirm={openConfirmModal}
                             openOptions={onOpenOptions}
                         />
                     ) 
                 }
-                <WeeklyBetReview bets={weeklyBets as DBBetSlipWithBets[]}/>
+                <WeeklyBetReview bets={weeklyBets as DBBetSlipWithBets[]} /> {/* Safe: useHookHome returns weeklyBets from fillBetSlipsWithResults */}
                 <BankReview 
                     transactions={userTransactions} 
                     topBookie={topBookie}
