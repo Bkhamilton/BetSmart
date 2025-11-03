@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, Image } from 'react-native';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -81,12 +81,19 @@ export default function OnboardingScreen() {
     );
   };
 
-  const handleFinishOnboarding = async () => {
+  const handleFinishOnboarding = async (retryCount = 0) => {
+    const MAX_RETRIES = 5;
+    
     // Ensure user is available before adding bookies
     if (!user) {
-      console.warn('User not available yet, waiting...');
-      // Try again after a short delay
-      setTimeout(() => handleFinishOnboarding(), 500);
+      if (retryCount < MAX_RETRIES) {
+        console.warn(`User not available yet, retrying... (${retryCount + 1}/${MAX_RETRIES})`);
+        // Try again after a short delay
+        setTimeout(() => handleFinishOnboarding(retryCount + 1), 500);
+      } else {
+        console.error('User not available after maximum retries');
+        alert('An error occurred. Please try again.');
+      }
       return;
     }
     
@@ -276,6 +283,10 @@ export default function OnboardingScreen() {
             ]}
             onPress={handleFinishOnboarding}
             disabled={selectedBookies.length === 0}
+            accessibilityLabel={selectedBookies.length > 0 
+              ? `Add ${selectedBookies.length} sportsbook${selectedBookies.length > 1 ? 's' : ''} and continue` 
+              : 'Select at least one sportsbook to continue'}
+            accessibilityHint={selectedBookies.length === 0 ? 'This button is disabled. Please select at least one sportsbook.' : undefined}
           >
             <Text style={styles.finishButtonText}>
               {selectedBookies.length > 0 
