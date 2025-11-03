@@ -3,7 +3,7 @@ import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import { getOpenBetSlips } from '@/db/betslips/BetSlips';
 import { getSettledBetSlips } from '@/db/betslips/BetSlipsResults';
-import { fillBetSlips, fillBetSlipsWithResults } from '@/contexts/BetContext/betSlipHelpers';
+import { fillBetSlips, fillBetSlipsWithResults } from '@/contexts/NewBetContext/BetContext/betSlipHelpers';
 
 const useHookBetHistory = () => {
 

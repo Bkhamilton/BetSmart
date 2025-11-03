@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
 import { Text, View, TouchableOpacity, ClearView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';

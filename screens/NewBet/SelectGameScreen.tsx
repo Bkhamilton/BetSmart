@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { DBContext } from '@/contexts/DBContext';
 import { View } from '@/components/Themed';
 import MainButtons from '@/components/PlaceBet/SelectGame/MainButtons';

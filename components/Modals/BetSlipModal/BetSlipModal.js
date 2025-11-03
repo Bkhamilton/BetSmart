@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { StyleSheet, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { View, Text, TouchableOpacity, Modal, TextInput, ScrollView } from '@/components/Themed';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
 import { Ionicons } from '@expo/vector-icons';
-import { calculateCombinedOdds } from '@/contexts/BetContext/betSlipHelpers';
+import { calculateCombinedOdds } from '@/contexts/NewBetContext/BetContext/betSlipHelpers';
 import BetSlip from './BetSlip';
 import Banner from './Banner';
 import Header from './Header';

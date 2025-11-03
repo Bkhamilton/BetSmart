@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { DBContext } from '@/contexts/DBContext';
 import { getLeaguePropsForLeague } from '@/db/bet-general/LeagueProps';
 import { getLeaguePropInfo } from '@/db/bet-general/LeaguePropsInfo';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 
 const useHookBetDetails = () => {
 

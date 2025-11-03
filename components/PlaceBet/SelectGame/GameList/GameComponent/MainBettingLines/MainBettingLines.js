@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View } from '@/components/Themed';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import useTheme from '@/hooks/useTheme';
 import DisplayMarketLines from './DisplayMarketLines';
 

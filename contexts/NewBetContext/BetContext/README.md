@@ -64,7 +64,7 @@ The original `BetContext.tsx` file has been maintained as a **compatibility laye
 ### Example Usage (Backward Compatible)
 ```typescript
 // This still works exactly as before
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 
 const MyComponent = () => {
   const { currentGame, league, betSlip, selectProp } = useContext(BetContext);
@@ -75,8 +75,8 @@ const MyComponent = () => {
 ### Example Usage (Direct Context Access)
 ```typescript
 // New option: Use specific contexts directly
-import { GameContext } from '@/contexts/GameContext';
-import { BetSlipContext } from '@/contexts/BetSlipContext';
+import { GameContext } from '@/contexts/NewBetContext/GameContext';
+import { BetSlipContext } from '@/contexts/NewBetContext/BetSlipContext';
 
 const MyComponent = () => {
   const { currentGame } = useContext(GameContext);
@@ -105,12 +105,12 @@ This hierarchy ensures that:
 
 ## File Locations
 
-- `/contexts/GameContext.tsx` - Game state management
-- `/contexts/LeagueContext.tsx` - League state management
-- `/contexts/BookieSelectionContext.tsx` - Bookie selection management
-- `/contexts/BetSlipContext.tsx` - Bet slip management
-- `/contexts/BetContext/BetContext.tsx` - Backward-compatible wrapper
-- `/contexts/BetContext/betSlipHelpers.js` - Helper functions (unchanged)
+- `/contexts/NewBetContext/GameContext.tsx` - Game state management
+- `/contexts/NewBetContext/LeagueContext.tsx` - League state management
+- `/contexts/NewBetContext/BookieSelectionContext.tsx` - Bookie selection management
+- `/contexts/NewBetContext/BetSlipContext.tsx` - Bet slip management
+- `/contexts/NewBetContext/BetContext/BetContext.tsx` - Backward-compatible wrapper
+- `/contexts/NewBetContext/BetContext/betSlipHelpers.js` - Helper functions (unchanged)
 
 ## Type Definitions
 
@@ -129,11 +129,11 @@ Consider using the specific contexts directly for better clarity:
 
 ```typescript
 // Before
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 const { currentGame } = useContext(BetContext);
 
 // After (optional, more explicit)
-import { GameContext } from '@/contexts/GameContext';
+import { GameContext } from '@/contexts/NewBetContext/GameContext';
 const { currentGame } = useContext(GameContext);
 ```
 

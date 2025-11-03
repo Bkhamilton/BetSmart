@@ -1,7 +1,7 @@
-// app/contexts/BetSlipContext.tsx
+// app/contexts/NewBetContext/BetSlipContext.tsx
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/BetContext/betSlipHelpers';
-import { UserContext } from './UserContext';
+import { createLeg, createBet, createBetSlip, updateBetSlip } from '@/contexts/NewBetContext/BetContext/betSlipHelpers';
+import { UserContext } from '../UserContext';
 import { GameContext } from './GameContext';
 import { LeagueContext } from './LeagueContext';
 import { BookieSelectionContext } from './BookieSelectionContext';

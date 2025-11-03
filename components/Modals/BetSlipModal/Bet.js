@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { TouchableOpacity, Text, View, Pressable, TextInput, ClearView } from '@/components/Themed';
-import { BetContext } from '@/contexts/BetContext/BetContext';
+import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { updateBetOdds } from '@/contexts/BetContext/betSlipHelpers';
+import { updateBetOdds } from '@/contexts/NewBetContext/BetContext/betSlipHelpers';
 import Leg from './Leg';
 import useTheme from '@/hooks/useTheme';
 
