@@ -8,6 +8,7 @@ import { DBContext } from '@/contexts/DBContext';
 import { useRouter } from 'expo-router';
 import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
 import useHookBetPreferences from '@/hooks/useHookBetPreferences';
+import { Preference } from '@/constants/types';
 
 export default function BetPreferencesScreen() {
 
@@ -20,7 +21,7 @@ export default function BetPreferencesScreen() {
 
     const { preferences, setPreferences } = useHookBetPreferences();
 
-    const handleSave = (updatedPreferences) => {
+    const handleSave = (updatedPreferences: Preference) => {
         if (!signedIn) {
             alert('Please sign in to save changes');
             return;
