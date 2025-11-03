@@ -23,14 +23,25 @@ import useDatabaseFuncs from '@/hooks/useDatabaseFuncs';
 import ProfileOptions from '@/components/Modals/ProfileOptions';
 import BankReview from '@/components/Home/BankReview/BankReview';
 import { LocationModal } from '@/components/Modals/LocationModal';
+import { Bookie, Balance, DBBetSlip, DBBetSlipWithBets, Bet } from '@/constants/types';
 
 export default function HomeScreen() {
 
     const { user, setBookie, signedIn, locationStatus } = useContext(UserContext);
 
-    type BetSlip = {
-        bets?: any[];
-        // add other properties as needed
+    // Type guard function to distinguish Balance from DBBetSlipWithBets
+    const isBalance = (target: Balance | DBBetSlipWithBets): target is Balance => {
+        return 'balance' in target && typeof (target as Balance).balance === 'number';
+    };
+
+    // Type guard function to check if a value is DBBetSlipWithBets
+    const isDBBetSlipWithBets = (value: unknown): value is DBBetSlipWithBets => {
+        return value !== null &&
+               value !== undefined &&
+               typeof value === 'object' && 
+               'bets' in value && 
+               Array.isArray((value as { bets?: unknown }).bets) &&
+               'formatId' in value;
     };
 
     const {
@@ -49,22 +60,6 @@ export default function HomeScreen() {
         openProfileOptionsModal,
         closeProfileOptionsModal,
         onConfirmBetSlip,
-    }: {
-        confirmModalVisible: boolean;
-        chooseBookieModalVisible: boolean;
-        profileOptionsModalVisible: boolean;
-        confirmedBetSlip: BetSlip | null;
-        betSlips: BetSlip[];
-        weeklyBets: any[];
-        refreshing: boolean;
-        onRefresh: () => void;
-        openChooseBookieModal: () => void;
-        closeChooseBookieModal: () => void;
-        openConfirmModal: (betSlip: BetSlip) => void;
-        closeConfirmModal: () => void;
-        openProfileOptionsModal: () => void;
-        closeProfileOptionsModal: () => void;
-        onConfirmBetSlip: () => void;
     } = useHookHome();
 
     const { 
@@ -111,11 +106,11 @@ export default function HomeScreen() {
         deleteUserBetSlip
     } = useDatabaseFuncs();
 
-    const onAddBookie = async (bookie : any) => {
+    const onAddBookie = async (bookie: Bookie) => {
         handleConfirmation(`add ${bookie.name} as a bookie?`, closeAddBookieModal, addBookie, bookie);
     };
 
-    const onSelectBookie = (balance : any) => {
+    const onSelectBookie = (balance: Balance) => {
         if (balance.bookieId === -1) {
             closeChooseBookieModal();
             if (!signedIn) {
@@ -129,32 +124,29 @@ export default function HomeScreen() {
         }
     }
 
-    const handleResponse = async (response : string, target : any) => {
+    const handleResponse = async (response: string, target: Balance | DBBetSlipWithBets) => {
         // if response is delete, confirm deletion
         if (response === 'Delete') {
             // if target is Balance object, delete balance
-            if (target.balance >= 0) {
+            if (isBalance(target)) {
                 handleConfirmation(`delete ${target.bookieName} as a bookie?`, closeProfileOptionsModal, deleteBalBookie, [target.bookieId, user!.id]);
             } else {
-                if (target.bets) {
-                    handleConfirmation(`delete bet slip?`, closeProfileOptionsModal, deleteUserBetSlip, [target, user!.id], onRefresh);
-                }
+                // target is DBBetSlipWithBets
+                handleConfirmation(`delete bet slip?`, closeProfileOptionsModal, deleteUserBetSlip, [target, user!.id], onRefresh);
             }
         } else if (response === 'Edit') {
             // if target is Balance object, edit balance
-            if (target.balance >= 0) {
+            if (isBalance(target)) {
                 // open transaction modal
                 console.log('edit balance');
             } else {
                 // open bet slip modal
-                if (target.bets) {
-                    console.log('edit bet slip');
-                }
+                console.log('edit bet slip');
             }
         }
     }
 
-    const onOpenOptions = async (target : any, options : any) => {
+    const onOpenOptions = async (target: Balance | DBBetSlipWithBets, options: string[]) => {
         handleOpenOptions(target, options, handleResponse);
     };
 
@@ -202,7 +194,7 @@ export default function HomeScreen() {
                 />
                 <LocationModal />
                 {
-                    confirmedBetSlip && confirmedBetSlip.bets && (
+                    isDBBetSlipWithBets(confirmedBetSlip) && (
                     <ConfirmBetSlip
                         visible={confirmModalVisible}
                         close={closeConfirmModal}
@@ -233,13 +225,13 @@ export default function HomeScreen() {
                 { 
                     betSlips && betSlips.length > 0 && (
                         <OpenBets 
-                            betSlips={betSlips} 
+                            betSlips={betSlips as DBBetSlipWithBets[]} // Safe: useHookHome returns betSlips from fillBetSlips which adds bets property
                             confirm={openConfirmModal}
                             openOptions={onOpenOptions}
                         />
                     ) 
                 }
-                <WeeklyBetReview bets={weeklyBets}/>
+                <WeeklyBetReview bets={weeklyBets as DBBetSlipWithBets[]} /> {/* Safe: useHookHome returns weeklyBets from fillBetSlipsWithResults */}
                 <BankReview 
                     transactions={userTransactions} 
                     topBookie={topBookie}

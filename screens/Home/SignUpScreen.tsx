@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 import useAuthState from '@/hooks/useAuthState';
 import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
 import { UserContext } from '@/contexts/UserContext';
+import { Preference } from '@/constants/types';
 
 export default function SignUpScreen() {
 
@@ -41,7 +42,7 @@ export default function SignUpScreen() {
         }
     }
 
-    const handleSavePreferences = async (prefs : any) => {
+    const handleSavePreferences = async (prefs: Preference) => {
         await updatePreferences(prefs);
         router.back();
     }

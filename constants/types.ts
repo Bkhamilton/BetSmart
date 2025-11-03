@@ -197,6 +197,14 @@ export interface ParticipantBet {
     odds: number;
 }
 
+export interface ParticipantBetWithLegs extends ParticipantBet {
+    legs: Leg[];
+}
+
+export interface DBBetSlipWithBets extends DBBetSlip {
+    bets: ParticipantBetWithLegs[];
+}
+
 export interface ParticipantBetResult {
     id: number;
     participantBetId: number;
