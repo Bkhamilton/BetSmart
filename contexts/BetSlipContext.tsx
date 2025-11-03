@@ -37,7 +37,7 @@ export const BetSlipContextProvider = ({ children }: BetSlipContextProviderProps
     const { bookieId } = useContext(BookieSelectionContext);
 
     const [betSlip, setBetSlip] = useState<BetSlip | null>(null);
-    const [totalLegs, setTotalLegs] = useState<Number | null>(0);
+    const [totalLegs, setTotalLegs] = useState<number | null>(0);
 
     const selectProp = (props: { game: any; type: any; target: any; stat: any; value: any; overUnder: any; odds: any; bookieId: any; }) => {
         const { game, type, target, stat, value, overUnder, odds, bookieId } = props;

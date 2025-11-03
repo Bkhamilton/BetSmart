@@ -15,7 +15,7 @@ interface BookieSelectionContextProviderProps {
 
 export const BookieSelectionContextProvider = ({ children }: BookieSelectionContextProviderProps) => {
     const [bookie, setBookie] = useState<string | null>('DraftKings');
-    const [bookieId, setBookieId] = useState<Number | null>(1);
+    const [bookieId, setBookieId] = useState<number | null>(1);
 
     const value = {
         bookie,
