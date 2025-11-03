@@ -18,6 +18,7 @@ import useAuthState from '@/hooks/useAuthState';
 import AboutModal from '@/components/Modals/AboutModal';
 import HelpModal from '@/components/Modals/HelpModal';
 import PrivacySettings from '@/components/Modals/PrivacySettings';
+import { User } from '@/constants/types';
 
 export default function SettingsScreen() {
 
@@ -70,7 +71,7 @@ export default function SettingsScreen() {
 
     const { user } = useContext(UserContext);
 
-    const handleSignOut = (user : any) => {
+    const handleSignOut = (user: User) => {
         signOutUser(user.id);
     }
 

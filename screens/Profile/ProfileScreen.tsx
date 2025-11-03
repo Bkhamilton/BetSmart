@@ -18,6 +18,7 @@ import OptionMenu from '@/components/Modals/OptionMenu';
 import ProfilePageHeader from '@/components/Profile/ProfilePage/ProfilePageHeader';
 import BettingPreferences from '@/components/Profile/ProfilePage/BettingPreferences';
 import BankrollManagement from '@/components/Profile/ProfilePage/BankrollManagement';
+import { Bookie, Balance } from '@/constants/types';
 
 export default function ProfileScreen() {
   
@@ -59,7 +60,7 @@ export default function ProfileScreen() {
         handleSignUp,
     } = useAuthState();
 
-    const onAddBookie = async (bookie: any) => {
+    const onAddBookie = async (bookie: Bookie) => {
         if (!signedIn) {
             alert('Please sign in to add a bookie');
             return;
@@ -67,7 +68,7 @@ export default function ProfileScreen() {
         handleConfirmation(`add ${bookie.name} as a bookie?`, closeAddBookieModal, addBookie, bookie);
     };
 
-    const handleResponse = async (response: string, target: any) => {
+    const handleResponse = async (response: string, target: Balance) => {
         // if response is delete, confirm deletion
         if (response === 'Delete') {
             // if target is Balance object, delete balance
@@ -80,7 +81,7 @@ export default function ProfileScreen() {
         }
     }
 
-    const onOpenOptions = async (target: any, options: any) => {
+    const onOpenOptions = async (target: Balance, options: string[]) => {
         handleOpenOptions(target, options, handleResponse);
     };
 
