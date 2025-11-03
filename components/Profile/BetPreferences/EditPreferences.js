@@ -7,7 +7,6 @@ import useTheme from '@/hooks/useTheme';
 export default function EditPreferences({ 
     userPreferences, 
     setUserPreferences, 
-    updatePreferences,
     leagues = [],
     onSave
 }) {
@@ -78,8 +77,6 @@ export default function EditPreferences({
     const handleSaveChanges = () => {
         if (onSave) {
             onSave(preferences);
-        } else {
-            updatePreferences(preferences);
         }
     };
 

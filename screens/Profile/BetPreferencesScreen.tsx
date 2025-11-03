@@ -43,7 +43,6 @@ export default function BetPreferencesScreen() {
             <EditPreferences 
                 userPreferences={preferences}
                 setUserPreferences={setPreferences}
-                updatePreferences={updatePreferences}
                 leagues={leagues}
                 onSave={handleSave}
             />
