@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { Platform, StyleSheet, Image } from 'react-native';
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -19,7 +19,7 @@ type OnboardingStep = 'signup' | 'preferences' | 'bookies';
 
 export default function OnboardingScreen() {
   const { leagues, bookies } = useContext(DBContext);
-  const { updatePreferences, user } = useContext(UserContext);
+  const { updatePreferences, user, signedIn } = useContext(UserContext);
   const { iconColor, grayBackground, grayBorder, buttonGreen } = useTheme();
   const { signUp } = useAuthState();
   const router = useRouter();
@@ -82,8 +82,16 @@ export default function OnboardingScreen() {
   };
 
   const handleFinishOnboarding = async () => {
+    // Ensure user is available before adding bookies
+    if (!user) {
+      console.warn('User not available yet, waiting...');
+      // Try again after a short delay
+      setTimeout(() => handleFinishOnboarding(), 500);
+      return;
+    }
+    
     // Add all selected bookies to user's active bookies
-    if (user && selectedBookies.length > 0) {
+    if (selectedBookies.length > 0) {
       for (const bookieId of selectedBookies) {
         await insertBalance(db, bookieId, 0, user.id);
       }
