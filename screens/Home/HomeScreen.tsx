@@ -29,6 +29,21 @@ export default function HomeScreen() {
 
     const { user, setBookie, signedIn, locationStatus } = useContext(UserContext);
 
+    // Type guard function to distinguish Balance from DBBetSlipWithBets
+    const isBalance = (target: Balance | DBBetSlipWithBets): target is Balance => {
+        return 'balance' in target && typeof (target as Balance).balance === 'number';
+    };
+
+    // Type guard function to check if a value is DBBetSlipWithBets
+    const isDBBetSlipWithBets = (value: unknown): value is DBBetSlipWithBets => {
+        return value !== null &&
+               value !== undefined &&
+               typeof value === 'object' && 
+               'bets' in value && 
+               Array.isArray((value as any).bets) &&
+               'formatId' in value;
+    };
+
     const {
         confirmModalVisible,
         chooseBookieModalVisible,
@@ -113,23 +128,20 @@ export default function HomeScreen() {
         // if response is delete, confirm deletion
         if (response === 'Delete') {
             // if target is Balance object, delete balance
-            if ('balance' in target && target.balance >= 0) {
+            if (isBalance(target)) {
                 handleConfirmation(`delete ${target.bookieName} as a bookie?`, closeProfileOptionsModal, deleteBalBookie, [target.bookieId, user!.id]);
             } else {
-                if ('id' in target) {
-                    handleConfirmation(`delete bet slip?`, closeProfileOptionsModal, deleteUserBetSlip, [target, user!.id], onRefresh);
-                }
+                // target is DBBetSlipWithBets
+                handleConfirmation(`delete bet slip?`, closeProfileOptionsModal, deleteUserBetSlip, [target, user!.id], onRefresh);
             }
         } else if (response === 'Edit') {
             // if target is Balance object, edit balance
-            if ('balance' in target && target.balance >= 0) {
+            if (isBalance(target)) {
                 // open transaction modal
                 console.log('edit balance');
             } else {
                 // open bet slip modal
-                if ('id' in target) {
-                    console.log('edit bet slip');
-                }
+                console.log('edit bet slip');
             }
         }
     }
@@ -182,11 +194,11 @@ export default function HomeScreen() {
                 />
                 <LocationModal />
                 {
-                    confirmedBetSlip && (confirmedBetSlip as DBBetSlipWithBets).bets && (
+                    isDBBetSlipWithBets(confirmedBetSlip) && (
                     <ConfirmBetSlip
                         visible={confirmModalVisible}
                         close={closeConfirmModal}
-                        betSlip={confirmedBetSlip as DBBetSlipWithBets}
+                        betSlip={confirmedBetSlip}
                         confirm={onConfirmBetSlip}
                     />
                     )
