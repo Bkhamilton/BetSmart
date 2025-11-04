@@ -219,11 +219,11 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
                         setPreferences({
                             bankroll: preferences.bankroll,
                             dailyLimit: preferences.dailyLimit,
-                            unitSize: preferences.unitSize,
-                            preferredLeagues: preferences.preferredLeagues.split(','),
-                            preferredBetTypes: preferences.preferredBetTypes.split(','),
+                            unitSize: preferences.unitSize || '',
+                            preferredLeagues: preferences.preferredLeagues ? preferences.preferredLeagues.split(',') : [],
+                            preferredBetTypes: preferences.preferredBetTypes ? preferences.preferredBetTypes.split(',') : [],
                             riskTolerance: preferences.riskTolerance,
-                            oddsFormat: preferences.oddsFormat,
+                            oddsFormat: preferences.oddsFormat || '',
                         });
                     }
                 });

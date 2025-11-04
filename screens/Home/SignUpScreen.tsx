@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 import useAuthState from '@/hooks/useAuthState';
 import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
 import { UserContext } from '@/contexts/UserContext';
+import { DBContext } from '@/contexts/DBContext';
 import { Preference } from '@/constants/types';
 
 export default function SignUpScreen() {
@@ -22,6 +23,7 @@ export default function SignUpScreen() {
     const router = useRouter();
     const { signUp } = useAuthState();
     const { updatePreferences } = useContext(UserContext);
+    const { leagues } = useContext(DBContext);
 
     const onSignUp = async () => {
         // Check if each field is filled out
@@ -73,7 +75,8 @@ export default function SignUpScreen() {
                         oddsFormat: '',
                     }}
                     setUserPreferences={() => {}}
-                    updatePreferences={handleSavePreferences}
+                    leagues={leagues}
+                    onSave={handleSavePreferences}
                 />
             </>
         );

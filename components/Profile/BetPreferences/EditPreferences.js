@@ -37,12 +37,15 @@ export default function EditPreferences({
         if (userPreferences.bankRoll === 0) return;
         setPreferences(userPreferences);
         if (preferences.unitSize !== '') {
-            const unitSizes = userPreferences.unitSize.match(/\$\d+/g).map(size => size.replace('$', ''));
-            setUnitSizes({
-                'S': unitSizes[0],
-                'M': unitSizes[1],
-                'L': unitSizes[2],
-            });
+            const matches = userPreferences.unitSize.match(/\$\d+/g);
+            if (matches && matches.length >= 3) {
+                const unitSizes = matches.map(size => size.replace('$', ''));
+                setUnitSizes({
+                    'S': unitSizes[0],
+                    'M': unitSizes[1],
+                    'L': unitSizes[2],
+                });
+            }
         }
     }, [userPreferences]);
 
