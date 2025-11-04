@@ -14,6 +14,28 @@ export default function SportSlider({ selectLeague }) {
 
     const { text, backgroundColor, grayBackground, grayBorder } = useTheme();
 
+    function renderItem({ item }) {
+        return (
+            <TouchableOpacity 
+                style={[
+                    styles.sportContainer,
+                    item.leagueName === league?.leagueName && styles.selectedSport,
+                    item.leagueName === league.leagueName ? { backgroundColor: text } : { backgroundColor: grayBackground, borderColor: grayBorder },
+                ]}
+                onPress={() => selectLeague(item)}
+            >
+                <Image
+                    source={leagueImages[item.leagueName]}
+                    style={styles.logo}
+                />
+                <Text style={[
+                    styles.leagueText,
+                    item.leagueName === league.leagueName ? { color: backgroundColor } : {}
+                ]}>{item.leagueName}</Text>
+            </TouchableOpacity>
+        );
+    }
+
     return (
         <ClearView style={{ height: 78 }}>
             <FlatList
@@ -21,25 +43,7 @@ export default function SportSlider({ selectLeague }) {
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <TouchableOpacity 
-                        style={[
-                            styles.sportContainer,
-                            item.leagueName === league?.leagueName && styles.selectedSport,
-                            item.leagueName === league.leagueName ? { backgroundColor: text } : { backgroundColor: grayBackground, borderColor: grayBorder },
-                        ]}
-                        onPress={() => selectLeague(item)}
-                    >
-                        <Image
-                            source={leagueImages[item.leagueName]}
-                            style={styles.logo}
-                        />
-                        <Text style={[
-                            styles.leagueText,
-                            item.leagueName === league.leagueName ? { color: backgroundColor } : {}
-                        ]}>{item.leagueName}</Text>
-                    </TouchableOpacity>
-                )}
+                renderItem={renderItem}
             />
         </ClearView>
   );
