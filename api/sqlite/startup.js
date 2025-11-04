@@ -41,10 +41,13 @@ export const initializeDatabase = async (db) => {
 };
 
 export const setupDatabase = async (db) => {
+    await dropTables(db);
+    await dropViews(db);
     await createTables(db);
 }
 
 // Function to drop the tables
+
 export const dropTables = async (db) => {
     await db.execAsync(`
         DROP TABLE IF EXISTS Bookies;
@@ -58,6 +61,7 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS Balance;
         DROP TABLE IF EXISTS Transactions;
         DROP TABLE IF EXISTS Bonuses;
+        DROP TABLE IF EXISTS Preferences;
         DROP TABLE IF EXISTS LeagueProps;
         DROP TABLE IF EXISTS LeaguePropsInfo;
         DROP TABLE IF EXISTS BetTargets;
@@ -75,4 +79,20 @@ export const dropTables = async (db) => {
         DROP TABLE IF EXISTS GameResults;
     `);
     console.log('Tables dropped');
+};
+
+export const dropViews = async (db) => {
+    await db.execAsync(`
+        DROP VIEW IF EXISTS OverallBettingPerformance;
+        DROP VIEW IF EXISTS LeaguePerformance;
+        DROP VIEW IF EXISTS MarketPerformance;
+        DROP VIEW IF EXISTS BetTypePerformance;
+        DROP VIEW IF EXISTS OddsRangePerformance;
+        DROP VIEW IF EXISTS DayOfWeekPerformance;
+        DROP VIEW IF EXISTS TimeOfDayPerformance;
+        DROP VIEW IF EXISTS BetSizePerformance;
+        DROP VIEW IF EXISTS BetFormatPerformance;
+        DROP VIEW IF EXISTS BookiePerformance;
+    `);
+    console.log('Views dropped');
 };

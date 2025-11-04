@@ -132,5 +132,3 @@ export const getROIByPeriod = async (db, userId, period) => {
         throw error;
     }
 }
-    }
-}
