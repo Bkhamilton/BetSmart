@@ -36,13 +36,16 @@ export default function EditPreferences({
         if (!userPreferences.unitSize && userPreferences.unitSize !== '') return;
         if (userPreferences.bankRoll === 0) return;
         setPreferences(userPreferences);
-        if (preferences.unitSize !== '') {
-            const unitSizes = userPreferences.unitSize.match(/\$\d+/g).map(size => size.replace('$', ''));
-            setUnitSizes({
-                'S': unitSizes[0],
-                'M': unitSizes[1],
-                'L': unitSizes[2],
-            });
+        if (userPreferences.unitSize !== '') {
+            const matches = userPreferences.unitSize.match(/\$\d+/g);
+            if (matches && matches.length >= 3) {
+                const unitSizes = matches.map(size => size.replace('$', ''));
+                setUnitSizes({
+                    'S': unitSizes[0],
+                    'M': unitSizes[1],
+                    'L': unitSizes[2],
+                });
+            }
         }
     }, [userPreferences]);
 

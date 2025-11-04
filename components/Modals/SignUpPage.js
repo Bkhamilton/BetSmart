@@ -5,6 +5,7 @@ import { TouchableOpacity, Text, View, TextInput, ScrollView, ClearView, Modal }
 import useTheme from '@/hooks/useTheme';
 import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
 import { UserContext } from '@/contexts/UserContext';
+import { DBContext } from '@/contexts/DBContext';
 
 export default function SignUpPage({ visible, close, signUp }) {
 
@@ -17,6 +18,7 @@ export default function SignUpPage({ visible, close, signUp }) {
 
     const { iconColor, backgroundColor, grayBackground, grayBorder, buttonGreen } = useTheme();
     const { updatePreferences } = useContext(UserContext);
+    const { leagues } = useContext(DBContext);
 
     const onSignUp = async () => {
         // Check if each field is filled out
@@ -92,7 +94,8 @@ export default function SignUpPage({ visible, close, signUp }) {
                             oddsFormat: '',
                         }}
                         setUserPreferences={() => {}}
-                        updatePreferences={handleSavePreferences}
+                        leagues={leagues}
+                        onSave={handleSavePreferences}
                     />
                 </>
             ) : (
