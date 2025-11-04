@@ -6,6 +6,7 @@ export const createTables = async (db) => {
     await createUserSpecificTables(db);
     await createAPITables(db);
     await createInsightTables(db);
+    await createIndexes(db);
     console.log('Tables created');
 };
   
@@ -526,3 +527,61 @@ export const createTempTables = async (db) => {
         LIMIT 1;
     `);
 }
+
+// Function to create database indexes for performance optimization
+export const createIndexes = async (db) => {
+    await db.execAsync(`
+        -- Indexes for Games table (frequently joined and filtered)
+        CREATE INDEX IF NOT EXISTS idx_games_gameId ON Games(gameId);
+        CREATE INDEX IF NOT EXISTS idx_games_seasonId ON Games(seasonId);
+        CREATE INDEX IF NOT EXISTS idx_games_date ON Games(date);
+        CREATE INDEX IF NOT EXISTS idx_games_homeTeamId ON Games(homeTeamId);
+        CREATE INDEX IF NOT EXISTS idx_games_awayTeamId ON Games(awayTeamId);
+        CREATE INDEX IF NOT EXISTS idx_games_seasonId_date ON Games(seasonId, date);
+
+        -- Indexes for BetMarkets table (large table with complex queries)
+        CREATE INDEX IF NOT EXISTS idx_betmarkets_gameId ON BetMarkets(gameId);
+        CREATE INDEX IF NOT EXISTS idx_betmarkets_marketType ON BetMarkets(marketType);
+        CREATE INDEX IF NOT EXISTS idx_betmarkets_betTargetId ON BetMarkets(betTargetId);
+        CREATE INDEX IF NOT EXISTS idx_betmarkets_bookieId ON BetMarkets(bookieId);
+        CREATE INDEX IF NOT EXISTS idx_betmarkets_gameId_marketType ON BetMarkets(gameId, marketType);
+        CREATE INDEX IF NOT EXISTS idx_betmarkets_timestamp ON BetMarkets(timestamp);
+
+        -- Indexes for BetSlips table (frequently filtered by userId and date)
+        CREATE INDEX IF NOT EXISTS idx_betslips_userId ON BetSlips(userId);
+        CREATE INDEX IF NOT EXISTS idx_betslips_bookieId ON BetSlips(bookieId);
+        CREATE INDEX IF NOT EXISTS idx_betslips_date ON BetSlips(date);
+        CREATE INDEX IF NOT EXISTS idx_betslips_userId_date ON BetSlips(userId, date);
+        CREATE INDEX IF NOT EXISTS idx_betslips_formatId ON BetSlips(formatId);
+
+        -- Indexes for ParticipantBets table (join table between BetSlips and Games)
+        CREATE INDEX IF NOT EXISTS idx_participantbets_betSlipId ON ParticipantBets(betSlipId);
+        CREATE INDEX IF NOT EXISTS idx_participantbets_gameId ON ParticipantBets(gameId);
+
+        -- Indexes for Legs table (join table with complex queries)
+        CREATE INDEX IF NOT EXISTS idx_legs_participantBetId ON Legs(participantBetId);
+        CREATE INDEX IF NOT EXISTS idx_legs_betMarketId ON Legs(betMarketId);
+        CREATE INDEX IF NOT EXISTS idx_legs_betTypeId ON Legs(betTypeId);
+
+        -- Indexes for Results tables (frequently joined)
+        CREATE INDEX IF NOT EXISTS idx_betslipsresults_betSlipId ON BetSlipsResults(betSlipId);
+        CREATE INDEX IF NOT EXISTS idx_betslipsresults_result ON BetSlipsResults(result);
+        CREATE INDEX IF NOT EXISTS idx_participantbetsresults_participantBetId ON ParticipantBetsResults(participantBetId);
+        CREATE INDEX IF NOT EXISTS idx_participantbetsresults_result ON ParticipantBetsResults(result);
+        CREATE INDEX IF NOT EXISTS idx_legsresults_legId ON LegsResults(legId);
+        CREATE INDEX IF NOT EXISTS idx_legsresults_result ON LegsResults(result);
+
+        -- Indexes for other commonly queried tables
+        CREATE INDEX IF NOT EXISTS idx_teams_leagueId ON Teams(leagueId);
+        CREATE INDEX IF NOT EXISTS idx_seasons_leagueId ON Seasons(leagueId);
+        CREATE INDEX IF NOT EXISTS idx_seasons_startDate_endDate ON Seasons(startDate, endDate);
+        CREATE INDEX IF NOT EXISTS idx_bettargets_targetType ON BetTargets(targetType);
+        CREATE INDEX IF NOT EXISTS idx_bettargets_teamId ON BetTargets(teamId);
+        CREATE INDEX IF NOT EXISTS idx_bettargets_gameId ON BetTargets(gameId);
+        CREATE INDEX IF NOT EXISTS idx_balance_userId ON Balance(userID);
+        CREATE INDEX IF NOT EXISTS idx_transactions_userId ON Transactions(userId);
+        CREATE INDEX IF NOT EXISTS idx_transactions_bookieId ON Transactions(bookieId);
+        CREATE INDEX IF NOT EXISTS idx_gameresults_gameId ON GameResults(gameId);
+    `);
+    console.log('Database indexes created');
+};
