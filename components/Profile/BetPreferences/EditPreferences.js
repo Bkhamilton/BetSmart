@@ -32,6 +32,8 @@ export default function EditPreferences({
     });
 
     useEffect(() => {
+        if (!userPreferences) return;
+        if (!userPreferences.unitSize && userPreferences.unitSize !== '') return;
         if (userPreferences.bankRoll === 0) return;
         setPreferences(userPreferences);
         if (preferences.unitSize !== '') {
