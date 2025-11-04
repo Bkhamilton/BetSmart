@@ -74,7 +74,7 @@ export default function SignUpScreen() {
                 setTimeout(() => handleFinishOnboarding(retryCount + 1), 500);
             } else {
                 console.error('User not available after maximum retries');
-                alert('An error occurred. Please try again.');
+                alert('Failed to complete setup. Please restart the sign-up process.');
             }
             return;
         }
@@ -147,6 +147,10 @@ export default function SignUpScreen() {
                             ]}
                             onPress={handleFinishOnboarding}
                             disabled={selectedBookies.length === 0}
+                            accessibilityLabel={selectedBookies.length > 0 
+                                ? `Add ${selectedBookies.length} sportsbook${selectedBookies.length > 1 ? 's' : ''} and continue` 
+                                : 'Select at least one sportsbook to continue'}
+                            accessibilityHint={selectedBookies.length === 0 ? 'This button is disabled. Please select at least one sportsbook.' : undefined}
                         >
                             <Text style={styles.finishButtonText}>
                                 {selectedBookies.length > 0 
