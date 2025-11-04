@@ -162,33 +162,29 @@ export const clearGameBetMarkets = async (db, gameId) => {
 
 export const getMoneyline = async (db, gameId) => {
     try {
+        // Optimized query using window function instead of subquery
         const moneyline = await db.getAllAsync(`
         SELECT 
-            bm.id,
-            bm.gameId,
-            bm.marketType,
-            bm.timestamp,
-            bm.value,
-            bm.odds,
-            bm.overUnder,
-            bm.betTargetId,
-            bm.bookieId
-        FROM 
-            BetMarkets bm
-        INNER JOIN (
+            id,
+            gameId,
+            marketType,
+            timestamp,
+            value,
+            odds,
+            overUnder,
+            betTargetId,
+            bookieId
+        FROM (
             SELECT 
-            betTargetId, 
-            MIN(timestamp) as oldestTimestamp
+                bm.*,
+                ROW_NUMBER() OVER (PARTITION BY bm.betTargetId ORDER BY bm.timestamp ASC) as rn
             FROM 
-            BetMarkets
+                BetMarkets bm
             WHERE 
-            gameId = ? AND marketType = "moneyline"
-            GROUP BY 
-            betTargetId
-        ) oldest ON bm.betTargetId = oldest.betTargetId AND bm.timestamp = oldest.oldestTimestamp
-        WHERE 
-            bm.gameId = ? AND bm.marketType = "moneyline"
-        `, [gameId, gameId]);
+                bm.gameId = ? AND bm.marketType = "moneyline"
+        ) ranked
+        WHERE ranked.rn = 1
+        `, [gameId]);
         return moneyline;
     } catch (error) {
         console.error('Error getting moneyline:', error);
@@ -219,15 +215,18 @@ export const getTotalOverUnder = async (db, gameId) => {
 // Function to check if marketTypes 'moneyline', 'spread' and 'totals' all exist for a given gameId
 export const checkBetMarketsExist = async (db, gameId) => {
     try {
-        const moneyline = await getMoneyline(db, gameId);
-        const spread = await getSpread(db, gameId);
-        const totalOverUnder = await getTotalOverUnder(db, gameId);
-
-        if (moneyline.length > 0 && spread.length > 0 && totalOverUnder.length > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        // Optimized query to check all market types in a single query
+        const result = await db.getAllAsync(`
+            SELECT 
+                COUNT(DISTINCT marketType) as marketTypeCount
+            FROM 
+                BetMarkets
+            WHERE 
+                gameId = ? AND marketType IN ('moneyline', 'spread', 'totals')
+        `, [gameId]);
+        
+        // If all 3 market types exist, count should be 3
+        return result[0].marketTypeCount === 3;
     } catch (error) {
         console.error('Error checking if bet markets exist:', error);
         throw error;
@@ -237,15 +236,18 @@ export const checkBetMarketsExist = async (db, gameId) => {
 // Function to check if any one of marketTypes 'moneyline', 'spread' and 'totals' exist for a given gameId
 export const checkIfAnyBetMarketsExist = async (db, gameId) => {
     try {
-        const moneyline = await getMoneyline(db, gameId);
-        const spread = await getSpread(db, gameId);
-        const totalOverUnder = await getTotalOverUnder(db, gameId);
-
-        if (moneyline.length > 0 || spread.length > 0 || totalOverUnder.length > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        // Optimized query to check if any market types exist in a single query
+        const result = await db.getAllAsync(`
+            SELECT 
+                COUNT(*) as count
+            FROM 
+                BetMarkets
+            WHERE 
+                gameId = ? AND marketType IN ('moneyline', 'spread', 'totals')
+            LIMIT 1
+        `, [gameId]);
+        
+        return result[0].count > 0;
     } catch (error) {
         console.error('Error checking if any bet markets exist:', error);
         throw error;
