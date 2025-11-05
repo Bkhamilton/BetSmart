@@ -35,18 +35,26 @@ export default function ProfileMainInfo({ handleSignIn }) {
 
     return (
         <View style={styles.container}>
-            <View style={{ justifyContent: 'center' }}>
-                <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                    <Text>{totalBets} Bets</Text>
-                    <Text>${totalWinnings} All Time</Text>
-                </View>
-                <View style={{ paddingVertical: 4 }}>
+            <View style={{ justifyContent: 'center', flex: 1 }}>
+                <View style={{ paddingVertical: 4, marginBottom: 8 }}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
                         {signedIn ? user?.name : 'No User'}  {/* Use optional chaining */}
                     </Text>
                 </View>
-                <Text style={{ fontSize: 16 }}>{signedIn ? user?.username : ''}</Text>
-                <View style={{ marginTop: 8 }}>
+                <Text style={{ fontSize: 16, marginBottom: 12 }}>{signedIn ? user?.username : ''}</Text>
+                
+                <View style={styles.statsContainer}>
+                    <View style={[styles.statCard, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
+                        <Text style={styles.statValue}>{totalBets}</Text>
+                        <Text style={styles.statLabel}>Total Bets</Text>
+                    </View>
+                    <View style={[styles.statCard, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
+                        <Text style={styles.statValue}>${totalWinnings}</Text>
+                        <Text style={styles.statLabel}>All Time</Text>
+                    </View>
+                </View>
+
+                <View style={{ marginTop: 12 }}>
                     {signedIn ? (
                         <TouchableOpacity 
                             style={[styles.editProfileButton, { borderColor: grayBorder, backgroundColor: grayBackground }]}
@@ -80,6 +88,29 @@ export default function ProfileMainInfo({ handleSignIn }) {
         paddingHorizontal: 12,
         paddingLeft: 20,
         paddingVertical: 16,
+    },
+    statsContainer: {
+        flexDirection: 'row',
+        gap: 12,
+        marginBottom: 4,
+    },
+    statCard: {
+        flex: 1,
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        borderWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    statValue: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 2,
+    },
+    statLabel: {
+        fontSize: 12,
+        opacity: 0.7,
     },
     editProfileButton: {
         paddingVertical: 4,
