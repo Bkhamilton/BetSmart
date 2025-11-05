@@ -14,7 +14,7 @@ const ICON_LIBRARIES = {
     Ionicons,
 };
 
-const PreferenceItem = ({ icon, label, value, iconLib = 'FontAwesome6', iconColor, grayBorder }) => {
+const PreferenceItem = React.memo(({ icon, label, value, iconLib = 'FontAwesome6', iconColor, grayBorder }) => {
     const IconComponent = ICON_LIBRARIES[iconLib] || FontAwesome6;
     
     return (
@@ -30,7 +30,7 @@ const PreferenceItem = ({ icon, label, value, iconLib = 'FontAwesome6', iconColo
             </Text>
         </ClearView>
     );
-};
+});
 
 export default function BettingPreferences() {
 
