@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
-import { ScrollView, ClearView, Text, View } from '@/components/Themed';
+import { View } from '@/components/Themed';
 import InsightHeader from '@/components/Insights/InsightHeader';
-import InsightIntro from '@/components/Insights/InsightIntro/InsightIntro';
-import BetAnalysis from '@/components/Insights/BetAnalysis/BetAnalysis';
-import BankManagement from '@/components/Insights/BankManagement/BankManagement';
-import TopBet from '@/components/Insights/TopBet/TopBet';
+import ViewToggle from '@/components/Insights/ViewToggle';
+import AnalysisView from './AnalysisView';
+import TipsScreen from './TipsScreen';
 import useHookInsightsPage from '@/hooks/useHookInsights';
 import { SupabaseContext } from '@/contexts/SupabaseContext';
 import { getLeagueByName } from '@/api/supabase/Leagues';
 import { refreshBettingMarkets } from '@/api/supabase/markets';
 import { fetchAndUpdateRoster } from '@/api/sportsdb/players';
-import PreferenceAdherence from '@/components/Insights/PreferenceAdherence/PreferenceAdherence';
 import { getActionableInsights } from '@/utils/insights';
 import { createTempTables } from '@/api/sqlite/createTables';
+import useTheme from '@/hooks/useTheme';
 
 export default function InsightScreen() {
 
@@ -26,8 +26,12 @@ export default function InsightScreen() {
 
     const { user } = useContext(UserContext);
 
+    const { mainGreen } = useTheme();
+
     const [actionableInsights, setActionableInsights] = useState<{ message: string; priority: number; }[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedView, setSelectedView] = useState<'analysis' | 'tips'>('analysis');
+    const [isTransitioning, setIsTransitioning] = useState(false);
 
     useEffect(() => {
         const initialize = async () => {
@@ -61,28 +65,37 @@ export default function InsightScreen() {
         
     }
 
-    const renderInsightCard = (insight : any, index : number) => (
-        <ClearView key={index} style={{ 
-            margin: 8,
-        }}>
-            <Text style={{ 
-                fontSize: 16, 
-                fontWeight: '500', 
-                textAlign: 'center',
-            }}>
-                {insight.message}
-            </Text>
-        </ClearView>
-    );
+    const handleViewChange = async (view: 'analysis' | 'tips') => {
+        if (view === selectedView) return;
+        
+        setIsTransitioning(true);
+        // Simulate loading delay for smooth transition
+        setTimeout(() => {
+            setSelectedView(view);
+            setIsTransitioning(false);
+        }, 300);
+    };
 
-    const getTextColor = (type : string) => {
-        switch(type) {
-            case 'success': return '#2e7d32';
-            case 'warning': return '#ed6c02';
-            case 'improvement': return '#d32f2f';
-            case 'strategy': return '#1565c0';
-            default: return '#333333';
+    const renderContent = () => {
+        if (isTransitioning) {
+            return (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <ActivityIndicator size="large" color={mainGreen} />
+                </View>
+            );
         }
+
+        if (selectedView === 'analysis') {
+            return (
+                <AnalysisView 
+                    streak={streak}
+                    topBet={topBet}
+                    actionableInsights={actionableInsights}
+                />
+            );
+        }
+
+        return <TipsScreen />;
     };
 
     return (
@@ -90,33 +103,11 @@ export default function InsightScreen() {
             <InsightHeader
                 onPress={tempFunction}
             />
-            <ScrollView>
-                <InsightIntro streak={streak} />
-                <BetAnalysis streak={streak} />
-                {/* Insight #1 - Top Performer */}
-                {actionableInsights.length > 0 && (
-                    <View style={{ padding: 16, justifyContent: 'center', alignItems: 'center' }}>
-                        {renderInsightCard(actionableInsights[0], 0)}
-                    </View>
-                )}
-                <TopBet betSlip={topBet}/>
-                {actionableInsights.length > 1 && (
-                    <View style={{ padding: 16, justifyContent: 'center', alignItems: 'center' }}>
-                        {renderInsightCard(actionableInsights[1], 1)}
-                    </View>
-                )}
-                {/* Top Props */}
-                <BankManagement streak={streak} />
-                <PreferenceAdherence />
-                {actionableInsights.length > 2 && (
-                    <ClearView style={{ padding: 16, justifyContent: 'center', alignItems: 'center' }}>
-                        {renderInsightCard(actionableInsights[2], 2)}
-                    </ClearView>
-                )}
-                {/* Behavioral Analysis */}
-                {/* Learning Opportunities */}
-                {/* Future: Comparative Analysis */}
-            </ScrollView>
+            <ViewToggle 
+                selectedView={selectedView}
+                onViewChange={handleViewChange}
+            />
+            {renderContent()}
         </>
     );
 }
