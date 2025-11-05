@@ -6,6 +6,7 @@ import useRouting from '@/hooks/useRouting';
 import { DBContext } from '@/contexts/DBContext';
 import { UserContext } from '@/contexts/UserContext';
 import useHookBetPreferences from '@/hooks/useHookBetPreferences';
+import { FontAwesome6, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 export default function BettingPreferences() {
 
@@ -76,45 +77,87 @@ export default function BettingPreferences() {
         });
     }, [user, signedIn, preferences]);
 
+    const PreferenceItem = ({ icon, label, value, iconLib = 'FontAwesome6' }) => {
+        const IconComponent = iconLib === 'MaterialCommunityIcons' ? MaterialCommunityIcons : 
+                             iconLib === 'Ionicons' ? Ionicons : FontAwesome6;
+        
+        return (
+            <ClearView style={styles.preferenceItem}>
+                <ClearView style={styles.preferenceLeft}>
+                    <View style={[styles.iconContainer, { backgroundColor: grayBorder }]}>
+                        <IconComponent name={icon} size={20} color={iconColor} />
+                    </View>
+                    <Text style={styles.preferenceLabel}>{label}</Text>
+                </ClearView>
+                <Text style={styles.preferenceValue} numberOfLines={1} ellipsizeMode="tail">
+                    {value}
+                </Text>
+            </ClearView>
+        );
+    };
+
     return (
         <View style={styles.container}>
             <View style={{ paddingHorizontal: 20 }}>
                 <Text style={{ fontSize: 18, fontWeight: '500' }}>Betting Preferences</Text>
             </View>
             <View style={[styles.mainContainer, { backgroundColor: grayBackground, borderColor: grayBorder }]}>
-                <ClearView style={styles.preferenceContainer}>
-                    <Text style={{ fontSize: 16 }}>Bankroll:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>${tempPreferences.bankroll}</Text>
-                </ClearView>
-                <ClearView style={styles.preferenceContainer}>
-                    <Text style={{ fontSize: 16 }}>Daily Limit:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>${tempPreferences.dailyLimit}</Text>
-                </ClearView>
-                <ClearView style={styles.preferenceContainer}>
-                    <Text style={{ fontSize: 16 }}>Unit Size:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{tempPreferences.unitSize}</Text>
-                </ClearView>
-                <ClearView style={styles.preferenceContainer}>
-                    <Text style={{ fontSize: 16 }}>Preferred Leagues:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{tempPreferences.preferredLeagues}</Text>
-                </ClearView>
-                <ClearView style={styles.preferenceContainer}>
-                    <Text style={{ fontSize: 16 }}>Preferred Bet Types:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{tempPreferences.preferredBetTypes}</Text>
-                </ClearView>
-                <ClearView style={styles.preferenceContainer}>
-                    <Text style={{ fontSize: 16 }}>Risk Tolerance:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{tempPreferences.riskTolerance}</Text>
-                </ClearView>
-                <ClearView style={styles.preferenceContainer}>
-                    <Text style={{ fontSize: 16 }}>Odds Format:</Text>
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>{tempPreferences.oddsFormat}</Text>
-                </ClearView>
+                <PreferenceItem 
+                    icon="wallet" 
+                    label="Bankroll" 
+                    value={`$${tempPreferences.bankroll}`}
+                />
+                <View style={[styles.separator, { backgroundColor: grayBorder }]} />
+                
+                <PreferenceItem 
+                    icon="calendar-day" 
+                    label="Daily Limit" 
+                    value={`$${tempPreferences.dailyLimit}`}
+                />
+                <View style={[styles.separator, { backgroundColor: grayBorder }]} />
+                
+                <PreferenceItem 
+                    icon="chart-simple" 
+                    label="Unit Size" 
+                    value={tempPreferences.unitSize}
+                />
+                <View style={[styles.separator, { backgroundColor: grayBorder }]} />
+                
+                <PreferenceItem 
+                    icon="trophy" 
+                    label="Preferred Leagues" 
+                    value={tempPreferences.preferredLeagues}
+                />
+                <View style={[styles.separator, { backgroundColor: grayBorder }]} />
+                
+                <PreferenceItem 
+                    icon="ticket" 
+                    iconLib="MaterialCommunityIcons"
+                    label="Preferred Bet Types" 
+                    value={tempPreferences.preferredBetTypes}
+                />
+                <View style={[styles.separator, { backgroundColor: grayBorder }]} />
+                
+                <PreferenceItem 
+                    icon="speedometer" 
+                    iconLib="Ionicons"
+                    label="Risk Tolerance" 
+                    value={tempPreferences.riskTolerance}
+                />
+                <View style={[styles.separator, { backgroundColor: grayBorder }]} />
+                
+                <PreferenceItem 
+                    icon="calculator" 
+                    label="Odds Format" 
+                    value={tempPreferences.oddsFormat}
+                />
+                
                 <TouchableOpacity
-                    style={[styles.addBookieContainer, { backgroundColor: grayBorder }]}
+                    style={[styles.editButton, { backgroundColor: grayBorder }]}
                     onPress={handleEditPreferences}
                 >
-                    <Text style={{ fontSize: 16, fontWeight: '600' }}>Edit Preferences</Text>    
+                    <FontAwesome6 name="pen-to-square" size={16} color={iconColor} />
+                    <Text style={{ fontSize: 16, fontWeight: '600', marginLeft: 8 }}>Edit Preferences</Text>    
                 </TouchableOpacity>                                                                
             </View>
         </View>
@@ -125,22 +168,56 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    addBookieContainer: {
-        marginTop: 10,
-        padding: 8,
-        borderRadius: 8,
-        alignItems: 'center',
-    },
     mainContainer: {
-        paddingVertical: 12,
-        paddingHorizontal: 12, 
+        paddingVertical: 16,
+        paddingHorizontal: 16, 
         marginHorizontal: 12, 
         marginVertical: 12, 
         borderWidth: 1, 
-        borderRadius: 8,
+        borderRadius: 12,
     },
-    preferenceContainer: {
+    preferenceItem: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 10,
+    },
+    preferenceLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1,
+        marginRight: 12,
+    },
+    iconContainer: {
+        width: 36,
+        height: 36,
+        borderRadius: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    preferenceLabel: {
+        fontSize: 15,
+        fontWeight: '500',
+        opacity: 0.8,
+    },
+    preferenceValue: {
+        fontSize: 15,
+        fontWeight: '600',
+        maxWidth: '45%',
+        textAlign: 'right',
+    },
+    separator: {
+        height: 1,
+        opacity: 0.3,
+        marginVertical: 4,
+    },
+    editButton: {
+        marginTop: 16,
+        paddingVertical: 12,
+        borderRadius: 10,
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center',
     },
 });
