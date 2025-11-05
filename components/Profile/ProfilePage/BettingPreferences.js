@@ -8,6 +8,30 @@ import { UserContext } from '@/contexts/UserContext';
 import useHookBetPreferences from '@/hooks/useHookBetPreferences';
 import { FontAwesome6, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
+const ICON_LIBRARIES = {
+    FontAwesome6,
+    MaterialCommunityIcons,
+    Ionicons,
+};
+
+const PreferenceItem = ({ icon, label, value, iconLib = 'FontAwesome6', iconColor, grayBorder }) => {
+    const IconComponent = ICON_LIBRARIES[iconLib] || FontAwesome6;
+    
+    return (
+        <ClearView style={styles.preferenceItem}>
+            <ClearView style={styles.preferenceLeft}>
+                <View style={[styles.iconContainer, { backgroundColor: grayBorder }]}>
+                    <IconComponent name={icon} size={20} color={iconColor} />
+                </View>
+                <Text style={styles.preferenceLabel}>{label}</Text>
+            </ClearView>
+            <Text style={styles.preferenceValue} numberOfLines={1} ellipsizeMode="tail">
+                {value}
+            </Text>
+        </ClearView>
+    );
+};
+
 export default function BettingPreferences() {
 
     const { iconColor, grayBorder, grayBackground } = useTheme();
@@ -77,25 +101,6 @@ export default function BettingPreferences() {
         });
     }, [user, signedIn, preferences]);
 
-    const PreferenceItem = ({ icon, label, value, iconLib = 'FontAwesome6' }) => {
-        const IconComponent = iconLib === 'MaterialCommunityIcons' ? MaterialCommunityIcons : 
-                             iconLib === 'Ionicons' ? Ionicons : FontAwesome6;
-        
-        return (
-            <ClearView style={styles.preferenceItem}>
-                <ClearView style={styles.preferenceLeft}>
-                    <View style={[styles.iconContainer, { backgroundColor: grayBorder }]}>
-                        <IconComponent name={icon} size={20} color={iconColor} />
-                    </View>
-                    <Text style={styles.preferenceLabel}>{label}</Text>
-                </ClearView>
-                <Text style={styles.preferenceValue} numberOfLines={1} ellipsizeMode="tail">
-                    {value}
-                </Text>
-            </ClearView>
-        );
-    };
-
     return (
         <View style={styles.container}>
             <View style={{ paddingHorizontal: 20 }}>
@@ -106,6 +111,8 @@ export default function BettingPreferences() {
                     icon="wallet" 
                     label="Bankroll" 
                     value={`$${tempPreferences.bankroll}`}
+                    iconColor={iconColor}
+                    grayBorder={grayBorder}
                 />
                 <View style={[styles.separator, { backgroundColor: grayBorder }]} />
                 
@@ -113,6 +120,8 @@ export default function BettingPreferences() {
                     icon="calendar-day" 
                     label="Daily Limit" 
                     value={`$${tempPreferences.dailyLimit}`}
+                    iconColor={iconColor}
+                    grayBorder={grayBorder}
                 />
                 <View style={[styles.separator, { backgroundColor: grayBorder }]} />
                 
@@ -120,6 +129,8 @@ export default function BettingPreferences() {
                     icon="chart-simple" 
                     label="Unit Size" 
                     value={tempPreferences.unitSize}
+                    iconColor={iconColor}
+                    grayBorder={grayBorder}
                 />
                 <View style={[styles.separator, { backgroundColor: grayBorder }]} />
                 
@@ -127,6 +138,8 @@ export default function BettingPreferences() {
                     icon="trophy" 
                     label="Preferred Leagues" 
                     value={tempPreferences.preferredLeagues}
+                    iconColor={iconColor}
+                    grayBorder={grayBorder}
                 />
                 <View style={[styles.separator, { backgroundColor: grayBorder }]} />
                 
@@ -135,6 +148,8 @@ export default function BettingPreferences() {
                     iconLib="MaterialCommunityIcons"
                     label="Preferred Bet Types" 
                     value={tempPreferences.preferredBetTypes}
+                    iconColor={iconColor}
+                    grayBorder={grayBorder}
                 />
                 <View style={[styles.separator, { backgroundColor: grayBorder }]} />
                 
@@ -143,6 +158,8 @@ export default function BettingPreferences() {
                     iconLib="Ionicons"
                     label="Risk Tolerance" 
                     value={tempPreferences.riskTolerance}
+                    iconColor={iconColor}
+                    grayBorder={grayBorder}
                 />
                 <View style={[styles.separator, { backgroundColor: grayBorder }]} />
                 
@@ -150,6 +167,8 @@ export default function BettingPreferences() {
                     icon="calculator" 
                     label="Odds Format" 
                     value={tempPreferences.oddsFormat}
+                    iconColor={iconColor}
+                    grayBorder={grayBorder}
                 />
                 
                 <TouchableOpacity
