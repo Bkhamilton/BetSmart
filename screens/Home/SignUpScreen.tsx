@@ -145,7 +145,7 @@ export default function SignUpScreen() {
                                     opacity: selectedBookies.length > 0 ? 1 : 0.5,
                                 }
                             ]}
-                            onPress={handleFinishOnboarding}
+                            onPress={() => handleFinishOnboarding()}
                             disabled={selectedBookies.length === 0}
                             accessibilityLabel={selectedBookies.length > 0 
                                 ? `Add ${selectedBookies.length} sportsbook${selectedBookies.length > 1 ? 's' : ''} and continue` 

@@ -85,7 +85,7 @@ export default function OnboardingBookiesScreen({ onComplete }: OnboardingBookie
                 ]}
                 onPress={() => toggleBookieSelection(bookie.id)}
               >
-                <Image source={bookieImages[bookie.name]} style={styles.bookieImage} />
+                <Image source={bookieImages[bookie.name as keyof typeof bookieImages]} style={styles.bookieImage} />
                 <Text style={styles.bookieName}>{bookie.name}</Text>
                 {selectedBookies.includes(bookie.id) && (
                   <View style={[styles.checkmark, { backgroundColor: buttonGreen }]}>
@@ -104,7 +104,7 @@ export default function OnboardingBookiesScreen({ onComplete }: OnboardingBookie
                 opacity: selectedBookies.length > 0 ? 1 : 0.5,
               }
             ]}
-            onPress={handleFinishOnboarding}
+            onPress={() => handleFinishOnboarding()}
             disabled={selectedBookies.length === 0}
             accessibilityLabel={selectedBookies.length > 0 
               ? `Add ${selectedBookies.length} sportsbook${selectedBookies.length > 1 ? 's' : ''} and continue` 

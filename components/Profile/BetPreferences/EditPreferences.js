@@ -7,7 +7,7 @@ import useTheme from '@/hooks/useTheme';
 export default function EditPreferences({ 
     userPreferences, 
     setUserPreferences, 
-    leagues = [],
+    leagues = /** @type {import('@/constants/types').League[]} */ ([]),
     onSave
 }) {
 

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
+import { Link } from 'expo-router';
 import { BetContext } from '@/contexts/NewBetContext/BetContext/BetContext';
-import { ScrollView } from '@/components/Themed';
+import { ScrollView, View, Text } from '@/components/Themed';
 import IntroInfo from '@/components/PlaceBet/BetDetails/IntroInfo';
 import LeaguePropSlider from '@/components/PlaceBet/BetDetails/LeaguePropSlider';
 import LeaguePropInfo from '@/components/PlaceBet/BetDetails/LeaguePropInfo';
@@ -12,6 +13,19 @@ import BetSlipModal from '@/components/Modals/BetSlipModal/BetSlipModal';
 import BetDetailsHeader from '@/components/PlaceBet/BetDetails/BetDetailsHeader';
 
 export default function BetDetailsScreen() {
+    const { league, currentGame } = useContext(BetContext);
+    if (!league || !currentGame) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 }}>
+                <Text>Select a game before viewing bet details.</Text>
+                <Link href="/(tabs)/newBet/selectGame">Choose a game</Link>
+            </View>
+        );
+    }
+    return <BetDetailsContent />;
+}
+
+function BetDetailsContent() {
     
     const { league, betSlip } = useContext(BetContext);
 

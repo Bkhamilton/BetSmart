@@ -282,7 +282,7 @@ export const createUserSpecificTables = async (db) => {
 
 export const createInsightTables = async (db) => {
     await db.execAsync(`
-        CREATE VIEW OverallBettingPerformance AS
+        CREATE VIEW IF NOT EXISTS OverallBettingPerformance AS
         SELECT 
             bs.userId,
             COUNT(*) AS total_bets,
@@ -306,7 +306,7 @@ export const createInsightTables = async (db) => {
         WHERE bsr.result IN (1, 0, -1)
         GROUP BY bs.userId;
 
-        CREATE VIEW LeaguePerformance AS
+        CREATE VIEW IF NOT EXISTS LeaguePerformance AS
         SELECT 
             bs.userId,
             l.leagueName,
@@ -322,7 +322,7 @@ export const createInsightTables = async (db) => {
         JOIN Leagues l ON s.leagueId = l.id
         GROUP BY bs.userId, l.leagueName;
 
-        CREATE VIEW MarketPerformance AS
+        CREATE VIEW IF NOT EXISTS MarketPerformance AS
         SELECT 
             bs.userId,
             bm.marketType AS market_name,
@@ -337,7 +337,7 @@ export const createInsightTables = async (db) => {
         JOIN BetMarkets bm ON l.betMarketId = bm.id
         GROUP BY bs.userId, bm.marketType;
 
-        CREATE VIEW BetTypePerformance AS
+        CREATE VIEW IF NOT EXISTS BetTypePerformance AS
         SELECT 
             bs.userId,
             bt.betType,
@@ -352,7 +352,7 @@ export const createInsightTables = async (db) => {
         JOIN BetTypes bt ON l.betTypeId = bt.id
         GROUP BY bs.userId, bt.betType;
         
-        CREATE VIEW OddsRangePerformance AS
+        CREATE VIEW IF NOT EXISTS OddsRangePerformance AS
         SELECT 
             bs.userId,
             CASE 
@@ -372,7 +372,7 @@ export const createInsightTables = async (db) => {
         JOIN ParticipantBetsResults pbr ON pb.id = pbr.participantBetId
         GROUP BY bs.userId, odds_range;
 
-        CREATE VIEW DayOfWeekPerformance AS
+        CREATE VIEW IF NOT EXISTS DayOfWeekPerformance AS
         SELECT 
             bs.userId,
             strftime('%w', bs.date) AS day_of_week,
@@ -394,7 +394,7 @@ export const createInsightTables = async (db) => {
         GROUP BY bs.userId, day_of_week, day_name
         ORDER BY bs.userId, day_of_week;
 
-        CREATE VIEW TimeOfDayPerformance AS
+        CREATE VIEW IF NOT EXISTS TimeOfDayPerformance AS
         SELECT 
             bs.userId,
             CASE 
@@ -411,7 +411,7 @@ export const createInsightTables = async (db) => {
         JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
         GROUP BY bs.userId, time_of_day;
 
-        CREATE VIEW BetSizePerformance AS
+        CREATE VIEW IF NOT EXISTS BetSizePerformance AS
         SELECT 
             bs.userId,
             CASE 
@@ -431,7 +431,7 @@ export const createInsightTables = async (db) => {
         JOIN BetSlipsResults bsr ON bs.id = bsr.betSlipId
         GROUP BY bs.userId, bet_size_category;
 
-        CREATE VIEW BetFormatPerformance AS
+        CREATE VIEW IF NOT EXISTS BetFormatPerformance AS
         SELECT 
             bs.userId,
             bf.formatName AS format_name,
@@ -446,7 +446,7 @@ export const createInsightTables = async (db) => {
         JOIN BetFormats bf ON bs.formatId = bf.id
         GROUP BY bs.userId, bf.formatName;
         
-        CREATE VIEW BookiePerformance AS
+        CREATE VIEW IF NOT EXISTS BookiePerformance AS
         SELECT 
             bs.userId,
             bk.name AS bookie_name,

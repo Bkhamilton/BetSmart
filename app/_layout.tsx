@@ -1,9 +1,10 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router/react-navigation';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { Suspense, useEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { SQLiteProvider } from 'expo-sqlite';
 import { initializeDatabase } from '@/api/sqlite/startup';
 import { UserContextProvider } from '@/contexts/UserContext';
@@ -19,7 +20,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)/index',
+  initialRouteName: '(tabs)',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -47,15 +48,17 @@ export default function RootLayout() {
   }
 
   return (
-    <SQLiteProvider databaseName="BetSmart.db" onInit={initializeDatabase} useSuspense={true}>
-      <SupabaseContextProvider>
-        <UserContextProvider>
-          <DBContextProvider>
-            <RootLayoutNav />
-          </DBContextProvider>
-        </UserContextProvider>
-      </SupabaseContextProvider>
-    </SQLiteProvider>
+    <Suspense fallback={<ActivityIndicator style={{ flex: 1 }} size="large" />}>
+      <SQLiteProvider databaseName="BetSmart.db" onInit={initializeDatabase} useSuspense={true}>
+        <SupabaseContextProvider>
+          <UserContextProvider>
+            <DBContextProvider>
+              <RootLayoutNav />
+            </DBContextProvider>
+          </UserContextProvider>
+        </SupabaseContextProvider>
+      </SQLiteProvider>
+    </Suspense>
   );
 }
 

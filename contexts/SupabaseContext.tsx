@@ -1,7 +1,6 @@
 // app/contexts/BetContext/BetContext.tsx
 import React, { createContext, ReactNode, useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/services/supabase';
 import { League, SupabaseContextValue } from '@/constants/types';
 
 export const SupabaseContext = createContext<SupabaseContextValue>({
@@ -14,27 +13,12 @@ interface SupabaseContextValueProviderProps {
 
 export const SupabaseContextProvider = ({ children }: SupabaseContextValueProviderProps) => {
     
-    const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL
-    const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_API_KEY
-    const supabase = createClient(
-        supabaseUrl || "",
-        supabaseKey || "",
-        {
-          auth: {
-            storage: AsyncStorage,
-            autoRefreshToken: true,
-            persistSession: true,
-            detectSessionInUrl: false,
-          },
-        }
-    )
-
     const [leagues, setLeagues] = useState<League[]>([]);
 
     useEffect(() => {
       const getLeagues = async () => {
         try {
-            const { data: leagues, error } = await supabase.from('Leagues').select();
+            const { data: leagues, error } = await supabase!.from('Leagues').select();
     
             if (error) {
                 console.error('Error fetching todos:', error.message);
@@ -49,7 +33,7 @@ export const SupabaseContextProvider = ({ children }: SupabaseContextValueProvid
         }
       };
   
-      getLeagues();
+      if (supabase) getLeagues();
     }, []);
 
     const value = {

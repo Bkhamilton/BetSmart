@@ -8,7 +8,6 @@ export default function NewBetLayout() {
                 <Stack.Screen
                     name="selectGame"
                     options={{ headerShown: false }}
-                    initialParams={{ currentGame: null }}
                 />
                 <Stack.Screen
                     name="betDetails"

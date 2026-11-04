@@ -20,7 +20,7 @@ export default function SportSlider({ selectLeague }) {
                 style={[
                     styles.sportContainer,
                     item.leagueName === league?.leagueName && styles.selectedSport,
-                    item.leagueName === league.leagueName ? { backgroundColor: text } : { backgroundColor: grayBackground, borderColor: grayBorder },
+                    item.leagueName === league?.leagueName ? { backgroundColor: text } : { backgroundColor: grayBackground, borderColor: grayBorder },
                 ]}
                 onPress={() => selectLeague(item)}
             >
@@ -30,7 +30,7 @@ export default function SportSlider({ selectLeague }) {
                 />
                 <Text style={[
                     styles.leagueText,
-                    item.leagueName === league.leagueName ? { color: backgroundColor } : {}
+                    item.leagueName === league?.leagueName ? { color: backgroundColor } : {}
                 ]}>{item.leagueName}</Text>
             </TouchableOpacity>
         );
