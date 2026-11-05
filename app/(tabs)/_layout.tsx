@@ -1,15 +1,15 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, type ColorValue } from 'react-native';
 import useTheme from '@/hooks/useTheme';
 import { View } from '@/components/Themed';
 
 function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name'];
-    color: string;
+    color?: ColorValue;
 }) {
-    return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+    return <FontAwesome name={props.name} size={28} style={{ marginBottom: -3, color: props.color }} />;
 }
 
 interface TabBarButtonProps {
@@ -22,7 +22,7 @@ function TabBarButton({ name, active }: TabBarButtonProps) {
     const { grayBorder, grayBackground, iconColor, borderColor } = useTheme();
 
     return (
-        <Link href='/(tabs)/newBet' asChild>
+        <Link href='/(tabs)/newBet/selectGame' asChild>
             <TouchableOpacity
                 style={{
                     height: 60,
@@ -58,7 +58,7 @@ export default function TabLayout() {
                 name="(index)"
                 options={{
                     title: 'BetSmart',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+                    tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color ?? undefined} />,
                     tabBarLabel: 'Home',
                     headerShown: false,
                 }}
@@ -68,7 +68,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Insights',
                     href: '/(tabs)/insights',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="eye" color={color} />,
+                    tabBarIcon: ({ color }) => <TabBarIcon name="eye" color={color ?? undefined} />,
                     tabBarLabel: 'Insights',
                     headerShown: false,
                 }}
@@ -77,7 +77,7 @@ export default function TabLayout() {
                 name="newBet"
                 options={{
                     title: 'New Bet',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+                    tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color ?? undefined} />,
                     tabBarButton: (props) => (
                         <View style={{ alignItems: 'center' }}>
                             <TabBarButton 
@@ -94,7 +94,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Data',
                     href: '/(tabs)/data',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="pie-chart" color={color} />,
+                    tabBarIcon: ({ color }) => <TabBarIcon name="pie-chart" color={color ?? undefined} />,
                     tabBarLabel: 'Data',
                     headerShown: false,
                 }}
@@ -104,7 +104,7 @@ export default function TabLayout() {
                 options={{
                     title: 'Profile',
                     href: '/(tabs)/profile/profilePage',
-                    tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+                    tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color ?? undefined} />,
                     headerShown: false,
                 }}
             />

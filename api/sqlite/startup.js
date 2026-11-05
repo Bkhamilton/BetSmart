@@ -1,43 +1,27 @@
-import * as SQLite from 'expo-sqlite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/services/supabase';
 import { createTables } from '@/api/sqlite/createTables';
-import { getActiveLeagueNames } from '@/db/general/Leagues';
 import { syncInitialData, checkForUpdates } from '@/api/supabase/startup';
 
-// Set up Supabase client
-const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.EXPO_PUBLIC_SUPABASE_API_KEY
-const supabase = createClient(
-    supabaseUrl || "",
-    supabaseKey || "",
-    {
-        auth: {
-            storage: AsyncStorage,
-            autoRefreshToken: true,
-            persistSession: true,
-            detectSessionInUrl: false,
-        },
-    }
-);
-
+// Always create missing local schema without deleting existing betting history.
 export const initializeDatabase = async (db) => {
+    await createTables(db);
+    if (!supabase) {
+        console.info('Supabase is not configured. Starting with local data only.');
+        return;
+    }
+
     try {
         const isFirstLaunch = await AsyncStorage.getItem('isFirstLaunch');
         if (isFirstLaunch === null) {
-            // First-time initialization
-            await AsyncStorage.setItem('isFirstLaunch', 'false');
-            console.log('First-time initialization');
-            await setupDatabase(db);
             await syncInitialData(db, supabase);
+            await AsyncStorage.setItem('isFirstLaunch', 'false');
         } else {
-            console.log('Subsequent loads');
-            // Subsequent loads
             await checkForUpdates(db, supabase);
         }
     } catch (error) {
-        console.error('Error initializing database:', error.message);
-    }  
+        console.warn('Remote sync unavailable; using local data:', error);
+    }
 };
 
 export const setupDatabase = async (db) => {

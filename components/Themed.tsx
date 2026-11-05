@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react';
 /**
  * Learn more about Light and Dark modes:
  * https://docs.expo.io/guides/color-schemes/
@@ -22,14 +23,14 @@ type ThemeProps = {
   darkColor?: string;
 };
 
-export type TextProps = ThemeProps & DefaultText['props'];
-export type ViewProps = ThemeProps & DefaultView['props'];
-export type TouchableOpacityProps = ThemeProps & DefaultTouchableOpacity['props'];
-export type ScrollViewProps = ThemeProps & DefaultScrollView['props'];
-export type SafeAreaViewProps = ThemeProps & DefaultSafeAreaView['props'];
-export type TextInputProps = ThemeProps & DefaultTextInput['props'];
-export type PressableProps = ThemeProps & DefaultPressable['props'];
-export type ModalProps = ThemeProps & DefaultModal['props'];
+export type TextProps = ThemeProps & ComponentProps<typeof DefaultText>;
+export type ViewProps = ThemeProps & ComponentProps<typeof DefaultView>;
+export type TouchableOpacityProps = ThemeProps & ComponentProps<typeof DefaultTouchableOpacity>;
+export type ScrollViewProps = ThemeProps & ComponentProps<typeof DefaultScrollView>;
+export type SafeAreaViewProps = ThemeProps & ComponentProps<typeof DefaultSafeAreaView>;
+export type TextInputProps = ThemeProps & ComponentProps<typeof DefaultTextInput>;
+export type PressableProps = ThemeProps & ComponentProps<typeof DefaultPressable>;
+export type ModalProps = ThemeProps & ComponentProps<typeof DefaultModal>;
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -104,7 +105,7 @@ export function Pressable(props: PressableProps) {
   const backgroundColor = useThemeColor({ light: lightColor, dark: darkColor }, 'background');
   const borderColor = useThemeColor({ light: lightColor, dark: darkColor }, 'borderColor');
 
-  return <DefaultPressable style={[{ backgroundColor, borderColor }, style]} {...otherProps} />;
+  return <DefaultPressable style={(state) => [{ backgroundColor, borderColor }, typeof style === 'function' ? style(state) : style]} {...otherProps} />;
 }
 
 export function Modal(props: ModalProps) {

@@ -23,17 +23,11 @@ export default function BalanceBox({ openModal }) {
     const { bookieColors } = useTheme();
 
     const switchBookie = () => {
-        // use userBalance to determine which bookies are available
-        // cycle to next id in userBalance, if it doesn't exist, cycle to first
-        // curBookie is the bookie object with the current bookieId
-        const bookieIds = userBalance.map(obj => obj.bookieId);
-        let newBookieId = bookieId + 1;
-        if (!bookieIds.includes(newBookieId)) {
-            newBookieId = 1;
-        }
-        const newBookie = userBalance.find(obj => obj.bookieId === newBookieId).bookieName;
-        setBookieId(newBookieId);
-        setBookie(newBookie);
+        if (!userBalance?.length) return;
+        const index = userBalance.findIndex(item => item.bookieId === bookieId);
+        const nextBookie = userBalance[(index + 1) % userBalance.length];
+        setBookieId(nextBookie.bookieId);
+        setBookie(nextBookie.bookieName);
     };
 
     return (
@@ -48,7 +42,7 @@ export default function BalanceBox({ openModal }) {
             onLongPress={() => switchBookie()}
         >
             <View style={styles.bankContainer}>
-                <Text style={styles.bankText}>${userBalance.find(b => b.bookieId === bookieId)?.balance.toFixed(2) || '0.00'}</Text>
+                <Text style={styles.bankText}>${userBalance?.find(b => b.bookieId === bookieId)?.balance?.toFixed(2) || '0.00'}</Text>
             </View>
             <Image source={bookieImages[bookie]} style={styles.bankImage} />
         </Pressable>

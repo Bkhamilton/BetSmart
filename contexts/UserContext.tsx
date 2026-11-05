@@ -1,5 +1,6 @@
 // app/contexts/UserContext.tsx
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { getMostRecentSession } from '@/db/user-specific/UserSessions';
 import { getUserById } from '@/db/user-specific/Users';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -258,7 +259,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
     return (
         <UserContext.Provider value={value}>
-            {children}
+            {user ? children : <ActivityIndicator accessibilityLabel="Loading local profile" style={{ flex: 1 }} size="large" />}
         </UserContext.Provider>
     );
 };
