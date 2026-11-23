@@ -86,6 +86,5 @@ The Insights Tab provides users with actionable insights, performance analysis, 
 
 The following functions are used for testing and debugging purposes and are not part of the production functionality:
 
--   `refreshMarkets`
 -   `refreshPlayers`
 -   `tempFunction`

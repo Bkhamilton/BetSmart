@@ -58,12 +58,62 @@ To reconnect a backend, copy `.env.example` to `.env`, fill in the public URL an
 client API key, and restart Expo. Only put publishable/anon client credentials in
 `EXPO_PUBLIC_*` variables; they are included in the app bundle.
 
+### Standalone market refresh
+
+The market refresh runs outside Expo. `services/market-refresh.mjs` is a
+self-contained Node.js 24 script with no npm dependencies; copy it to a separate
+project or host if desired. It fetches The Odds API's NBA, NFL, MLB, and NHL
+moneylines, spreads, and totals for active leagues and the four configured
+bookmakers. It does **not** fetch player props or schedule itself.
+
+Before running it:
+
+1. Apply `services/market-refresh.sql` once using the target Supabase project's SQL
+   editor or migrations. It installs a service-role-only function that replaces
+   returned game/bookmaker/market combinations in a transaction; markets not
+   returned by the provider are left alone. Check this against a test database
+   before production, especially if other tables reference market IDs.
+2. Provide `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `THE_ODDS_API_KEY` as
+   private server-side environment variables. Never put them in `EXPO_PUBLIC_*`,
+   commit them, or ship them with the app.
+3. Run `node services\market-refresh.mjs` on Windows. The process exits nonzero
+   on failure. It logs the provider's remaining quota when available.
+
+For Supabase Edge Functions, copy both `market-refresh-edge.mjs` (as `index.mjs`)
+and `market-refresh.mjs` into `supabase/functions/market-refresh` in a Supabase
+CLI project. Configure the JavaScript entry point in `supabase/config.toml`:
+
+```toml
+[functions.market-refresh]
+entrypoint = "./functions/market-refresh/index.mjs"
+verify_jwt = false
+```
+
+Set
+`THE_ODDS_API_KEY` and a long random `MARKET_REFRESH_TOKEN` as function secrets;
+Supabase supplies `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` for hosted
+functions. Deploy using `supabase functions deploy market-refresh`. The
+function requires the private `x-market-refresh-token` header on every POST
+instead of a user JWT. Keep the token in a secure server-side secret store; never call
+this endpoint directly from the app. A scheduler must POST to the deployed
+function URL with that header. This repository does not configure a schedule.
+
+Each active supported league causes one Odds API request per run. This service
+does not enforce a twice-daily limit, prevent overlapping runs, or automatically
+retry; configure the scheduler accordingly and monitor logs and provider quota.
+Dates used for selecting active seasons and games are UTC. A failure stops the
+run; games already completed remain updated, so rerunning may consume additional
+provider quota. The refresh replaces market rows and their IDs for returned
+combinations, matching the old refresh's approach; check downstream references
+and local bet history before deploying it.
+
 ### Checks
 
 ```sh
 npm run doctor
 npm run typecheck
 npm test -- --runInBand
+node --test services\__tests__\market-refresh.test.mjs
 npm run test:database
 npx expo export --platform android
 npx expo export --platform ios
