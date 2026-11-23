@@ -8,9 +8,6 @@ import ViewToggle from '@/components/Insights/ViewToggle';
 import AnalysisView from './AnalysisView';
 import TipsScreen from './TipsScreen';
 import useHookInsightsPage from '@/hooks/useHookInsights';
-import { SupabaseContext } from '@/contexts/SupabaseContext';
-import { getLeagueByName } from '@/api/supabase/Leagues';
-import { refreshBettingMarkets } from '@/api/supabase/markets';
 import { fetchAndUpdateRoster } from '@/api/sportsdb/players';
 import { getActionableInsights } from '@/utils/insights';
 import { createTempTables } from '@/api/sqlite/createTables';
@@ -21,8 +18,6 @@ export default function InsightScreen() {
     const { streak, cycleStreak, topBet } = useHookInsightsPage();
 
     const { db } = useContext(DBContext);
-
-    const { supabase, leagues } = useContext(SupabaseContext);
 
     const { user } = useContext(UserContext);
 
@@ -50,12 +45,6 @@ export default function InsightScreen() {
         };
         loadInsights();
     }, [user, loading]);
-
-    const refreshMarkets = async () => {
-        const league = await getLeagueByName(supabase, 'NBA');
-
-        await refreshBettingMarkets(supabase, league);
-    }
 
     const refreshPlayers = async () => {
         await fetchAndUpdateRoster(db);

@@ -324,7 +324,7 @@ See `db/general/Leagues.js` - `getActiveLeagues(db, date)` lines 16-28
 
 ### Usage Context
 Used in multiple places:
-- `api/supabase/markets.js` - `refreshAllBettingMarkets(supabase)` to refresh betting markets for all active leagues
+- `services/market-refresh.mjs` - `refreshAllBettingMarkets` to refresh betting markets for all supported active leagues
 - For determining which leagues to display or process at a given time
 
 ---
