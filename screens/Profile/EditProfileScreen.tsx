@@ -3,33 +3,16 @@ import { StyleSheet } from 'react-native';
 import { Text, View, TouchableOpacity, ScrollView, ClearView } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { UserContext } from '@/contexts/UserContext';
-import { DBContext } from '@/contexts/DBContext';
 import useTheme from '@/hooks/useTheme';
 import EditProfileInfo from '@/components/Profile/EditProfile/EditProfileInfo';
-import ConfirmMessage from '@/components/Modals/ConfirmMessage';
-import useConfirmationState from '@/hooks/useConfirmationState';
-import { updateUserPassword } from '@/db/user-specific/Users';
 import { useRouter } from 'expo-router';
+import useAuthState from '@/hooks/useAuthState';
 
 export default function EditProfileScreen() {
 
     const { iconColor } = useTheme();
 
-    const { user, signedIn } = useContext(UserContext);
-    const { db } = useContext(DBContext);
-
-    const { 
-        confirmationModalVisible, 
-        closeConfirmationModal, 
-        confirmMessage, 
-        onHandleConfirm,
-        handleConfirmation,
-    } = useConfirmationState();
-
-    const onChangePassword = (password: string) => {
-        handleConfirmation('change password?', closeConfirmationModal, updateUserPassword, [db, user!.id, password]);
-    };
-
+    const { updateProfile, updatePassword, authError, isLoading } = useAuthState();
     const router = useRouter();
 
     return (
@@ -45,13 +28,10 @@ export default function EditProfileScreen() {
                 </View>   
             </View>
             <EditProfileInfo 
-                changePassword={onChangePassword}
-            />
-            <ConfirmMessage 
-                visible={confirmationModalVisible}
-                close={closeConfirmationModal}
-                message={confirmMessage}
-                confirm={onHandleConfirm}
+                updateProfile={updateProfile}
+                updatePassword={updatePassword}
+                authError={authError}
+                isLoading={isLoading}
             />
         </>
     );

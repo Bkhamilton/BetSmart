@@ -58,6 +58,10 @@ export default function ProfileScreen() {
         closeLoginModal,
         closeSignUpModal,
         handleSignUp,
+        authError,
+        isLoading,
+        requestPasswordReset,
+        resendConfirmation,
     } = useAuthState();
 
     const onAddBookie = async (bookie: Bookie) => {
@@ -88,16 +92,23 @@ export default function ProfileScreen() {
     return (
         <>
             <ProfilePageHeader/>
+            {authError ? <Text style={{ color: '#c62828', paddingHorizontal: 20 }}>{authError}</Text> : null}
             <LoginPage 
                 visible={loginModalVisible} 
                 close={closeLoginModal} 
                 login={login}
                 handleSignUp={handleSignUp}
+                authError={authError}
+                isLoading={isLoading}
+                requestPasswordReset={requestPasswordReset}
+                resendConfirmation={resendConfirmation}
             />
             <SignUpPage 
                 visible={signUpModalVisible} 
                 close={closeSignUpModal}
                 signUp={signUp}
+                authError={authError}
+                isLoading={isLoading}
             />
             <AddBookie 
                 visible={addBookieModalVisible} 

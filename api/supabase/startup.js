@@ -2,7 +2,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { syncBookies, syncLeagues, syncSeasons, syncTeams, syncPlayers } from "@/api/supabase/sync";
 import { syncLeagueProps, syncLeaguePropsInfo } from "@/api/supabase/sync";
-import { syncGames, syncUsers } from "@/api/supabase/sync";
+import { syncGames } from "@/api/supabase/sync";
 import { syncBetTypes, syncBetTargets, syncBetFormats, syncBetMarkets } from "@/api/supabase/sync";
 import { updateGameInfo, updateMarkets } from "@/api/supabase/sync";
 import { getAllUpcomingGames } from './Games';
@@ -12,7 +12,6 @@ import { getLastUpdatedMarket } from './BetMarkets';
 
 export const syncInitialData = async (db, supabase) => {
     // Sync initial data
-    await syncUsers(db);
     await syncBookies(db, supabase);
     await syncLeagues(db, supabase);
     await syncSeasons(db, supabase);

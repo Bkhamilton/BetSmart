@@ -6,8 +6,9 @@ import useTheme from '@/hooks/useTheme';
 import EditPreferences from '@/components/Profile/BetPreferences/EditPreferences';
 import { UserContext } from '@/contexts/UserContext';
 import { DBContext } from '@/contexts/DBContext';
+import { validateSignupFields } from '@/services/authValidation';
 
-export default function SignUpPage({ visible, close, signUp }) {
+export default function SignUpPage({ visible, close, signUp, authError, isLoading }) {
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -21,14 +22,9 @@ export default function SignUpPage({ visible, close, signUp }) {
     const { leagues } = useContext(DBContext);
 
     const onSignUp = async () => {
-        // Check if each field is filled out
-        if (!username || !email || !name || !password || !confirmPassword) {
-            alert('Please fill out all fields');
-            return;
-        }
-        // Check if password and confirm password match
-        if (password !== confirmPassword) {
-            alert('Passwords do not match');
+        const validationError = validateSignupFields({ name, username, email, password, confirmPassword });
+        if (validationError) {
+            alert(validationError);
             return;
         }
         // Call the signUp function from the parent component
@@ -189,11 +185,14 @@ export default function SignUpPage({ visible, close, signUp }) {
                                 </ClearView>
                             </View>
 
+                            {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
+
                             <TouchableOpacity 
                                 style={[styles.signUpButton, { backgroundColor: buttonGreen }]}
                                 onPress={onSignUp}
+                                disabled={isLoading}
                             >
-                                <Text style={styles.signUpButtonText}>Create Account</Text>
+                                <Text style={styles.signUpButtonText}>{isLoading ? 'Creating Account...' : 'Create Account'}</Text>
                             </TouchableOpacity>
                         </View>
                     </ScrollView>
@@ -275,5 +274,10 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: '600',
+    },
+    errorText: {
+        color: '#c62828',
+        marginBottom: 16,
+        textAlign: 'center',
     },
 });

@@ -2,15 +2,17 @@
 // This file contains all the TypeScript types used across the application
 // Reference: Context files (UserContext.tsx, BetContext.tsx, DBContext.tsx, SupabaseContext.tsx)
 // Reference: Database schema documentation (docs/DatabaseSchema.md)
+import type { User as SupabaseAuthUser } from '@supabase/supabase-js';
 
 // ==================== User Related Types ====================
 
 export interface User {
     id: number;
+    cloudUserId: string;
     name: string;
     email: string;
     username: string;
-    password: string;
+    lastSyncedAt: string | null;
 }
 
 export interface Balance {
@@ -396,7 +398,7 @@ export interface HeaderProps {
 // ==================== Form Input Types ====================
 
 export interface LoginFormData {
-    username: string;
+    email: string;
     password: string;
 }
 
@@ -494,7 +496,10 @@ export interface UserContextValue {
     preferences: Preference;
     updatePreferences: (preferences: Preference) => Promise<void>;
     signedIn: boolean;
-    setSignedIn: (signedIn: boolean) => void;
+    authLoading: boolean;
+    authError: string | null;
+    setAuthError: (message: string | null) => void;
+    activateAccount: (authUser: SupabaseAuthUser) => Promise<void>;
     locationStatus: LocationStatus;
     checkLocation: () => Promise<{
         isLegal: boolean | null;

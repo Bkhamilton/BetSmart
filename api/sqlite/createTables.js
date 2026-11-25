@@ -1,9 +1,12 @@
 // Function to create the database and tables
+import { migrateAuthSchema } from './authMigration.js';
+
 export const createTables = async (db) => {
     await createGeneralTables(db);
     await createBetGeneralTables(db);
     await createBetslipTables(db);
     await createUserSpecificTables(db);
+    await migrateAuthSchema(db);
     await createAPITables(db);
     await createInsightTables(db);
     await createIndexes(db);
@@ -219,21 +222,12 @@ export const createBetGeneralTables = async (db) => {
 export const createUserSpecificTables = async (db) => {
     await db.execAsync(`
         CREATE TABLE IF NOT EXISTS Users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, 
-            name TEXT,
-            email TEXT, 
-            username TEXT NOT NULL, 
-            password TEXT NOT NULL,
-            UNIQUE (username)
-        );
-        CREATE TABLE IF NOT EXISTS UserSessions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            userId INTEGER,
-            loginTimestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-            logoutTimestamp DATETIME,
-            isActive BOOLEAN DEFAULT 1,
-            FOREIGN KEY(userId) REFERENCES Users(id),
-            UNIQUE (userId, loginTimestamp, logoutTimestamp, isActive)
+            cloudUserId TEXT,
+            name TEXT,
+            email TEXT,
+            username TEXT,
+            lastSyncedAt TEXT
         );
         CREATE TABLE IF NOT EXISTS Balance (
             bookieId INTEGER NOT NULL, 

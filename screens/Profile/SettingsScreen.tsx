@@ -18,7 +18,6 @@ import useAuthState from '@/hooks/useAuthState';
 import AboutModal from '@/components/Modals/AboutModal';
 import HelpModal from '@/components/Modals/HelpModal';
 import PrivacySettings from '@/components/Modals/PrivacySettings';
-import { User } from '@/constants/types';
 
 export default function SettingsScreen() {
 
@@ -40,7 +39,6 @@ export default function SettingsScreen() {
     const {
         clearUserData,
         clearBettingData,
-        deleteAccount,
     } = useDatabaseFuncs();
 
     const {
@@ -67,12 +65,16 @@ export default function SettingsScreen() {
         closeSignUpModal,
         handleSignUp,
         signOutUser,
+        authError,
+        isLoading,
+        requestPasswordReset,
+        resendConfirmation,
     } = useAuthState();
 
     const { user } = useContext(UserContext);
 
-    const handleSignOut = (user: User) => {
-        signOutUser(user.id);
+    const handleSignOut = () => {
+        signOutUser();
     }
 
     const handleSupport = () => {
@@ -111,8 +113,6 @@ export default function SettingsScreen() {
             case 'Log Out':
                 handleConfirmNoModal('log out?', handleSignOut, user);
                 break;
-            case 'Delete Account':
-                handleConfirmNoModal('delete your account? This cannot be undone', deleteAccount, [user, signOutUser]);
             default:
                 console.log('default');
         }
@@ -125,11 +125,17 @@ export default function SettingsScreen() {
                 close={closeLoginModal} 
                 login={login}
                 handleSignUp={handleSignUp}
+                authError={authError}
+                isLoading={isLoading}
+                requestPasswordReset={requestPasswordReset}
+                resendConfirmation={resendConfirmation}
             />
             <SignUpPage 
                 visible={signUpModalVisible} 
                 close={closeSignUpModal}
                 signUp={signUp}
+                authError={authError}
+                isLoading={isLoading}
             />        
             <ConfirmMessage
                 visible={confirmationModalVisible}
@@ -165,6 +171,7 @@ export default function SettingsScreen() {
                 <View style={styles.settingsHeader}>
                     <Text style={styles.settingsHeaderText}>Settings</Text>
                 </View>
+                {authError ? <Text style={{ color: '#c62828', paddingHorizontal: 20 }}>{authError}</Text> : null}
                 <ClearView>
                     <View style={styles.accountHeader}>
                         <Text style={styles.accountHeaderText}>Account</Text>

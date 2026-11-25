@@ -63,14 +63,6 @@ export default function SettingsOptions({ onSelect }) {
                                 onSelect={() => onSelect('Log Out')}
                             />
                         </View>
-                        <View style={{ marginVertical: 4}}> 
-                            <SettingsOption
-                                icon={'person-remove'}
-                                title={'Delete Account'}
-                                pressIcon={'chevron-right'}
-                                onSelect={() => onSelect('Delete Account')}
-                            />
-                        </View>
                     </>
                 )
             }

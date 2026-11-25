@@ -10,10 +10,41 @@ const filename = join(directory, 'test.db');
 let sqlite;
 try {
   sqlite = new DatabaseSync(filename);
-  const db = { execAsync: async sql => sqlite.exec(sql) };
+  sqlite.exec(`
+    CREATE TABLE Users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT,
+      email TEXT,
+      username TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL
+    );
+    CREATE TABLE UserSessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      userId INTEGER REFERENCES Users(id)
+    );
+    INSERT INTO Users (id, name, email, username, password)
+    VALUES (1, 'Local User', 'local@example.com', 'local-user', 'legacy-password');
+    INSERT INTO UserSessions (userId) VALUES (1);
+  `);
+  const db = {
+    execAsync: async sql => sqlite.exec(sql),
+    getFirstAsync: async sql => sqlite.prepare(sql).get(),
+    getAllAsync: async sql => sqlite.prepare(sql).all(),
+    runAsync: async (sql, parameters = []) => sqlite.prepare(sql).run(...parameters),
+    withTransactionAsync: async callback => {
+      sqlite.exec('BEGIN');
+      try {
+        await callback();
+        sqlite.exec('COMMIT');
+      } catch (error) {
+        sqlite.exec('ROLLBACK');
+        throw error;
+      }
+    },
+  };
+
   await createTables(db);
   sqlite.exec(`
-    INSERT INTO Users (id, username, password) VALUES (1, 'local-user', 'test');
     INSERT INTO Bookies (id, name) VALUES (1, 'Local Bookie');
     INSERT INTO BetFormats (id, formatName) VALUES (1, 'Single');
     INSERT INTO BetSlips (formatId, date, odds, betAmount, winnings, userId, bookieId)
@@ -26,8 +57,11 @@ try {
   assert.equal(sqlite.prepare('SELECT username FROM Users').get().username, 'local-user');
   assert.equal(sqlite.prepare('SELECT betAmount FROM BetSlips').get().betAmount, 10);
   assert.equal(sqlite.prepare('SELECT COUNT(*) AS count FROM BetSlips').get().count, 1);
+  assert.equal(sqlite.prepare('SELECT cloudUserId FROM Users WHERE id = 1').get().cloudUserId, null);
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS count FROM pragma_table_info('Users') WHERE name = 'password'").get().count, 0);
+  assert.equal(sqlite.prepare("SELECT COUNT(*) AS count FROM sqlite_master WHERE type = 'table' AND name = 'UserSessions'").get().count, 0);
   assert.equal(sqlite.prepare("SELECT COUNT(*) AS count FROM sqlite_master WHERE type = 'view' AND name = 'OverallBettingPerformance'").get().count, 1);
-  console.log('PASS: fresh schema, repeat initialization, persisted betting history, and insight views after reopening.');
+  console.log('PASS: auth migration preserves local IDs/history, removes passwords/sessions, and repeated initialization remains stable.');
 } finally {
   sqlite?.close();
   rmSync(directory, { recursive: true, force: true });

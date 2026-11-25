@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Alert } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View, TextInput, ScrollView, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 import useAuthState from '@/hooks/useAuthState';
+import { validateSignupFields } from '@/services/authValidation';
 
 interface OnboardingSignUpScreenProps {
   onSignUpSuccess: () => void;
@@ -18,17 +19,12 @@ export default function OnboardingSignUpScreen({ onSignUpSuccess, onClose }: Onb
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const { iconColor, grayBackground, grayBorder, buttonGreen } = useTheme();
-  const { signUp } = useAuthState();
+  const { signUp, authError, isLoading } = useAuthState();
 
   const onSignUp = async () => {
-    // Check if each field is filled out
-    if (!username || !email || !name || !password || !confirmPassword) {
-      alert('Please fill out all fields');
-      return;
-    }
-    // Check if password and confirm password match
-    if (password !== confirmPassword) {
-      alert('Passwords do not match');
+    const validationError = validateSignupFields({ name, username, email, password, confirmPassword });
+    if (validationError) {
+      Alert.alert('Check your details', validationError);
       return;
     }
     // Call the signUp function
@@ -134,9 +130,11 @@ export default function OnboardingSignUpScreen({ onSignUpSuccess, onClose }: Onb
           <TouchableOpacity 
             style={[styles.signUpButton, { backgroundColor: buttonGreen }]}
             onPress={onSignUp}
+            disabled={isLoading}
           >
-            <Text style={styles.signUpButtonText}>Create Account</Text>
+            <Text style={styles.signUpButtonText}>{isLoading ? 'Creating Account...' : 'Create Account'}</Text>
           </TouchableOpacity>
+          {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
         </View>
       </ScrollView>
     </>
@@ -210,5 +208,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: '600',
+  },
+  errorText: {
+    color: '#c62828',
+    marginTop: 16,
+    textAlign: 'center',
   },
 });
