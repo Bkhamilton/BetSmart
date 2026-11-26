@@ -1,95 +1,218 @@
-// app/contexts/UserContext.tsx
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { ActivityIndicator } from 'react-native';
-import { getMostRecentSession } from '@/db/user-specific/UserSessions';
-import { getUserById } from '@/db/user-specific/Users';
+import React, { createContext, useCallback, useEffect, useRef, useState, ReactNode } from 'react';
+import { AppState } from 'react-native';
 import { useSQLiteContext } from 'expo-sqlite';
+import type { Session, User as SupabaseAuthUser } from '@supabase/supabase-js';
+import { supabase } from '@/services/supabase';
+import { initializeAuthenticatedAccount } from '@/services/supabaseProfile';
+import { getUserByCloudId } from '@/db/user-specific/Users';
 import { getBalanceByUser } from '@/db/user-specific/Balance';
 import { getPreferences, insertPreference, clearUserPreferences } from '@/db/user-specific/Preferences';
 import { verifyLegalLocation } from '@/services/locationService';
-import { 
-    User, 
-    Balance, 
-    Bookie, 
-    Preference, 
-    DBPreference, 
-    LocationStatus, 
-    UserContextValue 
+import {
+    User,
+    Balance,
+    Bookie,
+    Preference,
+    LocationStatus,
+    UserContextValue,
 } from '@/constants/types';
+
+const defaultPreferences: Preference = {
+    bankroll: 0,
+    dailyLimit: 0,
+    unitSize: '',
+    preferredLeagues: [],
+    preferredBetTypes: [],
+    riskTolerance: 0,
+    oddsFormat: '',
+};
 
 export const UserContext = createContext<UserContextValue>({
     user: null,
-    userBalance : null,
-    setUserBalance : () => {},
+    userBalance: null,
+    setUserBalance: () => {},
     bookie: null,
     setBookie: () => {},
     trigger: false,
     setTrigger: () => {},
-    preferences: {
-        bankroll: 0,
-        dailyLimit: 0,
-        unitSize: '',
-        preferredLeagues: [],
-        preferredBetTypes: [],
-        riskTolerance: 0,
-        oddsFormat: '',
-    },
+    preferences: defaultPreferences,
     updatePreferences: async () => {},
     signedIn: false,
-    setSignedIn: () => {},
+    authLoading: true,
+    authError: null,
+    setAuthError: () => {},
+    activateAccount: async () => {},
     locationStatus: {
         verified: false,
         isLegal: null,
         state: null,
         lastChecked: null,
-        error: null
+        error: null,
     },
-    checkLocation: async () => {
-        return {
-            isLegal: null,
-            state: null,
-            coordinates: undefined,
-            timestamp: null,
-            error: null
-        };
-    },
+    checkLocation: async () => ({
+        isLegal: null,
+        state: null,
+        coordinates: undefined,
+        timestamp: null,
+        error: null,
+    }),
 });
 
 interface UserContextProviderProps {
-  children: ReactNode;
+    children: ReactNode;
 }
+
+const errorMessage = (error: unknown) => {
+    if ((error as { code?: string } | null)?.code === 'username_unavailable') return 'That username is unavailable.';
+    if (isNetworkError(error)) return 'A network connection is required to set up this account.';
+    return 'Unable to load this account. Check your connection and try again.';
+};
+
+const isNetworkError = (error: unknown) =>
+    error instanceof Error &&
+    (error.name === 'AuthRetryableFetchError' || /network|fetch failed|offline|timed out/i.test(error.message));
 
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
     const [user, setUser] = useState<User | null>(null);
     const [userBalance, setUserBalance] = useState<Balance[] | null>(null);
     const [bookie, setBookie] = useState<Bookie | null>({ id: 0, name: 'Default' });
-
-    const [trigger, setTrigger] = useState<boolean>(false);
-    const [fetchBalance, setFetchBalance] = useState<boolean>(false);
-
-    const [preferences, setPreferences] = useState<Preference>({
-        bankroll: 0,
-        dailyLimit: 0,
-        unitSize: '',
-        preferredLeagues: [],
-        preferredBetTypes: [],
-        riskTolerance: 0,
-        oddsFormat: '',
-    });
-    const [triggerPreferences, setTriggerPreferences] = useState<boolean>(false);
-
-    const [signedIn, setSignedIn] = useState<boolean>(false);
-
-    const db = useSQLiteContext();
-
+    const [trigger, setTrigger] = useState(false);
+    const [preferences, setPreferences] = useState<Preference>(defaultPreferences);
+    const [signedIn, setSignedIn] = useState(false);
+    const [authLoading, setAuthLoading] = useState(true);
+    const [authError, setAuthError] = useState<string | null>(null);
+    const [authSession, setAuthSession] = useState<Session | null>(null);
     const [locationStatus, setLocationStatus] = useState<LocationStatus>({
         verified: false,
         isLegal: null,
         state: null,
         lastChecked: null,
-        error: null
+        error: null,
     });
-    
+
+    const db = useSQLiteContext();
+    const authUserId = useRef<string | null>(null);
+    const activationId = useRef(0);
+
+    const clearAccountState = useCallback(() => {
+        setUser(null);
+        setUserBalance(null);
+        setBookie({ id: 0, name: 'Default' });
+        setPreferences(defaultPreferences);
+        setSignedIn(false);
+        setTrigger(false);
+    }, []);
+
+    const activateAccount = useCallback(async (authUser: SupabaseAuthUser) => {
+        if (!supabase) throw new Error('Supabase authentication is not configured.');
+
+        const requestId = ++activationId.current;
+        setAuthLoading(true);
+        setAuthError(null);
+        const applyAccount = async (localUser: User) => {
+            const balance = await getBalanceByUser(db, localUser.id);
+            const preferenceRows = await getPreferences(db, localUser.id) as Record<string, string> | null;
+            if (requestId !== activationId.current || (authUserId.current && authUserId.current !== authUser.id)) return;
+
+            setUser(localUser);
+            setUserBalance(balance);
+            setBookie({ id: 0, name: 'Total' });
+            setPreferences(preferenceRows ? {
+                bankroll: Number(preferenceRows.bankroll) || 0,
+                dailyLimit: Number(preferenceRows.dailyLimit) || 0,
+                unitSize: preferenceRows.unitSize || '',
+                preferredLeagues: preferenceRows.preferredLeagues ? preferenceRows.preferredLeagues.split(',') : [],
+                preferredBetTypes: preferenceRows.preferredBetTypes ? preferenceRows.preferredBetTypes.split(',') : [],
+                riskTolerance: Number(preferenceRows.riskTolerance) || 0,
+                oddsFormat: preferenceRows.oddsFormat || '',
+            } : defaultPreferences);
+            setSignedIn(true);
+            setAuthLoading(false);
+        };
+
+        try {
+            const localUser = await initializeAuthenticatedAccount(db, supabase, authUser);
+            await applyAccount(localUser);
+        } catch (error) {
+            if (isNetworkError(error)) {
+                const cachedUser = await getUserByCloudId(db, authUser.id);
+                if (cachedUser) {
+                    await applyAccount(cachedUser);
+                    setAuthError("Offline mode: showing this device's saved account data. Cloud changes are unavailable.");
+                    return;
+                }
+            }
+
+            console.error('Unable to initialize authenticated account:', error instanceof Error ? error.message : 'Unknown error.');
+            if (requestId === activationId.current) {
+                clearAccountState();
+                setAuthError(errorMessage(error));
+                setAuthLoading(false);
+            }
+            throw error;
+        }
+    }, [clearAccountState, db]);
+
+    useEffect(() => {
+        if (!supabase) {
+            setAuthLoading(false);
+            setAuthError('Supabase authentication is not configured.');
+            return;
+        }
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            const nextUserId = session?.user.id ?? null;
+            if (!session || authUserId.current !== nextUserId) {
+                authUserId.current = nextUserId;
+                activationId.current += 1;
+                clearAccountState();
+                setAuthError(null);
+            }
+            setAuthSession(session);
+        });
+
+        supabase.auth.getSession().then(({ data, error }) => {
+            if (error) throw error;
+            setAuthSession(data.session);
+        }).catch((error: unknown) => {
+            console.error('Unable to restore the Supabase session:', error instanceof Error ? error.message : 'Unknown error.');
+            setAuthError(errorMessage(error));
+            setAuthLoading(false);
+        });
+
+        return () => subscription.unsubscribe();
+    }, [clearAccountState]);
+
+    useEffect(() => {
+        const client = supabase;
+        if (!client) return;
+
+        const updateRefreshState = (state: string | null | undefined) => {
+            if (state === 'active') client.auth.startAutoRefresh();
+            else client.auth.stopAutoRefresh();
+        };
+        updateRefreshState(AppState.currentState);
+        const subscription = AppState.addEventListener('change', updateRefreshState);
+        return () => {
+            subscription.remove();
+            client.auth.stopAutoRefresh();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!authSession?.user) {
+            activationId.current += 1;
+            clearAccountState();
+            setAuthLoading(false);
+            return;
+        }
+
+        activateAccount(authSession.user).catch((error: unknown) => {
+            setAuthError(errorMessage(error));
+            setAuthLoading(false);
+        });
+    }, [activateAccount, authSession?.user.id, clearAccountState]);
+
     const checkLocation = async () => {
         const result = await verifyLegalLocation();
         setLocationStatus({
@@ -97,151 +220,73 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
             isLegal: result.isLegal,
             state: result.state,
             lastChecked: result.timestamp,
-            error: result.error
+            error: result.error,
         });
         return result;
     };
 
     useEffect(() => {
-        const checkLocationStatus = async () => {
-            const result = await checkLocation();
-            setLocationStatus({
-                verified: true,
-                isLegal: result.isLegal ?? null,
-                state: result.state ?? null,
-                lastChecked: result.timestamp ?? null,
-                error: result.error ?? null,
-            });
-        };
-        checkLocationStatus();
+        checkLocation().catch((error: unknown) => {
+            console.error('Unable to verify location:', error);
+        });
     }, []);
-    
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const mostRecentActiveUserSession = await getMostRecentSession(db);
-            if (mostRecentActiveUserSession) {
-                getUserById(db, mostRecentActiveUserSession.userId).then((newUser) => {
-                    setUser(newUser)
-                    getBalanceByUser(db, newUser.id).then((newUserBalance) => {
-                        setUserBalance(newUserBalance);
-                        setFetchBalance(true);
-                        setSignedIn(true);
-                    });
-                });
-            } else {
-                // No active user session, add default values here
-                const defaultUser = {
-                    id: 0,
-                    name: 'Default User',
-                    email: 'default@email.com',
-                    username: 'defaultUser',
-                    password: 'defaultPassword',
-                };
-                const defaultUserBalance = {
-                    id: 0,
-                    userId: 0,
-                    bookieId: 0,
-                    balance: 0,
-                    bookieName: 'Default',
-                };
-                setUser(defaultUser);
-                setUserBalance([defaultUserBalance]);                
-            }
-        };
+    const updatePreferences = async (nextPreferences: Preference) => {
+        if (!signedIn || !user) throw new Error('Sign in before saving preferences.');
 
-        fetchUserData();
-    }, [signedIn]);
+        const {
+            bankroll = 0,
+            dailyLimit = 0,
+            unitSize = '',
+            preferredLeagues = [],
+            preferredBetTypes = [],
+            riskTolerance = 0,
+            oddsFormat = '',
+        } = nextPreferences;
 
-    useEffect(() => {
-        if (fetchBalance) {
-            const fetchBookie = async () => {
-                const mostRecentActiveUserSession = await getMostRecentSession(db);
-                if (mostRecentActiveUserSession) {
-                    getBalanceByUser(db, mostRecentActiveUserSession.userId).then((newUserBalance) => {
-                        setBookie({ id: 0, name: 'Total' });
-                    });
-                } else {
-                    // No active user session, add default values here
-                    const defaultBookie = {
-                        id: 0,
-                        name: 'Default Bookie',
-                    };
-                    setBookie(defaultBookie);
-                }
-            }
-    
-            fetchBookie();
-        }
-
-    }, [fetchBalance]);
-
-    const updatePreferences = async (preferences: Preference) => {
-        try {
-            // Ensure user is signed in
-            if (!signedIn || !user) {
-                throw new Error('User is not signed in or user data is not available');
-            }
-            // Ensure all values are defined
-            const {
-                bankroll = 0,
-                dailyLimit = 0,
-                unitSize = '',
-                preferredLeagues = [],
-                preferredBetTypes = [],
-                riskTolerance = 0,
-                oddsFormat = ''
-            } = preferences;
-    
-            // Clear user preferences
-            await clearUserPreferences(db, user.id);
-    
-            // Insert preferences
-            await insertPreference(db, user.id, 'bankroll', bankroll);
-            await insertPreference(db, user.id, 'dailyLimit', dailyLimit);
-            await insertPreference(db, user.id, 'unitSize', unitSize);
-            await insertPreference(db, user.id, 'preferredLeagues', preferredLeagues.filter(league => league !== '').join(','));
-            await insertPreference(db, user.id, 'preferredBetTypes', preferredBetTypes.filter(betType => betType !== '').join(','));
-            await insertPreference(db, user.id, 'riskTolerance', riskTolerance);
-            await insertPreference(db, user.id, 'oddsFormat', oddsFormat);
-
-            setTriggerPreferences(!trigger);
-        } catch (error) {
-            console.error('Error updating preferences:', error);
-        }
+        await clearUserPreferences(db, user.id);
+        await insertPreference(db, user.id, 'bankroll', bankroll);
+        await insertPreference(db, user.id, 'dailyLimit', dailyLimit);
+        await insertPreference(db, user.id, 'unitSize', unitSize);
+        await insertPreference(db, user.id, 'preferredLeagues', preferredLeagues.filter(Boolean).join(','));
+        await insertPreference(db, user.id, 'preferredBetTypes', preferredBetTypes.filter(Boolean).join(','));
+        await insertPreference(db, user.id, 'riskTolerance', riskTolerance);
+        await insertPreference(db, user.id, 'oddsFormat', oddsFormat);
+        setPreferences(nextPreferences);
     };
 
     useEffect(() => {
-        if (signedIn && user) {
-            getPreferences(db, user.id)
-                .then((result) => {
-                    if (result) {
-                        const preferences = result as DBPreference;
-                        setPreferences({
-                            bankroll: preferences.bankroll,
-                            dailyLimit: preferences.dailyLimit,
-                            unitSize: preferences.unitSize || '',
-                            preferredLeagues: preferences.preferredLeagues ? preferences.preferredLeagues.split(',') : [],
-                            preferredBetTypes: preferences.preferredBetTypes ? preferences.preferredBetTypes.split(',') : [],
-                            riskTolerance: preferences.riskTolerance,
-                            oddsFormat: preferences.oddsFormat || '',
-                        });
-                    }
-                });
-        }
-    }, [signedIn, triggerPreferences]);
+        if (!signedIn || !user) return;
 
-    // useEffect to fetch user balance data on trigger change
-    useEffect(() => {
-        if (trigger && signedIn && user) {
-            getBalanceByUser(db, user.id).then((newUserBalance) => {
-                setUserBalance(newUserBalance);
-                setTrigger(prev => !prev);
+        getPreferences(db, user.id).then((result) => {
+            if (!result) return;
+            const dbPreferences = result as Record<string, string>;
+            setPreferences({
+                bankroll: Number(dbPreferences.bankroll) || 0,
+                dailyLimit: Number(dbPreferences.dailyLimit) || 0,
+                unitSize: dbPreferences.unitSize || '',
+                preferredLeagues: dbPreferences.preferredLeagues ? dbPreferences.preferredLeagues.split(',') : [],
+                preferredBetTypes: dbPreferences.preferredBetTypes ? dbPreferences.preferredBetTypes.split(',') : [],
+                riskTolerance: Number(dbPreferences.riskTolerance) || 0,
+                oddsFormat: dbPreferences.oddsFormat || '',
             });
-        }
-    }, [trigger, signedIn]);
+        }).catch((error: unknown) => {
+            console.error('Unable to load account preferences:', error);
+        });
+    }, [db, signedIn, user]);
 
-    const value = {
+    useEffect(() => {
+        if (!trigger || !signedIn || !user) return;
+        getBalanceByUser(db, user.id).then((balance) => {
+            setUserBalance(balance);
+            setTrigger(false);
+        }).catch((error: unknown) => {
+            console.error('Unable to refresh account balances:', error);
+            setTrigger(false);
+        });
+    }, [db, trigger, signedIn, user]);
+
+    const value: UserContextValue = {
         user,
         userBalance,
         setUserBalance,
@@ -252,14 +297,13 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
         preferences,
         updatePreferences,
         signedIn,
-        setSignedIn,
+        authLoading,
+        authError,
+        setAuthError,
+        activateAccount,
         locationStatus,
         checkLocation,
     };
 
-    return (
-        <UserContext.Provider value={value}>
-            {user ? children : <ActivityIndicator accessibilityLabel="Loading local profile" style={{ flex: 1 }} size="large" />}
-        </UserContext.Provider>
-    );
+    return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

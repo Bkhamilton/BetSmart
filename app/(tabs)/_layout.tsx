@@ -1,9 +1,12 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
-import { TouchableOpacity, type ColorValue } from 'react-native';
+import { Redirect, useSegments } from 'expo-router';
+import { ActivityIndicator, TouchableOpacity, type ColorValue } from 'react-native';
 import useTheme from '@/hooks/useTheme';
 import { View } from '@/components/Themed';
+import { UserContext } from '@/contexts/UserContext';
+import { useContext } from 'react';
 
 function TabBarIcon(props: {
     name: React.ComponentProps<typeof FontAwesome>['name'];
@@ -46,9 +49,16 @@ function TabBarButton({ name, active }: TabBarButtonProps) {
 export default function TabLayout() {
 
     const { grayBorder, tint, tabBar } = useTheme();
+    const { user, signedIn, authLoading } = useContext(UserContext);
+    const segments = useSegments();
+    const authRoute = segments[segments.length - 1] === 'login' || segments[segments.length - 1] === 'signup';
+
+    if (authLoading) return <ActivityIndicator accessibilityLabel="Restoring account session" style={{ flex: 1 }} size="large" />;
+    if (!signedIn && !authRoute) return <Redirect href="/(tabs)/(index)/login" />;
+    if (signedIn && authRoute) return <Redirect href="/(tabs)/(index)" />;
 
     return (
-        <Tabs
+        <Tabs key={user?.cloudUserId ?? 'signed-out'}
             screenOptions={{
                 tabBarActiveTintColor: tint,
                 tabBarStyle: { backgroundColor: tabBar, borderTopWidth: 1, borderColor: grayBorder },

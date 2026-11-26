@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Alert } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View, TextInput, ScrollView, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
@@ -12,6 +12,7 @@ import { Preference, Bookie } from '@/constants/types';
 import { bookieImages } from '@/constants/bookieConstants';
 import { useSQLiteContext } from 'expo-sqlite';
 import { insertBalance } from '@/db/user-specific/Balance';
+import { validateSignupFields } from '@/services/authValidation';
 
 export default function SignUpScreen() {
 
@@ -25,20 +26,15 @@ export default function SignUpScreen() {
 
     const { iconColor, grayBackground, grayBorder, buttonGreen } = useTheme();
     const router = useRouter();
-    const { signUp } = useAuthState();
+    const { signUp, authError, isLoading } = useAuthState();
     const { updatePreferences, user } = useContext(UserContext);
     const { leagues, bookies } = useContext(DBContext);
     const db = useSQLiteContext();
 
     const onSignUp = async () => {
-        // Check if each field is filled out
-        if (!username || !email || !name || !password || !confirmPassword) {
-            alert('Please fill out all fields');
-            return;
-        }
-        // Check if password and confirm password match
-        if (password !== confirmPassword) {
-            alert('Passwords do not match');
+        const validationError = validateSignupFields({ name, username, email, password, confirmPassword });
+        if (validationError) {
+            Alert.alert('Check your details', validationError);
             return;
         }
         // Call the signUp function from the parent component
@@ -290,9 +286,11 @@ export default function SignUpScreen() {
                     <TouchableOpacity 
                         style={[styles.signUpButton, { backgroundColor: buttonGreen }]}
                         onPress={onSignUp}
+                        disabled={isLoading}
                     >
-                        <Text style={styles.signUpButtonText}>Create Account</Text>
+                        <Text style={styles.signUpButtonText}>{isLoading ? 'Creating Account...' : 'Create Account'}</Text>
                     </TouchableOpacity>
+                    {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
                 </View>
             </ScrollView>
         </>
@@ -377,6 +375,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: '600',
+    },
+    errorText: {
+        color: '#c62828',
+        marginTop: 16,
+        textAlign: 'center',
     },
     bookiesGrid: {
         flexDirection: 'row',

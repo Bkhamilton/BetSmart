@@ -1,42 +1,42 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
+import { Alert } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { UserContext } from '@/contexts/UserContext';
-import { DBContext } from '@/contexts/DBContext';
 import { TouchableOpacity, Text, View, ScrollView, TextInput, ClearView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
-import { updateUserInfo, updateUserPassword } from '@/db/user-specific/Users';
-import { AntDesign, FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome6 } from '@expo/vector-icons';
+import { validateProfileFields } from '@/services/authValidation';
 
-export default function EditProfileInfo({ changePassword }) {
+export default function EditProfileInfo({ updateProfile, updatePassword, authError, isLoading }) {
 
     const { iconColor, grayBackground, grayBorder, backgroundColor } = useTheme();
-    
-    const { user, signedIn } = useContext(UserContext);
-    const { db } = useContext(DBContext);
+    const { user, signedIn } = React.useContext(UserContext);
 
-    const [name, setName] = useState(signedIn ? user.name : '');
-    const [username, setUsername] = useState(signedIn ? user.username : '');
-    const [email, setEmail] = useState(signedIn ? user.email : '');
+    const [name, setName] = useState(user?.name ?? '');
+    const [username, setUsername] = useState(user?.username ?? '');
+    const [email, setEmail] = useState(user?.email ?? '');
     const [password, setPassword] = useState('');
 
-    const buildNewUser = () => {
-        return {
-            id: user.id,
-            name: name ? name : user.name,
-            username: username ? username : user.username,
-            email: email ? email : user.email,
-        };
-    };
-
-    const handleSaveChanges = () => {
-        if (!signedIn) {
-            alert('Please sign in to save changes');
+    const handleSaveChanges = async () => {
+        if (!signedIn || !user) {
+            Alert.alert('Sign in required', 'Sign in to update your account.');
             return;
         }
-        if (password) {
-            changePassword(password);
-        } else {
-            updateUserInfo(db, buildNewUser());
+        const validationError = validateProfileFields({ name, username, email });
+        if (validationError) {
+            Alert.alert('Check your details', validationError);
+            return;
+        }
+
+        const profileSaved = await updateProfile({ name, username, email });
+        if (profileSaved && password) {
+            const passwordSaved = await updatePassword(password);
+            if (passwordSaved) {
+                setPassword('');
+                Alert.alert('Account updated', 'Your profile and password were updated.');
+            }
+        } else if (profileSaved) {
+            Alert.alert('Account updated', 'Your profile was saved.');
         }
     };
 
@@ -83,25 +83,28 @@ export default function EditProfileInfo({ changePassword }) {
                             onChangeText={setEmail}
                         />
                     </ClearView>                    
-                    {/* Password */}
+                    {/* New Password */}
                     <ClearView style={{ padding: 8 }}>
-                        <Text>Password</Text>
+                        <Text>New Password</Text>
                         <TextInput
                             style={[styles.editComponentInput, { borderColor: backgroundColor, backgroundColor: grayBorder }]}
-                            placeholder={'Enter your password'}
+                            placeholder={'Enter a new password'}
                             autoCorrect={false}
                             value={password}
                             onChangeText={setPassword}
+                            secureTextEntry
                         />
                     </ClearView>             
                 </View>
+                {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
             </ScrollView>
             <View style={{ paddingVertical: 16, paddingHorizontal: 8 }}>
                 <TouchableOpacity 
                     style={styles.saveButton}
                     onPress={handleSaveChanges}    
+                    disabled={isLoading}
                 >
-                    <Text>Save Changes</Text>
+                    <Text>{isLoading ? 'Saving...' : 'Save Changes'}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -150,5 +153,9 @@ const styles = StyleSheet.create({
         borderWidth: 1, 
         opacity: 0.8,
         marginTop: 8,
-    }
+    },
+    errorText: {
+        color: '#c62828',
+        padding: 8,
+    },
 });

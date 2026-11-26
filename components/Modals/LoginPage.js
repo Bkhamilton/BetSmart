@@ -4,24 +4,40 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { TouchableOpacity, Text, View, TextInput, Modal, ClearView, ScrollView } from '@/components/Themed';
 import useTheme from '@/hooks/useTheme';
 
-export default function LoginPage({ visible, close, login, handleSignUp }) {
+export default function LoginPage({ visible, close, login, handleSignUp, authError, isLoading, requestPasswordReset, resendConfirmation }) {
 
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const { iconColor, backgroundColor, grayBackground, grayBorder, greenText, buttonGreen } = useTheme();
 
     const handleLogin = async () => {
         try {
-            const result = await login(username, password);
+            const result = await login(email, password);
             if (result) {
                 Alert.alert("Success", "You have successfully logged in!");
-            } else {
-                Alert.alert("Error", "Invalid username or password.");
             }
         } catch (error) {
-            Alert.alert("Error", "An error occurred while trying to log in.");
+            Alert.alert("Sign in failed", error instanceof Error ? error.message : "Please try again.");
         }
+    };
+
+    const handlePasswordReset = async () => {
+        if (!email.trim()) {
+            Alert.alert("Enter your email", "Enter your email address first so we can send a reset link.");
+            return;
+        }
+        const sent = await requestPasswordReset(email);
+        if (sent) Alert.alert("Check your email", "If an account exists for that address, a password reset link has been sent.");
+    };
+
+    const handleResendConfirmation = async () => {
+        if (!email.trim()) {
+            Alert.alert("Enter your email", "Enter your email address first so we can resend a confirmation link.");
+            return;
+        }
+        const sent = await resendConfirmation(email);
+        if (sent) Alert.alert("Check your email", "If the address needs confirmation, a new link has been sent.");
     };
 
     return (
@@ -48,16 +64,17 @@ export default function LoginPage({ visible, close, login, handleSignUp }) {
                     </View>
                     
                     <View style={styles.formContainer}>
-                        {/* Username */}
+                        {/* Email */}
                         <ClearView style={styles.inputContainer}>
-                            <Text style={styles.inputLabel}>Username</Text>
+                            <Text style={styles.inputLabel}>Email</Text>
                             <TextInput
                                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
-                                placeholder={'Enter your username'}
-                                onChangeText={setUsername}
-                                value={username}
+                                placeholder={'Enter your email'}
+                                onChangeText={setEmail}
+                                value={email}
                                 autoCorrect={false}
                                 autoCapitalize="none"
+                                keyboardType="email-address"
                             />
                         </ClearView>
                         
@@ -69,6 +86,7 @@ export default function LoginPage({ visible, close, login, handleSignUp }) {
                                 placeholder={'Enter your password'}
                                 onChangeText={setPassword}
                                 value={password}
+                                autoComplete="password"
                                 autoCorrect={false}
                                 autoCapitalize="none"
                                 secureTextEntry={true}
@@ -76,11 +94,21 @@ export default function LoginPage({ visible, close, login, handleSignUp }) {
                         </ClearView>
                     </View>
 
+                    {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
+
                     <TouchableOpacity 
                         style={[styles.loginButton, { backgroundColor: buttonGreen }]}
-                        onPress={() => handleLogin()}
+                        onPress={handleLogin}
+                        disabled={isLoading}
                     >
-                        <Text style={styles.loginButtonText}>Sign In</Text>
+                        <Text style={styles.loginButtonText}>{isLoading ? 'Signing In...' : 'Sign In'}</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={handlePasswordReset} disabled={isLoading} style={styles.resetLink}>
+                        <Text style={{ color: greenText }}>Forgot password?</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleResendConfirmation} disabled={isLoading} style={styles.resetLink}>
+                        <Text style={{ color: greenText }}>Resend confirmation email</Text>
                     </TouchableOpacity>
 
                     <View style={styles.signUpContainer}>
@@ -176,5 +204,14 @@ const styles = StyleSheet.create({
     signUpLink: {
         fontSize: 15,
         fontWeight: '600',
+    },
+    resetLink: {
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    errorText: {
+        color: '#c62828',
+        marginBottom: 12,
+        textAlign: 'center',
     },
 });
