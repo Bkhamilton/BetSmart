@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Alert } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { TouchableOpacity, Text, View, TextInput, ScrollView, ClearView } from '@/components/Themed';
+import { TouchableOpacity, Text, View, ClearView } from '@/components/Themed';
+import { SignupKeyboardScroll, SignupInput } from '@/components/SignupKeyboardScroll';
 import useTheme from '@/hooks/useTheme';
 import useAuthState from '@/hooks/useAuthState';
 import { validateSignupFields } from '@/services/authValidation';
@@ -47,7 +48,7 @@ export default function OnboardingSignUpScreen({ onSignUpSuccess, onClose }: Onb
           </TouchableOpacity>
         )}
       </View>
-      <ScrollView 
+      <SignupKeyboardScroll 
         style={{ flex: 1 }} 
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -62,7 +63,7 @@ export default function OnboardingSignUpScreen({ onSignUpSuccess, onClose }: Onb
             {/* Name */}
             <ClearView style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Name</Text>
-              <TextInput
+              <SignupInput
                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                 placeholder={'Enter your full name'}
                 onChangeText={setName}
@@ -74,7 +75,7 @@ export default function OnboardingSignUpScreen({ onSignUpSuccess, onClose }: Onb
             {/* Username */}
             <ClearView style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Username</Text>
-              <TextInput
+              <SignupInput
                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                 placeholder={'Choose a username'}
                 onChangeText={setUsername}
@@ -87,7 +88,7 @@ export default function OnboardingSignUpScreen({ onSignUpSuccess, onClose }: Onb
             {/* Email */}
             <ClearView style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Email</Text>
-              <TextInput
+              <SignupInput
                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                 placeholder={'Enter your email address'}
                 onChangeText={setEmail}
@@ -101,7 +102,7 @@ export default function OnboardingSignUpScreen({ onSignUpSuccess, onClose }: Onb
             {/* Password */}
             <ClearView style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Password</Text>
-              <TextInput
+              <SignupInput
                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                 placeholder={'Create a password'}
                 onChangeText={setPassword}
@@ -115,7 +116,7 @@ export default function OnboardingSignUpScreen({ onSignUpSuccess, onClose }: Onb
             {/* Confirm Password */}
             <ClearView style={styles.inputContainer}>
               <Text style={styles.inputLabel}>Confirm Password</Text>
-              <TextInput
+              <SignupInput
                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                 placeholder={'Confirm your password'}
                 onChangeText={setConfirmPassword}
@@ -136,7 +137,7 @@ export default function OnboardingSignUpScreen({ onSignUpSuccess, onClose }: Onb
           </TouchableOpacity>
           {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
         </View>
-      </ScrollView>
+      </SignupKeyboardScroll>
     </>
   );
 }
