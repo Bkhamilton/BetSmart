@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { StyleSheet, Image, Alert } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { TouchableOpacity, Text, View, TextInput, ScrollView, ClearView } from '@/components/Themed';
+import { TouchableOpacity, Text, View, ScrollView, ClearView } from '@/components/Themed';
+import { SignupKeyboardScroll, SignupInput } from '@/components/SignupKeyboardScroll';
 import useTheme from '@/hooks/useTheme';
 import { useRouter } from 'expo-router';
 import useAuthState from '@/hooks/useAuthState';
@@ -203,7 +204,7 @@ export default function SignUpScreen() {
                     <FontAwesome5 name="times" size={24} color={iconColor} />
                 </TouchableOpacity>
             </View>
-            <ScrollView 
+            <SignupKeyboardScroll 
                 style={{ flex: 1 }} 
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
@@ -218,7 +219,7 @@ export default function SignUpScreen() {
                         {/* Name */}
                         <ClearView style={styles.inputContainer}>
                             <Text style={styles.inputLabel}>Name</Text>
-                            <TextInput
+                            <SignupInput
                                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                                 placeholder={'Enter your full name'}
                                 onChangeText={setName}
@@ -230,7 +231,7 @@ export default function SignUpScreen() {
                         {/* Username */}
                         <ClearView style={styles.inputContainer}>
                             <Text style={styles.inputLabel}>Username</Text>
-                            <TextInput
+                            <SignupInput
                                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                                 placeholder={'Choose a username'}
                                 onChangeText={setUsername}
@@ -243,7 +244,7 @@ export default function SignUpScreen() {
                         {/* Email */}
                         <ClearView style={styles.inputContainer}>
                             <Text style={styles.inputLabel}>Email</Text>
-                            <TextInput
+                            <SignupInput
                                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                                 placeholder={'Enter your email address'}
                                 onChangeText={setEmail}
@@ -257,7 +258,7 @@ export default function SignUpScreen() {
                         {/* Password */}
                         <ClearView style={styles.inputContainer}>
                             <Text style={styles.inputLabel}>Password</Text>
-                            <TextInput
+                            <SignupInput
                                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                                 placeholder={'Create a password'}
                                 onChangeText={setPassword}
@@ -271,7 +272,7 @@ export default function SignUpScreen() {
                         {/* Confirm Password */}
                         <ClearView style={styles.inputContainer}>
                             <Text style={styles.inputLabel}>Confirm Password</Text>
-                            <TextInput
+                            <SignupInput
                                 style={[styles.input, { borderColor: grayBorder, backgroundColor: grayBackground }]}
                                 placeholder={'Confirm your password'}
                                 onChangeText={setConfirmPassword}
@@ -292,7 +293,7 @@ export default function SignUpScreen() {
                     </TouchableOpacity>
                     {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
                 </View>
-            </ScrollView>
+            </SignupKeyboardScroll>
         </>
     );
 }
