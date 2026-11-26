@@ -166,13 +166,31 @@ export const getLegsByParticipantBetIds = async (db, participantBetIds) => {
 };
 
 // Function to insert a leg
-export const insertLeg = async (db, participantBetId, betMarketId, betTypeId) => {
+export const insertLeg = async (db, participantBetId, betMarketId, betTypeId, snapshot = {}) => {
     try {
         const query = `
-            INSERT INTO Legs (participantBetId, betMarketId, betTypeId) 
-            VALUES (?, ?, ?)
+            INSERT INTO Legs (
+                participantBetId, betMarketId, betTypeId, marketTypeSnapshot,
+                marketValueSnapshot, oddsSnapshot, overUnderSnapshot,
+                targetIdSnapshot, targetNameSnapshot, targetTypeSnapshot,
+                bookieIdSnapshot, betTypeSnapshot
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        const resultDB = await db.runAsync(query, [participantBetId, betMarketId, betTypeId]);
+        const resultDB = await db.runAsync(query, [
+            participantBetId,
+            betMarketId,
+            betTypeId,
+            snapshot.marketTypeSnapshot ?? null,
+            snapshot.marketValueSnapshot ?? null,
+            snapshot.oddsSnapshot ?? null,
+            snapshot.overUnderSnapshot ?? null,
+            snapshot.targetIdSnapshot ?? null,
+            snapshot.targetNameSnapshot ?? null,
+            snapshot.targetTypeSnapshot ?? null,
+            snapshot.bookieIdSnapshot ?? null,
+            snapshot.betTypeSnapshot ?? null,
+        ]);
         return resultDB.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting leg:', error);

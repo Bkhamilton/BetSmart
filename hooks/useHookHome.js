@@ -55,13 +55,15 @@ const useHookHome = () => {
         setProfileOptionsModalVisible(false);
     }
 
-    const onConfirmBetSlip = (betSlip) => {
-        confirmBetResults(db, betSlip, user);
-
-        closeConfirmModal();
-
-        setTriggerFetch(prev => !prev);
-        setTrigger(prev => !prev);
+    const onConfirmBetSlip = async (betSlip) => {
+        try {
+            await confirmBetResults(db, betSlip, user);
+            closeConfirmModal();
+            setTriggerFetch(prev => !prev);
+            setTrigger(prev => !prev);
+        } catch (error) {
+            console.error('Unable to confirm bet results:', error);
+        }
     };
 
     useEffect(() => {

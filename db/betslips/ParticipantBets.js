@@ -194,9 +194,21 @@ export const getBetsByBetSlipIds = async (db, betSlipIds) => {
 };
 
 // Function to insert a participant bet
-export const insertParticipantBet = async (db, betSlipId, gameId, odds) => {
+export const insertParticipantBet = async (db, betSlipId, gameId, odds, snapshot = {}) => {
     try {
-        const result = await db.runAsync('INSERT INTO ParticipantBets (betSlipId, gameId, odds) VALUES (?, ?, ?)', [betSlipId, gameId, odds]);
+        const result = await db.runAsync(
+            `INSERT INTO ParticipantBets
+                (betSlipId, gameId, odds, sportSnapshot, homeTeamSnapshot, awayTeamSnapshot)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [
+                betSlipId,
+                gameId,
+                odds,
+                snapshot.sportSnapshot ?? null,
+                snapshot.homeTeamSnapshot ?? null,
+                snapshot.awayTeamSnapshot ?? null,
+            ]
+        );
         return result.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting participant bet:', error);
