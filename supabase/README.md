@@ -1,6 +1,7 @@
 # Issue #52 — User data, authentication and offline sync
 
-This directory begins the **cloud schema foundation**, not a completed sync feature.
+This directory contains the **cloud schema foundation and Phase 3 sync
+contract**, not a completed end-to-end sync feature.
 The new tables are intentionally prefixed `bs_` to avoid overwriting BetSmart's
 existing Supabase sportsbook/reference tables. The live Supabase project has **not**
 been changed merely by committing these files.
@@ -11,7 +12,8 @@ been changed merely by committing these files.
   `bs_profiles` table or authenticate against the local SQLite `Users` table.
 - **Supabase Postgres** is the authoritative durable user history.
 - **Local SQLite** is the offline working copy and analytics query engine.
-  Offline edits will eventually be uploaded via a durable outbox.
+  Offline edits are captured in a durable per-account outbox; transport and
+  restoration are still follow-up work.
 - **Shared sportsbook reference data** (teams, games, markets, odds) remains
   separate from private user-generated records.
 - `bs_bet_slips -> bs_participant_bets -> bs_bet_legs` follows the existing
@@ -42,11 +44,11 @@ been changed merely by committing these files.
 - Every private table has `user_id` and per-user RLS policies. Composite
   foreign keys ensure child records cannot point to another user's parent.
 - UUIDs are cloud stable identifiers. Current SQLite auto-increment IDs are
-  **not** interchangeable with them; migration needs a persistent ID mapping.
+  **not** interchangeable with them; Phase 3 adds stable UUIDs to betting
+  records while retaining local integer keys.
 - `updated_at`, `revision`, and soft-delete `deleted_at` support future
-  incremental sync. This migration alone does **not** provide lost-update
-  protection: implement conditional write/version checks before multi-device
-  writes are enabled. A client should not overwrite a stale server revision.
+  incremental sync. The Phase 3 RPC rejects stale revisions, but the mobile
+  client must not enable multi-device writes until Phase 4 uses that contract.
 - `bs_transactions` tracks money movements only; bankroll balance should be
   derived from a consistent ledger/history rather than trusted as independently
   synced state.
@@ -60,22 +62,23 @@ been changed merely by committing these files.
 - Never put the Supabase service-role key in an Expo `EXPO_PUBLIC_` variable.
   Use the publishable/anon key with RLS for mobile clients.
 
-## Follow-up implementation checklist (not implemented by this PR)
+## Phase 3 and remaining implementation
 
-- [ ] Replace local plaintext-credential login in `hooks/useAuthState.js`
-  and local `UserSessions` with Supabase Auth; choose secure session storage.
-  The existing SQLite `Users` implementation currently compares and writes
-  password values directly, so this is a launch-blocking audit.
+- [x] Replace local plaintext-credential login and `UserSessions` with
+  Supabase Auth and secure session storage (Phase 2 code).
+- [ ] Complete real-device validation of session persistence, logout/login,
+  offline startup, account switching, and local account isolation.
 - [ ] Establish mapping from legacy SQLite users to newly verified Auth IDs;
   do **not** migrate a local account solely on a matching unverified email.
-- [ ] Add `cloud_id` (UUID) to local user tables without losing integer
-  primary keys or existing parent-child associations.
-- [ ] Add an SQLite `sync_outbox` and make user mutations + outbox writes
-  atomic. Use stable operation IDs and idempotent server writes.
-- [ ] Implement full initial upload, incremental download with a safe cursor,
-  tombstone propagation, retries and reconnect/foreground synchronization.
-- [ ] Implement conditional server writes (expected revision / CAS or RPC)
-  and conflict handling for simultaneous edits on different devices.
+- [x] Add stable local cloud UUIDs, a per-account SQLite outbox/cursor, atomic
+  write triggers, retry metadata, and the authenticated revision-checked
+  Supabase mutation and ordered change-feed contract (Phase 3).
+- [ ] Wire one complete bet-slip aggregate through SQLite, outbox, Supabase,
+  and a clean second device (Phase 4; the app does not call the RPC yet).
+- [ ] Add initial upload, incremental download, tombstone application, retry
+  UI, and reconnect/foreground synchronization.
+- [ ] Resolve stale financial conflicts explicitly; do not overwrite a stale
+  server revision.
 - [ ] Handle sign-out, per-account local isolation, account export and purge,
   including soft-deleted rows and unresolved uploads.
 - [ ] Add integration tests for duplicate retries, offline changes, 2-user RLS,
@@ -84,12 +87,16 @@ been changed merely by committing these files.
   `pending / synced / failed` status that distinguishes local saves from
   durable cloud confirmation.
 
-## Why this is a phased PR
+See [PHASE_3_MAPPING.md](./PHASE_3_MAPPING.md) for field-level mappings,
+settlement constraints, and the RPC/cursor contract.
 
-Changing Auth and syncing every write path in the same change as deploying a
-new Postgres schema could permanently orphan existing local users' history.
-This PR isolates the reversible first step (a reviewable **additive schema**)
-from the later app migration. **Do not merge/deploy assuming synchronization or
-cloud account recovery works yet.**
+## Why sync remains phased
+
+Authentication, local history preservation, and cloud synchronization have
+separate implementation and live-validation gates. Phase 3 adds only an
+additive schema and local/server contracts. Phase 4 must wire and test one
+complete betting-history flow before the app treats cloud synchronization as
+available. **Do not merge/deploy assuming end-to-end synchronization or cloud
+account recovery works yet.**
 
 Tracking: #52

@@ -1,5 +1,6 @@
 // Function to create the database and tables
 import { migrateAuthSchema } from './authMigration.js';
+import { migrateSyncSchema } from './syncMigration.js';
 
 export const createTables = async (db) => {
     await createGeneralTables(db);
@@ -7,6 +8,7 @@ export const createTables = async (db) => {
     await createBetslipTables(db);
     await createUserSpecificTables(db);
     await migrateAuthSchema(db);
+    await migrateSyncSchema(db);
     await createAPITables(db);
     await createInsightTables(db);
     await createIndexes(db);
