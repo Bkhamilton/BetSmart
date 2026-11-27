@@ -1,7 +1,7 @@
 # Issue #52 — User data, authentication and offline sync
 
-This directory contains the **cloud schema foundation and Phase 3 sync
-contract**, not a completed end-to-end sync feature.
+This directory contains the **cloud schema foundation and sync contracts**,
+not a completed end-to-end sync feature.
 The new tables are intentionally prefixed `bs_` to avoid overwriting BetSmart's
 existing Supabase sportsbook/reference tables. The live Supabase project has **not**
 been changed merely by committing these files.
@@ -73,6 +73,10 @@ been changed merely by committing these files.
 - [x] Add stable local cloud UUIDs, a per-account SQLite outbox/cursor, atomic
   write triggers, retry metadata, and the authenticated revision-checked
   Supabase mutation and ordered change-feed contract (Phase 3).
+- [x] Add an atomic server-side batch contract for ordered history operations.
+  The caller must supply all necessary changes in dependency order and retry
+  each with its original operation ID, revision, and payload. The contract
+  does not discover aggregate members or wire the mobile client.
 - [ ] Wire one complete bet-slip aggregate through SQLite, outbox, Supabase,
   and a clean second device (Phase 4; the app does not call the RPC yet).
 - [ ] Add initial upload, incremental download, tombstone application, retry
@@ -89,6 +93,18 @@ been changed merely by committing these files.
 
 See [PHASE_3_MAPPING.md](./PHASE_3_MAPPING.md) for field-level mappings,
 settlement constraints, and the RPC/cursor contract.
+The Phase 4 batch migration must be reviewed and applied after the Phase 3
+migration; neither has been applied to the hosted project by this change.
+Existing local betting records are assumed to be in USD, as confirmed by the
+project owner. The client must use that assumption explicitly when mapping
+them; no existing amounts are converted.
+
+To exercise the batch contract, run `scripts/test-phase4-sync-batch.sql` with
+`psql -v ON_ERROR_STOP=1` against a disposable PostgreSQL database named
+`betsmart_phase4_test`, after applying the three migrations. The local fixture
+must provide the Supabase `anon` and `authenticated` roles, an `auth.users`
+table, and an `auth.uid()` implementation based on `request.jwt.claim.sub`.
+The test uses synthetic accounts and rolls back its data.
 
 ## Why sync remains phased
 
