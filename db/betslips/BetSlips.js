@@ -1,5 +1,3 @@
-import * as SQLite from 'expo-sqlite';
-
 // Function to get all bet slips
 export const getAllBetSlips = async (db) => {
     try {
@@ -64,14 +62,14 @@ export const getOpenBetSlips = async (db, userId) => {
             SELECT 
                 bs.id AS id,
                 bs.formatId AS formatId,
-                bf.formatName AS formatName,
+                COALESCE(bs.formatNameSnapshot, bf.formatName) AS formatName,
                 bs.date AS date,
                 bs.odds AS odds,
                 bs.betAmount AS betAmount,
                 bs.winnings AS winnings,
                 bs.userId AS userId,
                 bs.bookieId AS bookieId,
-                b.name AS bookieName
+                COALESCE(bs.bookieNameSnapshot, b.name) AS bookieName
             FROM 
                 BetSlips bs
             LEFT JOIN 
@@ -186,9 +184,15 @@ export const getFavoriteBookie = async (db, userId) => {
 };
 
 // Function to insert a bet slip
-export const insertBetSlip = async (db, formatId, date, odds, betAmount, winnings, userId, bookieId) => {
+export const insertBetSlip = async (db, formatId, date, odds, betAmount, winnings, userId, bookieId, snapshot = {}) => {
     try {
-        const result = await db.runAsync('INSERT INTO BetSlips (formatId, date, odds, betAmount, winnings, userId, bookieId) VALUES (?, ?, ?, ?, ?, ?, ?)', [formatId, date, odds, betAmount, winnings, userId, bookieId]);
+        const result = await db.runAsync(
+            `INSERT INTO BetSlips
+                (formatId, date, odds, betAmount, winnings, userId, bookieId, formatNameSnapshot, bookieNameSnapshot)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [formatId, date, odds, betAmount, winnings, userId, bookieId,
+                snapshot.formatNameSnapshot ?? null, snapshot.bookieNameSnapshot ?? null]
+        );
         return result.lastInsertRowId;
     } catch (error) {
         console.error('Error inserting bet slip:', error);

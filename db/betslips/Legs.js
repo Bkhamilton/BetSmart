@@ -1,5 +1,3 @@
-import * as SQLite from 'expo-sqlite';
-
 // Function to get all legs
 export const getAllLegs = async (db) => {
     try {
@@ -23,22 +21,22 @@ export const getAllValidLegs = async (db, participantBetIds) => {
                 Legs.id AS legId,
                 Legs.participantBetId AS participantBetId, 
                 Legs.betMarketId AS betMarketId,
-                BetMarkets.marketType AS marketType, 
-                BetMarkets.value AS value, 
-                BetMarkets.odds AS odds, 
-                BetMarkets.overUnder AS overUnder, 
+                COALESCE(Legs.marketTypeSnapshot, BetMarkets.marketType) AS marketType,
+                COALESCE(Legs.marketValueSnapshot, BetMarkets.value) AS value,
+                COALESCE(Legs.oddsSnapshot, BetMarkets.odds) AS odds,
+                COALESCE(Legs.overUnderSnapshot, BetMarkets.overUnder) AS overUnder,
                 BetTargets.id AS betTargetId,
-                BetTargets.targetName AS betTarget,
-                BetTargets.targetType AS targetType,
+                COALESCE(Legs.targetNameSnapshot, BetTargets.targetName) AS betTarget,
+                COALESCE(Legs.targetTypeSnapshot, BetTargets.targetType) AS targetType,
                 BetTypes.id AS betTypeId, 
-                BetTypes.betType AS betType
+                COALESCE(Legs.betTypeSnapshot, BetTypes.betType) AS betType
             FROM 
                 Legs 
-            JOIN 
+            LEFT JOIN
                 BetMarkets ON Legs.betMarketId = BetMarkets.id 
-            JOIN
+            LEFT JOIN
                 BetTargets ON BetMarkets.betTargetId = BetTargets.id
-            JOIN 
+            LEFT JOIN
                 BetTypes ON Legs.betTypeId = BetTypes.id
             WHERE 
                 Legs.participantBetId IN (${placeholders})
@@ -64,23 +62,23 @@ export const getAllValidLegsWithResults = async (db, participantBetIds) => {
                 Legs.id AS legId,
                 Legs.participantBetId AS participantBetId, 
                 Legs.betMarketId AS betMarketId,
-                BetMarkets.marketType AS marketType, 
-                BetMarkets.value AS value, 
-                BetMarkets.odds AS odds, 
-                BetMarkets.overUnder AS overUnder, 
+                COALESCE(Legs.marketTypeSnapshot, BetMarkets.marketType) AS marketType,
+                COALESCE(Legs.marketValueSnapshot, BetMarkets.value) AS value,
+                COALESCE(Legs.oddsSnapshot, BetMarkets.odds) AS odds,
+                COALESCE(Legs.overUnderSnapshot, BetMarkets.overUnder) AS overUnder,
                 BetTargets.id AS betTargetId,
-                BetTargets.targetName AS betTarget,
-                BetTargets.targetType AS targetType,
+                COALESCE(Legs.targetNameSnapshot, BetTargets.targetName) AS betTarget,
+                COALESCE(Legs.targetTypeSnapshot, BetTargets.targetType) AS targetType,
                 BetTypes.id AS betTypeId, 
-                BetTypes.betType AS betType,
+                COALESCE(Legs.betTypeSnapshot, BetTypes.betType) AS betType,
                 LegsResults.result AS result
             FROM 
                 Legs 
-            JOIN 
+            LEFT JOIN
                 BetMarkets ON Legs.betMarketId = BetMarkets.id 
-            JOIN
+            LEFT JOIN
                 BetTargets ON BetMarkets.betTargetId = BetTargets.id
-            JOIN 
+            LEFT JOIN
                 BetTypes ON Legs.betTypeId = BetTypes.id
             JOIN
                 LegsResults ON Legs.id = LegsResults.legId

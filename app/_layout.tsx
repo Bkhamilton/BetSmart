@@ -10,6 +10,7 @@ import { initializeDatabase } from '@/api/sqlite/startup';
 import { UserContextProvider } from '@/contexts/UserContext';
 import { DBContextProvider } from '@/contexts/DBContext';
 import { SupabaseContextProvider } from '@/contexts/SupabaseContext';
+import { HistorySyncProvider } from '@/contexts/HistorySyncContext';
 
 import { useColorScheme } from '@/components/useColorScheme';
 
@@ -49,11 +50,13 @@ export default function RootLayout() {
 
   return (
     <Suspense fallback={<ActivityIndicator style={{ flex: 1 }} size="large" />}>
-      <SQLiteProvider databaseName="BetSmart.db" onInit={initializeDatabase} useSuspense={true}>
+      <SQLiteProvider databaseName="BetSmart.db" options={{ enableChangeListener: true }} onInit={initializeDatabase} useSuspense={true}>
         <SupabaseContextProvider>
           <UserContextProvider>
             <DBContextProvider>
-              <RootLayoutNav />
+              <HistorySyncProvider>
+                <RootLayoutNav />
+              </HistorySyncProvider>
             </DBContextProvider>
           </UserContextProvider>
         </SupabaseContextProvider>

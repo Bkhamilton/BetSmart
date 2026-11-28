@@ -11,14 +11,14 @@ import useTheme from '@/hooks/useTheme';
 export default function LegComponent({ leg, children }) {
     const { db } = useContext(DBContext);
     const { grayBorder } = useTheme();
-    const { marketType, value, odds, overUnder, betTargetId, betTarget, targetType, betType } = leg;
+    const { betTarget, targetType } = leg;
     const [betTargetName, setBetTargetName] = useState('');
     const [targetLogo, setTargetLogo] = useState('');
 
     const getName = async () => {
         if (targetType === 'Team') {
             const team = await getTeamAbbreviationByName(db, betTarget);
-            return team.abbreviation;
+            return team?.abbreviation ?? betTarget;
         } else if (targetType === 'Game') {
             return 'Game';
         } else {
@@ -37,24 +37,30 @@ export default function LegComponent({ leg, children }) {
     }
 
     useEffect(() => {
+        let active = true;
         const fetchName = async () => {
-            const name = await getName(betTargetId);
-            setBetTargetName(name);
+            const name = await getName();
+            if (active) setBetTargetName(name);
         };
-        fetchName();
-    }, []);
+        fetchName().catch((error) => console.error('Unable to load bet target name:', error));
+        return () => { active = false; };
+    }, [db, betTarget, targetType]);
 
     useEffect(() => {
+        let active = true;
         const fetchTargetLogo = async (db, betTarget) => {
+            let url;
             if (targetType === 'Team') {
-                getLogoUrl(db, betTarget).then((url) => setTargetLogo(url.logoUrl + '/preview'));
+                url = (await getLogoUrl(db, betTarget))?.logoUrl;
             }
             else if (targetType === 'Player') {
-                getPlayerLogo(db, betTarget).then((url) => setTargetLogo(url.image + '/preview'));
+                url = (await getPlayerLogo(db, betTarget))?.image;
             }
+            if (active) setTargetLogo(url ? url + '/preview' : '');
         };
-        fetchTargetLogo(db, betTarget);
-    }, [betTarget]);
+        fetchTargetLogo(db, betTarget).catch((error) => console.error('Unable to load bet target logo:', error));
+        return () => { active = false; };
+    }, [db, betTarget, targetType]);
 
     return (
         <View style={[styles.container, { borderColor: grayBorder }]}>
@@ -66,7 +72,11 @@ export default function LegComponent({ leg, children }) {
                 )}
                 <View style={styles.legTextContainer}>
                     <Text style={styles.targetHeader}>{getTargetHeader()}</Text>
-                    <Text style={styles.legDetails}>{displayLeg(leg, betTargetName)}</Text>
+                    <Text style={styles.legDetails}>
+                        {leg.marketType && (targetType !== 'Player' || betTarget)
+                            ? displayLeg(leg, betTargetName)
+                            : 'Selection details unavailable'}
+                    </Text>
                 </View>
             </View>
             {children}

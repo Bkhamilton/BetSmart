@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeDatabase } from '../startup';
 import { createTables } from '../createTables';
+import { migrateGameReferenceConstraints } from '../gameReferenceMigration';
+import { migrateLinePlacementSnapshot } from '../linePlacementMigration';
 import { syncInitialData, checkForUpdates } from '@/api/supabase/startup';
 import { supabase } from '@/services/supabase';
 
@@ -9,6 +11,8 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
   setItem: jest.fn(),
 }));
 jest.mock('../createTables', () => ({ createTables: jest.fn() }));
+jest.mock('../gameReferenceMigration', () => ({ migrateGameReferenceConstraints: jest.fn() }));
+jest.mock('../linePlacementMigration', () => ({ migrateLinePlacementSnapshot: jest.fn() }));
 jest.mock('@/api/supabase/startup', () => ({
   syncInitialData: jest.fn(),
   checkForUpdates: jest.fn(),
@@ -25,6 +29,10 @@ it('initializes local schema on every launch without a backend or data reset', a
   await initializeDatabase(db);
   expect(createTables).toHaveBeenCalledTimes(2);
   expect(createTables).toHaveBeenCalledWith(db);
+  expect(migrateGameReferenceConstraints).toHaveBeenCalledTimes(2);
+  expect(migrateGameReferenceConstraints).toHaveBeenCalledWith(db);
+  expect(migrateLinePlacementSnapshot).toHaveBeenCalledTimes(2);
+  expect(migrateLinePlacementSnapshot).toHaveBeenCalledWith(db);
   expect(db.execAsync).not.toHaveBeenCalled();
   expect(syncInitialData).not.toHaveBeenCalled();
   expect(checkForUpdates).not.toHaveBeenCalled();
@@ -35,4 +43,14 @@ it('initializes local schema on every launch without a backend or data reset', a
 it('surfaces local schema failures rather than opening a broken database', async () => {
   createTables.mockRejectedValueOnce(new Error('disk full'));
   await expect(initializeDatabase({})).rejects.toThrow('disk full');
+});
+
+it('surfaces local game-reference migration failures instead of starting with an invalid schema', async () => {
+  migrateGameReferenceConstraints.mockRejectedValueOnce(new Error('game migration blocked'));
+  await expect(initializeDatabase({})).rejects.toThrow('game migration blocked');
+});
+
+it('surfaces local line-placement migration failures rather than hiding them', async () => {
+  migrateLinePlacementSnapshot.mockRejectedValueOnce(new Error('migration blocked'));
+  await expect(initializeDatabase({})).rejects.toThrow('migration blocked');
 });
