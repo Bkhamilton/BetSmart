@@ -9,7 +9,7 @@ const config = {
   now: new Date('2026-11-23T12:00:00Z'),
 };
 
-function fixture() {
+function fixture(active = [{ id: 1, leagueName: 'NBA' }, { id: 2, leagueName: 'WNBA' }]) {
   const calls = [];
   const game = {
     id: 'game-1',
@@ -40,7 +40,8 @@ function fixture() {
     calls.push({ url: parsed, options });
     const json = (body, status = 200) => new Response(JSON.stringify(body), { status });
     if (parsed.hostname === 'api.the-odds-api.com') return json([game]);
-    if (path.endsWith('/rpc/get_active_leagues')) return json([{ id: 1, leagueName: 'NBA' }, { id: 2, leagueName: 'WNBA' }]);
+    if (path.endsWith('/rpc/get_active_leagues')) return json(active);
+    if (path.endsWith('/Leagues')) return json([{ id: 1 }]);
     if (path.endsWith('/Bookies')) return json([{ id: 5 }]);
     if (path.endsWith('/Seasons')) return json([{ id: 6 }]);
     if (path.endsWith('/Teams')) return json([{ id: parsed.searchParams.get('teamName') === 'eq.Home' ? 7 : 8 }]);
@@ -71,6 +72,37 @@ test('refreshes supported leagues with complete market rows through the atomic R
     ['totals', 215.5, '-110', 'Under', null],
   ]);
   assert.equal(rpc.options.headers.Authorization, 'Bearer service-secret');
+});
+
+test('resolves league IDs when the active-league RPC returns lowercase names without IDs', async () => {
+  const { calls, fetchImpl } = fixture([{ leaguename: 'NBA' }, { leaguename: 'WNBA' }]);
+  const result = await refreshAllBettingMarkets({ ...config, fetchImpl });
+  assert.deepEqual(result, { leagues: 1, games: 1, markets: 4 });
+  const lookup = calls.find((call) => call.url.pathname.endsWith('/Leagues'));
+  assert.equal(lookup.url.searchParams.get('leagueName'), 'eq.NBA');
+  const season = calls.find((call) => call.url.pathname.endsWith('/Seasons'));
+  assert.equal(season.url.searchParams.get('leagueId'), 'eq.1');
+});
+
+test('rejects malformed or unresolved leagues before consuming provider quota', async () => {
+  for (const active of [[{}], [{ leaguename: 'NBA' }]]) {
+    const { calls, fetchImpl } = fixture(active);
+    await assert.rejects(refreshAllBettingMarkets({
+      ...config,
+      fetchImpl: (url, options) => new URL(url).pathname.endsWith('/Leagues')
+        ? Promise.resolve(new Response('[]'))
+        : fetchImpl(url, options),
+    }), /Invalid active league name|Expected one league NBA/);
+    assert.equal(calls.some((call) => call.url.hostname === 'api.the-odds-api.com'), false);
+  }
+});
+
+test('sends Supabase secret keys as apikey without a bearer token', async () => {
+  const { calls, fetchImpl } = fixture();
+  await refreshAllBettingMarkets({ ...config, supabaseServiceRoleKey: 'sb_secret_test', fetchImpl });
+  const active = calls.find((call) => call.url.pathname.endsWith('/rpc/get_active_leagues'));
+  assert.equal(active.options.headers.apikey, 'sb_secret_test');
+  assert.equal(active.options.headers.Authorization, undefined);
 });
 
 test('does not replace existing markets when a provider returns incomplete outcomes', async () => {

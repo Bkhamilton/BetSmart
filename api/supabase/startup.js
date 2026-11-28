@@ -38,12 +38,13 @@ export const checkForUpdates2 = async (db, supabase) => {
 export const checkForUpdates = async (db, supabase) => {
     try {
 
+        const seasonsChanged = await syncSeasons(db, supabase);
         const date = new Date();
         const today = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;    
         const lastSyncDate = await AsyncStorage.getItem('lastSyncDate');
 
-        if (lastSyncDate !== today) {
-            // First time opening the app today, run updateGameInfo
+        if (lastSyncDate !== today || seasonsChanged) {
+            // Refresh games after season changes, even if a sync already ran today.
             await updateGameInfo(db, supabase);
             await AsyncStorage.setItem('lastSyncDate', today);
         } else {

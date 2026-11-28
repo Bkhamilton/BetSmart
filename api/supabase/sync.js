@@ -71,21 +71,38 @@ export const syncSeasons = async (db, supabase) => {
         const seasons = await getAllSeasons(supabase);
         if (seasons.length === 0) {
             console.log('No seasons to sync');
-            return;
+            return false;
         }
 
+        let changed = false;
         await db.withTransactionAsync(async () => {
             for (const season of seasons) {
-                await db.runAsync(
-                    'INSERT INTO Seasons (id, leagueId, season, games, description, seasonType, startDate, endDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                const result = await db.runAsync(
+                    `INSERT INTO Seasons (id, leagueId, season, games, description, seasonType, startDate, endDate)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                     ON CONFLICT(id) DO UPDATE SET
+                        leagueId = excluded.leagueId, season = excluded.season,
+                        games = excluded.games, description = excluded.description,
+                        seasonType = excluded.seasonType, startDate = excluded.startDate,
+                        endDate = excluded.endDate
+                     WHERE Seasons.leagueId IS NOT excluded.leagueId
+                        OR Seasons.season IS NOT excluded.season
+                        OR Seasons.games IS NOT excluded.games
+                        OR Seasons.description IS NOT excluded.description
+                        OR Seasons.seasonType IS NOT excluded.seasonType
+                        OR Seasons.startDate IS NOT excluded.startDate
+                        OR Seasons.endDate IS NOT excluded.endDate`,
                     [season.id, season.leagueId, season.season, season.games, season.description, season.seasonType, season.startDate, season.endDate]
                 );
+                changed = changed || result.changes > 0;
             }
         });
 
         console.log('Seasons synced successfully');
+        return changed;
     } catch (error) {
         console.error('Error syncing seasons:', error);
+        throw error;
     }
 };
 

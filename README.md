@@ -34,7 +34,8 @@ app/
 
 ## Development
 
-Use Node.js 24 LTS (`nvm use` reads `.nvmrc`) and npm.
+Use a Node.js version supported by `package.json` (`engines.node`); `.nvmrc`
+selects Node.js 26. Use npm for package management.
 
 ```sh
 npm ci
@@ -58,13 +59,17 @@ To reconnect a backend, copy `.env.example` to `.env`, fill in the public URL an
 client API key, and restart Expo. Only put publishable/anon client credentials in
 `EXPO_PUBLIC_*` variables; they are included in the app bundle.
 
+When connected, the app syncs seasons on startup before checking for game
+updates. New and changed seasons update local SQLite without deleting existing
+season records or betting history.
+
 ### Standalone market refresh
 
 The market refresh runs outside Expo. `services/market-refresh.mjs` is a
-self-contained Node.js 24 script with no npm dependencies; copy it to a separate
-project or host if desired. It fetches The Odds API's NBA, NFL, MLB, and NHL
-moneylines, spreads, and totals for active leagues and the four configured
-bookmakers. It does **not** fetch player props or schedule itself.
+self-contained Node.js 18+ script with no npm dependencies; copy it to a
+separate project or host if desired. It fetches The Odds API's NBA, NFL, MLB,
+and NHL moneylines, spreads, and totals for active leagues and the four
+configured bookmakers. It does **not** fetch player props or schedule itself.
 
 Before running it:
 
@@ -74,10 +79,18 @@ Before running it:
    returned by the provider are left alone. Check this against a test database
    before production, especially if other tables reference market IDs.
 2. Provide `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `THE_ODDS_API_KEY` as
-   private server-side environment variables. Never put them in `EXPO_PUBLIC_*`,
-   commit them, or ship them with the app.
+   private server-side environment variables. `SUPABASE_SERVICE_ROLE_KEY` must
+   contain a Supabase secret key or legacy service-role key, not a publishable
+   or anon key. Never put private credentials in `EXPO_PUBLIC_*`,
+   commit them, or ship them with the app. A `.env` file is not loaded by plain
+   `node`; use `node --env-file=.env` to load a private project-root `.env`
+   (supported by Node.js 20.6+ and 18.19+).
 3. Run `node services\market-refresh.mjs` on Windows. The process exits nonzero
-   on failure. It logs the provider's remaining quota when available.
+   on failure. With a `.env` file, run
+   `node --env-file=.env services\market-refresh.mjs` instead. It logs the
+   provider's remaining quota when available.
+
+The repository's `market-refresh` agent skill guides an authorized one-off run.
 
 For Supabase Edge Functions, copy both `market-refresh-edge.mjs` (as `index.mjs`)
 and `market-refresh.mjs` into `supabase/functions/market-refresh` in a Supabase

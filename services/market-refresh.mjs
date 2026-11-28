@@ -47,7 +47,9 @@ export async function refreshAllBettingMarkets({
   const baseUrl = new URL('/rest/v1/', supabaseUrl);
   const headers = {
     apikey: supabaseServiceRoleKey,
-    Authorization: `Bearer ${supabaseServiceRoleKey}`,
+    ...(!supabaseServiceRoleKey.startsWith('sb_secret_') && {
+      Authorization: `Bearer ${supabaseServiceRoleKey}`,
+    }),
     'Content-Type': 'application/json',
   };
 
@@ -170,9 +172,24 @@ export async function refreshAllBettingMarkets({
   const date = utcDate(now);
   const active = await db('rpc/get_active_leagues', { method: 'POST', body: { p_date: date } });
   if (!Array.isArray(active)) throw new Error('Invalid active leagues response');
-  const leagues = active.filter((league) => Object.hasOwn(LEAGUES, league.leagueName));
-  const skipped = active.filter((league) => !Object.hasOwn(LEAGUES, league.leagueName));
-  if (skipped.length) console.log(`Skipping unsupported active leagues: ${skipped.map((league) => league.leagueName).join(', ')}`);
+  const leagues = [];
+  const skipped = [];
+  for (const row of active) {
+    const leagueName = row?.leagueName ?? row?.leaguename;
+    if (typeof leagueName !== 'string' || !leagueName) {
+      throw new Error('Invalid active league name');
+    }
+    if (!Object.hasOwn(LEAGUES, leagueName)) {
+      skipped.push(leagueName);
+      continue;
+    }
+    const id = row.id ?? (await selectOne('Leagues', {
+      select: 'id', leagueName: `eq.${leagueName}`,
+    }, `league ${leagueName}`)).id;
+    if (!Number.isInteger(id)) throw new Error(`Invalid league ID for ${leagueName}`);
+    leagues.push({ id, leagueName });
+  }
+  if (skipped.length) console.log(`Skipping unsupported active leagues: ${skipped.join(', ')}`);
   let games = 0;
   let markets = 0;
   for (const league of leagues) {
