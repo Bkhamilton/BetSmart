@@ -1,11 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/services/supabase';
 import { createTables } from '@/api/sqlite/createTables';
+import { migrateGameReferenceConstraints } from './gameReferenceMigration';
+import { migrateLinePlacementSnapshot } from './linePlacementMigration';
 import { syncInitialData, checkForUpdates } from '@/api/supabase/startup';
 
 // Always create missing local schema without deleting existing betting history.
 export const initializeDatabase = async (db) => {
     await createTables(db);
+    // SQLiteProvider awaits onInit before exposing the connection to providers;
+    // the legacy-FK rebuild can therefore toggle FK enforcement and transact
+    // on this same connection without unrelated app queries interleaving.
+    await migrateGameReferenceConstraints(db);
+    await migrateLinePlacementSnapshot(db);
     if (!supabase) {
         console.info('Supabase is not configured. Starting with local data only.');
         return;

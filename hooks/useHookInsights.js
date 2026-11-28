@@ -3,12 +3,14 @@ import { UserContext } from '@/contexts/UserContext';
 import { getWonBetSlipCountLast7Days, getProfitLast7Days, getWinningestBetSlipLast7Days } from '@/db/betslips/BetSlipsResults';
 import { getBetSlipsLast7Days } from '@/db/betslips/BetSlips';
 import { DBContext } from '@/contexts/DBContext';
+import { HistorySyncContext } from '@/contexts/HistorySyncContext';
 
 const useHookInsightsPage = () => {
 
     const { db } = useContext(DBContext);
 
     const { user, signedIn } = useContext(UserContext);
+    const { revision } = useContext(HistorySyncContext);
     
     const [streak, setStreak] = useState('hot');
 
@@ -16,6 +18,7 @@ const useHookInsightsPage = () => {
     const [betsWon, setBetsWon] = useState(0);
     const [profit, setProfit] = useState(0);
     const [topBet, setTopBet] = useState({});
+    const [dataOwner, setDataOwner] = useState(null);
 
     // function to cycle betwen hot, cold, and no streaks
     const cycleStreak = () => {
@@ -29,35 +32,38 @@ const useHookInsightsPage = () => {
     }
 
     useEffect(() => {
-        if (!user) return;
-        if (signedIn) {
-            getBetSlipsLast7Days(db, user.id).then((res) => {
-                setBetsPlaced(res);
-            });
-            getWonBetSlipCountLast7Days(db, user.id).then((res) => {
-                setBetsWon(res);
-            });
-            getProfitLast7Days(db, user.id).then((res) => {
-                setProfit(res);
-            });
-            getWinningestBetSlipLast7Days(db, user.id).then((res) => {
-                setTopBet(res);
-            });
-        } else {
+        let active = true;
+        if (!user || !signedIn || !db) {
             setBetsPlaced(0);
             setBetsWon(0);
             setProfit(0);
             setTopBet({});
+            setDataOwner(null);
+            return () => { active = false; };
         }
-    }, [user, signedIn]);
+        Promise.all([
+            getBetSlipsLast7Days(db, user.id),
+            getWonBetSlipCountLast7Days(db, user.id),
+            getProfitLast7Days(db, user.id),
+            getWinningestBetSlipLast7Days(db, user.id),
+        ]).then(([placed, won, totalProfit, top]) => {
+            if (!active) return;
+            setBetsPlaced(placed);
+            setBetsWon(won);
+            setProfit(totalProfit);
+            setTopBet(top);
+            setDataOwner(user.id);
+        }).catch((error) => console.error('Unable to refresh insights:', error));
+        return () => { active = false; };
+    }, [db, user?.id, signedIn, revision]);
     
     return {
         streak,
         cycleStreak,
-        betsPlaced,
-        betsWon,
-        profit,
-        topBet,
+        betsPlaced: user && signedIn && dataOwner === user.id ? betsPlaced : 0,
+        betsWon: user && signedIn && dataOwner === user.id ? betsWon : 0,
+        profit: user && signedIn && dataOwner === user.id ? profit : 0,
+        topBet: user && signedIn && dataOwner === user.id ? topBet : {},
     };
 };
 

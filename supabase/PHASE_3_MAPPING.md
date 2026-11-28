@@ -12,29 +12,28 @@ settlement-result rows, in the same transaction as the local write.
 | --- | --- | --- |
 | `BetSlips.cloudId` | `bs_bet_slips.id` | Stable UUID generated on-device. Never use SQLite `id` as the cloud ID. |
 | `BetSlips.userId` | `bs_bet_slips.user_id` | Resolve through `Users.cloudUserId`; do not infer identity from local email or username. |
-| `BetSlips.formatId` | `bet_format` and `legacy_format_id` | `BetFormats.formatName` supplies the display format; preserve the local integer separately. |
+| `BetSlips.formatNameSnapshot` | `bet_format` | Preserve the format recorded with the bet, independently of local reference IDs. |
 | `BetSlips.date` | `placed_at` | Preserve the stored ISO/text timestamp; do not convert it to a date-only value. |
 | `BetSlips.odds` | `odds_snapshot` and `decimal_odds` | Preserve the original odds string. Populate decimal odds only when conversion is validated. |
-| `BetSlips.betAmount` | `stake` | Preserve the local amount; SQLite stores it as `REAL`, so it is not an exact decimal source. |
-| `BetSlips.winnings` | `payout` | Preserve as the app's recorded gross return. Do not infer a payout for an unsettled bet. |
-| `BetSlips.bookieId` | `legacy_bookie_id` | Keep as a legacy reference. Populate `user_bookie_id` only after a stable user-bookie mapping exists. |
+| `BetSlips.betAmount`, `cloudStake` | `stake` | Local `REAL` amounts cannot recover previously lost precision; restored cloud decimals are also retained as exact text. |
+| `BetSlips.winnings`, `cloudPayout` | `payout` | The app records gross return; exact restored cloud decimals are retained as text. |
+| `BetSlips.bookieNameSnapshot` | `bookie_display_name_snapshot` | A historical display name is not a synced sportsbook association. |
 | `BetSlipsResults.result` | `status` and `legacy_result` | Existing settled values are `1` (won), `0` (lost), and `-1` (push). Preserve the source value; do not translate unknown values. |
 | `BetSlipsResults.timestamp` | `settled_at` and `legacy_result_at` | Preserve the settlement timestamp when present. |
 | `ParticipantBets.cloudId` | `bs_participant_bets.id` | Stable UUID; map `betSlipId` to the parent's cloud UUID. |
 | `ParticipantBets.gameId` | `game_reference_id` | Preserve the provider/reference string, not a local game integer. |
 | `ParticipantBets.odds` | `odds_snapshot` and `decimal_odds` | Preserve the original odds string and convert only when valid. |
-| `ParticipantBets.*Snapshot` | `sport_snapshot`, `home_team_snapshot`, `away_team_snapshot` | New local writes snapshot these values. Older rows may have null snapshots; never claim current game metadata is historical truth. |
+| `ParticipantBets.*Snapshot` | game, sport, league and team snapshot columns | New local writes snapshot these values. Older rows may have null snapshots; never claim current game metadata is historical truth. |
 | `ParticipantBetsResults.result/timestamp` | participant `status`, `legacy_result`, `legacy_result_at` | Result rows remain local SQLite records; serialize their state into the parent cloud row. |
 | `Legs.cloudId` | `bs_bet_legs.id` | Stable UUID; map `participantBetId` to the participant's cloud UUID. |
-| `Legs.betMarketId` | `legacy_market_id` | Preserve the old integer reference, not as a cloud UUID. |
-| `Legs.betTypeId` | `legacy_bet_type_id` and `bet_type_snapshot` | Preserve both the integer reference and the current display label snapshot. |
+| `Legs.betMarketId` | `legacy_market_id` | A device-local reference; it must not be interpreted as a valid reference on another device. |
+| `Legs.betTypeSnapshot` | `bet_type_snapshot` | Preserve the label independently of the device-local integer reference. |
 | `Legs.*Snapshot` | leg snapshot columns | New local writes retain market type/value, odds, over/under, target, and bookie reference. Legacy rows may lack a trustworthy historical snapshot. |
 | `LegsResults.result/timestamp` | leg `status`, `legacy_result`, `legacy_result_at` | Serialize with the parent leg; there is no separate cloud result table. |
 
-`bs_bet_slips.currency_code` currently defaults to USD, while local betting
-records do not store a currency. Confirm the currency assumption before the
-Phase 4 uploader relies on that default. Local `REAL` amounts also cannot
-recover decimal precision that was already lost before this migration.
+Existing local betting records are assumed to be USD, as confirmed by the
+project owner. A restored cloud record retains its currency instead of being
+converted. Local `REAL` amounts cannot recover precision already lost.
 
 ## Durable local queue and ownership
 
@@ -69,10 +68,10 @@ The pull cursor and timestamps are stored per local account in
   change-log ID allocation with commit, so a client can persist the last
   returned ID as a cursor without skipping a concurrently committed lower ID.
   The cursor is returned as text to avoid JavaScript integer precision loss.
-- The mobile client does not call either RPC yet. Phase 4 will map local
-  outbox payloads to the cloud shape, upload an aggregate in dependency order,
-  apply the feed without generating upload feedback, and restore on a second
-  device.
+- Phase 4 adds batch upload and a page RPC that returns account-owned record
+  snapshots with the feed. Remote changes are applied with local outbox
+  triggers suppressed. Device and hosted-project verification remain separate
+  deployment gates.
 
 ## Deliberate follow-ups
 

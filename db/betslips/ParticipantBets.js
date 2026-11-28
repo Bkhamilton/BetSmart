@@ -1,5 +1,3 @@
-import * as SQLite from 'expo-sqlite';
-
 // Function to get all participant bets
 export const getAllParticipantBets = async (db) => {
     try {
@@ -21,26 +19,30 @@ export const getAllValidParticipantBets = async (db, betSlipIds) => {
         const query = `
             SELECT 
                 ParticipantBets.*, 
-                Games.gameId, 
+                COALESCE(ParticipantBets.gameId, ParticipantBets.cloudGameReferenceId) AS gameId,
                 Games.seasonId, 
-                Games.date, 
+                COALESCE(ParticipantBets.gameDateSnapshot, Games.date) AS date,
                 Games.timestamp,
-                Teams.teamName as homeTeamName, 
-                Teams.abbreviation as homeTeamAbv, 
-                Teams2.teamName as awayTeamName, 
-                Teams2.abbreviation as awayTeamAbv,
+                COALESCE(ParticipantBets.homeTeamSnapshot, Teams.teamName) as homeTeamName,
+                COALESCE(ParticipantBets.homeTeamAbbreviationSnapshot,
+                    CASE WHEN ParticipantBets.homeTeamSnapshot IS NULL OR ParticipantBets.homeTeamSnapshot = Teams.teamName
+                        THEN Teams.abbreviation ELSE ParticipantBets.homeTeamSnapshot END) as homeTeamAbv,
+                COALESCE(ParticipantBets.awayTeamSnapshot, Teams2.teamName) as awayTeamName,
+                COALESCE(ParticipantBets.awayTeamAbbreviationSnapshot,
+                    CASE WHEN ParticipantBets.awayTeamSnapshot IS NULL OR ParticipantBets.awayTeamSnapshot = Teams2.teamName
+                        THEN Teams2.abbreviation ELSE ParticipantBets.awayTeamSnapshot END) as awayTeamAbv,
                 Seasons.leagueId,
-                Leagues.leagueName as league
+                COALESCE(ParticipantBets.leagueSnapshot, Leagues.leagueName) as league
             FROM ParticipantBets
-            JOIN 
+            LEFT JOIN
                 Games ON ParticipantBets.gameId = Games.gameId
-            JOIN 
+            LEFT JOIN
                 Teams ON Games.homeTeamId = Teams.id 
-            JOIN 
+            LEFT JOIN
                 Teams as Teams2 ON Games.awayTeamId = Teams2.id
-            JOIN
+            LEFT JOIN
                 Seasons ON Games.seasonId = Seasons.id
-            JOIN
+            LEFT JOIN
                 Leagues ON Seasons.leagueId = Leagues.id
             WHERE betSlipId IN (${placeholders})
         `;
@@ -62,27 +64,31 @@ export const getAllValidParticipantBetsWithResults = async (db, betSlipIds) => {
         const query = `
             SELECT 
                 ParticipantBets.*, 
-                Games.gameId, 
+                COALESCE(ParticipantBets.gameId, ParticipantBets.cloudGameReferenceId) AS gameId,
                 Games.seasonId, 
-                Games.date, 
+                COALESCE(ParticipantBets.gameDateSnapshot, Games.date) AS date,
                 Games.timestamp,
-                Teams.teamName as homeTeamName, 
-                Teams.abbreviation as homeTeamAbv, 
-                Teams2.teamName as awayTeamName, 
-                Teams2.abbreviation as awayTeamAbv,
+                COALESCE(ParticipantBets.homeTeamSnapshot, Teams.teamName) as homeTeamName,
+                COALESCE(ParticipantBets.homeTeamAbbreviationSnapshot,
+                    CASE WHEN ParticipantBets.homeTeamSnapshot IS NULL OR ParticipantBets.homeTeamSnapshot = Teams.teamName
+                        THEN Teams.abbreviation ELSE ParticipantBets.homeTeamSnapshot END) as homeTeamAbv,
+                COALESCE(ParticipantBets.awayTeamSnapshot, Teams2.teamName) as awayTeamName,
+                COALESCE(ParticipantBets.awayTeamAbbreviationSnapshot,
+                    CASE WHEN ParticipantBets.awayTeamSnapshot IS NULL OR ParticipantBets.awayTeamSnapshot = Teams2.teamName
+                        THEN Teams2.abbreviation ELSE ParticipantBets.awayTeamSnapshot END) as awayTeamAbv,
                 Seasons.leagueId,
-                Leagues.leagueName as league,
+                COALESCE(ParticipantBets.leagueSnapshot, Leagues.leagueName) as league,
                 ParticipantBetsResults.result as result
             FROM ParticipantBets
-            JOIN 
+            LEFT JOIN
                 Games ON ParticipantBets.gameId = Games.gameId
-            JOIN 
+            LEFT JOIN
                 Teams ON Games.homeTeamId = Teams.id 
-            JOIN 
+            LEFT JOIN
                 Teams as Teams2 ON Games.awayTeamId = Teams2.id
-            JOIN
+            LEFT JOIN
                 Seasons ON Games.seasonId = Seasons.id
-            JOIN
+            LEFT JOIN
                 Leagues ON Seasons.leagueId = Leagues.id
             JOIN
                 ParticipantBetsResults ON ParticipantBets.id = ParticipantBetsResults.participantBetId
@@ -198,8 +204,9 @@ export const insertParticipantBet = async (db, betSlipId, gameId, odds, snapshot
     try {
         const result = await db.runAsync(
             `INSERT INTO ParticipantBets
-                (betSlipId, gameId, odds, sportSnapshot, homeTeamSnapshot, awayTeamSnapshot)
-             VALUES (?, ?, ?, ?, ?, ?)`,
+                (betSlipId, gameId, odds, sportSnapshot, homeTeamSnapshot, awayTeamSnapshot,
+                 gameDateSnapshot, leagueSnapshot, homeTeamAbbreviationSnapshot, awayTeamAbbreviationSnapshot)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
                 betSlipId,
                 gameId,
@@ -207,6 +214,10 @@ export const insertParticipantBet = async (db, betSlipId, gameId, odds, snapshot
                 snapshot.sportSnapshot ?? null,
                 snapshot.homeTeamSnapshot ?? null,
                 snapshot.awayTeamSnapshot ?? null,
+                snapshot.gameDateSnapshot ?? null,
+                snapshot.leagueSnapshot ?? null,
+                snapshot.homeTeamAbbreviationSnapshot ?? null,
+                snapshot.awayTeamAbbreviationSnapshot ?? null,
             ]
         );
         return result.lastInsertRowId;

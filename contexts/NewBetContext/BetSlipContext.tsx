@@ -76,6 +76,10 @@ export const BetSlipContextProvider = ({ children }: BetSlipContextProviderProps
             const betSlipDate = betSlip.date.toISOString();
             const betSlipOdds = betSlip.odds.toString();
             await db.withTransactionAsync(async () => {
+                const bookieSnapshot = await db.getFirstAsync(
+                    'SELECT name FROM Bookies WHERE id = ?',
+                    [betSlip.bookieId]
+                );
                 const betSlipId = await insertBetSlip(
                     db,
                     betSlipFormat.id,
@@ -84,15 +88,22 @@ export const BetSlipContextProvider = ({ children }: BetSlipContextProviderProps
                     betSlip.betAmount,
                     betSlip.winnings,
                     user.id,
-                    betSlip.bookieId
+                    betSlip.bookieId,
+                    {
+                        formatNameSnapshot: betSlip.type,
+                        bookieNameSnapshot: bookieSnapshot?.name ?? null,
+                    }
                 );
 
                 for (const bet of betSlip.bets) {
                     const gameSnapshot = await db.getFirstAsync(`
-                        SELECT Leagues.sport
+                        SELECT Leagues.sport, home.abbreviation AS homeAbbreviation,
+                            away.abbreviation AS awayAbbreviation
                         FROM Games
                         JOIN Seasons ON Seasons.id = Games.seasonId
                         JOIN Leagues ON Leagues.id = Seasons.leagueId
+                        LEFT JOIN Teams AS home ON home.id = Games.homeTeamId
+                        LEFT JOIN Teams AS away ON away.id = Games.awayTeamId
                         WHERE Games.gameId = ?
                         LIMIT 1
                     `, [bet.gameId]);
@@ -100,6 +111,10 @@ export const BetSlipContextProvider = ({ children }: BetSlipContextProviderProps
                         sportSnapshot: gameSnapshot?.sport ?? null,
                         homeTeamSnapshot: bet.home ?? null,
                         awayTeamSnapshot: bet.away ?? null,
+                        gameDateSnapshot: bet.date ?? null,
+                        leagueSnapshot: bet.league ?? null,
+                        homeTeamAbbreviationSnapshot: gameSnapshot?.homeAbbreviation ?? null,
+                        awayTeamAbbreviationSnapshot: gameSnapshot?.awayAbbreviation ?? null,
                     });
 
                     for (const leg of bet.legs) {

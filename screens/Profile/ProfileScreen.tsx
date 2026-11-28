@@ -18,6 +18,7 @@ import OptionMenu from '@/components/Modals/OptionMenu';
 import ProfilePageHeader from '@/components/Profile/ProfilePage/ProfilePageHeader';
 import BettingPreferences from '@/components/Profile/ProfilePage/BettingPreferences';
 import BankrollManagement from '@/components/Profile/ProfilePage/BankrollManagement';
+import HistorySyncStatus from '@/components/Profile/HistorySyncStatus';
 import { Bookie, Balance } from '@/constants/types';
 
 export default function ProfileScreen() {
@@ -138,6 +139,7 @@ export default function ProfileScreen() {
                 <ProfileMainInfo 
                     handleSignIn={openLoginModal}
                 /> 
+                {signedIn && <HistorySyncStatus />}
                 <UserFavorites player={"Zion Williamson"}/>
                 <ActiveBookies 
                     addBookie={openAddBookieModal}
